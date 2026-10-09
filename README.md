@@ -10,6 +10,8 @@
 
 Windows で Markdown ファイルを開き、テキストと整形済み表示を並べて編集するアプリです。
 
+*A Windows app that opens Markdown files and lets you edit the text side by side with a rendered preview.* [日本語](#セットアップ) / [English](#english)
+
 ## セットアップ
 
 1. .NET 10 SDK がインストールされた Windows で、`powershell -ExecutionPolicy Bypass -File .\setup.ps1` を実行します。アプリは `%LOCALAPPDATA%\Programs\mdEditor` に発行され、現在のユーザー向けに登録されます。
