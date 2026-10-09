@@ -1,0 +1,34 @@
+<!--
+  File: mdEditor.csproj
+  Description: Windows desktop Markdown editor project configuration
+  Author: 5garashi.com設計事務所 / 5garashi.com Design Office
+  Created: 2026-10-10
+  License: MIT
+  SPDX-License-Identifier: MIT
+-->
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>mdEditor</AssemblyName>
+    <RootNamespace>MdEditor</RootNamespace>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <ApplicationIcon>wwwroot\assets\5garashi_mark_simple.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="wwwroot\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Remove="wwwroot\assets\5garashi_mark_simple.ico" />
+    <Resource Include="wwwroot\assets\5garashi_mark_simple.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="HtmlSanitizer" Version="9.2.1039" />
+    <PackageReference Include="Markdig" Version="1.4.0" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4258.31" />
+  </ItemGroup>
+</Project>

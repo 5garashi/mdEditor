@@ -1,0 +1,73 @@
+<!--
+  File: wwwroot/index.html
+  Description: Accessible side-by-side Markdown editor and preview
+  Author: 5garashi.com設計事務所 / 5garashi.com Design Office
+  Created: 2026-10-10
+  License: MIT
+  SPDX-License-Identifier: MIT
+-->
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https:; style-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="theme-color" content="#FFE699">
+  <title>mdEditor</title>
+  <link rel="icon" href="assets/5garashi_mark_simple.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="brand-bar">
+    <div class="brand-lockup">
+      <img class="brand-logo" src="assets/5garashi_logotype_outlined.svg" alt="5garashi.com 設計事務所">
+      <h1>mdEditor</h1>
+    </div>
+    <img class="brand-mark" src="assets/5garashi_mark_simple.svg" alt="" aria-hidden="true">
+  </header>
+  <section class="toolbar" aria-label="文書操作">
+    <div class="document-status" aria-live="polite">
+      <span id="document-name">新しい文書.md</span>
+      <span id="save-state">保存済み</span>
+      <span class="drop-hint">ここに .md ファイルをドロップして開く</span>
+    </div>
+    <div class="actions">
+      <button id="open-button" type="button" title="開く (Ctrl+O)">開く</button>
+      <button id="save-button" class="primary" type="button" title="保存 (Ctrl+S)">保存</button>
+      <button id="save-as-button" type="button">名前を付けて保存</button>
+      <button id="pdf-button" type="button">PDFに保存</button>
+    </div>
+  </section>
+  <main class="workspace">
+    <section class="pane editor-pane" aria-labelledby="editor-heading">
+      <div class="pane-heading">
+        <h2 id="editor-heading">Markdown を編集</h2>
+        <button class="pane-fullscreen-button" type="button" data-fullscreen-mode="editor" aria-pressed="false">編集画面を全画面表示</button>
+      </div>
+      <textarea id="editor" aria-label="Markdown テキスト" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></textarea>
+    </section>
+    <div id="pane-divider"
+         class="pane-divider"
+         role="separator"
+         tabindex="0"
+         aria-label="編集画面とプレビューの幅"
+         aria-orientation="vertical"
+         aria-valuemin="20"
+         aria-valuemax="80"
+         aria-valuenow="50"
+         aria-valuetext="編集画面 50%、プレビュー 50%"
+         title="ドラッグまたは矢印キーで左右の幅を調整します"></div>
+    <section class="pane preview-pane" aria-labelledby="preview-heading">
+      <div class="pane-heading">
+        <h2 id="preview-heading">プレビュー</h2>
+        <button class="pane-fullscreen-button" type="button" data-fullscreen-mode="preview" aria-pressed="false">プレビューを全画面表示</button>
+      </div>
+      <article id="preview"
+               class="preview-content"
+               aria-label="Markdown の表示結果"></article>
+    </section>
+  </main>
+</body>
+</html>

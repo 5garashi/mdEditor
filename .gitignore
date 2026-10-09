@@ -1,0 +1,8 @@
+# File: .gitignore
+# Description: Excludes mdEditor build and publish output
+# Author: 5garashi.com設計事務所 / 5garashi.com Design Office
+# Created: 2026-10-10
+# License: MIT
+# SPDX-License-Identifier: MIT
+bin/
+obj/

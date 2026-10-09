@@ -1,0 +1,14 @@
+<!--
+  File: App.xaml
+  Description: WPF application resources
+  Author: 5garashi.com設計事務所 / 5garashi.com Design Office
+  Created: 2026-10-10
+  License: MIT
+  SPDX-License-Identifier: MIT
+-->
+<Application x:Class="MdEditor.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Application.Resources>
+  </Application.Resources>
+</Application>

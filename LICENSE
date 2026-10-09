@@ -1,0 +1,33 @@
+MIT License
+
+Copyright (c) 2026 5garashi.com設計事務所 / 5garashi.com Design Office
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Exception / 適用除外:
+The files in wwwroot/assets/ (the 5garashi.com symbol mark and logotype) are
+NOT covered by the MIT License. They are provided under CC BY-ND 4.0
+(Creative Commons Attribution-NoDerivatives 4.0 International) by
+5garashi.com設計事務所 / 5garashi.com Design Office, and all rights in the name
+and logos are reserved (Identity Art. 12-2). Do not use them in a way that
+implies official origin, endorsement, or affiliation.
+wwwroot/assets/ 内のファイル(5garashi.com のシンボルマークとロゴタイプ)は
+MIT License の対象外で、CC BY-ND 4.0 で提供します。名称とロゴに関する権利は
+留保します(Identity 第12-2条)。公式の提供物・承認・提携と誤認される形では
+使用できません。
