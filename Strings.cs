@@ -47,6 +47,9 @@ internal static class Strings
 
     public static string Language { get; set; } = DefaultLanguage();
 
+    // Set by the --lang command-line option; takes priority over the saved choice.
+    public static string? ForcedLanguage { get; set; }
+
     public static string DefaultLanguage() =>
         System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ja"
             ? "ja"

@@ -36,6 +36,19 @@ Microsoft Edge WebView2 Runtime が必要です。Microsoft Edge がインスト
 
 Markdown の変更はプレビューに反映されます。未保存の変更がある状態でファイルを開く、またはアプリを閉じると、保存するか確認します。
 
+## 表示言語 / Display language
+
+画面と各種ダイアログは日本語と英語に対応します。初回は OS の表示言語（日本語なら日本語、それ以外は英語）で起動し、ツールバーの「English / 日本語」ボタンでいつでも切り替えられます。選択は次回以降も保持されます。
+
+起動オプションで言語を指定することもできます。指定した言語はその起動の間だけ有効で、保存済みの選択は書き換えません。
+
+```
+mdEditor.exe --lang en
+mdEditor.exe --lang ja "C:\docs\memo.md"
+```
+
+The interface and dialogs support Japanese and English. On first launch the language follows the OS display language (Japanese if it is Japanese, otherwise English). Use the "English / 日本語" button in the toolbar to switch at any time; the choice is remembered. The `--lang en` or `--lang ja` option (also `--lang=en`) sets the language for that launch only and does not overwrite the saved choice.
+
 ## Markdown とプレビュー
 
 見出し、リスト、引用、表、コード、リンク、画像などのMarkdownを表示します。セキュリティのため、Markdown内の生HTMLは表示せず、プレビュー内容をサニタイズします。Webリンクは既定のブラウザー、メールリンクは既定のメールアプリで開きます。PDFには整形済みのプレビューのみを出力し、編集中のテキスト欄や操作ボタンは含めません。

@@ -15,7 +15,34 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
-        MainWindow = new MainWindow(e.Args.FirstOrDefault());
+        string? path = null;
+        for (var i = 0; i < e.Args.Length; i++)
+        {
+            var arg = e.Args[i];
+            string? value = null;
+            if (arg.StartsWith("--lang=", StringComparison.OrdinalIgnoreCase))
+            {
+                value = arg["--lang=".Length..];
+            }
+            else if (string.Equals(arg, "--lang", StringComparison.OrdinalIgnoreCase))
+            {
+                value = i + 1 < e.Args.Length ? e.Args[++i] : null;
+            }
+            else
+            {
+                path ??= arg;
+                continue;
+            }
+
+            Strings.ForcedLanguage = value?.Trim().ToLowerInvariant() switch
+            {
+                "en" => "en",
+                "ja" => "ja",
+                _ => Strings.ForcedLanguage
+            };
+        }
+
+        MainWindow = new MainWindow(path);
         MainWindow.Show();
     }
 }

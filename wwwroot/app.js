@@ -317,6 +317,9 @@
       documentDirty = message.isDirty;
       pdfStarting = false;
       saveState.textContent = statusText();
+    } else if (message.type === "language") {
+      language = message.lang === "en" ? "en" : "ja";
+      applyLanguage();
     } else if (message.type === "setText") {
       editor.value = message.text;
     } else if (message.type === "preview") {

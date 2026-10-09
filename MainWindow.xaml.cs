@@ -117,9 +117,14 @@ public partial class MainWindow : Window
         {
             case "ready":
                 _pageReady = true;
-                Strings.Language = root.TryGetProperty("lang", out var lang) && lang.GetString() == "en"
-                    ? "en"
-                    : "ja";
+                Strings.Language = Strings.ForcedLanguage
+                    ?? (root.TryGetProperty("lang", out var lang) && lang.GetString() == "en"
+                        ? "en"
+                        : "ja");
+                if (Strings.ForcedLanguage is not null)
+                {
+                    SendToPage(new { type = "language", lang = Strings.ForcedLanguage });
+                }
                 if (!string.IsNullOrWhiteSpace(_initialPath))
                 {
                     await LoadDocumentAsync(_initialPath);
