@@ -22,36 +22,38 @@
 <body>
   <header class="brand-bar">
     <div class="brand-lockup">
-      <img class="brand-logo" src="assets/5garashi_logotype_outlined.svg" alt="5garashi.com 設計事務所">
+      <img class="brand-logo" src="assets/5garashi_logotype_outlined.svg" alt="5garashi.com 設計事務所 / 5garashi.com Design Office">
       <h1>mdEditor</h1>
     </div>
     <img class="brand-mark" src="assets/5garashi_mark_simple.svg" alt="" aria-hidden="true">
   </header>
-  <section class="toolbar" aria-label="文書操作">
+  <section class="toolbar" data-i18n-attr="aria-label:toolbar">
     <div class="document-status" aria-live="polite">
       <span id="document-name">新しい文書.md</span>
       <span id="save-state">保存済み</span>
-      <span class="drop-hint">ここに .md ファイルをドロップして開く</span>
+      <span class="drop-hint" data-i18n="dropHint">ここに .md ファイルをドロップして開く</span>
     </div>
     <div class="actions">
-      <button id="open-button" type="button" title="開く (Ctrl+O)">開く</button>
-      <button id="save-button" class="primary" type="button" title="保存 (Ctrl+S)">保存</button>
-      <button id="save-as-button" type="button">名前を付けて保存</button>
-      <button id="pdf-button" type="button">PDFに保存</button>
+      <button id="open-button" type="button" data-i18n="open" data-i18n-attr="title:openTitle">開く</button>
+      <button id="save-button" class="primary" type="button" data-i18n="save" data-i18n-attr="title:saveTitle">保存</button>
+      <button id="save-as-button" type="button" data-i18n="saveAs">名前を付けて保存</button>
+      <button id="pdf-button" type="button" data-i18n="pdf">PDFに保存</button>
+      <button id="language-button" type="button" lang="en" data-i18n="languageToggle" data-i18n-attr="aria-label:languageLabel">English</button>
     </div>
   </section>
   <main class="workspace">
     <section class="pane editor-pane" aria-labelledby="editor-heading">
       <div class="pane-heading">
-        <h2 id="editor-heading">Markdown を編集</h2>
+        <h2 id="editor-heading" data-i18n="editorHeading">Markdown を編集</h2>
         <button class="pane-fullscreen-button" type="button" data-fullscreen-mode="editor" aria-pressed="false">編集画面を全画面表示</button>
       </div>
-      <textarea id="editor" aria-label="Markdown テキスト" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></textarea>
+      <textarea id="editor" data-i18n-attr="aria-label:editorLabel" aria-label="Markdown テキスト" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></textarea>
     </section>
     <div id="pane-divider"
          class="pane-divider"
          role="separator"
          tabindex="0"
+         data-i18n-attr="aria-label:dividerLabel;title:dividerTitle"
          aria-label="編集画面とプレビューの幅"
          aria-orientation="vertical"
          aria-valuemin="20"
@@ -61,11 +63,12 @@
          title="ドラッグまたは矢印キーで左右の幅を調整します"></div>
     <section class="pane preview-pane" aria-labelledby="preview-heading">
       <div class="pane-heading">
-        <h2 id="preview-heading">プレビュー</h2>
+        <h2 id="preview-heading" data-i18n="previewHeading">プレビュー</h2>
         <button class="pane-fullscreen-button" type="button" data-fullscreen-mode="preview" aria-pressed="false">プレビューを全画面表示</button>
       </div>
       <article id="preview"
                class="preview-content"
+               data-i18n-attr="aria-label:previewLabel"
                aria-label="Markdown の表示結果"></article>
     </section>
   </main>

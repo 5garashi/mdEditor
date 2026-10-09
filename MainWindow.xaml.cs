@@ -87,8 +87,8 @@ public partial class MainWindow : Window
         catch (WebView2RuntimeNotFoundException ex)
         {
             MessageBox.Show(
-                $"Microsoft Edge WebView2 Runtime が必要です。\n\n{ex.Message}",
-                "mdEditor を起動できません",
+                $"{Strings.Tr("Microsoft Edge WebView2 Runtime が必要です。")}\n\n{ex.Message}",
+                Strings.Tr("mdEditor を起動できません"),
                 MessageBoxButton.OK,
                 MessageBoxImage.Error);
             Close();
@@ -117,6 +117,9 @@ public partial class MainWindow : Window
         {
             case "ready":
                 _pageReady = true;
+                Strings.Language = root.TryGetProperty("lang", out var lang) && lang.GetString() == "en"
+                    ? "en"
+                    : "ja";
                 if (!string.IsNullOrWhiteSpace(_initialPath))
                 {
                     await LoadDocumentAsync(_initialPath);
@@ -126,6 +129,10 @@ public partial class MainWindow : Window
                     SendDocumentInfo();
                     SendPreview();
                 }
+                break;
+            case "setLanguage":
+                Strings.Language = root.GetProperty("lang").GetString() == "en" ? "en" : "ja";
+                SendDocumentInfo();
                 break;
             case "dropFile":
                 await HandleDropAsync(e);
@@ -188,7 +195,7 @@ public partial class MainWindow : Window
         if (!TryGetDroppedMarkdownPath(e, out var filePath))
         {
             MessageBox.Show(
-                "Markdown ファイル（.md または .markdown）を1つだけドロップしてください。",
+                Strings.Tr("Markdown ファイル（.md または .markdown）を1つだけドロップしてください。"),
                 "mdEditor",
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
@@ -234,7 +241,7 @@ public partial class MainWindow : Window
 
         var dialog = new OpenFileDialog
         {
-            Filter = "Markdown ファイル (*.md;*.markdown)|*.md;*.markdown|すべてのファイル (*.*)|*.*",
+            Filter = Strings.Tr("Markdown ファイル (*.md;*.markdown)|*.md;*.markdown|すべてのファイル (*.*)|*.*"),
             CheckFileExists = true,
             Multiselect = false
         };
@@ -329,10 +336,10 @@ public partial class MainWindow : Window
     {
         var dialog = new SaveFileDialog
         {
-            Filter = "Markdown ファイル (*.md)|*.md|すべてのファイル (*.*)|*.*",
+            Filter = Strings.Tr("Markdown ファイル (*.md)|*.md|すべてのファイル (*.*)|*.*"),
             DefaultExt = ".md",
             AddExtension = true,
-            FileName = _filePath is null ? "新しい文書.md" : Path.GetFileName(_filePath)
+            FileName = _filePath is null ? Strings.Tr("新しい文書.md") : Path.GetFileName(_filePath)
         };
         if (dialog.ShowDialog(this) != true)
         {
@@ -385,14 +392,14 @@ public partial class MainWindow : Window
             SendToPage(new
             {
                 type = "pdfExportStatus",
-                message = "PDFの保存先を選択してください"
+                message = Strings.Tr("PDFの保存先を選択してください")
             });
             var defaultName = _filePath is null
-                ? "新しい文書.pdf"
+                ? Strings.Tr("新しい文書.pdf")
                 : Path.ChangeExtension(_filePath, ".pdf");
             var dialog = new SaveFileDialog
             {
-                Filter = "PDF ファイル (*.pdf)|*.pdf",
+                Filter = Strings.Tr("PDF ファイル (*.pdf)|*.pdf"),
                 DefaultExt = ".pdf",
                 AddExtension = true,
                 CheckPathExists = true,
@@ -440,16 +447,16 @@ public partial class MainWindow : Window
             if (!saved)
             {
                 MessageBox.Show(
-                    "PDFを書き出せませんでした。ほかのPDF書き出しが完了してから、もう一度お試しください。",
-                    "PDFの書き出し",
+                    Strings.Tr("PDFを書き出せませんでした。ほかのPDF書き出しが完了してから、もう一度お試しください。"),
+                    Strings.Tr("PDFの書き出し"),
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
             else
             {
                 MessageBox.Show(
-                    $"PDFを保存しました。\n\n{dialog.FileName}",
-                    "PDFの書き出し",
+                    $"{Strings.Tr("PDFを保存しました。")}\n\n{dialog.FileName}",
+                    Strings.Tr("PDFの書き出し"),
                     MessageBoxButton.OK,
                     MessageBoxImage.Information);
             }
@@ -543,8 +550,8 @@ public partial class MainWindow : Window
         }
 
         var result = MessageBox.Show(
-            "変更を保存しますか？",
-            "未保存の変更",
+            Strings.Tr("変更を保存しますか？"),
+            Strings.Tr("未保存の変更"),
             MessageBoxButton.YesNoCancel,
             MessageBoxImage.Warning);
         return result switch
@@ -590,7 +597,7 @@ public partial class MainWindow : Window
         SendToPage(new
         {
             type = "documentInfo",
-            name = _filePath is null ? "新しい文書.md" : Path.GetFileName(_filePath),
+            name = _filePath is null ? Strings.Tr("新しい文書.md") : Path.GetFileName(_filePath),
             isDirty = _isDirty
         });
     }
@@ -626,7 +633,7 @@ public partial class MainWindow : Window
         catch (Win32Exception ex)
         {
             MessageBox.Show(
-                $"リンクを開けませんでした。\n\n{ex.Message}",
+                $"{Strings.Tr("リンクを開けませんでした。")}\n\n{ex.Message}",
                 "mdEditor",
                 MessageBoxButton.OK,
                 MessageBoxImage.Error);
@@ -634,7 +641,7 @@ public partial class MainWindow : Window
         catch (InvalidOperationException ex)
         {
             MessageBox.Show(
-                $"リンクを開けませんでした。\n\n{ex.Message}",
+                $"{Strings.Tr("リンクを開けませんでした。")}\n\n{ex.Message}",
                 "mdEditor",
                 MessageBoxButton.OK,
                 MessageBoxImage.Error);
@@ -643,8 +650,9 @@ public partial class MainWindow : Window
 
     private void ShowFileError(string title, Exception ex)
     {
+        var stop = Strings.Language == "en" ? "." : "。";
         MessageBox.Show(
-            $"{title}。\n\n{ex.Message}",
+            $"{Strings.Tr(title)}{stop}\n\n{ex.Message}",
             "mdEditor",
             MessageBoxButton.OK,
             MessageBoxImage.Error);

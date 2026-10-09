@@ -11,14 +11,71 @@
   const preview = document.getElementById("preview");
   const documentName = document.getElementById("document-name");
   const saveState = document.getElementById("save-state");
+  const languageButton = document.getElementById("language-button");
   const workspace = document.querySelector(".workspace");
   const divider = document.getElementById("pane-divider");
   const fullscreenButtons = document.querySelectorAll(".pane-fullscreen-button");
   const compactLayout = window.matchMedia("(max-width: 760px)");
   let editorRatio = Number.parseFloat(localStorage.getItem("mdeditor-editor-ratio"));
   let displayMode = "normal";
-  let documentStatus = "保存済み";
+  let documentDirty = false;
+  let pdfStarting = false;
   let pointerId = null;
+
+  const messages = {
+    ja: {
+      toolbar: "文書操作", dropHint: "ここに .md ファイルをドロップして開く",
+      open: "開く", openTitle: "開く (Ctrl+O)", save: "保存", saveTitle: "保存 (Ctrl+S)",
+      saveAs: "名前を付けて保存", pdf: "PDFに保存",
+      languageToggle: "English", languageLabel: "表示言語を English に切り替える",
+      editorHeading: "Markdown を編集", editorLabel: "Markdown テキスト",
+      previewHeading: "プレビュー", previewLabel: "Markdown の表示結果",
+      dividerLabel: "編集画面とプレビューの幅",
+      dividerTitle: "ドラッグまたは矢印キーで左右の幅を調整します",
+      fullscreenEditor: "編集画面を全画面表示", fullscreenPreview: "プレビューを全画面表示",
+      fullscreenExit: "全画面表示を終了", saved: "保存済み", unsaved: "未保存の変更",
+      pdfStarting: "PDF出力を開始しています",
+      ratio: (e, p) => `編集画面 ${e}%、プレビュー ${p}%`
+    },
+    en: {
+      toolbar: "Document actions", dropHint: "Drop a .md file here to open it",
+      open: "Open", openTitle: "Open (Ctrl+O)", save: "Save", saveTitle: "Save (Ctrl+S)",
+      saveAs: "Save As", pdf: "Save as PDF",
+      languageToggle: "日本語", languageLabel: "Switch the display language to Japanese",
+      editorHeading: "Edit Markdown", editorLabel: "Markdown text",
+      previewHeading: "Preview", previewLabel: "Rendered Markdown",
+      dividerLabel: "Width of the editor and preview",
+      dividerTitle: "Drag or use the arrow keys to resize",
+      fullscreenEditor: "Full screen editor", fullscreenPreview: "Full screen preview",
+      fullscreenExit: "Exit full screen", saved: "Saved", unsaved: "Unsaved changes",
+      pdfStarting: "Starting PDF export",
+      ratio: (e, p) => `Editor ${e}%, preview ${p}%`
+    }
+  };
+  const storedLanguage = localStorage.getItem("mdeditor-language");
+  let language = storedLanguage === "en" || storedLanguage === "ja"
+    ? storedLanguage
+    : (navigator.language || "").toLowerCase().startsWith("ja") ? "ja" : "en";
+  const t = (key) => messages[language][key];
+
+  const statusText = () => (documentDirty ? t("unsaved") : t("saved"));
+
+  const applyLanguage = () => {
+    document.documentElement.lang = language;
+    for (const element of document.querySelectorAll("[data-i18n]")) {
+      element.textContent = t(element.dataset.i18n);
+    }
+    for (const element of document.querySelectorAll("[data-i18n-attr]")) {
+      for (const pair of element.dataset.i18nAttr.split(";")) {
+        const [attribute, key] = pair.split(":");
+        element.setAttribute(attribute, t(key));
+      }
+    }
+    languageButton.lang = language === "ja" ? "en" : "ja";
+    saveState.textContent = pdfStarting ? t("pdfStarting") : statusText();
+    setEditorRatio(editorRatio, false);
+    setDisplayMode(displayMode);
+  };
 
   if (!Number.isFinite(editorRatio)) {
     editorRatio = 50;
@@ -45,7 +102,7 @@
     divider.setAttribute("aria-valuenow", String(editorRatio));
     divider.setAttribute(
       "aria-valuetext",
-      `編集画面 ${editorRatio}%、プレビュー ${100 - editorRatio}%`
+      t("ratio")(editorRatio, 100 - editorRatio)
     );
     if (persist) {
       localStorage.setItem("mdeditor-editor-ratio", String(editorRatio));
@@ -67,10 +124,10 @@
       const buttonMode = button.dataset.fullscreenMode;
       const active = mode === buttonMode;
       button.textContent = active
-        ? "全画面表示を終了"
+        ? t("fullscreenExit")
         : buttonMode === "editor"
-          ? "編集画面を全画面表示"
-          : "プレビューを全画面表示";
+          ? t("fullscreenEditor")
+          : t("fullscreenPreview");
       button.setAttribute("aria-pressed", String(active));
     }
   };
@@ -100,8 +157,15 @@
   document.getElementById("save-button").addEventListener("click", () => post({ type: "save" }));
   document.getElementById("save-as-button").addEventListener("click", () => post({ type: "saveAs" }));
   document.getElementById("pdf-button").addEventListener("click", () => {
-    saveState.textContent = "PDF出力を開始しています";
+    pdfStarting = true;
+    saveState.textContent = t("pdfStarting");
     post({ type: "exportPdf" });
+  });
+  languageButton.addEventListener("click", () => {
+    language = language === "ja" ? "en" : "ja";
+    localStorage.setItem("mdeditor-language", language);
+    applyLanguage();
+    post({ type: "setLanguage", lang: language });
   });
   fullscreenButtons.forEach((button) => {
     button.addEventListener("click", () => {
@@ -250,8 +314,9 @@
     const message = event.data;
     if (message.type === "documentInfo") {
       documentName.textContent = message.name;
-      documentStatus = message.isDirty ? "未保存の変更" : "保存済み";
-      saveState.textContent = documentStatus;
+      documentDirty = message.isDirty;
+      pdfStarting = false;
+      saveState.textContent = statusText();
     } else if (message.type === "setText") {
       editor.value = message.text;
     } else if (message.type === "preview") {
@@ -259,10 +324,10 @@
     } else if (message.type === "displayMode") {
       setDisplayMode(message.mode);
     } else if (message.type === "pdfExportStatus") {
-      saveState.textContent = message.message || documentStatus;
+      saveState.textContent = message.message || statusText();
     }
   });
 
-  setEditorRatio(editorRatio, false);
-  post({ type: "ready" });
+  applyLanguage();
+  post({ type: "ready", lang: language });
 })();
