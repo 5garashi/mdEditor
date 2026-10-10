@@ -19,9 +19,11 @@
     <ApplicationIcon>wwwroot\assets\5garashi_mark_simple.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <!-- WebView2 serves these from a real folder, so keep them beside the single-file exe. -->
     <Content Include="wwwroot\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
     <Content Remove="wwwroot\assets\5garashi_mark_simple.ico" />
     <Resource Include="wwwroot\assets\5garashi_mark_simple.ico" />
