@@ -45,7 +45,25 @@
     <section class="pane editor-pane" aria-labelledby="editor-heading">
       <div class="pane-heading">
         <h2 id="editor-heading" data-i18n="editorHeading">Markdown を編集</h2>
+        <button id="replace-button" type="button" data-i18n="findReplace" data-i18n-attr="title:findReplaceTitle">検索・置換</button>
         <button class="pane-fullscreen-button" type="button" data-fullscreen-mode="editor" aria-pressed="false">編集画面をウィンドウ全体に表示</button>
+      </div>
+      <div id="find-bar" class="find-bar" role="search" hidden>
+        <div class="find-row find-section">
+          <span class="find-label" data-i18n="findLabel">検索</span>
+          <input id="find-input" type="text" data-i18n-attr="placeholder:findPlaceholder;aria-label:findPlaceholder" autocomplete="off" spellcheck="false">
+          <button id="find-prev" type="button" data-i18n="findPrev">前へ</button>
+          <button id="find-next" type="button" data-i18n="findNext">次へ</button>
+          <label class="find-case"><input id="find-case" type="checkbox"> <span data-i18n="matchCase">大文字小文字を区別</span></label>
+          <button id="find-close" type="button" data-i18n="close" data-i18n-attr="aria-label:close">閉じる</button>
+        </div>
+        <div class="find-row replace-section">
+          <span class="find-label" data-i18n="replaceLabel">置換</span>
+          <input id="replace-input" type="text" data-i18n-attr="placeholder:replacePlaceholder;aria-label:replacePlaceholder" autocomplete="off" spellcheck="false">
+          <button id="replace-one" type="button" data-i18n="replaceOne">置換</button>
+          <button id="replace-all" type="button" data-i18n="replaceAll">すべて置換</button>
+          <span id="find-status" class="find-status" aria-live="polite"></span>
+        </div>
       </div>
       <textarea id="editor" data-i18n-attr="aria-label:editorLabel" aria-label="Markdown テキスト" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></textarea>
     </section>

@@ -35,6 +35,12 @@
       fullscreenEditor: "編集画面をウィンドウ全体に表示", fullscreenPreview: "プレビューをウィンドウ全体に表示",
       fullscreenExit: "元の表示に戻す", saved: "保存済み", unsaved: "未保存の変更",
       pdfStarting: "PDF出力を開始しています",
+      findReplace: "検索・置換", findReplaceTitle: "検索・置換 (Ctrl+H)",
+      findPlaceholder: "検索する文字列", replacePlaceholder: "置換後の文字列",
+      findLabel: "検索", replaceLabel: "置換",
+      findPrev: "前へ", findNext: "次へ", replaceOne: "置換", replaceAll: "すべて置換",
+      matchCase: "大文字小文字を区別", close: "閉じる",
+      notFound: "見つかりません", replacedCount: (n) => `${n} 件を置換しました`,
       ratio: (e, p) => `編集画面 ${e}%、プレビュー ${p}%`
     },
     en: {
@@ -49,6 +55,12 @@
       fullscreenEditor: "Fill window with editor", fullscreenPreview: "Fill window with preview",
       fullscreenExit: "Restore layout", saved: "Saved", unsaved: "Unsaved changes",
       pdfStarting: "Starting PDF export",
+      findReplace: "Find/Replace", findReplaceTitle: "Find/Replace (Ctrl+H)",
+      findPlaceholder: "Text to find", replacePlaceholder: "Replace with",
+      findLabel: "Find", replaceLabel: "Replace",
+      findPrev: "Previous", findNext: "Next", replaceOne: "Replace", replaceAll: "Replace all",
+      matchCase: "Match case", close: "Close",
+      notFound: "Not found", replacedCount: (n) => `Replaced ${n}`,
       ratio: (e, p) => `Editor ${e}%, preview ${p}%`
     }
   };
@@ -242,6 +254,148 @@
     }
   });
 
+  const findBar = document.getElementById("find-bar");
+  const findInput = document.getElementById("find-input");
+  const replaceInput = document.getElementById("replace-input");
+  const findCase = document.getElementById("find-case");
+  const findStatus = document.getElementById("find-status");
+
+  const openFindBar = () => {
+    findBar.hidden = false;
+    const selected = editor.value.slice(editor.selectionStart, editor.selectionEnd);
+    if (selected && !selected.includes("\n")) {
+      findInput.value = selected;
+    }
+    findStatus.textContent = "";
+    findInput.focus();
+    findInput.select();
+  };
+
+  const closeFindBar = () => {
+    findBar.hidden = true;
+    editor.focus();
+  };
+
+  const norm = (s) => (findCase.checked ? s : s.toLowerCase());
+
+  // Measures the wrapped position of the match with a hidden mirror of the textarea.
+  const scrollMatchIntoView = (index) => {
+    const style = getComputedStyle(editor);
+    const mirror = document.createElement("div");
+    for (const name of [
+      "boxSizing", "width", "paddingTop", "paddingRight", "paddingBottom", "paddingLeft",
+      "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth",
+      "fontFamily", "fontSize", "fontWeight", "lineHeight", "letterSpacing", "tabSize",
+      "whiteSpace", "overflowWrap"
+    ]) {
+      mirror.style[name] = style[name];
+    }
+    mirror.style.position = "absolute";
+    mirror.style.visibility = "hidden";
+    mirror.style.top = "0";
+    mirror.textContent = editor.value.slice(0, index);
+    const marker = document.createElement("span");
+    marker.textContent = "\u200b";
+    mirror.appendChild(marker);
+    document.body.appendChild(mirror);
+    const top = marker.offsetTop;
+    mirror.remove();
+    const lineHeight = Number.parseFloat(style.lineHeight) || 24;
+    if (top < editor.scrollTop || top + lineHeight > editor.scrollTop + editor.clientHeight) {
+      editor.scrollTop = Math.max(0, top - editor.clientHeight / 2);
+    }
+  };
+
+  const findText = (forward) => {
+    const needle = findInput.value;
+    if (!needle) {
+      return false;
+    }
+    const hay = norm(editor.value);
+    const target = norm(needle);
+    let index;
+    if (forward) {
+      index = hay.indexOf(target, editor.selectionEnd);
+      if (index < 0) index = hay.indexOf(target);
+    } else {
+      index = editor.selectionStart > 0
+        ? hay.lastIndexOf(target, editor.selectionStart - 1)
+        : -1;
+      if (index < 0) index = hay.lastIndexOf(target);
+    }
+    if (index < 0) {
+      findStatus.textContent = t("notFound");
+      return false;
+    }
+    findStatus.textContent = "";
+    editor.focus();
+    editor.setSelectionRange(index, index + needle.length);
+    scrollMatchIntoView(index);
+    return true;
+  };
+
+  const replaceSelection = (text) => {
+    editor.focus();
+    if (!document.execCommand("insertText", false, text)) {
+      editor.setRangeText(text, editor.selectionStart, editor.selectionEnd, "end");
+      post({ type: "change", text: editor.value });
+    }
+  };
+
+  const replaceOne = () => {
+    const needle = findInput.value;
+    if (!needle) return;
+    const selected = editor.value.slice(editor.selectionStart, editor.selectionEnd);
+    if (norm(selected) === norm(needle)) {
+      replaceSelection(replaceInput.value);
+    }
+    findText(true);
+  };
+
+  const replaceAll = () => {
+    const needle = findInput.value;
+    if (!needle) return;
+    const hay = norm(editor.value);
+    const target = norm(needle);
+    let count = 0;
+    let result = "";
+    let last = 0;
+    let index = hay.indexOf(target);
+    while (index >= 0) {
+      result += editor.value.slice(last, index) + replaceInput.value;
+      last = index + needle.length;
+      count += 1;
+      index = hay.indexOf(target, last);
+    }
+    if (count === 0) {
+      findStatus.textContent = t("notFound");
+      return;
+    }
+    result += editor.value.slice(last);
+    editor.focus();
+    editor.select();
+    replaceSelection(result);
+    findStatus.textContent = t("replacedCount")(count);
+  };
+
+  document.getElementById("replace-button").addEventListener("click", openFindBar);
+  document.getElementById("find-close").addEventListener("click", closeFindBar);
+  document.getElementById("find-next").addEventListener("click", () => findText(true));
+  document.getElementById("find-prev").addEventListener("click", () => findText(false));
+  document.getElementById("replace-one").addEventListener("click", replaceOne);
+  document.getElementById("replace-all").addEventListener("click", replaceAll);
+  findBar.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      if (event.target === replaceInput) replaceOne();
+      else findText(!event.shiftKey);
+    } else if (event.key === "Escape") {
+      event.preventDefault();
+      event.stopPropagation();
+      closeFindBar();
+    }
+  });
+
   document.addEventListener("keydown", (event) => {
     if (!event.ctrlKey && !event.metaKey) {
       if (event.key === "F11") {
@@ -259,7 +413,10 @@
     }
 
     const key = event.key.toLowerCase();
-    if (key === "s") {
+    if (key === "h" && !event.shiftKey) {
+      event.preventDefault();
+      openFindBar();
+    } else if (key === "s") {
       event.preventDefault();
       post({ type: event.shiftKey ? "saveAs" : "save" });
     } else if (key === "o") {

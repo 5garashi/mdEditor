@@ -33,6 +33,8 @@ Microsoft Edge WebView2 Runtime が必要です。Microsoft Edge がインスト
 - **Ctrl+Shift+S**: 名前を付けて保存します。
 - **PDFに保存**: 整形したプレビューをA4のPDFに書き出します。
 - **Ctrl+Shift+P**: PDFに保存します。
+- **Ctrl+H**: 編集画面の検索・置換バーを開きます。「置換」「すべて置換」が使えます（`Enter` で次を検索、`Esc` で閉じる）。
+- **Ctrl+F**: ウィンドウ標準の検索です。プレビューの検索にも使えます。
 - **左右の区切り**: 中央の境界線をドラッグすると編集欄とプレビューの幅を調整できます。区切りをフォーカスして左右矢印キーを押すと、幅を5%ずつ調整します。狭い画面では縦方向の区切りを上下矢印キーで操作します。幅の設定も次回起動時に保持されます。
 - **編集画面 / プレビューをウィンドウ全体に表示**: 各欄のボタンで、その欄をウィンドウいっぱいに広げます（OSの全画面にはなりません）。「元の表示に戻す」ボタンまたは `Esc` で並列表示に戻ります。
 - **ウィンドウの全画面表示**: `F11` で切り替えます。解除は `F11` または `Esc` です。
@@ -89,6 +91,8 @@ Microsoft Edge WebView2 Runtime is required. It is normally available wherever M
 - **Ctrl+Shift+S**: save as.
 - **Save as PDF**: export the rendered preview as an A4 PDF.
 - **Ctrl+Shift+P**: save as PDF.
+- **Ctrl+H**: open the editor's find/replace bar with Replace and Replace all (`Enter` finds next, `Esc` closes).
+- **Ctrl+F**: the standard window find, which also works in the preview.
 - **Pane divider**: drag the center divider to resize the editor and the preview. Focus the divider and press the left or right arrow keys to resize in 5% steps. On narrow windows the divider is vertical and uses the up and down arrow keys. The width is remembered for the next launch.
 - **Fill window with editor / preview**: each pane has a button that expands that pane to fill the app window (not OS full screen). Return with "Restore layout" or `Esc`.
 - **Window full screen**: toggle with `F11`; exit with `F11` or `Esc`.
