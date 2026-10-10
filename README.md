@@ -34,7 +34,8 @@ Microsoft Edge WebView2 Runtime が必要です。Microsoft Edge がインスト
 - **PDFに保存**: 整形したプレビューをA4のPDFに書き出します。
 - **Ctrl+Shift+P**: PDFに保存します。
 - **左右の区切り**: 中央の境界線をドラッグすると編集欄とプレビューの幅を調整できます。区切りをフォーカスして左右矢印キーを押すと、幅を5%ずつ調整します。狭い画面では縦方向の区切りを上下矢印キーで操作します。幅の設定も次回起動時に保持されます。
-- **編集画面を全画面表示 / プレビューを全画面表示**: 各欄のボタンで、その欄だけを全画面に表示します。欄の「全画面表示を終了」ボタン、`F11` または `Esc` で並列表示に戻ります。
+- **編集画面 / プレビューをウィンドウ全体に表示**: 各欄のボタンで、その欄をウィンドウいっぱいに広げます（OSの全画面にはなりません）。「元の表示に戻す」ボタンまたは `Esc` で並列表示に戻ります。
+- **ウィンドウの全画面表示**: `F11` で切り替えます。解除は `F11` または `Esc` です。
 
 Markdown の変更はプレビューに反映されます。未保存の変更がある状態でファイルを開く、またはアプリを閉じると、保存するか確認します。
 
@@ -49,7 +50,7 @@ mdEditor.exe --lang en
 mdEditor.exe --lang ja "C:\docs\memo.md"
 ```
 
-The interface and dialogs support Japanese and English. On first launch the language follows the OS display language (Japanese if it is Japanese, otherwise English). Use the "English / 日本語" button in the toolbar to switch at any time; the choice is remembered. The `--lang en` or `--lang ja` option (also `--lang=en`) sets the language for that launch only and does not overwrite the saved choice.
+The interface and dialogs support Japanese and English. On first launch the language follows the OS display language (Japanese if it is Japanese, otherwise English). Use the "English / 日本語" button in the toolbar to switch at any time; the choice is remembered. The `--lang en` or `--lang ja` option (also `--lang=en`) sets the language for that launch only and does not overwrite the saved choice. (The same section applies to the English part below.)
 
 ## Markdown とプレビュー
 
@@ -62,6 +63,49 @@ The interface and dialogs support Japanese and English. On first launch the lang
 ## ライセンス
 
 ソースコードは [MIT License](./LICENSE) です（Identity 第12-1条）。`wwwroot/assets/` のロゴタイプとシンボルマークは MIT の対象外で、CC BY-ND 4.0 で提供されます。名称とロゴに関する権利は留保され、公式の提供物・承認・提携と誤認される使い方はできません（第12-2条）。
+
+## English
+
+[日本語](#セットアップ) / English
+
+### Setup
+
+1. On Windows with the .NET 10 SDK installed, run `powershell -ExecutionPolicy Bypass -File .\setup.ps1`. The app is published to `%LOCALAPPDATA%\Programs\mdEditor` and registered for the current user.
+2. Open Windows Settings, Apps, Default apps, and choose `mdEditor` as the default app for `.md`.
+3. When you open a `.md` file, mdEditor shows the text on the left and the preview on the right.
+
+Windows requires the user to set default apps, so choose `mdEditor` for `.md` in the Settings page that opens after setup. An app cannot change the default without the user's confirmation.
+
+Microsoft Edge WebView2 Runtime is required. It is normally available wherever Microsoft Edge is installed.
+
+### Usage
+
+- **Open**: choose a Markdown file.
+- **Drag and drop**: drop one `.md` or `.markdown` file onto the window to open it. If there are unsaved changes, you are asked before it opens.
+- **Save**: overwrite the current file. A new document asks where to save.
+- **Save As**: choose a location and file name.
+- **Ctrl+O**: open a file.
+- **Ctrl+S**: save.
+- **Ctrl+Shift+S**: save as.
+- **Save as PDF**: export the rendered preview as an A4 PDF.
+- **Ctrl+Shift+P**: save as PDF.
+- **Pane divider**: drag the center divider to resize the editor and the preview. Focus the divider and press the left or right arrow keys to resize in 5% steps. On narrow windows the divider is vertical and uses the up and down arrow keys. The width is remembered for the next launch.
+- **Fill window with editor / preview**: each pane has a button that expands that pane to fill the app window (not OS full screen). Return with "Restore layout" or `Esc`.
+- **Window full screen**: toggle with `F11`; exit with `F11` or `Esc`.
+
+Changes in the Markdown are reflected in the preview. If there are unsaved changes when you open a file or close the app, you are asked whether to save.
+
+### Markdown and preview
+
+Headings, lists, quotes, tables, code, links, and images are rendered. For security, raw HTML inside Markdown is not displayed and the preview content is sanitized. Web links open in the default browser and mail links in the default mail app. The PDF contains only the rendered preview, not the editing text area or buttons.
+
+### Design and official assets
+
+The screen design follows the 5garashi.com Design Office Identity v4.7 (2026-10-08). The official logotype and simple symbol mark are bundled unmodified from the SVG assets of [5garashi/5garashi-identity](https://github.com/5garashi/5garashi-identity). The simple mark is used for the window, the executable, and the Markdown file association icons. The author, copyright, and CC BY-ND 4.0 license stated in each SVG file are preserved.
+
+### License
+
+The source code is under the [MIT License](./LICENSE) (Identity Art. 12-1). The logotype and symbol mark in `wwwroot/assets/` are not covered by MIT and are provided under CC BY-ND 4.0. All rights in the name and logos are reserved, and they may not be used in a way that implies official origin, endorsement, or affiliation (Art. 12-2).
 
 ---
 

@@ -32,8 +32,8 @@
       previewHeading: "プレビュー", previewLabel: "Markdown の表示結果",
       dividerLabel: "編集画面とプレビューの幅",
       dividerTitle: "ドラッグまたは矢印キーで左右の幅を調整します",
-      fullscreenEditor: "編集画面を全画面表示", fullscreenPreview: "プレビューを全画面表示",
-      fullscreenExit: "全画面表示を終了", saved: "保存済み", unsaved: "未保存の変更",
+      fullscreenEditor: "編集画面をウィンドウ全体に表示", fullscreenPreview: "プレビューをウィンドウ全体に表示",
+      fullscreenExit: "元の表示に戻す", saved: "保存済み", unsaved: "未保存の変更",
       pdfStarting: "PDF出力を開始しています",
       ratio: (e, p) => `編集画面 ${e}%、プレビュー ${p}%`
     },
@@ -46,8 +46,8 @@
       previewHeading: "Preview", previewLabel: "Rendered Markdown",
       dividerLabel: "Width of the editor and preview",
       dividerTitle: "Drag or use the arrow keys to resize",
-      fullscreenEditor: "Full screen editor", fullscreenPreview: "Full screen preview",
-      fullscreenExit: "Exit full screen", saved: "Saved", unsaved: "Unsaved changes",
+      fullscreenEditor: "Fill window with editor", fullscreenPreview: "Fill window with preview",
+      fullscreenExit: "Restore layout", saved: "Saved", unsaved: "Unsaved changes",
       pdfStarting: "Starting PDF export",
       ratio: (e, p) => `Editor ${e}%, preview ${p}%`
     }
@@ -170,10 +170,7 @@
   fullscreenButtons.forEach((button) => {
     button.addEventListener("click", () => {
       const mode = button.dataset.fullscreenMode;
-      post({
-        type: "setDisplayMode",
-        mode: displayMode === mode ? "normal" : mode
-      });
+      setDisplayMode(displayMode === mode ? "normal" : mode);
     });
   });
 
@@ -247,12 +244,16 @@
 
   document.addEventListener("keydown", (event) => {
     if (!event.ctrlKey && !event.metaKey) {
-      if (event.key === "F11" && displayMode !== "normal") {
+      if (event.key === "F11") {
         event.preventDefault();
-        post({ type: "exitDisplayMode" });
-      } else if (event.key === "Escape" && displayMode !== "normal") {
+        post({ type: "toggleWindowFullscreen" });
+      } else if (event.key === "Escape") {
         event.preventDefault();
-        post({ type: "exitDisplayMode" });
+        if (displayMode !== "normal") {
+          setDisplayMode("normal");
+        } else {
+          post({ type: "exitWindowFullscreen" });
+        }
       }
       return;
     }
@@ -324,8 +325,6 @@
       editor.value = message.text;
     } else if (message.type === "preview") {
       preview.innerHTML = message.html;
-    } else if (message.type === "displayMode") {
-      setDisplayMode(message.mode);
     } else if (message.type === "pdfExportStatus") {
       saveState.textContent = message.message || statusText();
     }

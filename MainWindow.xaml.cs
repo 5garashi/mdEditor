@@ -24,13 +24,6 @@ namespace MdEditor;
 
 public partial class MainWindow : Window
 {
-    private enum DisplayMode
-    {
-        Normal,
-        EditorFullscreen,
-        Preview
-    }
-
     private readonly string? _initialPath;
     private readonly MarkdownPipeline _markdownPipeline =
         new MarkdownPipelineBuilder().UseAdvancedExtensions().DisableHtml().Build();
@@ -46,7 +39,7 @@ public partial class MainWindow : Window
     private bool _allowClose;
     private bool _closePromptActive;
     private bool _pdfExportActive;
-    private DisplayMode _displayMode;
+    private bool _windowFullscreen;
     private WindowState _windowedState;
     private WindowStyle _windowedStyle;
     private ResizeMode _windowedResizeMode;
@@ -161,16 +154,11 @@ public partial class MainWindow : Window
             case "externalLink":
                 OpenExternalLink(root.GetProperty("url").GetString());
                 break;
-            case "setDisplayMode":
-                SetDisplayMode(root.GetProperty("mode").GetString() switch
-                {
-                    "editor" => DisplayMode.EditorFullscreen,
-                    "preview" => DisplayMode.Preview,
-                    _ => DisplayMode.Normal
-                });
+            case "toggleWindowFullscreen":
+                SetWindowFullscreen(!_windowFullscreen);
                 break;
-            case "exitDisplayMode":
-                SetDisplayMode(DisplayMode.Normal);
+            case "exitWindowFullscreen":
+                SetWindowFullscreen(false);
                 break;
             case "exportPdf":
                 await ExportPdfAsync();
@@ -497,15 +485,13 @@ public partial class MainWindow : Window
         }
     }
 
-    private void SetDisplayMode(DisplayMode mode)
+    private void SetWindowFullscreen(bool isFullscreen)
     {
-        if (mode == _displayMode)
+        var wasFullscreen = _windowFullscreen;
+        if (wasFullscreen == isFullscreen)
         {
             return;
         }
-
-        var wasFullscreen = _displayMode != DisplayMode.Normal;
-        var isFullscreen = mode != DisplayMode.Normal;
 
         if (!wasFullscreen && isFullscreen)
         {
@@ -534,17 +520,7 @@ public partial class MainWindow : Window
             WindowState = _windowedState;
         }
 
-        _displayMode = mode;
-        SendToPage(new
-        {
-            type = "displayMode",
-            mode = mode switch
-            {
-                DisplayMode.EditorFullscreen => "editor",
-                DisplayMode.Preview => "preview",
-                _ => "normal"
-            }
-        });
+        _windowFullscreen = isFullscreen;
     }
 
     private async Task<bool> ConfirmSaveChangesAsync()
