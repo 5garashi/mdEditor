@@ -440,6 +440,46 @@ body.dragging {
   border-top: 2px solid var(--line);
 }
 
+.preview-content .mermaid {
+  margin: 1em 0;
+  overflow-x: auto;
+  overflow-wrap: normal;
+  text-align: center;
+}
+
+.preview-content .mermaid svg {
+  height: auto;
+}
+
+/* Mermaid source shown as code until its first drawing is ready. */
+.preview-content .mermaid.diagram-pending {
+  padding: 12px;
+  border: 1px dashed var(--document-foreground);
+  border-radius: 6px;
+  font-family: Consolas, "Cascadia Mono", monospace;
+  font-size: 0.92em;
+  text-align: left;
+  white-space: pre;
+}
+
+.preview-content .mermaid.diagram-error {
+  text-align: left;
+}
+
+.preview-content .diagram-error-message {
+  margin: 0 0 6px;
+  padding: 6px 10px;
+  border-left: 4px solid var(--volt);
+  color: var(--volt-deep);
+  white-space: pre-wrap;
+}
+
+.preview-content .katex-display {
+  padding-block: 4px;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
 @media (max-width: 760px) {
   .toolbar {
     align-items: flex-start;
@@ -577,8 +617,15 @@ body.preview-focused .pane-heading {
   body.printing-preview .preview-content pre,
   body.printing-preview .preview-content blockquote,
   body.printing-preview .preview-content tr,
-  body.printing-preview .preview-content img {
+  body.printing-preview .preview-content img,
+  body.printing-preview .preview-content .mermaid,
+  body.printing-preview .preview-content .katex-display {
     break-inside: avoid;
+  }
+
+  body.printing-preview .preview-content .mermaid,
+  body.printing-preview .preview-content .katex-display {
+    overflow: visible;
   }
 }
 
@@ -590,5 +637,11 @@ body.preview-focused .pane-heading {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  /* Even short transitions make Mermaid measure SVG mid-transition and fail. */
+  svg,
+  svg * {
+    transition: none !important;
   }
 }

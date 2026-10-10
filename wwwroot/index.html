@@ -12,11 +12,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https:; style-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https:; style-src 'self' 'unsafe-inline'; script-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <meta name="theme-color" content="#FFE699">
   <title>mdEditor</title>
   <link rel="icon" href="assets/5garashi_mark_simple.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="lib/katex/katex.min.css">
   <link rel="stylesheet" href="styles.css">
+  <script src="lib/katex/katex.min.js" defer></script>
+  <script src="lib/mermaid/mermaid.min.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
