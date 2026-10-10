@@ -41,6 +41,7 @@
       findPrev: "前へ", findNext: "次へ", replaceOne: "置換", replaceAll: "すべて置換",
       matchCase: "大文字小文字を区別", close: "閉じる",
       notFound: "見つかりません", replacedCount: (n) => `${n} 件を置換しました`,
+      diagramError: "図を表示できません", diagramUnavailable: "図の表示機能を読み込めませんでした",
       ratio: (e, p) => `編集画面 ${e}%、プレビュー ${p}%`
     },
     en: {
@@ -61,6 +62,7 @@
       findPrev: "Previous", findNext: "Next", replaceOne: "Replace", replaceAll: "Replace all",
       matchCase: "Match case", close: "Close",
       notFound: "Not found", replacedCount: (n) => `Replaced ${n}`,
+      diagramError: "Unable to render the diagram", diagramUnavailable: "The diagram renderer could not be loaded",
       ratio: (e, p) => `Editor ${e}%, preview ${p}%`
     }
   };
@@ -445,6 +447,127 @@
     post({ type: "externalLink", url: url.href });
   });
 
+  // Rendered SVG keyed by Mermaid source, so unchanged diagrams are restored
+  // synchronously on every preview update without flicker or scroll jumps.
+  const diagramCache = new Map();
+  let diagramCounter = 0;
+  let renderGeneration = 0;
+
+  window.mermaid?.initialize({
+    startOnLoad: false,
+    securityLevel: "strict",
+    theme: "default",
+    fontFamily: "\"Yu Gothic UI\", \"Meiryo\", sans-serif"
+  });
+
+  const renderMath = () => {
+    if (!window.katex) return;
+    for (const element of preview.querySelectorAll(".math")) {
+      const source = element.textContent.trim()
+        .replace(/^\\[([]/, "")
+        .replace(/\\[)\]]$/, "")
+        .trim();
+      try {
+        window.katex.render(source, element, {
+          displayMode: element.tagName === "DIV",
+          throwOnError: false
+        });
+      } catch {
+        // Leave the TeX source visible when KaTeX cannot render it.
+      }
+    }
+  };
+
+  // Markdig marks nomnoml blocks as diagrams, but no renderer is bundled for them.
+  const showUnsupportedDiagrams = () => {
+    for (const element of preview.querySelectorAll(".nomnoml")) {
+      const code = document.createElement("code");
+      code.textContent = element.textContent;
+      const pre = document.createElement("pre");
+      pre.appendChild(code);
+      element.replaceWith(pre);
+    }
+  };
+
+  const showDiagramError = (element, source, detail) => {
+    const message = document.createElement("p");
+    message.className = "diagram-error-message";
+    message.textContent = detail ? `${t("diagramError")}: ${detail}` : t("diagramError");
+    const code = document.createElement("code");
+    code.textContent = source;
+    const pre = document.createElement("pre");
+    pre.appendChild(code);
+    element.classList.remove("diagram-pending");
+    element.classList.add("diagram-error");
+    element.replaceChildren(message, pre);
+  };
+
+  const renderDiagrams = async (generation, previousSvgs) => {
+    // Markdig emits <pre class="mermaid">; a div keeps code-block styles out of the drawing.
+    const blocks = Array.from(preview.querySelectorAll(".mermaid"), (block) => {
+      const element = document.createElement("div");
+      element.className = "mermaid";
+      element.textContent = block.textContent;
+      block.replaceWith(element);
+      return { element, source: element.textContent };
+    });
+    const sources = new Set(blocks.map((block) => block.source));
+    for (const source of diagramCache.keys()) {
+      if (!sources.has(source)) diagramCache.delete(source);
+    }
+
+    const pending = [];
+    blocks.forEach((block, index) => {
+      const cached = diagramCache.get(block.source);
+      if (cached) {
+        block.element.innerHTML = cached;
+        block.element.classList.add("diagram-rendered");
+      } else if (previousSvgs[index]) {
+        // Keep the last drawing at this position while the edited diagram renders.
+        block.element.innerHTML = previousSvgs[index];
+        block.element.classList.add("diagram-rendered");
+        pending.push(block);
+      } else {
+        block.element.classList.add("diagram-pending");
+        pending.push(block);
+      }
+    });
+
+    for (const { element, source } of pending) {
+      if (generation !== renderGeneration) return;
+      if (!window.mermaid) {
+        showDiagramError(element, source, t("diagramUnavailable"));
+        continue;
+      }
+
+      const id = `mermaid-diagram-${++diagramCounter}`;
+      try {
+        const { svg } = await window.mermaid.render(id, source);
+        diagramCache.set(source, svg);
+        if (generation !== renderGeneration) return;
+        element.innerHTML = svg;
+        element.classList.remove("diagram-pending");
+        element.classList.add("diagram-rendered");
+      } catch (error) {
+        document.getElementById(`d${id}`)?.remove();
+        if (generation !== renderGeneration) return;
+        showDiagramError(element, source, error?.message ?? String(error));
+      }
+    }
+  };
+
+  const renderPreview = async (html) => {
+    const generation = ++renderGeneration;
+    const previousSvgs = Array.from(
+      preview.querySelectorAll(".mermaid"),
+      (element) => (element.classList.contains("diagram-rendered") ? element.innerHTML : null)
+    );
+    preview.innerHTML = html;
+    showUnsupportedDiagrams();
+    renderMath();
+    await renderDiagrams(generation, previousSvgs);
+  };
+
   const hasFiles = (event) =>
     Array.from(event.dataTransfer?.types ?? []).includes("Files");
   window.addEventListener("dragover", (event) => {
@@ -481,7 +604,9 @@
     } else if (message.type === "setText") {
       editor.value = message.text;
     } else if (message.type === "preview") {
-      preview.innerHTML = message.html;
+      renderPreview(message.html).finally(() => {
+        if (message.notifyRendered) post({ type: "previewRendered" });
+      });
     } else if (message.type === "pdfExportStatus") {
       saveState.textContent = message.message || statusText();
     }

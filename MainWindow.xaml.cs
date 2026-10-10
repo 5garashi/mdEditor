@@ -40,6 +40,7 @@ public partial class MainWindow : Window
     private bool _closePromptActive;
     private bool _pdfExportActive;
     private bool _windowFullscreen;
+    private TaskCompletionSource? _previewRendered;
     private WindowState _windowedState;
     private WindowStyle _windowedStyle;
     private ResizeMode _windowedResizeMode;
@@ -58,9 +59,9 @@ public partial class MainWindow : Window
         _htmlSanitizer.AllowedTags.Clear();
         _htmlSanitizer.AllowedTags.UnionWith(
         [
-            "a", "blockquote", "br", "code", "del", "em", "h1", "h2", "h3", "h4", "h5", "h6",
-            "hr", "img", "li", "ol", "p", "pre", "strong", "table", "tbody", "td", "th",
-            "thead", "tr", "ul"
+            "a", "blockquote", "br", "code", "del", "div", "em", "h1", "h2", "h3", "h4", "h5",
+            "h6", "hr", "img", "li", "ol", "p", "pre", "span", "strong", "table", "tbody", "td",
+            "th", "thead", "tr", "ul"
         ]);
         _htmlSanitizer.AllowedAttributes.Clear();
         _htmlSanitizer.AllowedAttributes.UnionWith(
@@ -159,6 +160,9 @@ public partial class MainWindow : Window
                 break;
             case "exitWindowFullscreen":
                 SetWindowFullscreen(false);
+                break;
+            case "previewRendered":
+                _previewRendered?.TrySetResult();
                 break;
             case "exportPdf":
                 await ExportPdfAsync();
@@ -419,14 +423,16 @@ public partial class MainWindow : Window
             settings.ShouldPrintBackgrounds = true;
             settings.ShouldPrintHeaderAndFooter = false;
 
-            var html = _htmlSanitizer.Sanitize(Markdown.ToHtml(_text, _markdownPipeline));
-            var updatePreviewScript =
-                $"document.getElementById('preview').innerHTML = {JsonSerializer.Serialize(html)};" +
-                "document.body.classList.add('printing-preview');";
             bool saved;
             try
             {
-                await EditorWebView.CoreWebView2.ExecuteScriptAsync(updatePreviewScript);
+                // Diagrams and math are drawn by the page, so wait until it reports the preview is complete.
+                _previewRendered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+                SendPreview(notifyRendered: true);
+                await Task.WhenAny(_previewRendered.Task, Task.Delay(TimeSpan.FromSeconds(15)));
+                _previewRendered = null;
+                await EditorWebView.CoreWebView2.ExecuteScriptAsync(
+                    "document.body.classList.add('printing-preview')");
                 saved = await EditorWebView.CoreWebView2.PrintToPdfAsync(
                     dialog.FileName,
                     settings);
@@ -583,7 +589,7 @@ public partial class MainWindow : Window
         });
     }
 
-    private void SendPreview()
+    private void SendPreview(bool notifyRendered = false)
     {
         if (!_pageReady)
         {
@@ -591,7 +597,7 @@ public partial class MainWindow : Window
         }
 
         var html = Markdown.ToHtml(_text, _markdownPipeline);
-        SendToPage(new { type = "preview", html = _htmlSanitizer.Sanitize(html) });
+        SendToPage(new { type = "preview", html = _htmlSanitizer.Sanitize(html), notifyRendered });
     }
 
     private void SendToPage(object message)
