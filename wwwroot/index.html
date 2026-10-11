@@ -53,6 +53,8 @@
       <button id="paper-button" type="button">用紙: 自動（A4）</button>
       <button id="theme-button" type="button">表示: 自動</button>
       <button id="settings-button" type="button" data-i18n="settings" aria-haspopup="dialog">設定</button>
+      <button id="sample-button" type="button" data-i18n="sample" aria-haspopup="dialog">サンプル</button>
+      <button id="about-button" type="button" data-i18n="about" aria-haspopup="dialog">このアプリについて</button>
       <button id="language-button" type="button" lang="en" data-i18n="languageToggle" data-i18n-attr="aria-label:languageLabel">English</button>
     </div>
   </section>
@@ -251,6 +253,28 @@
         <tbody id="help-rows"></tbody>
       </table>
     </div>
+  </dialog>
+  <dialog id="sample-dialog" class="help-dialog" aria-labelledby="sample-heading">
+    <div class="help-header">
+      <h2 id="sample-heading" data-i18n="sampleHeading">サンプルを開く</h2>
+      <button id="sample-close" type="button" data-i18n="close">閉じる</button>
+    </div>
+    <p class="help-intro" data-i18n="sampleIntro"></p>
+    <ul id="sample-list" class="sample-list"></ul>
+  </dialog>
+  <dialog id="about-dialog" class="help-dialog" aria-labelledby="about-heading">
+    <div class="help-header">
+      <h2 id="about-heading" data-i18n="aboutHeading">このアプリについて</h2>
+      <button id="about-close" type="button" data-i18n="close">閉じる</button>
+    </div>
+    <p class="help-intro" data-i18n="aboutIntro"></p>
+    <ul class="about-links">
+      <li><a href="https://5garashi.com/" data-i18n="aboutCompany">5garashi.com Design Office の紹介</a></li>
+      <li><a href="https://github.com/5garashi" data-i18n="aboutWorks">作品・ほかのアプリ</a></li>
+      <li><a href="https://github.com/5garashi/mdEditor/issues" data-i18n="aboutSupport">サポート・お問い合わせ</a></li>
+      <li><a href="https://github.com/5garashi/mdEditor/blob/main/PRIVACY.md" data-i18n="aboutPrivacy">プライバシーポリシー</a></li>
+    </ul>
+    <p class="help-intro" data-i18n="aboutNote"></p>
   </dialog>
 </body>
 </html>

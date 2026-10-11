@@ -44,8 +44,12 @@ Windows は既定アプリをユーザーの操作で設定するため、セッ
 
 Microsoft Edge WebView2 Runtime が必要です。Microsoft Edge がインストールされている環境では、通常このランタイムも利用できます。
 
+**Microsoft Store 用のパッケージ**: `setup.cmd` は開発用の手順です。Store 向けには、Windows SDK を入れた PC で `store\build-msix.ps1`（Partner Center の「製品の ID」の値を `-IdentityName` と `-Publisher` に指定）を実行すると、署名前の MSIX が `artifacts` に作られます。署名は Store が行います。
+
 ## 操作
 
+- **サンプル**: 「図と数式」「基本の書き方」のサンプルを、選んだときだけ編集欄に入れます。
+- **このアプリについて**: 会社紹介・作品・サポート・プライバシーポリシーへのリンクを表示します。リンクは選んだときだけブラウザーで開きます。
 - **開く**: Markdown ファイルを選択します。
 - **ドラッグ&ドロップ**: `.md` または `.markdown` ファイルをアプリ画面へ1つドロップして開きます。未保存の変更がある場合は、開く前に確認します。
 - **保存**: 現在のファイルに上書きします。新規文書は保存先を選びます。
@@ -229,8 +233,12 @@ Windows requires the user to set default apps, so choose `mdEditor` for `.md` in
 
 Microsoft Edge WebView2 Runtime is required. It is normally available wherever Microsoft Edge is installed.
 
+**Package for the Microsoft Store**: `setup.cmd` is the development procedure. For the Store, run `store\build-msix.ps1` on a PC with the Windows SDK, passing the values from Partner Center's Product identity as `-IdentityName` and `-Publisher`. It creates an unsigned MSIX in `artifacts`; the Store signs it.
+
 ### Usage
 
+- **Samples**: puts the "Diagrams and math" or "Basic writing" sample into the editor, only when you choose it.
+- **About**: shows links to the company, works, support, and the privacy policy. Links open in your browser only when you choose them.
 - **Open**: choose a Markdown file.
 - **Drag and drop**: drop one `.md` or `.markdown` file onto the window to open it. If there are unsaved changes, you are asked before it opens.
 - **Save**: overwrite the current file. A new document asks where to save.
