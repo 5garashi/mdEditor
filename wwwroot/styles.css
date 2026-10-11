@@ -25,6 +25,10 @@
   --document-foreground: #1A1A1A;
   /* Neutral gray for heading underlines and horizontal rules in documents and PDFs. */
   --document-rule: #D0D0D0;
+  /* Selection, current-line highlight, and read-aloud frame (Identity 4-3, 7-1 補2). */
+  --document-selection: #C7D0C1;
+  --document-current-line: #F0F0F0;
+  --document-reading: #B92613;
   /* Identity Art. 6: on Windows, Yu Gothic then Meiryo. */
   font-family: "Yu Gothic UI", "Meiryo", sans-serif;
   color: var(--ink);
@@ -56,6 +60,9 @@
     --document-background: #121314;
     --document-foreground: #BFBFBF;
     --document-rule: #2B2B2B;
+    --document-selection: #494740;
+    --document-current-line: #202122;
+    --document-reading: #F07B5F;
   }
 }
 
@@ -739,13 +746,14 @@ body.dragging {
 
 /* Optional aids from Settings: the current line and a thicker drawn cursor. */
 #editor .cm-activeLine {
-  background: rgb(0 0 0 / 6%);
+  background: var(--document-current-line);
 }
 
 #editor .cm-selectionBackground,
 #editor .cm-focused .cm-selectionBackground,
-#editor .cm-content ::selection {
-  background: rgb(56 87 35 / 28%);
+#editor .cm-content ::selection,
+.preview-content ::selection {
+  background: var(--document-selection);
 }
 
 #editor .cm-content {
@@ -787,7 +795,7 @@ body.dragging {
 
 /* The block being read aloud is marked on screen too (Identity 7-4). */
 .preview-content .reading {
-  outline: 3px solid var(--volt);
+  outline: 3px solid var(--document-reading);
   outline-offset: 3px;
   border-radius: 2px;
 }
@@ -1224,22 +1232,10 @@ body.preview-focused .pane-heading {
   font-size: 13px;
 }
 
-@media screen and (prefers-color-scheme: dark) {
-  #editor .cm-activeLine {
-    background: rgb(255 255 255 / 6%);
-  }
-
-  #editor .cm-selectionBackground,
-  #editor .cm-focused .cm-selectionBackground,
-  #editor .cm-content ::selection {
-    background: rgb(201 193 165 / 30%);
-  }
-}
-
 /*
- * Windows contrast themes (forced colors): the system colors replace ours, so
- * keep every control outlined, focus rings in the highlight color, and
- * diagrams on their own white ground so their colors stay readable.
+ * Windows contrast themes (forced colors, Identity 7-8): the system colors
+ * replace ours, so keep every control outlined, focus rings and selections in
+ * the highlight color, and the marks and diagrams in their own colors.
  */
 @media (forced-colors: active) {
   button,
@@ -1271,6 +1267,16 @@ body.preview-focused .pane-heading {
     border: 2px solid CanvasText;
   }
 
+  #editor .cm-selectionBackground,
+  #editor .cm-focused .cm-selectionBackground {
+    background: Highlight;
+  }
+
+  .brand-logo,
+  .brand-mark {
+    forced-color-adjust: none;
+  }
+
   .preview-content .mermaid svg {
     forced-color-adjust: none;
     background: #FFFFFF;
@@ -1281,15 +1287,17 @@ body.preview-focused .pane-heading {
   }
 }
 
+/* Identity 7-5 and 9-4: stop motion outright, not with tiny durations, which
+   still animate every property (Mermaid then measures SVG mid-transition). */
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   *,
   *::before,
   *::after {
-    scroll-behavior: auto !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    /* No transitions at all: a short duration would still animate every
-       property, and Mermaid measures SVG mid-transition and fails. */
+    animation: none !important;
     transition: none !important;
   }
 }

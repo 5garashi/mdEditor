@@ -163,13 +163,13 @@ public partial class MainWindow : Window
         }
         catch (WebView2RuntimeNotFoundException ex)
         {
-            ShowStartupError(Strings.Tr("Microsoft Edge WebView2 Runtime が必要です。"), ex);
+            ShowStartupError(Strings.Tr("Microsoft Edge WebView2 Runtime が必要です。Microsoft のサイトから「WebView2 Runtime」をインストールしてから、もう一度起動してください。"), ex);
             return;
         }
         catch (Exception ex) when (ex is COMException or IOException or UnauthorizedAccessException
                                        or InvalidOperationException or ArgumentException)
         {
-            ShowStartupError(Strings.Tr("画面の表示機能（WebView2）を初期化できませんでした。"), ex);
+            ShowStartupError(Strings.Tr("画面の表示機能（WebView2）を初期化できませんでした。PC を再起動してから、もう一度起動してください。"), ex);
             return;
         }
 
@@ -473,7 +473,7 @@ public partial class MainWindow : Window
     private static void ShowLinkError(Exception ex)
     {
         MessageBox.Show(
-            $"{Strings.Tr("リンクを開けませんでした。")}\n\n{ex.Message}",
+            $"{Strings.Tr("リンクを開けませんでした。リンク先の場所を確かめて、ブラウザーやエクスプローラーから開いてください。")}\n\n{ex.Message}",
             "mdEditor",
             MessageBoxButton.OK,
             MessageBoxImage.Error);
@@ -482,7 +482,7 @@ public partial class MainWindow : Window
     private static void ShowLinkNotFound(string path)
     {
         MessageBox.Show(
-            string.Format(Strings.Tr("リンク先のファイルが見つかりません。\n\n{0}"), path),
+            string.Format(Strings.Tr("リンク先のファイルが見つかりません。文書の中のリンクの書き方と、ファイルの場所を確かめてください。\n\n{0}"), path),
             "mdEditor",
             MessageBoxButton.OK,
             MessageBoxImage.Warning);
@@ -572,31 +572,31 @@ public partial class MainWindow : Window
         }
         catch (FileNotFoundException ex)
         {
-            ShowFileError("ファイルが見つかりません", ex);
+            ShowFileError("ファイルが見つかりません。移動・名前の変更・削除がされていないか確かめて、もう一度開いてください", ex);
         }
         catch (DirectoryNotFoundException ex)
         {
-            ShowFileError("フォルダーが見つかりません", ex);
+            ShowFileError("フォルダーが見つかりません。フォルダーがあるか確かめて、別の場所を選んでください", ex);
         }
         catch (UnauthorizedAccessException ex)
         {
-            ShowFileError("ファイルを読み取れません", ex);
+            ShowFileError("ファイルを読み取れません。ほかのアプリで開いている場合は閉じてから、もう一度開いてください", ex);
         }
         catch (IOException ex)
         {
-            ShowFileError("ファイルを読み取れません", ex);
+            ShowFileError("ファイルを読み取れません。ほかのアプリで開いている場合は閉じてから、もう一度開いてください", ex);
         }
         catch (ArgumentException ex)
         {
-            ShowFileError("ファイルのパスを確認してください", ex);
+            ShowFileError("ファイルの場所の指定が正しくありません。場所と名前を確かめて、もう一度選んでください", ex);
         }
         catch (NotSupportedException ex)
         {
-            ShowFileError("このファイルのパス形式には対応していません", ex);
+            ShowFileError("この形式のファイルの場所には対応していません。PC のドライブか共有フォルダーにあるファイルを選んでください", ex);
         }
         catch (SecurityException ex)
         {
-            ShowFileError("ファイルへのアクセスが許可されていません", ex);
+            ShowFileError("ファイルへのアクセスが許可されていません。読み書きできる場所（ドキュメントなど）を選ぶか、ファイルの権限を確かめてください", ex);
         }
     }
 
@@ -624,23 +624,23 @@ public partial class MainWindow : Window
         }
         catch (UnauthorizedAccessException ex)
         {
-            ShowFileError("ファイルを保存できません", ex);
+            ShowFileError("ファイルを保存できません。ほかのアプリで開いている場合は閉じるか、「名前を付けて保存」で別の場所に保存してください", ex);
         }
         catch (IOException ex)
         {
-            ShowFileError("ファイルを保存できません", ex);
+            ShowFileError("ファイルを保存できません。ほかのアプリで開いている場合は閉じるか、「名前を付けて保存」で別の場所に保存してください", ex);
         }
         catch (ArgumentException ex)
         {
-            ShowFileError("ファイルのパスを確認してください", ex);
+            ShowFileError("ファイルの場所の指定が正しくありません。場所と名前を確かめて、もう一度選んでください", ex);
         }
         catch (NotSupportedException ex)
         {
-            ShowFileError("このファイルのパス形式には対応していません", ex);
+            ShowFileError("この形式のファイルの場所には対応していません。PC のドライブか共有フォルダーにあるファイルを選んでください", ex);
         }
         catch (SecurityException ex)
         {
-            ShowFileError("ファイルへのアクセスが許可されていません", ex);
+            ShowFileError("ファイルへのアクセスが許可されていません。読み書きできる場所（ドキュメントなど）を選ぶか、ファイルの権限を確かめてください", ex);
         }
 
         return false;
@@ -675,23 +675,23 @@ public partial class MainWindow : Window
         }
         catch (UnauthorizedAccessException ex)
         {
-            ShowFileError("ファイルを保存できません", ex);
+            ShowFileError("ファイルを保存できません。ほかのアプリで開いている場合は閉じるか、「名前を付けて保存」で別の場所に保存してください", ex);
         }
         catch (IOException ex)
         {
-            ShowFileError("ファイルを保存できません", ex);
+            ShowFileError("ファイルを保存できません。ほかのアプリで開いている場合は閉じるか、「名前を付けて保存」で別の場所に保存してください", ex);
         }
         catch (ArgumentException ex)
         {
-            ShowFileError("ファイルのパスを確認してください", ex);
+            ShowFileError("ファイルの場所の指定が正しくありません。場所と名前を確かめて、もう一度選んでください", ex);
         }
         catch (NotSupportedException ex)
         {
-            ShowFileError("このファイルのパス形式には対応していません", ex);
+            ShowFileError("この形式のファイルの場所には対応していません。PC のドライブか共有フォルダーにあるファイルを選んでください", ex);
         }
         catch (SecurityException ex)
         {
-            ShowFileError("ファイルへのアクセスが許可されていません", ex);
+            ShowFileError("ファイルへのアクセスが許可されていません。読み書きできる場所（ドキュメントなど）を選ぶか、ファイルの権限を確かめてください", ex);
         }
 
         return false;
@@ -994,7 +994,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or SecurityException)
         {
-            ShowFileError("ファイルを読み取れません", ex);
+            ShowFileError("ファイルを読み取れません。ほかのアプリで開いている場合は閉じてから、もう一度開いてください", ex);
         }
     }
 
@@ -1264,27 +1264,27 @@ public partial class MainWindow : Window
         }
         catch (UnauthorizedAccessException ex)
         {
-            ShowFileError("PDFを書き込めません", ex);
+            ShowFileError("PDFを書き込めません。同じ名前の PDF をほかのアプリで開いている場合は閉じるか、別の名前で保存してください", ex);
         }
         catch (IOException ex)
         {
-            ShowFileError("PDFを書き込めません", ex);
+            ShowFileError("PDFを書き込めません。同じ名前の PDF をほかのアプリで開いている場合は閉じるか、別の名前で保存してください", ex);
         }
         catch (ArgumentException ex)
         {
-            ShowFileError("PDFの保存先を確認してください", ex);
+            ShowFileError("PDFの保存先の指定が正しくありません。保存先と名前を確かめて、もう一度選んでください", ex);
         }
         catch (COMException ex)
         {
-            ShowFileError("PDFを書き出せません", ex);
+            ShowFileError("PDFを書き出せません。少し待ってから、もう一度お試しください", ex);
         }
         catch (InvalidOperationException ex)
         {
-            ShowFileError("PDFの書き出しを開始できません", ex);
+            ShowFileError("PDFの書き出しを開始できません。mdEditor を再起動してから、もう一度お試しください", ex);
         }
         catch (NotSupportedException ex)
         {
-            ShowFileError("この環境ではPDFを書き出せません", ex);
+            ShowFileError("この環境ではPDFを書き出せません。WebView2 Runtime を最新にしてから、もう一度お試しください", ex);
         }
         finally
         {
@@ -1601,7 +1601,7 @@ public partial class MainWindow : Window
         catch (Win32Exception ex)
         {
             MessageBox.Show(
-                $"{Strings.Tr("リンクを開けませんでした。")}\n\n{ex.Message}",
+                $"{Strings.Tr("リンクを開けませんでした。リンク先の場所を確かめて、ブラウザーやエクスプローラーから開いてください。")}\n\n{ex.Message}",
                 "mdEditor",
                 MessageBoxButton.OK,
                 MessageBoxImage.Error);
@@ -1609,7 +1609,7 @@ public partial class MainWindow : Window
         catch (InvalidOperationException ex)
         {
             MessageBox.Show(
-                $"{Strings.Tr("リンクを開けませんでした。")}\n\n{ex.Message}",
+                $"{Strings.Tr("リンクを開けませんでした。リンク先の場所を確かめて、ブラウザーやエクスプローラーから開いてください。")}\n\n{ex.Message}",
                 "mdEditor",
                 MessageBoxButton.OK,
                 MessageBoxImage.Error);
