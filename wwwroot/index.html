@@ -21,6 +21,7 @@
   <link rel="stylesheet" href="styles.css">
   <script src="lib/katex/katex.min.js" defer></script>
   <script src="lib/mermaid/mermaid.min.js" defer></script>
+  <script src="lib/codemirror/codemirror.min.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
@@ -42,23 +43,32 @@
     <div class="document-status" aria-live="polite">
       <span id="document-name">新しい文書.md</span>
       <span id="save-state">保存済み</span>
-      <span class="drop-hint" data-i18n="dropHint">ここに .md ファイルをドロップして開く</span>
+      <button id="encoding-button" class="status-button" type="button" aria-haspopup="dialog">UTF-8</button>
     </div>
     <div class="actions">
-      <button id="open-button" type="button" data-i18n="open" data-i18n-attr="title:openTitle">開く</button>
-      <button id="save-button" class="primary" type="button" data-i18n="save" data-i18n-attr="title:saveTitle">保存</button>
+      <button id="open-button" type="button" data-i18n="open">開く</button>
+      <button id="save-button" class="primary" type="button" data-i18n="save">保存</button>
       <button id="save-as-button" type="button" data-i18n="saveAs">名前を付けて保存</button>
       <button id="pdf-button" type="button" data-i18n="pdf">PDFに保存</button>
+      <button id="paper-button" type="button">用紙: 自動（A4）</button>
       <button id="theme-button" type="button">表示: 自動</button>
+      <button id="settings-button" type="button" data-i18n="settings" aria-haspopup="dialog">設定</button>
       <button id="language-button" type="button" lang="en" data-i18n="languageToggle" data-i18n-attr="aria-label:languageLabel">English</button>
     </div>
   </section>
+  <div id="notice" class="notice" role="status" hidden>
+    <span class="notice-icon" aria-hidden="true">!</span>
+    <span id="notice-text" class="notice-text"></span>
+    <button id="notice-encoding" type="button" data-i18n="noticeChoose">文字コードを選ぶ</button>
+    <button id="notice-close" type="button" data-i18n="close">閉じる</button>
+  </div>
   <main class="workspace">
     <section class="pane editor-pane" aria-labelledby="editor-heading">
       <div class="pane-heading">
         <h2 id="editor-heading" data-i18n="editorHeading">Markdown を編集</h2>
-        <button id="replace-button" type="button" data-i18n="findReplace" data-i18n-attr="title:findReplaceTitle">検索・置換</button>
-        <button id="help-button" type="button" data-i18n="help" data-i18n-attr="title:helpTitle" aria-haspopup="dialog">書き方</button>
+        <button id="replace-button" type="button" data-i18n="findReplace">検索・置換</button>
+        <button id="help-button" type="button" data-i18n="help" aria-haspopup="dialog">書き方</button>
+        <button id="shortcuts-button" type="button" data-i18n="shortcuts" aria-haspopup="dialog">キー操作</button>
         <button class="pane-fullscreen-button" type="button" data-fullscreen-mode="editor" aria-pressed="false">編集画面をウィンドウ全体に表示</button>
       </div>
       <div id="find-bar" class="find-bar" role="search" hidden>
@@ -78,7 +88,8 @@
           <span id="find-status" class="find-status" aria-live="polite"></span>
         </div>
       </div>
-      <textarea id="editor" data-i18n-attr="aria-label:editorLabel" aria-label="Markdown テキスト" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"></textarea>
+      <!-- CodeMirror 6 mounts here (app.js); its content element carries the label. -->
+      <div id="editor" class="editor-host"></div>
     </section>
     <div id="pane-divider"
          class="pane-divider"
@@ -95,14 +106,132 @@
     <section class="pane preview-pane" aria-labelledby="preview-heading">
       <div class="pane-heading">
         <h2 id="preview-heading" data-i18n="previewHeading">プレビュー</h2>
+        <!-- Read-aloud controls appear only when read-aloud is turned on in Settings. -->
+        <div id="reader-controls" class="reader-controls" hidden>
+          <button id="reader-play" type="button" data-i18n="readerPlay">読み上げ</button>
+          <button id="reader-stop" type="button" data-i18n="readerStop" disabled>停止</button>
+        </div>
         <button class="pane-fullscreen-button" type="button" data-fullscreen-mode="preview" aria-pressed="false">プレビューをウィンドウ全体に表示</button>
       </div>
+      <!-- tabindex lets keyboard users focus and scroll a long preview (Identity 7-3 (2)). -->
       <article id="preview"
                class="preview-content"
+               tabindex="0"
                data-i18n-attr="aria-label:previewLabel"
                aria-label="Markdown の表示結果"></article>
     </section>
   </main>
+  <dialog id="encoding-dialog" class="help-dialog encoding-dialog" aria-labelledby="encoding-heading">
+    <div class="help-header">
+      <h2 id="encoding-heading" data-i18n="encodingHeading">文字コード</h2>
+      <button id="encoding-close" type="button" data-i18n="close">閉じる</button>
+    </div>
+    <p id="encoding-current" class="help-intro"></p>
+    <fieldset class="encoding-options">
+      <legend data-i18n="encodingLegend">文字コードを選ぶ</legend>
+      <div id="encoding-list"></div>
+    </fieldset>
+    <div class="encoding-actions">
+      <button id="encoding-reopen" type="button" data-i18n="encodingReopen">この文字コードで開き直す</button>
+      <button id="encoding-save" type="button" data-i18n="encodingSave">次の保存からこの文字コードにする</button>
+    </div>
+    <p class="help-intro" data-i18n="encodingHelp"></p>
+  </dialog>
+  <dialog id="settings-dialog" class="help-dialog settings-dialog" aria-labelledby="settings-heading">
+    <div class="help-header">
+      <h2 id="settings-heading" data-i18n="settingsHeading">設定</h2>
+      <button id="settings-close" type="button" data-i18n="close">閉じる</button>
+    </div>
+    <p class="help-intro" data-i18n="settingsIntro"></p>
+    <fieldset class="settings-group">
+      <legend data-i18n="settingsText">文字（編集欄とプレビュー）</legend>
+      <label class="settings-row"><span data-i18n="settingsFont">書体</span>
+        <select id="setting-font">
+          <option value="standard" data-i18n="settingsFontStandard">標準</option>
+          <option value="ud" data-i18n="settingsFontUd">BIZ UD ゴシック（読みやすさ重視）</option>
+        </select></label>
+      <label class="settings-row"><span data-i18n="settingsSize">文字の大きさ</span>
+        <select id="setting-size">
+          <option value="1" data-i18n="settingsSize100">標準</option>
+          <option value="1.25" data-i18n="settingsSize125">大きい（125%）</option>
+          <option value="1.5" data-i18n="settingsSize150">とても大きい（150%）</option>
+          <option value="2" data-i18n="settingsSize200">最大（200%）</option>
+        </select></label>
+      <label class="settings-row"><span data-i18n="settingsSpacing">行間</span>
+        <select id="setting-spacing">
+          <option value="1.7" data-i18n="settingsSpacingNormal">標準</option>
+          <option value="2.1" data-i18n="settingsSpacingWide">広め</option>
+          <option value="2.5" data-i18n="settingsSpacingWider">とても広い</option>
+        </select></label>
+    </fieldset>
+    <fieldset class="settings-group">
+      <legend data-i18n="settingsZoom">画面全体の表示倍率</legend>
+      <div class="settings-row zoom-row">
+        <button id="zoom-out" type="button" data-i18n="zoomOut">縮小</button>
+        <output id="zoom-value" aria-live="polite">100%</output>
+        <button id="zoom-in" type="button" data-i18n="zoomIn">拡大</button>
+        <button id="zoom-reset" type="button" data-i18n="zoomReset">100% に戻す</button>
+      </div>
+      <p class="settings-note" data-i18n="zoomNote"></p>
+    </fieldset>
+    <fieldset class="settings-group">
+      <legend data-i18n="settingsEditor">編集欄</legend>
+      <label class="settings-check"><input id="setting-active-line" type="checkbox"> <span data-i18n="settingsActiveLine">いまの行を強調する</span></label>
+      <label class="settings-check"><input id="setting-thick-caret" type="checkbox"> <span data-i18n="settingsThickCaret">カーソルを太くする</span></label>
+    </fieldset>
+    <fieldset class="settings-group">
+      <legend data-i18n="settingsReader">読み上げ</legend>
+      <label class="settings-check"><input id="setting-reader" type="checkbox"> <span data-i18n="settingsReaderOn">読み上げ機能を使う（プレビューの見出しに操作ボタンを表示）</span></label>
+      <label class="settings-row"><span data-i18n="settingsReaderRate">速さ</span>
+        <select id="setting-reader-rate">
+          <option value="0.7" data-i18n="rateSlow">ゆっくり</option>
+          <option value="0.85" data-i18n="rateSlower">少しゆっくり</option>
+          <option value="1" data-i18n="rateNormal">ふつう</option>
+          <option value="1.25" data-i18n="rateFaster">少し速い</option>
+          <option value="1.5" data-i18n="rateFast">速い</option>
+        </select></label>
+      <label class="settings-row"><span data-i18n="settingsReaderPause">段落の間</span>
+        <select id="setting-reader-pause">
+          <option value="0" data-i18n="pauseNone">間を空けない</option>
+          <option value="0.5" data-i18n="pauseShort">0.5 秒</option>
+          <option value="1" data-i18n="pauseMedium">1 秒</option>
+          <option value="2" data-i18n="pauseLong">2 秒</option>
+        </select></label>
+      <p id="reader-voice-note" class="settings-note"></p>
+    </fieldset>
+    <fieldset class="settings-group">
+      <legend data-i18n="settingsBackup">自動バックアップ</legend>
+      <label class="settings-check"><input id="setting-backup" type="checkbox"> <span data-i18n="settingsBackupOn">作業中の文書を自動でバックアップし、異常終了したときに復元する</span></label>
+      <p class="settings-note" data-i18n="settingsBackupNote"></p>
+    </fieldset>
+    <div class="encoding-actions shortcut-actions">
+      <button id="settings-reset" type="button" data-i18n="settingsReset">表示の設定を初期設定に戻す</button>
+    </div>
+  </dialog>
+  <dialog id="shortcut-dialog" class="help-dialog" aria-labelledby="shortcut-heading">
+    <div class="help-header">
+      <h2 id="shortcut-heading" data-i18n="shortcutHeading">キーボードショートカット</h2>
+      <button id="shortcut-close" type="button" data-i18n="close">閉じる</button>
+    </div>
+    <p class="help-intro" data-i18n="shortcutIntro"></p>
+    <label class="shortcut-toggle"><input id="shortcut-enabled" type="checkbox"> <span data-i18n="shortcutEnabled">キーボードショートカットを使う</span></label>
+    <p id="shortcut-status" class="shortcut-status" role="status" aria-live="polite"></p>
+    <div class="help-table-wrap">
+      <table class="help-table shortcut-table">
+        <thead>
+          <tr>
+            <th scope="col" data-i18n="shortcutAction">操作</th>
+            <th scope="col" data-i18n="shortcutKeys">キー</th>
+            <th scope="col"><span class="visually-hidden" data-i18n="shortcutChange">変更</span></th>
+          </tr>
+        </thead>
+        <tbody id="shortcut-rows"></tbody>
+      </table>
+    </div>
+    <div class="encoding-actions shortcut-actions">
+      <button id="shortcut-reset" type="button" data-i18n="shortcutReset">初期設定に戻す</button>
+    </div>
+  </dialog>
   <dialog id="help-dialog" class="help-dialog" aria-labelledby="help-heading">
     <div class="help-header">
       <h2 id="help-heading" data-i18n="helpHeading">Markdown の簡単な書き方</h2>

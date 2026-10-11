@@ -21,6 +21,7 @@ public partial class App : Application
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         DispatcherUnhandledException += OnDispatcherUnhandledException;
         string? path = null;
+        string? anchor = null;
         for (var i = 0; i < e.Args.Length; i++)
         {
             var arg = e.Args[i];
@@ -32,6 +33,12 @@ public partial class App : Application
             else if (string.Equals(arg, "--lang", StringComparison.OrdinalIgnoreCase))
             {
                 value = i + 1 < e.Args.Length ? e.Args[++i] : null;
+            }
+            else if (string.Equals(arg, "--anchor", StringComparison.OrdinalIgnoreCase))
+            {
+                // Heading to show first, for a window opened from a link such as other.md#heading.
+                anchor = i + 1 < e.Args.Length ? e.Args[++i] : null;
+                continue;
             }
             else
             {
@@ -47,7 +54,7 @@ public partial class App : Application
             };
         }
 
-        MainWindow = new MainWindow(path);
+        MainWindow = new MainWindow(path, anchor);
         MainWindow.Show();
     }
 

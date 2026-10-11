@@ -26,8 +26,27 @@ The 5garashi.com logotype and symbol mark in `wwwroot/assets/` are not covered b
 | Microsoft.Web.WebView2 (SDK) | 1.0.4258.31 | BSD-3-Clause (Microsoft) | Copyright (C) Microsoft Corporation | https://www.nuget.org/packages/Microsoft.Web.WebView2 |
 | Mermaid | 11.17.2 | MIT | Copyright (c) 2014 - 2022 Knut Sveidqvist | https://github.com/mermaid-js/mermaid |
 | KaTeX (including fonts) | 0.18.9 | MIT | Copyright (c) 2013-2020 Khan Academy and other contributors | https://github.com/KaTeX/KaTeX |
+| CodeMirror 6 (view 6.43.12, state 6.7.6, commands 6.11.1) | 6 | MIT | Copyright (C) 2018-2021 by Marijn Haverbeke and others | https://codemirror.net/ |
 
 Microsoft Edge WebView2 Runtime is not distributed with mdEditor; it is provided by Windows or installed separately under Microsoft's terms. The .NET runtime's own third-party notices are at https://github.com/dotnet/runtime/blob/main/THIRD-PARTY-NOTICES.TXT.
+
+## Libraries bundled inside the CodeMirror build / CodeMirror に含まれるライブラリ
+
+`wwwroot/lib/codemirror/codemirror.min.js` is built from unmodified npm packages with `tools/codemirror` (esbuild). It contains:
+
+| Library | Version | License | Copyright |
+| :--- | :--- | :--- | :--- |
+| @codemirror/view | 6.43.12 | MIT | Copyright (C) 2018-2021 by Marijn Haverbeke and others |
+| @codemirror/state | 6.7.6 | MIT | Copyright (C) 2018-2021 by Marijn Haverbeke and others |
+| @codemirror/commands | 6.11.1 | MIT | Copyright (C) 2018-2021 by Marijn Haverbeke and others |
+| @codemirror/language | 6.13.1 | MIT | Copyright (C) 2018-2021 by Marijn Haverbeke and others |
+| @lezer/common | 1.5.3 | MIT | Copyright (C) 2018 by Marijn Haverbeke and others |
+| @lezer/highlight | 1.2.5 | MIT | Copyright (C) 2018 by Marijn Haverbeke and others |
+| @lezer/lr | 1.4.11 | MIT | Copyright (C) 2018 by Marijn Haverbeke and others |
+| @marijn/find-cluster-break | 1.0.4 | MIT | Copyright (C) 2024 by Marijn Haverbeke |
+| crelt | 1.0.7 | MIT | Copyright (C) 2020 by Marijn Haverbeke |
+| style-mod | 4.1.4 | MIT | Copyright (C) 2018 by Marijn Haverbeke and others |
+| w3c-keyname | 2.2.8 | MIT | Copyright (C) 2016 by Marijn Haverbeke and others |
 
 ## Libraries bundled inside Mermaid / Mermaid に含まれるライブラリ
 
@@ -63,7 +82,7 @@ Microsoft Edge WebView2 Runtime is not distributed with mdEditor; it is provided
 
 ## MIT License
 
-Applies to: .NET Runtime, HtmlSanitizer, AngleSharp, AngleSharp.Css, Mermaid, KaTeX, and the MIT-licensed libraries above. Each component's copyright notice is listed in the tables above.
+Applies to: .NET Runtime, HtmlSanitizer, AngleSharp, AngleSharp.Css, Mermaid, KaTeX, CodeMirror, and the MIT-licensed libraries above. Each component's copyright notice is listed in the tables above.
 
 ```text
 Copyright (c) <year> <copyright holders>

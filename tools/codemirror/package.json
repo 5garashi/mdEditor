@@ -1,0 +1,17 @@
+{
+  "name": "mdeditor-codemirror-bundle",
+  "private": true,
+  "description": "Builds wwwroot/lib/codemirror/codemirror.min.js for mdEditor",
+  "license": "MIT",
+  "scripts": {
+    "build": "esbuild entry.js --bundle --minify --format=iife --legal-comments=eof --outfile=../../wwwroot/lib/codemirror/codemirror.min.js"
+  },
+  "dependencies": {
+    "@codemirror/commands": "6.11.1",
+    "@codemirror/state": "6.7.6",
+    "@codemirror/view": "6.43.12"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}

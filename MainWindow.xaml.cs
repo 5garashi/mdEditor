@@ -19,6 +19,7 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using Ganss.Xss;
 using Markdig;
+using Markdig.Extensions.AutoIdentifiers;
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
 using Markdig.Renderers.Html.Inlines;
@@ -32,8 +33,13 @@ namespace MdEditor;
 public partial class MainWindow : Window
 {
     private readonly string? _initialPath;
+    private readonly string? _initialAnchor;
     private readonly MarkdownPipeline _markdownPipeline =
-        new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+        // GitHub-style heading ids keep Japanese text, so links like [x](#セットアップ) work.
+        new MarkdownPipelineBuilder()
+            .UseAutoIdentifiers(AutoIdentifierOptions.GitHub)
+            .UseAdvancedExtensions()
+            .Build();
     private readonly HtmlSanitizer _htmlSanitizer = new();
     private readonly DispatcherTimer _previewTimer = new()
     {
@@ -64,15 +70,35 @@ public partial class MainWindow : Window
     private const int DwmwaUseImmersiveDarkMode = 20;
     private const string SettingsKeyPath = @"Software\mdEditor";
     // "auto", "light", or "dark". Kept in the registry so it applies before the page paints.
-    private string _theme = LoadTheme();
+    private string _theme = NormalizeTheme(LoadSetting("Theme"));
+    // PDF paper: "auto" (A4, or Letter where the region uses US customary units), "a4", or "letter".
+    private string _paper = NormalizePaper(LoadSetting("PaperSize"));
+    // How _encoding was decided: "detected" (BOM or valid UTF-8), "guessed"
+    // (system code page fallback), or "chosen" by the user.
+    private string _encodingSource = "detected";
+    // True when some bytes could not be read in _encoding and became U+FFFD.
+    private bool _hasUndecodableBytes;
+    // Crash recovery: unsaved text is copied to LocalAppData (never over the
+    // document itself) and offered back at the next start if the app ended abnormally.
+    private static readonly string RecoveryFolder = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "mdEditor", "Recovery");
+    private static readonly long ProcessStartTicks = Process.GetCurrentProcess().StartTime.ToUniversalTime().Ticks;
+    private readonly string _recoveryFile = Path.Combine(RecoveryFolder, $"recovery-{Environment.ProcessId}.json");
+    private readonly DispatcherTimer _backupTimer = new() { Interval = TimeSpan.FromSeconds(15) };
+    private bool _autoBackup = LoadSetting("AutoBackup") != "off";
+    private long _backupVersion = -1;
+
+    private sealed record RecoveryRecord(
+        int ProcessId, long ProcessStartTicks, string? Path, string Encoding, string Text, DateTime SavedAt);
 
     [DllImport("dwmapi.dll")]
     private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attribute, ref int value, int size);
 
-    public MainWindow(string? initialPath)
+    public MainWindow(string? initialPath, string? initialAnchor = null)
     {
         InitializeComponent();
         _initialPath = initialPath;
+        _initialAnchor = initialAnchor;
         ApplyTheme();
         SourceInitialized += (_, _) => ApplyTheme();
         SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
@@ -82,6 +108,10 @@ public partial class MainWindow : Window
             _previewTimer.Stop();
             SendPreview();
         };
+        _backupTimer.Tick += (_, _) => WriteRecoveryCopy();
+        _backupTimer.Start();
+        // A normal exit (saved, or changes deliberately discarded) leaves no copy behind.
+        Closed += (_, _) => DeleteRecoveryCopy();
 
         _htmlSanitizer.AllowedTags.Clear();
         _htmlSanitizer.AllowedTags.UnionWith(
@@ -93,8 +123,8 @@ public partial class MainWindow : Window
         _htmlSanitizer.AllowedAttributes.Clear();
         _htmlSanitizer.AllowedAttributes.UnionWith(
         [
-            "alt", "checked", "class", "colspan", "disabled", "href", "rowspan", "src", "style",
-            "title", "type"
+            "alt", "checked", "class", "colspan", "data-line", "disabled", "href", "id", "rowspan",
+            "src", "style", "title", "type"
         ]);
         // Markdig writes table alignment as style="text-align: ..."; nothing else is kept.
         _htmlSanitizer.AllowedCssProperties.Clear();
@@ -144,6 +174,9 @@ public partial class MainWindow : Window
         }
 
         EditorWebView.CoreWebView2.Settings.AreDevToolsEnabled = false;
+        // Zoom (Ctrl + wheel, Ctrl + plus/minus, or the settings dialog) is kept between launches.
+        EditorWebView.ZoomFactor = LoadZoom();
+        EditorWebView.ZoomFactorChanged += (_, _) => OnZoomChanged();
         ApplyTheme();
         EditorWebView.CoreWebView2.SetVirtualHostNameToFolderMapping(
             "mdeditor.local",
@@ -178,9 +211,20 @@ public partial class MainWindow : Window
                     SendToPage(new { type = "language", lang = Strings.ForcedLanguage });
                 }
                 SendToPage(new { type = "theme", theme = _theme });
-                if (!string.IsNullOrWhiteSpace(_initialPath))
+                SendPaper();
+                SendZoom();
+                SendToPage(new { type = "autoBackup", enabled = _autoBackup });
+                if (await OfferRecoveryAsync())
+                {
+                    // The recovered document is shown instead of the file passed at start.
+                }
+                else if (!string.IsNullOrWhiteSpace(_initialPath))
                 {
                     await LoadDocumentAsync(_initialPath);
+                    if (!string.IsNullOrEmpty(_initialAnchor))
+                    {
+                        SendToPage(new { type = "scrollToAnchor", name = _initialAnchor });
+                    }
                 }
                 else
                 {
@@ -190,8 +234,34 @@ public partial class MainWindow : Window
                 break;
             case "setTheme":
                 _theme = NormalizeTheme(root.GetProperty("theme").GetString());
-                SaveTheme();
+                SaveSetting("Theme", _theme);
                 ApplyTheme();
+                break;
+            case "setAutoBackup":
+                _autoBackup = root.GetProperty("enabled").GetBoolean();
+                SaveSetting("AutoBackup", _autoBackup ? "on" : "off");
+                if (_autoBackup)
+                {
+                    WriteRecoveryCopy();
+                }
+                else
+                {
+                    DeleteRecoveryCopy();
+                }
+                break;
+            case "zoom":
+                ChangeZoom(root.GetProperty("action").GetString());
+                break;
+            case "setPaper":
+                _paper = NormalizePaper(root.GetProperty("paper").GetString());
+                SaveSetting("PaperSize", _paper);
+                SendPaper();
+                break;
+            case "reopenWithEncoding":
+                await ReopenWithEncodingAsync(root.GetProperty("encoding").GetString());
+                break;
+            case "setSaveEncoding":
+                SetSaveEncoding(root.GetProperty("encoding").GetString());
                 break;
             case "setLanguage":
                 Strings.Language = root.GetProperty("lang").GetString() == "en" ? "en" : "ja";
@@ -219,6 +289,9 @@ public partial class MainWindow : Window
                 break;
             case "externalLink":
                 OpenExternalLink(root.GetProperty("url").GetString());
+                break;
+            case "documentLink":
+                OpenDocumentLink(root.GetProperty("href").GetString());
                 break;
             case "toggleWindowFullscreen":
                 SetWindowFullscreen(!_windowFullscreen);
@@ -252,9 +325,178 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (!e.Uri.StartsWith("https://mdeditor.local/", StringComparison.OrdinalIgnoreCase))
+        // Only the app page itself may load; any other address (such as a relative
+        // link resolved against mdeditor.local) would leave an error page with no way back.
+        if (!e.Uri.StartsWith("https://mdeditor.local/index.html", StringComparison.OrdinalIgnoreCase))
         {
             e.Cancel = true;
+        }
+    }
+
+    // A relative link in the document (other.md, ./LICENSE, docs/, other.md#heading):
+    // Markdown and text open in a new mdEditor window, safe documents and media in
+    // their usual app, and anything else is only shown in File Explorer.
+    private void OpenDocumentLink(string? href)
+    {
+        if (string.IsNullOrWhiteSpace(href))
+        {
+            return;
+        }
+
+        if (_filePath is null)
+        {
+            MessageBox.Show(
+                Strings.Tr("保存していない文書では、ほかのファイルへのリンクを開けません。先に文書を保存してください。"),
+                "mdEditor",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+            return;
+        }
+
+        var fragmentIndex = href.IndexOf('#');
+        var fragment = fragmentIndex >= 0 ? href[(fragmentIndex + 1)..] : string.Empty;
+        var pathPart = fragmentIndex >= 0 ? href[..fragmentIndex] : href;
+        var queryIndex = pathPart.IndexOf('?');
+        if (queryIndex >= 0)
+        {
+            pathPart = pathPart[..queryIndex];
+        }
+
+        string fullPath;
+        try
+        {
+            var relative = Uri.UnescapeDataString(pathPart).Replace('/', Path.DirectorySeparatorChar);
+            fullPath = Path.GetFullPath(Path.Combine(
+                Path.GetDirectoryName(_filePath)!,
+                relative.TrimStart(Path.DirectorySeparatorChar)));
+            fragment = Uri.UnescapeDataString(fragment);
+        }
+        catch (Exception ex) when (ex is ArgumentException or NotSupportedException or PathTooLongException or UriFormatException)
+        {
+            ShowLinkNotFound(pathPart);
+            return;
+        }
+
+        if (string.Equals(fullPath, Path.GetFullPath(_filePath), StringComparison.OrdinalIgnoreCase))
+        {
+            if (fragment.Length > 0)
+            {
+                SendToPage(new { type = "scrollToAnchor", name = fragment });
+            }
+
+            return;
+        }
+
+        if (Directory.Exists(fullPath))
+        {
+            StartExplorer($"\"{fullPath}\"");
+            return;
+        }
+
+        if (!File.Exists(fullPath))
+        {
+            ShowLinkNotFound(fullPath);
+            return;
+        }
+
+        var extension = Path.GetExtension(fullPath).ToLowerInvariant();
+        if (extension is "" or ".md" or ".markdown" or ".txt" or ".text")
+        {
+            // Markdown and plain text (such as LICENSE) open in a new mdEditor
+            // window, so this document stays open where it was.
+            OpenInNewWindow(fullPath, fragment);
+        }
+        else if (SafeToOpenExtensions.Contains(extension))
+        {
+            StartShell(fullPath);
+        }
+        else
+        {
+            // Programs, scripts, and unknown types are never run from a link.
+            StartExplorer($"/select,\"{fullPath}\"");
+        }
+    }
+
+    // Documents and media that open in their usual app from a link. Nothing here
+    // can run code by being opened (no executables, scripts, or macro documents).
+    private static readonly HashSet<string> SafeToOpenExtensions =
+    [
+        ".pdf", ".png", ".jpg", ".jpeg", ".gif", ".bmp", ".webp", ".svg", ".ico",
+        ".csv", ".tsv", ".json", ".xml", ".yaml", ".yml", ".log", ".docx", ".xlsx", ".pptx",
+        ".mp3", ".wav", ".mp4", ".webm"
+    ];
+
+    private void OpenInNewWindow(string path, string anchor)
+    {
+        var exe = Environment.ProcessPath;
+        if (exe is null)
+        {
+            return;
+        }
+
+        var start = new ProcessStartInfo(exe) { UseShellExecute = false };
+        start.ArgumentList.Add(path);
+        if (anchor.Length > 0)
+        {
+            start.ArgumentList.Add("--anchor");
+            start.ArgumentList.Add(anchor);
+        }
+
+        if (Strings.ForcedLanguage is not null)
+        {
+            start.ArgumentList.Add("--lang");
+            start.ArgumentList.Add(Strings.ForcedLanguage);
+        }
+
+        try
+        {
+            Process.Start(start);
+        }
+        catch (Exception ex) when (ex is Win32Exception or InvalidOperationException)
+        {
+            ShowLinkError(ex);
+        }
+    }
+
+    private static void StartShell(string path)
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo(path) { UseShellExecute = true });
+        }
+        catch (Exception ex) when (ex is Win32Exception or InvalidOperationException)
+        {
+            ShowLinkError(ex);
+        }
+    }
+
+    private static void ShowLinkError(Exception ex)
+    {
+        MessageBox.Show(
+            $"{Strings.Tr("リンクを開けませんでした。")}\n\n{ex.Message}",
+            "mdEditor",
+            MessageBoxButton.OK,
+            MessageBoxImage.Error);
+    }
+
+    private static void ShowLinkNotFound(string path)
+    {
+        MessageBox.Show(
+            string.Format(Strings.Tr("リンク先のファイルが見つかりません。\n\n{0}"), path),
+            "mdEditor",
+            MessageBoxButton.OK,
+            MessageBoxImage.Warning);
+    }
+
+    private static void StartExplorer(string arguments)
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo("explorer.exe", arguments) { UseShellExecute = true });
+        }
+        catch (Exception ex) when (ex is Win32Exception or InvalidOperationException)
+        {
+            ShowLinkError(ex);
         }
     }
 
@@ -324,15 +566,9 @@ public partial class MainWindow : Window
         try
         {
             var fullPath = Path.GetFullPath(path);
-            var (text, encoding) = DecodeDocument(await File.ReadAllBytesAsync(fullPath));
+            var decoded = DecodeDocument(await File.ReadAllBytesAsync(fullPath));
             _filePath = fullPath;
-            _text = text;
-            _encoding = encoding;
-            _changeVersion++;
-            _isDirty = false;
-            SendDocumentInfo();
-            SendToPage(new { type = "setText", text = _text });
-            SendPreview();
+            ApplyDecodedDocument(decoded);
         }
         catch (FileNotFoundException ex)
         {
@@ -369,6 +605,17 @@ public partial class MainWindow : Window
         if (string.IsNullOrWhiteSpace(_filePath))
         {
             return await SaveDocumentAsAsync();
+        }
+
+        // Overwriting a file that was not read cleanly would replace the unreadable
+        // parts of the original with U+FFFD for good.
+        if (_hasUndecodableBytes && MessageBox.Show(
+                Strings.Tr("この文書には、選んだ文字コードで読めなかった文字（�）が含まれています。上書きすると、元のファイルのその部分は失われます。上書き保存しますか？"),
+                "mdEditor",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning) != MessageBoxResult.Yes)
+        {
+            return false;
         }
 
         try
@@ -452,33 +699,320 @@ public partial class MainWindow : Window
 
     // BOMs win; otherwise strict UTF-8, falling back to the system ANSI code page
     // (Shift_JIS on Japanese Windows) for older files.
-    private static (string Text, Encoding Encoding) DecodeDocument(byte[] bytes)
+    private sealed record DecodedDocument(string Text, Encoding Encoding, string Source, bool Lossy);
+
+    private static DecodedDocument DecodeDocument(byte[] bytes)
     {
         ReadOnlySpan<byte> data = bytes;
         if (data.StartsWith((ReadOnlySpan<byte>)[0xEF, 0xBB, 0xBF]))
         {
-            return (Encoding.UTF8.GetString(data[3..]), new UTF8Encoding(true));
+            return Decode(bytes, new UTF8Encoding(true), "detected");
         }
         if (data.StartsWith((ReadOnlySpan<byte>)[0xFF, 0xFE]))
         {
-            return (Encoding.Unicode.GetString(data[2..]), Encoding.Unicode);
+            return Decode(bytes, Encoding.Unicode, "detected");
         }
         if (data.StartsWith((ReadOnlySpan<byte>)[0xFE, 0xFF]))
         {
-            return (Encoding.BigEndianUnicode.GetString(data[2..]), Encoding.BigEndianUnicode);
+            return Decode(bytes, Encoding.BigEndianUnicode, "detected");
+        }
+
+        var utf8 = Decode(bytes, Utf8NoBom, "detected");
+        if (!utf8.Lossy)
+        {
+            return utf8;
+        }
+
+        // Not UTF-8: guess the system code page and tell the user it was a guess.
+        var legacy = Encoding.GetEncoding(
+            System.Globalization.CultureInfo.CurrentCulture.TextInfo.ANSICodePage);
+        return Decode(bytes, legacy, "guessed");
+    }
+
+    // Decodes strictly first so bytes that do not fit the encoding are reported
+    // (Lossy) instead of silently turning into "?" and being saved that way.
+    private static DecodedDocument Decode(byte[] bytes, Encoding encoding, string source)
+    {
+        ReadOnlySpan<byte> data = bytes;
+        var preamble = encoding.GetPreamble();
+        if (preamble.Length > 0 && data.StartsWith(preamble))
+        {
+            data = data[preamble.Length..];
+        }
+
+        var strict = (Encoding)encoding.Clone();
+        strict.DecoderFallback = DecoderFallback.ExceptionFallback;
+        try
+        {
+            return new DecodedDocument(strict.GetString(data), encoding, source, false);
+        }
+        catch (DecoderFallbackException)
+        {
+            var replacing = (Encoding)encoding.Clone();
+            replacing.DecoderFallback = new DecoderReplacementFallback("�");
+            return new DecodedDocument(replacing.GetString(data), encoding, source, true);
+        }
+    }
+
+    private static Encoding? EncodingFromId(string? id) => id switch
+    {
+        "utf-8" => Utf8NoBom,
+        "utf-8-bom" => new UTF8Encoding(true),
+        "utf-16le" => Encoding.Unicode,
+        "utf-16be" => Encoding.BigEndianUnicode,
+        "shift_jis" => Encoding.GetEncoding(932),
+        "euc-jp" => Encoding.GetEncoding(51932),
+        "iso-2022-jp" => Encoding.GetEncoding(50220),
+        "windows-1252" => Encoding.GetEncoding(1252),
+        _ => null
+    };
+
+    private static string EncodingId(Encoding encoding) => encoding.CodePage switch
+    {
+        65001 => encoding.GetPreamble().Length > 0 ? "utf-8-bom" : "utf-8",
+        1200 => "utf-16le",
+        1201 => "utf-16be",
+        932 => "shift_jis",
+        51932 or 20932 => "euc-jp",
+        50220 or 50221 or 50222 => "iso-2022-jp",
+        1252 => "windows-1252",
+        _ => encoding.WebName
+    };
+
+    private static double LoadZoom() =>
+        double.TryParse(LoadSetting("Zoom"), System.Globalization.NumberStyles.Float,
+                System.Globalization.CultureInfo.InvariantCulture, out var zoom) && zoom >= 0.25 && zoom <= 5
+            ? zoom
+            : 1.0;
+
+    private void OnZoomChanged()
+    {
+        SaveSetting("Zoom", EditorWebView.ZoomFactor.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture));
+        SendZoom();
+    }
+
+    private void SendZoom()
+    {
+        if (_pageReady)
+        {
+            SendToPage(new { type = "zoom", factor = EditorWebView.ZoomFactor });
+        }
+    }
+
+    private static readonly double[] ZoomSteps = [0.5, 0.67, 0.75, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2, 2.5, 3];
+
+    private void ChangeZoom(string? action)
+    {
+        var current = EditorWebView.ZoomFactor;
+        EditorWebView.ZoomFactor = action switch
+        {
+            "in" => ZoomSteps.FirstOrDefault(step => step > current + 0.001, ZoomSteps[^1]),
+            "out" => ZoomSteps.LastOrDefault(step => step < current - 0.001, ZoomSteps[0]),
+            _ => 1.0
+        };
+        // Setting ZoomFactor from code does not raise ZoomFactorChanged.
+        OnZoomChanged();
+    }
+
+    private void WriteRecoveryCopy()
+    {
+        if (!_autoBackup || !_isDirty || _backupVersion == _changeVersion)
+        {
+            return;
         }
 
         try
         {
-            var strictUtf8 = new UTF8Encoding(false, throwOnInvalidBytes: true);
-            return (strictUtf8.GetString(bytes), Utf8NoBom);
+            Directory.CreateDirectory(RecoveryFolder);
+            var record = new RecoveryRecord(
+                Environment.ProcessId, ProcessStartTicks, _filePath, EncodingId(_encoding), _text, DateTime.Now);
+            var tempPath = _recoveryFile + ".tmp";
+            File.WriteAllText(tempPath, JsonSerializer.Serialize(record), Utf8NoBom);
+            File.Move(tempPath, _recoveryFile, overwrite: true);
+            _backupVersion = _changeVersion;
         }
-        catch (DecoderFallbackException)
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or SecurityException)
         {
-            var legacy = Encoding.GetEncoding(
-                System.Globalization.CultureInfo.CurrentCulture.TextInfo.ANSICodePage);
-            return (legacy.GetString(bytes), legacy);
+            // Recovery is best effort; the document itself is unaffected.
         }
+    }
+
+    private void DeleteRecoveryCopy()
+    {
+        _backupVersion = -1;
+        try
+        {
+            File.Delete(_recoveryFile);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or SecurityException)
+        {
+            // A leftover copy is offered at the next start and can be discarded then.
+        }
+    }
+
+    // Copies left by an mdEditor that is no longer running mean it ended
+    // abnormally; copies from another open window are left alone.
+    private async Task<bool> OfferRecoveryAsync()
+    {
+        if (!Directory.Exists(RecoveryFolder))
+        {
+            return false;
+        }
+
+        var candidates = new List<(string File, RecoveryRecord Record)>();
+        foreach (var file in Directory.GetFiles(RecoveryFolder, "recovery-*.json"))
+        {
+            if (string.Equals(file, _recoveryFile, StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            try
+            {
+                var record = JsonSerializer.Deserialize<RecoveryRecord>(await File.ReadAllTextAsync(file));
+                if (record is not null && !IsStillRunning(record))
+                {
+                    candidates.Add((file, record));
+                }
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
+            {
+                // An unreadable copy is skipped.
+            }
+        }
+
+        foreach (var (file, record) in candidates.OrderByDescending(item => item.Record.SavedAt))
+        {
+            var name = record.Path is null ? Strings.Tr("新しい文書.md") : Path.GetFileName(record.Path);
+            var answer = MessageBox.Show(
+                string.Format(
+                    Strings.Tr("前回、保存されないまま終了した文書があります。\n\n文書: {0}\n最後のバックアップ: {1}\n\n復元しますか？\n「いいえ」を選ぶとバックアップを削除します。「キャンセル」を選ぶと、次回の起動時にもう一度確認します。"),
+                    name,
+                    record.SavedAt.ToString("g")),
+                "mdEditor",
+                MessageBoxButton.YesNoCancel,
+                MessageBoxImage.Question);
+            if (answer == MessageBoxResult.Cancel)
+            {
+                continue;
+            }
+
+            TryDelete(file);
+            if (answer != MessageBoxResult.Yes)
+            {
+                continue;
+            }
+
+            _filePath = record.Path;
+            _encoding = EncodingFromId(record.Encoding) ?? Utf8NoBom;
+            _encodingSource = "detected";
+            _hasUndecodableBytes = false;
+            _text = record.Text;
+            _changeVersion++;
+            _isDirty = true;
+            SendDocumentInfo();
+            SendToPage(new { type = "setText", text = _text });
+            SendPreview();
+            SendEncodingNotice();
+            WriteRecoveryCopy();
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool IsStillRunning(RecoveryRecord record)
+    {
+        try
+        {
+            using var process = Process.GetProcessById(record.ProcessId);
+            return Math.Abs(process.StartTime.ToUniversalTime().Ticks - record.ProcessStartTicks)
+                < TimeSpan.FromSeconds(2).Ticks;
+        }
+        catch (Exception ex) when (ex is ArgumentException or InvalidOperationException or Win32Exception)
+        {
+            return false;
+        }
+    }
+
+    private static void TryDelete(string path)
+    {
+        try
+        {
+            File.Delete(path);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or SecurityException)
+        {
+            // Left in place; it is offered again next time.
+        }
+    }
+
+    private void ApplyDecodedDocument(DecodedDocument decoded)
+    {
+        // A freshly opened document has nothing to recover.
+        DeleteRecoveryCopy();
+        _text = decoded.Text;
+        _encoding = decoded.Encoding;
+        _encodingSource = decoded.Source;
+        _hasUndecodableBytes = decoded.Lossy;
+        _changeVersion++;
+        _isDirty = false;
+        SendDocumentInfo();
+        SendToPage(new { type = "setText", text = _text });
+        SendPreview();
+        SendEncodingNotice();
+    }
+
+    // A guessed or lossy encoding is announced under the toolbar so the user can
+    // pick another one before saving over the original file.
+    private void SendEncodingNotice()
+    {
+        var kind = _hasUndecodableBytes ? "lossy" : _encodingSource == "guessed" ? "guessed" : null;
+        SendToPage(new { type = "encodingNotice", kind, encoding = EncodingId(_encoding) });
+    }
+
+    private async Task ReopenWithEncodingAsync(string? id)
+    {
+        var encoding = EncodingFromId(id);
+        if (encoding is null || _filePath is null)
+        {
+            return;
+        }
+
+        if (_isDirty && MessageBox.Show(
+                Strings.Tr("未保存の変更を破棄して、選んだ文字コードで開き直しますか？"),
+                "mdEditor",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning) != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        try
+        {
+            ApplyDecodedDocument(Decode(await File.ReadAllBytesAsync(_filePath), encoding, "chosen"));
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or SecurityException)
+        {
+            ShowFileError("ファイルを読み取れません", ex);
+        }
+    }
+
+    // Changes only how the next save is written; the text is unchanged.
+    private void SetSaveEncoding(string? id)
+    {
+        var encoding = EncodingFromId(id);
+        if (encoding is null || EncodingId(encoding) == EncodingId(_encoding))
+        {
+            return;
+        }
+
+        _encoding = encoding;
+        _encodingSource = "chosen";
+        _changeVersion++;
+        _isDirty = true;
+        SendDocumentInfo();
+        SendEncodingNotice();
     }
 
     // Writes to a temporary file beside the target and then swaps it in, so a
@@ -550,7 +1084,18 @@ public partial class MainWindow : Window
         {
             _isDirty = false;
         }
+        // What is on disk now is exactly what the editor shows.
+        _hasUndecodableBytes = false;
+        if (!_isDirty)
+        {
+            DeleteRecoveryCopy();
+        }
+        if (_encodingSource == "guessed")
+        {
+            _encodingSource = "detected";
+        }
         SendDocumentInfo();
+        SendEncodingNotice();
         return true;
     }
 
@@ -651,8 +1196,8 @@ public partial class MainWindow : Window
             _previewTimer.Stop();
             var settings = EditorWebView.CoreWebView2.Environment.CreatePrintSettings();
             settings.MediaSize = CoreWebView2PrintMediaSize.Custom;
-            // US Letter where the region uses US customary units, A4 elsewhere.
-            var useLetter = !System.Globalization.RegionInfo.CurrentRegion.IsMetric;
+            // The paper button chooses A4 or Letter; "auto" follows the region.
+            var useLetter = (_paper == "auto" ? RegionPaper() : _paper) == "letter";
             settings.PageWidth = useLetter ? 8.5 : 8.27;
             settings.PageHeight = useLetter ? 11 : 11.69;
             settings.Orientation = CoreWebView2PrintOrientation.Portrait;
@@ -758,18 +1303,32 @@ public partial class MainWindow : Window
     private static string NormalizeTheme(string? theme) =>
         theme is "light" or "dark" ? theme : "auto";
 
-    private static string LoadTheme()
+    private static string NormalizePaper(string? paper) =>
+        paper is "a4" or "letter" ? paper : "auto";
+
+    private static string RegionPaper() =>
+        System.Globalization.RegionInfo.CurrentRegion.IsMetric ? "a4" : "letter";
+
+    private void SendPaper()
     {
-        using var key = Registry.CurrentUser.OpenSubKey(SettingsKeyPath);
-        return NormalizeTheme(key?.GetValue("Theme") as string);
+        if (_pageReady)
+        {
+            SendToPage(new { type = "paper", paper = _paper, autoPaper = RegionPaper() });
+        }
     }
 
-    private void SaveTheme()
+    private static string? LoadSetting(string name)
+    {
+        using var key = Registry.CurrentUser.OpenSubKey(SettingsKeyPath);
+        return key?.GetValue(name) as string;
+    }
+
+    private static void SaveSetting(string name, string value)
     {
         try
         {
             using var key = Registry.CurrentUser.CreateSubKey(SettingsKeyPath);
-            key.SetValue("Theme", _theme);
+            key.SetValue(name, value);
         }
         catch (UnauthorizedAccessException)
         {
@@ -895,6 +1454,9 @@ public partial class MainWindow : Window
         }
 
         _closePromptActive = true;
+        // Let the Closing event finish first: WPF refuses to show a dialog owned by a
+        // window that is in the middle of closing (the Save As dialog for a new document).
+        await Task.Yield();
         if (await ConfirmSaveChangesAsync())
         {
             _allowClose = true;
@@ -917,7 +1479,10 @@ public partial class MainWindow : Window
         {
             type = "documentInfo",
             name = _filePath is null ? Strings.Tr("新しい文書.md") : Path.GetFileName(_filePath),
-            isDirty = _isDirty
+            isDirty = _isDirty,
+            encoding = EncodingId(_encoding),
+            encodingSource = _encodingSource,
+            canReopen = _filePath is not null
         });
     }
 
@@ -950,6 +1515,13 @@ public partial class MainWindow : Window
         renderer.ObjectRenderers.ReplaceOrAdd<HtmlInlineRenderer>(new EscapedHtmlInlineRenderer());
         var document = Markdown.Parse(text, _markdownPipeline);
         ResolveRelativeImages(document);
+        // Source line of each block, used by the page to keep the editor and preview
+        // scrolled to the same place.
+        foreach (var block in document.Descendants<Block>())
+        {
+            block.GetAttributes().AddProperty(
+                "data-line", block.Line.ToString(System.Globalization.CultureInfo.InvariantCulture));
+        }
         renderer.Render(document);
         writer.Flush();
         return writer.ToString();
@@ -992,7 +1564,7 @@ public partial class MainWindow : Window
                 return;
             }
 
-            renderer.Write("<p>");
+            renderer.Write("<p").WriteAttributes(obj).Write(">");
             renderer.WriteLeafRawLines(obj, true, true);
             renderer.WriteLine("</p>");
         }
