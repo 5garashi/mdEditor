@@ -1,7 +1,7 @@
 <!--
   File: mdEditor.csproj
   Description: Windows desktop Markdown editor project configuration
-  Author: 5garashi.com設計事務所 / 5garashi.com Design Office
+  Author: 5garashi.com Design Office
   Created: 2026-10-10
   License: MIT
   SPDX-License-Identifier: MIT
@@ -25,6 +25,12 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
+    <!-- Binary redistribution must carry the licenses (MIT, BSD, Apache). -->
+    <None Include="LICENSE;THIRD-PARTY-NOTICES.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </None>
     <Content Remove="wwwroot\assets\5garashi_mark_simple.ico" />
     <Resource Include="wwwroot\assets\5garashi_mark_simple.ico" />
   </ItemGroup>

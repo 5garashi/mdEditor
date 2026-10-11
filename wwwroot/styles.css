@@ -1,13 +1,13 @@
 /*
   File: wwwroot/styles.css
   Description: Responsive styling for the Markdown editor
-  Author: 5garashi.com設計事務所 / 5garashi.com Design Office
+  Author: 5garashi.com Design Office
   Created: 2026-10-10
   License: MIT
   SPDX-License-Identifier: MIT
 */
 :root {
-  color-scheme: light;
+  color-scheme: light dark;
   --paper: #F9EFCB;
   --head: #FFE699;
   --ink: #385723;
@@ -23,12 +23,54 @@
    */
   --document-background: #FFFFFF;
   --document-foreground: #1A1A1A;
+  /* Neutral gray for heading underlines and horizontal rules in documents and PDFs. */
+  --document-rule: #D0D0D0;
+  /* Identity Art. 6: on Windows, Yu Gothic then Meiryo. */
   font-family: "Yu Gothic UI", "Meiryo", sans-serif;
   color: var(--ink);
   background: var(--cream);
   font-size: 16px;
   font-weight: 600;
   line-height: 1.7;
+}
+
+/*
+ * Night palette (Identity v4.8, Art. 4-2): same variable names, night values.
+ * Screen only, so printing and PDF export keep the day palette.
+ * Editor and preview surfaces use a neutral dark gray like the VS Code dark
+ * theme: #BFBFBF on #121314 (10.1:1, AAA), with #2B2B2B rules.
+ */
+@media screen and (prefers-color-scheme: dark) {
+  :root {
+    --paper: #1A2212;
+    --head: #2B3A20;
+    /* Night ink #EFE6C4 dimmed to the brightness of the editor text so buttons and
+       frames do not glare: 9.09:1 on paper, 8.08:1 on card, 6.74:1 on head. */
+    --ink: #C9C1A5;
+    --steel: #D9B98C;
+    --volt: #F07B5F;
+    --volt-deep: #F7A58E;
+    --card: #222C1A;
+    --line: #4C5C3B;
+    --cream: #1A2212;
+    --document-background: #121314;
+    --document-foreground: #BFBFBF;
+    --document-rule: #2B2B2B;
+  }
+}
+
+/* English UI (Identity Art. 6): the OS UI face first, then the Japanese stack so
+   Japanese characters still use a Japanese face. system-ui is not used because
+   it can resolve to a Japanese UI face on Japanese Windows. */
+:root:lang(en) {
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Noto Sans", "Yu Gothic UI", "Meiryo", sans-serif;
+}
+
+/* Settings: BIZ UD Gothic, a Universal Design face shipped with Windows, for
+   readers who find it easier. Chosen by the user, so it overrides Art. 6. */
+:root.font-ud,
+:root.font-ud:lang(en) {
+  font-family: "BIZ UDPGothic", "BIZ UDGothic", "Yu Gothic UI", "Meiryo", sans-serif;
 }
 
 * {
@@ -70,8 +112,9 @@ button:hover {
   background: var(--paper);
 }
 
+/* Primary button: head on ink (Art. 7-1, day 6.66:1 and night 6.74:1). */
 button.primary {
-  color: var(--paper);
+  color: var(--head);
   background: var(--ink);
 }
 
@@ -103,6 +146,11 @@ button.primary:hover {
   gap: 16px;
 }
 
+.brand-bar picture {
+  display: flex;
+  flex: 0 0 auto;
+}
+
 .brand-logo {
   display: block;
   width: 132px;
@@ -114,6 +162,7 @@ button.primary:hover {
   margin: 0;
   font-size: 22px;
   font-weight: 800;
+  letter-spacing: 0.03em;
   line-height: 1.2;
 }
 
@@ -125,6 +174,8 @@ button.primary:hover {
 
 .toolbar {
   display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
   min-height: 64px;
   align-items: center;
   justify-content: space-between;
@@ -142,9 +193,12 @@ button.primary:hover {
   gap: 10px;
 }
 
+/* The file name does not shrink; the status row wraps instead, and only a name
+   wider than the whole row is shortened (the full name is in its tooltip). */
 #document-name {
+  flex: 0 0 auto;
   overflow: hidden;
-  max-width: 42vw;
+  max-width: 100%;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -155,20 +209,77 @@ button.primary:hover {
   font-size: 14px;
 }
 
-body.dragging {
-  outline: 4px dashed #385723;
-  outline-offset: -8px;
+/* Encoding shown as a compact button beside the file name. */
+.status-button {
+  flex: 0 0 auto;
+  min-width: 0;
+  min-height: 44px;
+  padding: 4px 10px;
+  font-size: 13px;
+  white-space: nowrap;
 }
 
-.drop-hint {
-  color: var(--steel);
-  font-size: 12px;
+/* Encoding notice: symbol + wording + color (Identity 7-2); ink on card (7-1). */
+.notice {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--line);
+  border-left: 6px solid var(--steel);
+  background: var(--card);
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.notice[hidden] {
+  display: none;
+}
+
+.notice-strong {
+  border-left-color: var(--volt);
+}
+
+.notice-icon {
+  display: inline-grid;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--cream);
+  background: var(--volt-deep);
+  font-weight: 800;
+}
+
+.notice-text {
+  flex: 1 1 280px;
+  min-width: 0;
+}
+
+.notice button {
+  min-height: 44px;
+  padding: 4px 10px;
+  font-size: 13px;
+}
+
+body.dragging {
+  outline: 4px dashed var(--ink);
+  outline-offset: -8px;
 }
 
 .actions {
   flex: 1 1 auto;
   flex-wrap: wrap;
   justify-content: flex-end;
+}
+
+/* Keep room for the file name; the buttons wrap to the next row first. */
+.document-status {
+  flex: 1 1 380px;
+  flex-wrap: wrap;
 }
 
 .workspace {
@@ -228,7 +339,9 @@ body.dragging {
 
 .pane-heading {
   display: flex;
-  flex: 0 0 56px;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  min-height: 56px;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
@@ -241,6 +354,7 @@ body.dragging {
   margin: 0;
   font-size: 16px;
   font-weight: 800;
+  letter-spacing: 0.03em;
 }
 
 .pane-fullscreen-button {
@@ -254,6 +368,271 @@ body.dragging {
   margin-left: auto;
   padding: 4px 10px;
   font-size: 13px;
+}
+
+#help-button {
+  min-height: 44px;
+  padding: 4px 10px;
+  font-size: 13px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.help-dialog {
+  width: min(860px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  padding: 0;
+  overflow: auto;
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  color: var(--ink);
+  background: var(--card);
+}
+
+.help-dialog::backdrop {
+  background: rgb(0 0 0 / 45%);
+}
+
+.help-header {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.help-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.help-intro {
+  margin: 12px 16px;
+  color: var(--steel);
+  font-size: 14px;
+}
+
+.help-table-wrap {
+  padding: 0 16px 16px;
+  overflow-x: auto;
+}
+
+.help-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.help-table > thead th,
+.help-table > tbody > tr > th,
+.help-table > tbody > tr > td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.help-table > tbody > tr > th {
+  white-space: nowrap;
+}
+
+.help-table pre {
+  margin: 0;
+  padding: 6px 8px;
+  border-radius: 4px;
+  color: var(--document-foreground);
+  background: var(--document-background);
+  font-family: Consolas, "Cascadia Mono", monospace;
+  font-size: 13px;
+  white-space: pre;
+}
+
+.help-result {
+  min-width: 160px;
+  color: var(--document-foreground);
+  background: var(--document-background);
+  font-weight: 400;
+}
+
+.help-result p,
+.help-result ul,
+.help-result ol,
+.help-result blockquote,
+.help-result pre {
+  margin: 0 0 4px;
+}
+
+.help-result ul,
+.help-result ol {
+  padding-left: 1.4em;
+}
+
+.help-result blockquote {
+  padding: 2px 10px;
+  border-left: 4px solid var(--document-foreground);
+}
+
+.help-result table {
+  border-collapse: collapse;
+}
+
+.help-result th,
+.help-result td {
+  padding: 2px 8px;
+  border: 1px solid var(--document-foreground);
+}
+
+.help-result .help-right {
+  text-align: right;
+}
+
+.help-result hr {
+  margin: 10px 0;
+  border: 0;
+  border-top: 2px solid var(--document-rule);
+}
+
+.help-result small {
+  display: block;
+  font-size: 12px;
+}
+
+.help-h1,
+.help-h2,
+.help-h3 {
+  display: block;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.help-h1 {
+  font-size: 1.5em;
+}
+
+.help-h2 {
+  font-size: 1.25em;
+}
+
+.help-h3 {
+  font-size: 1.1em;
+}
+
+.help-link {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.help-insert {
+  min-width: 0;
+  /* 44px targets throughout (Identity 7-3 (1)). */
+  min-height: 44px;
+  padding: 2px 10px;
+  font-size: 13px;
+}
+
+/* Keyboard shortcut dialog */
+.shortcut-toggle {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 8px;
+  margin: 0 16px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.shortcut-toggle input {
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  accent-color: var(--ink);
+}
+
+.shortcut-status {
+  min-height: 1.7em;
+  margin: 4px 16px;
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.shortcut-table kbd {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--document-foreground);
+  background: var(--document-background);
+  font-family: Consolas, "Cascadia Mono", monospace;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.shortcut-buttons {
+  white-space: nowrap;
+}
+
+.shortcut-buttons button {
+  min-width: 0;
+  min-height: 44px;
+  margin-right: 6px;
+  padding: 2px 12px;
+  font-size: 13px;
+}
+
+.shortcut-actions {
+  margin-bottom: 16px;
+}
+
+.encoding-dialog {
+  width: min(520px, calc(100vw - 32px));
+}
+
+.encoding-options {
+  margin: 0 16px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.encoding-options legend {
+  padding: 0 4px;
+  font-weight: 800;
+}
+
+.encoding-option {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.encoding-option input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: var(--ink);
+}
+
+.encoding-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 16px 0;
 }
 
 .find-bar {
@@ -299,7 +678,7 @@ body.dragging {
 
 .find-bar input[type="text"] {
   min-width: 120px;
-  min-height: 36px;
+  min-height: 44px;
   flex: 1 1 140px;
   padding: 4px 8px;
   border: 2px solid var(--ink);
@@ -310,7 +689,7 @@ body.dragging {
 }
 
 .find-bar button {
-  min-height: 36px;
+  min-height: 44px;
   padding: 2px 10px;
   font-size: 13px;
 }
@@ -327,26 +706,70 @@ body.dragging {
   font-weight: 700;
 }
 
+/* CodeMirror 6 editor (wwwroot/lib/codemirror); the host fills the pane. */
 #editor {
+  display: flex;
   flex: 1 1 auto;
-  width: 100%;
-  height: 100%;
   min-height: 0;
-  resize: none;
-  padding: 16px;
-  border: 0;
-  border-radius: 0;
-  outline-offset: -4px;
+  overflow: hidden;
+  background: var(--document-background);
+}
+
+#editor .cm-editor {
+  flex: 1 1 auto;
+  height: 100%;
+  min-width: 0;
   background: var(--document-background);
   color: var(--document-foreground);
-  color-scheme: light;
+}
+
+#editor .cm-scroller {
   font-family: Consolas, "Cascadia Mono", monospace;
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1.7;
+  /* Text size and line spacing follow Settings (--doc-scale, --doc-line-height). */
+  font-size: calc(15px * var(--doc-scale, 1));
+  /* Document surface body text is W4 (Identity 4-3 (4)). */
+  font-weight: 400;
+  line-height: var(--doc-line-height, 1.7);
   tab-size: 2;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
+}
+
+:root.font-ud #editor .cm-scroller {
+  font-family: "BIZ UDGothic", Consolas, monospace;
+}
+
+/* Optional aids from Settings: the current line and a thicker drawn cursor. */
+#editor .cm-activeLine {
+  background: rgb(0 0 0 / 6%);
+}
+
+#editor .cm-selectionBackground,
+#editor .cm-focused .cm-selectionBackground,
+#editor .cm-content ::selection {
+  background: rgb(56 87 35 / 28%);
+}
+
+#editor .cm-content {
+  padding: 16px;
+  caret-color: var(--document-foreground);
+}
+
+#editor .cm-line {
+  padding: 0;
+}
+
+#editor .cm-cursor {
+  border-left: 3px solid var(--document-foreground);
+}
+
+/* Same thick focus ring as the rest of the app (Identity 7-3 (2)), drawn inside. */
+#editor .cm-editor.cm-focused {
+  outline: 3px solid var(--volt);
+  outline-offset: -4px;
+}
+
+/* The pane clips outside outlines, so draw the focus ring inside. */
+.preview-content:focus-visible {
+  outline-offset: -4px;
 }
 
 .preview-content {
@@ -356,7 +779,17 @@ body.dragging {
   overflow-wrap: anywhere;
   background: var(--document-background);
   color: var(--document-foreground);
-  color-scheme: light;
+  /* Document surface body text is W4 (Identity 4-3 (4)). */
+  font-weight: 400;
+  font-size: calc(1rem * var(--doc-scale, 1));
+  line-height: var(--doc-line-height, 1.7);
+}
+
+/* The block being read aloud is marked on screen too (Identity 7-4). */
+.preview-content .reading {
+  outline: 3px solid var(--volt);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
 .preview-content h1,
@@ -367,14 +800,29 @@ body.dragging {
 .preview-content h6 {
   color: var(--document-foreground);
   font-weight: 800;
+  letter-spacing: 0.03em;
   line-height: 1.4;
   overflow-wrap: anywhere;
+}
+
+/* Headings stay larger than body text so they read as headings without the
+   decorative underline (Identity 4-3 (2), (4)); browser defaults make h5 and h6 smaller. */
+.preview-content h4 {
+  font-size: 1.12em;
+}
+
+.preview-content h5 {
+  font-size: 1.08em;
+}
+
+.preview-content h6 {
+  font-size: 1.04em;
 }
 
 .preview-content h1,
 .preview-content h2 {
   padding-bottom: 6px;
-  border-bottom: 2px solid var(--line);
+  border-bottom: 2px solid var(--document-rule);
 }
 
 .preview-content a {
@@ -437,7 +885,21 @@ body.dragging {
 
 .preview-content hr {
   border: 0;
-  border-top: 2px solid var(--line);
+  border-top: 2px solid var(--document-rule);
+}
+
+.preview-content .contains-task-list {
+  padding-left: 1.2em;
+}
+
+.preview-content .task-list-item {
+  list-style: none;
+}
+
+.preview-content .task-list-item input {
+  margin: 0 0.45em 0 0;
+  accent-color: var(--document-foreground);
+  vertical-align: middle;
 }
 
 .preview-content .mermaid {
@@ -480,18 +942,51 @@ body.dragging {
   overflow-y: hidden;
 }
 
+/*
+ * Narrow or short windows (including 200% zoom and a 320px width, Identity 7-7)
+ * scroll the whole page vertically so the editor and preview keep a usable
+ * height instead of being squeezed under the header and toolbar.
+ */
+@media (max-width: 760px), (max-height: 600px) {
+  html {
+    height: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  body {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
+
+  .workspace {
+    flex: 0 0 auto;
+  }
+
+  /* A fixed height keeps each pane scrolling inside itself (the editor would
+     otherwise grow with the document and scroll sync would lose its scroller). */
+  .pane {
+    height: max(280px, 70vh);
+  }
+}
+
 @media (max-width: 760px) {
   .toolbar {
     align-items: flex-start;
     flex-direction: column;
   }
 
+  /* Narrow screens wrap the status row so the full file name stays readable. */
   .document-status {
     width: 100%;
+    flex-wrap: wrap;
   }
 
   #document-name {
-    max-width: calc(100vw - 150px);
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 
   .actions {
@@ -561,6 +1056,12 @@ body.preview-focused .pane-heading {
 }
 
 @media print {
+  /* The page background (cream) would otherwise fill the whole PDF page. */
+  :root {
+    color-scheme: light;
+    background: #FFFFFF;
+  }
+
   body,
   body.printing-preview {
     --document-background: #FFFFFF;
@@ -573,12 +1074,22 @@ body.preview-focused .pane-heading {
     background: #FFFFFF;
   }
 
+  .help-dialog,
+  .notice,
   body.printing-preview .brand-bar,
   body.printing-preview .toolbar,
   body.printing-preview .editor-pane,
   body.printing-preview .pane-divider,
   body.printing-preview .pane-heading {
     display: none !important;
+  }
+
+  /* "Fill window" mode pins a pane with position: fixed; printing needs normal flow. */
+  body.printing-preview .editor-pane,
+  body.printing-preview .preview-pane {
+    position: static;
+    width: auto;
+    height: auto;
   }
 
   body.printing-preview .workspace {
@@ -629,6 +1140,147 @@ body.preview-focused .pane-heading {
   }
 }
 
+/* Settings dialog and the read-aloud controls */
+.settings-dialog {
+  width: min(640px, calc(100vw - 32px));
+}
+
+.settings-group {
+  margin: 0 16px 12px;
+  padding: 8px 12px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.settings-group legend {
+  padding: 0 4px;
+  font-weight: 800;
+}
+
+.settings-row {
+  display: flex;
+  flex-wrap: wrap;
+  min-height: 44px;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+.settings-row > span {
+  min-width: 7em;
+}
+
+.settings-row select {
+  min-height: 44px;
+  min-width: min(100%, 16em);
+  padding: 4px 8px;
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  color: var(--ink);
+  background: var(--card);
+  font: inherit;
+}
+
+.settings-check {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.settings-check input {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+  margin: 0;
+  accent-color: var(--ink);
+}
+
+.zoom-row output {
+  min-width: 4em;
+  font-weight: 800;
+  text-align: center;
+}
+
+.settings-note {
+  margin: 4px 0 0;
+  color: var(--steel);
+  font-size: 13px;
+}
+
+.reader-controls {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.reader-controls[hidden] {
+  display: none;
+}
+
+.reader-controls button {
+  min-height: 44px;
+  padding: 4px 10px;
+  font-size: 13px;
+}
+
+@media screen and (prefers-color-scheme: dark) {
+  #editor .cm-activeLine {
+    background: rgb(255 255 255 / 6%);
+  }
+
+  #editor .cm-selectionBackground,
+  #editor .cm-focused .cm-selectionBackground,
+  #editor .cm-content ::selection {
+    background: rgb(201 193 165 / 30%);
+  }
+}
+
+/*
+ * Windows contrast themes (forced colors): the system colors replace ours, so
+ * keep every control outlined, focus rings in the highlight color, and
+ * diagrams on their own white ground so their colors stay readable.
+ */
+@media (forced-colors: active) {
+  button,
+  .status-button,
+  .settings-row select,
+  .find-bar input[type="text"] {
+    border: 2px solid ButtonText;
+  }
+
+  :focus-visible,
+  #editor .cm-editor.cm-focused,
+  .preview-content .reading {
+    outline: 3px solid Highlight;
+  }
+
+  .pane,
+  .notice,
+  .help-dialog,
+  .settings-group,
+  .encoding-options {
+    border-color: CanvasText;
+  }
+
+  .pane-divider::before {
+    background: CanvasText;
+  }
+
+  .notice-icon {
+    border: 2px solid CanvasText;
+  }
+
+  .preview-content .mermaid svg {
+    forced-color-adjust: none;
+    background: #FFFFFF;
+  }
+
+  #editor .cm-cursor {
+    border-left-color: CanvasText;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -636,12 +1288,8 @@ body.preview-focused .pane-heading {
     scroll-behavior: auto !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-
-  /* Even short transitions make Mermaid measure SVG mid-transition and fail. */
-  svg,
-  svg * {
+    /* No transitions at all: a short duration would still animate every
+       property, and Mermaid measures SVG mid-transition and fails. */
     transition: none !important;
   }
 }

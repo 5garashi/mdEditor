@@ -1,3 +1,11 @@
+<!--
+  File: samples/diagram-test.en.md
+  Description: Test document for diagram, chart, and math rendering (English)
+  Author: 5garashi.com Design Office
+  Created: 2026-10-10
+  License: MIT
+  SPDX-License-Identifier: MIT
+-->
 # Diagram and Chart Rendering Test
 
 This test document checks that diagrams and charts render correctly in the mdEditor preview.
@@ -20,8 +28,8 @@ flowchart TD
     E --> H([End])
     G --> H
 
-    classDef ok fill:#d4f7d4,stroke:#2a7a2a;
-    classDef ng fill:#ffd6d6,stroke:#a22;
+    classDef ok fill:#d4f7d4,stroke:#2a7a2a,color:#1a1a1a;
+    classDef ng fill:#ffd6d6,stroke:#a22,color:#1a1a1a;
     class D,F,G ok;
     class E ng;
 ```
@@ -401,3 +409,8 @@ graph TD
 - [ ] Diagrams do not overflow a narrow preview (or can be scrolled)
 - [ ] "Save as PDF" includes the diagrams in the PDF
 - [ ] Diagrams render offline
+
+---
+
+**Author**: 5garashi.com Design Office\
+**License**: [MIT License](../LICENSE)

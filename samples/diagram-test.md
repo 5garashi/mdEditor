@@ -1,3 +1,11 @@
+<!--
+  ファイル名 / File: samples/diagram-test.md
+  概要 / Description: Test document for diagram, chart, and math rendering (Japanese)
+  作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
+  作成日 / Created: 2026-10-10
+  ライセンス / License: MIT
+  SPDX-License-Identifier: MIT
+-->
 # 図・チャート表示テスト
 
 mdEditor のプレビューで、各種ダイアグラムやチャートが正しく表示されるかを確認するためのテスト文書です。
@@ -20,8 +28,8 @@ flowchart TD
     E --> H([終了])
     G --> H
 
-    classDef ok fill:#d4f7d4,stroke:#2a7a2a;
-    classDef ng fill:#ffd6d6,stroke:#a22;
+    classDef ok fill:#d4f7d4,stroke:#2a7a2a,color:#1a1a1a;
+    classDef ng fill:#ffd6d6,stroke:#a22,color:#1a1a1a;
     class D,F,G ok;
     class E ng;
 ```
@@ -401,3 +409,8 @@ graph TD
 - [ ] 幅の狭いプレビューでも図が横にはみ出さない（またはスクロールできる）
 - [ ] 「PDFに保存」で図が PDF に含まれる
 - [ ] オフライン環境でも図が表示される
+
+---
+
+**作成者**: 5garashi.com設計事務所\
+**ライセンス**: [MIT License](../LICENSE)

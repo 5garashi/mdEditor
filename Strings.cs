@@ -1,9 +1,9 @@
 /*
-  File: Strings.cs
-  Description: Japanese and English text for native dialogs and messages
-  Author: 5garashi.com設計事務所 / 5garashi.com Design Office
-  Created: 2026-10-10
-  License: MIT
+  ファイル名 / File: Strings.cs
+  概要 / Description: Japanese and English text for native dialogs and messages
+  作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
+  作成日 / Created: 2026-10-10
+  ライセンス / License: MIT
   SPDX-License-Identifier: MIT
 */
 namespace MdEditor;
@@ -42,7 +42,24 @@ internal static class Strings
         ["この環境ではPDFを書き出せません"] = "PDF export is not available in this environment",
         ["変更を保存しますか？"] = "Save your changes?",
         ["未保存の変更"] = "Unsaved changes",
-        ["リンクを開けませんでした。"] = "The link could not be opened."
+        ["リンクを開けませんでした。"] = "The link could not be opened.",
+        ["保存していない文書では、ほかのファイルへのリンクを開けません。先に文書を保存してください。"] =
+            "Links to other files cannot be opened from a document that has not been saved. Save the document first.",
+        ["リンク先のファイルが見つかりません。\n\n{0}"] = "The linked file was not found.\n\n{0}",
+        ["画面の表示機能（WebView2）を初期化できませんでした。"] =
+            "The display component (WebView2) could not be initialized.",
+        ["この文書には {0} で保存できない文字があります。UTF-8 で保存しますか？"] =
+            "This document contains characters that cannot be saved in {0}. Save it as UTF-8?",
+        ["図や数式の描画が15秒以内に終わりませんでした。このままPDFに書き出しますか？"] =
+            "Diagrams and math did not finish drawing within 15 seconds. Export the PDF anyway?",
+        ["予期しないエラーが発生しました。作業中の文書を保存してから、mdEditor を再起動してください。"] =
+            "An unexpected error occurred. Save your document, then restart mdEditor.",
+        ["前回、保存されないまま終了した文書があります。\n\n文書: {0}\n最後のバックアップ: {1}\n\n復元しますか？\n「いいえ」を選ぶとバックアップを削除します。「キャンセル」を選ぶと、次回の起動時にもう一度確認します。"] =
+            "A document was not saved when mdEditor last closed unexpectedly.\n\nDocument: {0}\nLast backup: {1}\n\nRestore it?\nNo deletes the backup. Cancel asks again at the next start.",
+        ["未保存の変更を破棄して、選んだ文字コードで開き直しますか？"] =
+            "Discard unsaved changes and reopen the file in the selected encoding?",
+        ["この文書には、選んだ文字コードで読めなかった文字（�）が含まれています。上書きすると、元のファイルのその部分は失われます。上書き保存しますか？"] =
+            "This document contains characters that could not be read in the selected encoding (�). Overwriting the file loses those parts of the original. Overwrite anyway?"
     };
 
     public static string Language { get; set; } = DefaultLanguage();
