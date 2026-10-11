@@ -25,8 +25,8 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
-    <!-- Binary redistribution must carry the licenses (MIT, BSD, Apache). -->
-    <None Include="LICENSE;THIRD-PARTY-NOTICES.md">
+    <!-- Binary redistribution must carry the licenses (MIT, BSD, Apache) and the privacy policy (Identity 12-6). -->
+    <None Include="LICENSE;THIRD-PARTY-NOTICES.md;PRIVACY.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
