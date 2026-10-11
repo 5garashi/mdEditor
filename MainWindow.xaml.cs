@@ -1210,6 +1210,7 @@ public partial class MainWindow : Window
             settings.ShouldPrintHeaderAndFooter = false;
 
             bool saved;
+            string? tempPath = null;
             try
             {
                 // Diagrams and math are drawn by the page, so wait until it reports the preview is complete.
@@ -1233,16 +1234,36 @@ public partial class MainWindow : Window
                 // WebView2 fills the PDF page margins with the control's default
                 // background (cream, or dark green in dark mode), not with CSS.
                 EditorWebView.DefaultBackgroundColor = System.Drawing.Color.White;
+                // Print beside the target first so a failure never damages an existing PDF.
+                tempPath = Path.Combine(
+                    Path.GetDirectoryName(Path.GetFullPath(dialog.FileName))!,
+                    $".mdEditor-{Guid.NewGuid():N}.tmp");
                 saved = await EditorWebView.CoreWebView2.PrintToPdfAsync(
-                    dialog.FileName,
+                    tempPath,
                     settings);
+                if (saved)
+                {
+                    File.Move(tempPath, dialog.FileName, overwrite: true);
+                }
             }
             finally
             {
-                ApplyTheme();
-                await EditorWebView.CoreWebView2.ExecuteScriptAsync(
-                    "document.body.classList.remove('printing-preview')");
-                SendPreview();
+                if (tempPath is not null && File.Exists(tempPath))
+                {
+                    try { File.Delete(tempPath); } catch (IOException) { } catch (UnauthorizedAccessException) { }
+                }
+
+                // Restoring the page must not hide the real error or leave the export flag stuck.
+                try
+                {
+                    ApplyTheme();
+                    await EditorWebView.CoreWebView2.ExecuteScriptAsync(
+                        "document.body.classList.remove('printing-preview')");
+                    SendPreview();
+                }
+                catch (Exception ex) when (ex is COMException or InvalidOperationException or ObjectDisposedException)
+                {
+                }
             }
 
             if (!saved)

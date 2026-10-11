@@ -35,7 +35,8 @@ mdEditor（以下「本アプリ」）は、5garashi.com設計事務所が提供
 本アプリ自体は、利用状況の計測（テレメトリ）や広告のための通信を行いません。ただし、次の場合には通信が発生します。
 
 - 文書に `https://` などで始まる外部の画像が含まれている場合、プレビューと PDF の表示のために、本アプリはその画像のサーバーへ直接接続します。接続先のサーバーには、通常の Web の閲覧と同じように、利用者の IP アドレスなどが伝わります。
-- 文書内のリンクを開くと、既定のブラウザーやメールアプリで開きます。その後の通信は、それぞれのアプリの扱いによります。
+- 文書内のリンクと、「このアプリについて」の会社紹介・サポートなどのリンクは、利用者が選んだときだけ、既定のブラウザーやメールアプリで開きます。その後の通信は、それぞれのアプリの扱いによります。
+- Microsoft Store 版では、Windows の仕組みによりアプリが書き込む設定やデータの保存場所が、パッケージ専用の領域に置き換わることがあります。内容と扱いは上記と同じで、外部に送られることはありません。
 - 画面表示に使う Microsoft Edge WebView2 Runtime は Microsoft が提供する部品で、その更新や診断データの送信は Microsoft の設定とプライバシーに関する声明に従います。
 
 ### お問い合わせ
@@ -69,7 +70,8 @@ The app stores the following settings on your PC. They are never sent anywhere.
 The app itself makes no connections for usage tracking (telemetry) or advertising. Connections do happen in these cases:
 
 - If a document contains external images (for example, addresses starting with `https://`), the app connects directly to those servers to show the images in the preview and in PDFs. As with ordinary web browsing, those servers receive information such as your IP address.
-- Links in a document open in your default browser or mail app. What happens after that depends on those apps.
+- Links in a document, and the company, support, and other links in About, open in your default browser or mail app only when you choose them. What happens after that depends on those apps.
+- In the Microsoft Store version, Windows may redirect where the app writes its settings and data to a package-specific area. The contents and handling are the same as described above, and nothing is sent anywhere.
 - Microsoft Edge WebView2 Runtime, the display component provided by Microsoft, is updated and may send diagnostic data according to Microsoft's settings and privacy statement.
 
 ### Contact

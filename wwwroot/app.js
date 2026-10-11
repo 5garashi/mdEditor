@@ -26,6 +26,15 @@
   const messages = {
     ja: {
       toolbar: "文書操作",
+      sample: "サンプル", sampleHeading: "サンプルを開く",
+      sampleIntro: "図と数式を含む短い文書を、編集欄に入れて試せます。選んだときだけ入ります。",
+      sampleOpen: "開く", sampleOpenLabel: (name) => `サンプル「${name}」を編集欄に入れる`,
+      sampleConfirm: "編集欄の内容をサンプルに置き換えます。よろしいですか？",
+      about: "このアプリについて", aboutHeading: "このアプリについて",
+      aboutIntro: "mdEditor は 5garashi.com Design Office が作った、Markdown の編集・プレビュー・PDF 書き出しのアプリです。",
+      aboutCompany: "5garashi.com Design Office の紹介", aboutWorks: "作品・ほかのアプリ",
+      aboutSupport: "サポート・お問い合わせ", aboutPrivacy: "プライバシーポリシー",
+      aboutNote: "リンクは選んだときだけブラウザーで開きます。起動時の広告や、PDF への宣伝の挿入はありません。",
       open: "開く", openTitle: "開く (Ctrl+O)", save: "保存", saveTitle: "保存 (Ctrl+S)",
       saveAs: "名前を付けて保存", pdf: "PDFに保存",
       languageToggle: "English", languageLabel: "表示言語を English に切り替える",
@@ -115,6 +124,15 @@
     },
     en: {
       toolbar: "Document actions",
+      sample: "Samples", sampleHeading: "Open a sample",
+      sampleIntro: "Try a short document with diagrams and math. Nothing is inserted until you choose one.",
+      sampleOpen: "Open", sampleOpenLabel: (name) => `Put the sample "${name}" in the editor`,
+      sampleConfirm: "This replaces the editor content with the sample. Continue?",
+      about: "About", aboutHeading: "About this app",
+      aboutIntro: "mdEditor is a Markdown editor, previewer, and PDF exporter made by 5garashi.com Design Office.",
+      aboutCompany: "About 5garashi.com Design Office", aboutWorks: "Works and other apps",
+      aboutSupport: "Support and contact", aboutPrivacy: "Privacy policy",
+      aboutNote: "Links open in your browser only when you choose them. The app shows no ads at startup and never inserts promotions into PDFs.",
       open: "Open", openTitle: "Open (Ctrl+O)", save: "Save", saveTitle: "Save (Ctrl+S)",
       saveAs: "Save As", pdf: "Save as PDF",
       languageToggle: "日本語", languageLabel: "Switch the display language to Japanese",
@@ -1112,6 +1130,60 @@
     applyShortcutHints();
     shortcutRows.querySelector(`[data-capture="${definition.id}"]`)?.focus();
   }, true);
+
+  const samples = [
+    { ja: "図と数式", en: "Diagrams and math",
+      text: {
+        ja: "# 図と数式のサンプル\n\nMarkdown を書くと、右のプレビューにすぐ反映されます。\n\n## 図（Mermaid）\n\n```mermaid\nflowchart LR\n  A[書く] --> B[確認する]\n  B --> C[PDFに保存]\n```\n\n## 数式（KaTeX）\n\n円の面積は $S = \\pi r^2$ です。\n\n$$\\int_0^1 x^2\\,dx = \\frac{1}{3}$$\n\n## 表とチェックリスト\n\n| 名前 | 数 |\n| --- | ---: |\n| りんご | 3 |\n| みかん | 5 |\n\n- [x] 図を見る\n- [ ] PDFに保存する\n",
+        en: "# Diagrams and math sample\n\nWhat you type appears in the preview on the right right away.\n\n## Diagram (Mermaid)\n\n```mermaid\nflowchart LR\n  A[Write] --> B[Check]\n  B --> C[Save as PDF]\n```\n\n## Math (KaTeX)\n\nThe area of a circle is $S = \\pi r^2$.\n\n$$\\int_0^1 x^2\\,dx = \\frac{1}{3}$$\n\n## Table and checklist\n\n| Name | Qty |\n| --- | ---: |\n| Apple | 3 |\n| Orange | 5 |\n\n- [x] See the diagram\n- [ ] Save as PDF\n" } },
+    { ja: "基本の書き方", en: "Basic writing",
+      text: {
+        ja: "# はじめての Markdown\n\n**太字**、*斜体*、[リンク](https://example.com) が使えます。\n\n1. 見出し\n2. リスト\n3. 引用\n\n> 引用はこのように書きます。\n\n```\nコードはこのように書きます。\n```\n",
+        en: "# Your first Markdown\n\nYou can use **bold**, *italic*, and [links](https://example.com).\n\n1. Headings\n2. Lists\n3. Quotes\n\n> Quotes look like this.\n\n```\nCode looks like this.\n```\n" } }
+  ];
+  const sampleDialog = document.getElementById("sample-dialog");
+  const sampleList = document.getElementById("sample-list");
+  const openSampleDialog = () => {
+    sampleList.replaceChildren();
+    for (const sample of samples) {
+      const name = sample[language];
+      const item = document.createElement("li");
+      const label = document.createElement("span");
+      label.textContent = name;
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = t("sampleOpen");
+      button.setAttribute("aria-label", t("sampleOpenLabel")(name));
+      button.addEventListener("click", () => {
+        if (view.state.doc.length > 0 && !window.confirm(t("sampleConfirm"))) return;
+        sampleDialog.close();
+        view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: sample.text[language] } });
+        editorScroller.scrollTop = 0;
+        preview.scrollTop = 0;
+        view.focus();
+      });
+      item.append(label, button);
+      sampleList.appendChild(item);
+    }
+    sampleDialog.showModal();
+  };
+  document.getElementById("sample-button").addEventListener("click", openSampleDialog);
+  document.getElementById("sample-close").addEventListener("click", () => sampleDialog.close());
+  sampleDialog.addEventListener("click", (event) => {
+    if (event.target === sampleDialog) sampleDialog.close();
+  });
+
+  const aboutDialog = document.getElementById("about-dialog");
+  document.getElementById("about-button").addEventListener("click", () => aboutDialog.showModal());
+  document.getElementById("about-close").addEventListener("click", () => aboutDialog.close());
+  aboutDialog.addEventListener("click", (event) => {
+    if (event.target === aboutDialog) aboutDialog.close();
+    const link = event.target.closest?.("a");
+    if (link) {
+      event.preventDefault();
+      post({ type: "externalLink", url: link.href });
+    }
+  });
 
   const openShortcutDialog = () => {
     capturing = null;
