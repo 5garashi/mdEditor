@@ -1,9 +1,9 @@
 ﻿<#
-  File: setup.ps1
-  Description: Publishes mdEditor and registers it as a Windows Markdown app
-  Author: 5garashi.com設計事務所 / 5garashi.com Design Office
-  Created: 2026-10-10
-  License: MIT
+  ファイル名 / File: setup.ps1
+  概要 / Description: Publishes mdEditor and registers it as a Windows Markdown app
+  作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
+  作成日 / Created: 2026-10-10
+  ライセンス / License: MIT
   SPDX-License-Identifier: MIT
 #>
 [CmdletBinding()]
@@ -13,6 +13,27 @@ $ErrorActionPreference = 'Stop'
 $projectPath = Join-Path $PSScriptRoot 'mdEditor.csproj'
 $publishPath = Join-Path $env:LOCALAPPDATA 'Programs\mdEditor'
 $applicationPath = Join-Path $publishPath 'mdEditor.exe'
+
+# 起動中の mdEditor は exe を使用中にして上書きを妨げるため、発行の前に閉じる。
+# CloseMainWindow は通常の終了と同じで、未保存の文書があれば mdEditor が保存を確認する。
+$running = @(Get-Process -Name 'mdEditor' -ErrorAction SilentlyContinue |
+    Where-Object { $_.Path -eq $applicationPath })
+if ($running.Count -gt 0) {
+    Write-Host "インストール済みの mdEditor が $($running.Count) 個起動しています。更新するには閉じる必要があります。"
+    $answer = Read-Host '閉じてよろしいですか？未保存の文書があれば、保存するか確認されます (Y/N)'
+    if ($answer -notmatch '^[Yy]') {
+        throw 'mdEditor を閉じてから、もう一度実行してください。'
+    }
+    foreach ($process in $running) {
+        [void]$process.CloseMainWindow()
+    }
+    Write-Host '保存の確認が表示された場合は、各ウィンドウで応答してください。'
+    foreach ($process in $running) {
+        if (-not $process.WaitForExit(60000)) {
+            throw 'mdEditor が終了しませんでした。保存の確認に応答してから、もう一度実行してください。'
+        }
+    }
+}
 
 dotnet publish $projectPath --configuration Release --runtime win-x64 --self-contained true --output $publishPath -p:PublishSingleFile=true
 if ($LASTEXITCODE -ne 0) {

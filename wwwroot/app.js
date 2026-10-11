@@ -1,9 +1,9 @@
 /*
-  File: wwwroot/app.js
-  Description: Connects editor controls to the native application host
-  Author: 5garashi.com設計事務所 / 5garashi.com Design Office
-  Created: 2026-10-10
-  License: MIT
+  ファイル名 / File: wwwroot/app.js
+  概要 / Description: Connects editor controls to the native application host
+  作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
+  作成日 / Created: 2026-10-10
+  ライセンス / License: MIT
   SPDX-License-Identifier: MIT
 */
 (() => {
@@ -12,6 +12,7 @@
   const documentName = document.getElementById("document-name");
   const saveState = document.getElementById("save-state");
   const languageButton = document.getElementById("language-button");
+  const themeButton = document.getElementById("theme-button");
   const workspace = document.querySelector(".workspace");
   const divider = document.getElementById("pane-divider");
   const fullscreenButtons = document.querySelectorAll(".pane-fullscreen-button");
@@ -36,11 +37,17 @@
       fullscreenExit: "元の表示に戻す", saved: "保存済み", unsaved: "未保存の変更",
       pdfStarting: "PDF出力を開始しています",
       findReplace: "検索・置換", findReplaceTitle: "検索・置換 (Ctrl+H)",
+      help: "書き方", helpTitle: "Markdown の書き方 (F1)", helpHeading: "Markdown の簡単な書き方",
+      helpIntro: "左の書き方で入力すると、右のように表示されます。「挿入」を押すと、編集欄のカーソル位置に例を入れます。",
+      helpItem: "項目", helpSyntax: "書き方", helpResult: "表示", helpInsert: "挿入",
+      helpInsertLabel: (name) => `「${name}」の例を挿入`,
       findPlaceholder: "検索する文字列", replacePlaceholder: "置換後の文字列",
       findLabel: "検索", replaceLabel: "置換",
       findPrev: "前へ", findNext: "次へ", replaceOne: "置換", replaceAll: "すべて置換",
       matchCase: "大文字小文字を区別", close: "閉じる",
       notFound: "見つかりません", replacedCount: (n) => `${n} 件を置換しました`,
+      themeLabels: { auto: "表示: 自動", light: "表示: ライト", dark: "表示: ダーク" },
+      themeTitle: "表示テーマを切り替えます（自動 → ライト → ダーク）",
       diagramError: "図を表示できません", diagramUnavailable: "図の表示機能を読み込めませんでした",
       ratio: (e, p) => `編集画面 ${e}%、プレビュー ${p}%`
     },
@@ -57,11 +64,17 @@
       fullscreenExit: "Restore layout", saved: "Saved", unsaved: "Unsaved changes",
       pdfStarting: "Starting PDF export",
       findReplace: "Find/Replace", findReplaceTitle: "Find/Replace (Ctrl+H)",
+      help: "Syntax", helpTitle: "Markdown syntax (F1)", helpHeading: "Markdown quick reference",
+      helpIntro: "Type the syntax on the left to get the result on the right. Insert puts the example at the cursor in the editor.",
+      helpItem: "Item", helpSyntax: "Syntax", helpResult: "Result", helpInsert: "Insert",
+      helpInsertLabel: (name) => `Insert the ${name} example`,
       findPlaceholder: "Text to find", replacePlaceholder: "Replace with",
       findLabel: "Find", replaceLabel: "Replace",
       findPrev: "Previous", findNext: "Next", replaceOne: "Replace", replaceAll: "Replace all",
       matchCase: "Match case", close: "Close",
       notFound: "Not found", replacedCount: (n) => `Replaced ${n}`,
+      themeLabels: { auto: "Theme: Auto", light: "Theme: Light", dark: "Theme: Dark" },
+      themeTitle: "Switch the theme (Auto, Light, Dark)",
       diagramError: "Unable to render the diagram", diagramUnavailable: "The diagram renderer could not be loaded",
       ratio: (e, p) => `Editor ${e}%, preview ${p}%`
     }
@@ -71,6 +84,15 @@
     ? storedLanguage
     : (navigator.language || "").toLowerCase().startsWith("ja") ? "ja" : "en";
   const t = (key) => messages[language][key];
+
+  // "auto" follows the Windows app mode; the host applies the choice to WebView2,
+  // so prefers-color-scheme (CSS, logos, Mermaid) switches with it.
+  const themeOrder = ["auto", "light", "dark"];
+  let theme = "auto";
+  const updateThemeButton = () => {
+    themeButton.textContent = t("themeLabels")[theme];
+    themeButton.title = t("themeTitle");
+  };
 
   const statusText = () => (documentDirty ? t("unsaved") : t("saved"));
 
@@ -86,9 +108,12 @@
       }
     }
     languageButton.lang = language === "ja" ? "en" : "ja";
+    updateThemeButton();
     saveState.textContent = pdfStarting ? t("pdfStarting") : statusText();
     setEditorRatio(editorRatio, false);
     setDisplayMode(displayMode);
+    // The typeface follows the UI language, so redraw diagrams with it.
+    if (lastPreviewHtml !== null) renderPreview(lastPreviewHtml);
   };
 
   if (!Number.isFinite(editorRatio)) {
@@ -174,6 +199,11 @@
     pdfStarting = true;
     saveState.textContent = t("pdfStarting");
     post({ type: "exportPdf" });
+  });
+  themeButton.addEventListener("click", () => {
+    theme = themeOrder[(themeOrder.indexOf(theme) + 1) % themeOrder.length];
+    updateThemeButton();
+    post({ type: "setTheme", theme });
   });
   languageButton.addEventListener("click", () => {
     language = language === "ja" ? "en" : "ja";
@@ -278,7 +308,16 @@
     editor.focus();
   };
 
-  const norm = (s) => (findCase.checked ? s : s.toLowerCase());
+  // Matches come from the original text, so selection positions stay right even
+  // when lowercasing would change a string's length (for example "İ").
+  const findMatches = () => {
+    const pattern = findInput.value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp(pattern, findCase.checked ? "g" : "gi");
+    return Array.from(editor.value.matchAll(regex), (match) => ({
+      index: match.index,
+      length: match[0].length
+    }));
+  };
 
   // Measures the wrapped position of the match with a hidden mirror of the textarea.
   const scrollMatchIntoView = (index) => {
@@ -313,26 +352,18 @@
     if (!needle) {
       return false;
     }
-    const hay = norm(editor.value);
-    const target = norm(needle);
-    let index;
-    if (forward) {
-      index = hay.indexOf(target, editor.selectionEnd);
-      if (index < 0) index = hay.indexOf(target);
-    } else {
-      index = editor.selectionStart > 0
-        ? hay.lastIndexOf(target, editor.selectionStart - 1)
-        : -1;
-      if (index < 0) index = hay.lastIndexOf(target);
-    }
-    if (index < 0) {
+    const matches = findMatches();
+    if (matches.length === 0) {
       findStatus.textContent = t("notFound");
       return false;
     }
+    const match = forward
+      ? matches.find((m) => m.index >= editor.selectionEnd) ?? matches[0]
+      : matches.findLast((m) => m.index < editor.selectionStart) ?? matches[matches.length - 1];
     findStatus.textContent = "";
     editor.focus();
-    editor.setSelectionRange(index, index + needle.length);
-    scrollMatchIntoView(index);
+    editor.setSelectionRange(match.index, match.index + match.length);
+    scrollMatchIntoView(match.index);
     return true;
   };
 
@@ -347,8 +378,9 @@
   const replaceOne = () => {
     const needle = findInput.value;
     if (!needle) return;
-    const selected = editor.value.slice(editor.selectionStart, editor.selectionEnd);
-    if (norm(selected) === norm(needle)) {
+    const selectedIsMatch = findMatches().some((m) =>
+      m.index === editor.selectionStart && m.index + m.length === editor.selectionEnd);
+    if (selectedIsMatch) {
       replaceSelection(replaceInput.value);
     }
     findText(true);
@@ -357,21 +389,17 @@
   const replaceAll = () => {
     const needle = findInput.value;
     if (!needle) return;
-    const hay = norm(editor.value);
-    const target = norm(needle);
-    let count = 0;
-    let result = "";
-    let last = 0;
-    let index = hay.indexOf(target);
-    while (index >= 0) {
-      result += editor.value.slice(last, index) + replaceInput.value;
-      last = index + needle.length;
-      count += 1;
-      index = hay.indexOf(target, last);
-    }
+    const matches = findMatches();
+    const count = matches.length;
     if (count === 0) {
       findStatus.textContent = t("notFound");
       return;
+    }
+    let result = "";
+    let last = 0;
+    for (const match of matches) {
+      result += editor.value.slice(last, match.index) + replaceInput.value;
+      last = match.index + match.length;
     }
     result += editor.value.slice(last);
     editor.focus();
@@ -379,6 +407,104 @@
     replaceSelection(result);
     findStatus.textContent = t("replacedCount")(count);
   };
+
+  // Markdown quick reference. Results are fixed markup written here, not user input.
+  const helpItems = [
+    { block: true,
+      ja: ["見出し", "# 見出し1\n## 見出し2\n### 見出し3", '<span class="help-h1">見出し1</span><span class="help-h2">見出し2</span><span class="help-h3">見出し3</span>'],
+      en: ["Headings", "# Heading 1\n## Heading 2\n### Heading 3", '<span class="help-h1">Heading 1</span><span class="help-h2">Heading 2</span><span class="help-h3">Heading 3</span>'] },
+    { block: true,
+      ja: ["段落", "1つ目の段落\n\n2つ目の段落", "<p>1つ目の段落</p><p>2つ目の段落</p><small>空行で段落が分かれます</small>"],
+      en: ["Paragraphs", "First paragraph\n\nSecond paragraph", "<p>First paragraph</p><p>Second paragraph</p><small>A blank line starts a new paragraph</small>"] },
+    { block: true,
+      ja: ["改行", "1行目\\\n2行目", "<p>1行目<br>2行目</p><small>行末に \\ を付けるか、半角スペースを2つ入れると改行します。何も付けずに改行すると、前の行に続けて表示されます</small>"],
+      en: ["Line break", "First line\\\nSecond line", "<p>First line<br>Second line</p><small>End a line with \\ or two spaces to break it. A plain line break joins the lines in the output</small>"] },
+    { ja: ["太字", "**太字**", "<strong>太字</strong>"], en: ["Bold", "**bold**", "<strong>bold</strong>"] },
+    { ja: ["斜体", "*斜体*", "<em>斜体</em>"], en: ["Italic", "*italic*", "<em>italic</em>"] },
+    { ja: ["取り消し線", "~~取り消し線~~", "<del>取り消し線</del>"], en: ["Strikethrough", "~~strikethrough~~", "<del>strikethrough</del>"] },
+    { ja: ["コード（文中）", "`コード`", "<code>コード</code>"], en: ["Inline code", "`code`", "<code>code</code>"] },
+    { ja: ["リンク", "[リンクの文字](https://example.com)", '<span class="help-link">リンクの文字</span>'],
+      en: ["Link", "[link text](https://example.com)", '<span class="help-link">link text</span>'] },
+    { ja: ["画像", "![画像の説明](https://example.com/image.png)", "<small>画像が表示されます</small>"],
+      en: ["Image", "![image description](https://example.com/image.png)", "<small>The image is shown</small>"] },
+    { block: true,
+      ja: ["箇条書き", "- 項目1\n- 項目2\n  - 入れ子の項目", "<ul><li>項目1</li><li>項目2<ul><li>入れ子の項目</li></ul></li></ul>"],
+      en: ["Bulleted list", "- Item 1\n- Item 2\n  - Nested item", "<ul><li>Item 1</li><li>Item 2<ul><li>Nested item</li></ul></li></ul>"] },
+    { block: true,
+      ja: ["番号付きリスト", "1. 手順1\n2. 手順2", "<ol><li>手順1</li><li>手順2</li></ol>"],
+      en: ["Numbered list", "1. Step 1\n2. Step 2", "<ol><li>Step 1</li><li>Step 2</li></ol>"] },
+    { block: true,
+      ja: ["引用", "> 引用文", "<blockquote>引用文</blockquote>"],
+      en: ["Quote", "> Quoted text", "<blockquote>Quoted text</blockquote>"] },
+    { block: true,
+      ja: ["コードブロック", "```js\nconsole.log(\"hello\");\n```", "<pre><code>console.log(\"hello\");</code></pre>"],
+      en: ["Code block", "```js\nconsole.log(\"hello\");\n```", "<pre><code>console.log(\"hello\");</code></pre>"] },
+    { block: true,
+      ja: ["表", "| 名前 | 数 |\n| --- | ---: |\n| りんご | 3 |", '<table><thead><tr><th>名前</th><th class="help-right">数</th></tr></thead><tbody><tr><td>りんご</td><td class="help-right">3</td></tr></tbody></table>'],
+      en: ["Table", "| Name | Qty |\n| --- | ---: |\n| Apple | 3 |", '<table><thead><tr><th>Name</th><th class="help-right">Qty</th></tr></thead><tbody><tr><td>Apple</td><td class="help-right">3</td></tr></tbody></table>'] },
+    { block: true, ja: ["区切り線", "---", "<hr>"], en: ["Horizontal rule", "---", "<hr>"] },
+    { block: true,
+      ja: ["図（Mermaid）", "```mermaid\nflowchart LR\n  A[開始] --> B[終了]\n```", "<small>フローチャートやシーケンス図などが描かれます</small>"],
+      en: ["Diagram (Mermaid)", "```mermaid\nflowchart LR\n  A[Start] --> B[End]\n```", "<small>Draws flowcharts, sequence diagrams, and more</small>"] },
+    { math: "E = mc^2", ja: ["数式", "$E = mc^2$", ""], en: ["Math", "$E = mc^2$", ""] }
+  ];
+  const helpDialog = document.getElementById("help-dialog");
+  const helpButton = document.getElementById("help-button");
+  const helpRows = document.getElementById("help-rows");
+
+  // Block examples start on their own line so they do not join the current text.
+  const insertExample = (syntax, block) => {
+    helpDialog.close();
+    const before = editor.value.slice(0, editor.selectionStart);
+    const prefix = block && before && !before.endsWith("\n") ? "\n" : "";
+    replaceSelection(prefix + syntax + (block ? "\n" : ""));
+  };
+
+  const renderHelp = () => {
+    helpRows.replaceChildren();
+    for (const item of helpItems) {
+      const [name, syntax, result] = item[language];
+      const row = document.createElement("tr");
+      const nameCell = document.createElement("th");
+      nameCell.scope = "row";
+      nameCell.textContent = name;
+      const syntaxCell = document.createElement("td");
+      const pre = document.createElement("pre");
+      const code = document.createElement("code");
+      code.textContent = syntax;
+      pre.appendChild(code);
+      syntaxCell.appendChild(pre);
+      const resultCell = document.createElement("td");
+      resultCell.className = "help-result";
+      if (item.math && window.katex) {
+        window.katex.render(item.math, resultCell, { throwOnError: false });
+      } else {
+        resultCell.innerHTML = result || syntax;
+      }
+      const insertCell = document.createElement("td");
+      const insert = document.createElement("button");
+      insert.type = "button";
+      insert.className = "help-insert";
+      insert.textContent = t("helpInsert");
+      insert.setAttribute("aria-label", t("helpInsertLabel")(name));
+      insert.addEventListener("click", () => insertExample(syntax, item.block));
+      insertCell.appendChild(insert);
+      row.append(nameCell, syntaxCell, resultCell, insertCell);
+      helpRows.appendChild(row);
+    }
+  };
+
+  const openHelp = () => {
+    renderHelp();
+    helpDialog.showModal();
+  };
+
+  helpButton.addEventListener("click", openHelp);
+  document.getElementById("help-close").addEventListener("click", () => helpDialog.close());
+  // A click on the backdrop lands on the dialog element itself.
+  helpDialog.addEventListener("click", (event) => {
+    if (event.target === helpDialog) helpDialog.close();
+  });
 
   document.getElementById("replace-button").addEventListener("click", openFindBar);
   document.getElementById("find-close").addEventListener("click", closeFindBar);
@@ -399,8 +525,13 @@
   });
 
   document.addEventListener("keydown", (event) => {
+    // The open dialog handles Esc itself; preventing it here would keep it open.
+    if (helpDialog.open) return;
     if (!event.ctrlKey && !event.metaKey) {
-      if (event.key === "F11") {
+      if (event.key === "F1") {
+        event.preventDefault();
+        openHelp();
+      } else if (event.key === "F11") {
         event.preventDefault();
         post({ type: "toggleWindowFullscreen" });
       } else if (event.key === "Escape") {
@@ -447,18 +578,35 @@
     post({ type: "externalLink", url: url.href });
   });
 
-  // Rendered SVG keyed by Mermaid source, so unchanged diagrams are restored
-  // synchronously on every preview update without flicker or scroll jumps.
-  const diagramCache = new Map();
+  // Rendered SVG per Mermaid theme, keyed by source, so unchanged diagrams are
+  // restored synchronously on every preview update without flicker or scroll jumps.
+  const diagramCaches = { default: new Map(), dark: new Map() };
   let diagramCounter = 0;
   let renderGeneration = 0;
+  let mermaidConfig = null;
+  let lastPreviewHtml = null;
+  const darkScheme = window.matchMedia("(prefers-color-scheme: dark)");
 
-  window.mermaid?.initialize({
-    startOnLoad: false,
-    securityLevel: "strict",
-    theme: "default",
-    fontFamily: "\"Yu Gothic UI\", \"Meiryo\", sans-serif"
-  });
+  // PDF export always uses the day palette, so print renders use the light theme.
+  // Diagrams use the same typeface as the UI language (styles.css :root and
+  // :root:lang(en)), so drawings made in one language are not reused in the other.
+  const useMermaidTheme = (forPrint) => {
+    const theme = !forPrint && darkScheme.matches ? "dark" : "default";
+    const fontFamily = getComputedStyle(document.documentElement).fontFamily;
+    if (mermaidConfig?.fontFamily !== fontFamily) {
+      for (const cache of Object.values(diagramCaches)) cache.clear();
+    }
+    if (mermaidConfig?.theme !== theme || mermaidConfig?.fontFamily !== fontFamily) {
+      window.mermaid?.initialize({
+        startOnLoad: false,
+        securityLevel: "strict",
+        theme,
+        fontFamily
+      });
+      mermaidConfig = { theme, fontFamily };
+    }
+    return diagramCaches[theme];
+  };
 
   const renderMath = () => {
     if (!window.katex) return;
@@ -489,10 +637,37 @@
     }
   };
 
+  // Mermaid centres each sankey label on its node, so labels of neighbouring
+  // columns can land on the same line and overlap; move colliding pairs apart.
+  const separateSankeyLabels = (container) => {
+    const svg = container.querySelector('svg[aria-roledescription="sankey"]');
+    if (!svg) return;
+    const labels = Array.from(svg.querySelectorAll("text"));
+    for (let pass = 0; pass < 4; pass++) {
+      let moved = false;
+      for (let i = 0; i < labels.length; i++) {
+        for (let j = i + 1; j < labels.length; j++) {
+          const a = labels[i].getBBox();
+          const b = labels[j].getBBox();
+          const overlapX = a.x < b.x + b.width && b.x < a.x + a.width;
+          const overlapY = a.y < b.y + b.height && b.y < a.y + a.height;
+          if (!overlapX || !overlapY) continue;
+          const shift = (Math.min(a.y + a.height, b.y + b.height) - Math.max(a.y, b.y)) / 2 + 2;
+          const [upper, lower] = a.y <= b.y ? [labels[i], labels[j]] : [labels[j], labels[i]];
+          upper.setAttribute("y", String(Number.parseFloat(upper.getAttribute("y")) - shift));
+          lower.setAttribute("y", String(Number.parseFloat(lower.getAttribute("y")) + shift));
+          moved = true;
+        }
+      }
+      if (!moved) break;
+    }
+  };
+
   const showDiagramError = (element, source, detail) => {
     const message = document.createElement("p");
     message.className = "diagram-error-message";
-    message.textContent = detail ? `${t("diagramError")}: ${detail}` : t("diagramError");
+    // Errors carry a symbol and wording, not color alone (Identity 7-1, 7-2).
+    message.textContent = `⚠ ${detail ? `${t("diagramError")}: ${detail}` : t("diagramError")}`;
     const code = document.createElement("code");
     code.textContent = source;
     const pre = document.createElement("pre");
@@ -502,7 +677,7 @@
     element.replaceChildren(message, pre);
   };
 
-  const renderDiagrams = async (generation, previousSvgs) => {
+  const renderDiagrams = async (generation, previousSvgs, diagramCache) => {
     // Markdig emits <pre class="mermaid">; a div keeps code-block styles out of the drawing.
     const blocks = Array.from(preview.querySelectorAll(".mermaid"), (block) => {
       const element = document.createElement("div");
@@ -512,8 +687,10 @@
       return { element, source: element.textContent };
     });
     const sources = new Set(blocks.map((block) => block.source));
-    for (const source of diagramCache.keys()) {
-      if (!sources.has(source)) diagramCache.delete(source);
+    for (const cache of Object.values(diagramCaches)) {
+      for (const source of cache.keys()) {
+        if (!sources.has(source)) cache.delete(source);
+      }
     }
 
     const pending = [];
@@ -543,9 +720,12 @@
       const id = `mermaid-diagram-${++diagramCounter}`;
       try {
         const { svg } = await window.mermaid.render(id, source);
-        diagramCache.set(source, svg);
+        // A newer render may have switched the theme while this one was drawing.
         if (generation !== renderGeneration) return;
         element.innerHTML = svg;
+        separateSankeyLabels(element);
+        // Cache the adjusted markup so restored diagrams keep the fix.
+        diagramCache.set(source, element.innerHTML);
         element.classList.remove("diagram-pending");
         element.classList.add("diagram-rendered");
       } catch (error) {
@@ -556,8 +736,10 @@
     }
   };
 
-  const renderPreview = async (html) => {
+  const renderPreview = async (html, forPrint = false) => {
     const generation = ++renderGeneration;
+    const diagramCache = useMermaidTheme(forPrint);
+    if (!forPrint) lastPreviewHtml = html;
     const previousSvgs = Array.from(
       preview.querySelectorAll(".mermaid"),
       (element) => (element.classList.contains("diagram-rendered") ? element.innerHTML : null)
@@ -565,8 +747,12 @@
     preview.innerHTML = html;
     showUnsupportedDiagrams();
     renderMath();
-    await renderDiagrams(generation, previousSvgs);
+    await renderDiagrams(generation, previousSvgs, diagramCache);
   };
+
+  darkScheme.addEventListener("change", () => {
+    if (lastPreviewHtml !== null) renderPreview(lastPreviewHtml);
+  });
 
   const hasFiles = (event) =>
     Array.from(event.dataTransfer?.types ?? []).includes("Files");
@@ -601,11 +787,14 @@
     } else if (message.type === "language") {
       language = message.lang === "en" ? "en" : "ja";
       applyLanguage();
+    } else if (message.type === "theme") {
+      theme = themeOrder.includes(message.theme) ? message.theme : "auto";
+      updateThemeButton();
     } else if (message.type === "setText") {
       editor.value = message.text;
     } else if (message.type === "preview") {
-      renderPreview(message.html).finally(() => {
-        if (message.notifyRendered) post({ type: "previewRendered" });
+      renderPreview(message.html, message.forPrint).finally(() => {
+        if (message.notifyRendered) post({ type: "previewRendered", requestId: message.requestId });
       });
     } else if (message.type === "pdfExportStatus") {
       saveState.textContent = message.message || statusText();

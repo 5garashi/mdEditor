@@ -1,9 +1,9 @@
 <!--
-  File: wwwroot/index.html
-  Description: Accessible side-by-side Markdown editor and preview
-  Author: 5garashi.com設計事務所 / 5garashi.com Design Office
-  Created: 2026-10-10
-  License: MIT
+  ファイル名 / File: wwwroot/index.html
+  概要 / Description: Accessible side-by-side Markdown editor and preview
+  作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
+  作成日 / Created: 2026-10-10
+  ライセンス / License: MIT
   SPDX-License-Identifier: MIT
 -->
 <!doctype html>
@@ -11,9 +11,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light">
+  <meta name="color-scheme" content="light dark">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https:; style-src 'self' 'unsafe-inline'; script-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
-  <meta name="theme-color" content="#FFE699">
+  <meta name="theme-color" content="#FFE699" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#2B3A20" media="(prefers-color-scheme: dark)">
   <title>mdEditor</title>
   <link rel="icon" href="assets/5garashi_mark_simple.svg" type="image/svg+xml">
   <link rel="stylesheet" href="lib/katex/katex.min.css">
@@ -25,10 +26,17 @@
 <body>
   <header class="brand-bar">
     <div class="brand-lockup">
-      <img class="brand-logo" src="assets/5garashi_logotype_outlined.svg" alt="5garashi.com 設計事務所 / 5garashi.com Design Office">
+      <!-- Dark mode uses the gray reversal (Identity v4.8, Art. 3-7). -->
+      <picture>
+        <source srcset="assets/5garashi_logotype_reversed_outlined.svg" media="(prefers-color-scheme: dark)">
+        <img class="brand-logo" src="assets/5garashi_logotype_outlined.svg" alt="5garashi.com 設計事務所 / 5garashi.com Design Office">
+      </picture>
       <h1>mdEditor</h1>
     </div>
-    <img class="brand-mark" src="assets/5garashi_mark_simple.svg" alt="" aria-hidden="true">
+    <!-- The symbol mark stays red (volt) in dark mode too, by the owner's choice. -->
+    <picture>
+      <img class="brand-mark" src="assets/5garashi_mark_simple.svg" alt="" aria-hidden="true">
+    </picture>
   </header>
   <section class="toolbar" data-i18n-attr="aria-label:toolbar">
     <div class="document-status" aria-live="polite">
@@ -41,6 +49,7 @@
       <button id="save-button" class="primary" type="button" data-i18n="save" data-i18n-attr="title:saveTitle">保存</button>
       <button id="save-as-button" type="button" data-i18n="saveAs">名前を付けて保存</button>
       <button id="pdf-button" type="button" data-i18n="pdf">PDFに保存</button>
+      <button id="theme-button" type="button">表示: 自動</button>
       <button id="language-button" type="button" lang="en" data-i18n="languageToggle" data-i18n-attr="aria-label:languageLabel">English</button>
     </div>
   </section>
@@ -49,6 +58,7 @@
       <div class="pane-heading">
         <h2 id="editor-heading" data-i18n="editorHeading">Markdown を編集</h2>
         <button id="replace-button" type="button" data-i18n="findReplace" data-i18n-attr="title:findReplaceTitle">検索・置換</button>
+        <button id="help-button" type="button" data-i18n="help" data-i18n-attr="title:helpTitle" aria-haspopup="dialog">書き方</button>
         <button class="pane-fullscreen-button" type="button" data-fullscreen-mode="editor" aria-pressed="false">編集画面をウィンドウ全体に表示</button>
       </div>
       <div id="find-bar" class="find-bar" role="search" hidden>
@@ -93,5 +103,25 @@
                aria-label="Markdown の表示結果"></article>
     </section>
   </main>
+  <dialog id="help-dialog" class="help-dialog" aria-labelledby="help-heading">
+    <div class="help-header">
+      <h2 id="help-heading" data-i18n="helpHeading">Markdown の簡単な書き方</h2>
+      <button id="help-close" type="button" data-i18n="close">閉じる</button>
+    </div>
+    <p class="help-intro" data-i18n="helpIntro"></p>
+    <div class="help-table-wrap">
+      <table class="help-table">
+        <thead>
+          <tr>
+            <th scope="col" data-i18n="helpItem">項目</th>
+            <th scope="col" data-i18n="helpSyntax">書き方</th>
+            <th scope="col" data-i18n="helpResult">表示</th>
+            <th scope="col"><span class="visually-hidden" data-i18n="helpInsert">挿入</span></th>
+          </tr>
+        </thead>
+        <tbody id="help-rows"></tbody>
+      </table>
+    </div>
+  </dialog>
 </body>
 </html>

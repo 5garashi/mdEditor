@@ -1,9 +1,9 @@
 /*
-  File: Strings.cs
-  Description: Japanese and English text for native dialogs and messages
-  Author: 5garashi.com設計事務所 / 5garashi.com Design Office
-  Created: 2026-10-10
-  License: MIT
+  ファイル名 / File: Strings.cs
+  概要 / Description: Japanese and English text for native dialogs and messages
+  作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
+  作成日 / Created: 2026-10-10
+  ライセンス / License: MIT
   SPDX-License-Identifier: MIT
 */
 namespace MdEditor;
@@ -42,7 +42,15 @@ internal static class Strings
         ["この環境ではPDFを書き出せません"] = "PDF export is not available in this environment",
         ["変更を保存しますか？"] = "Save your changes?",
         ["未保存の変更"] = "Unsaved changes",
-        ["リンクを開けませんでした。"] = "The link could not be opened."
+        ["リンクを開けませんでした。"] = "The link could not be opened.",
+        ["画面の表示機能（WebView2）を初期化できませんでした。"] =
+            "The display component (WebView2) could not be initialized.",
+        ["この文書には {0} で保存できない文字があります。UTF-8 で保存しますか？"] =
+            "This document contains characters that cannot be saved in {0}. Save it as UTF-8?",
+        ["図や数式の描画が15秒以内に終わりませんでした。このままPDFに書き出しますか？"] =
+            "Diagrams and math did not finish drawing within 15 seconds. Export the PDF anyway?",
+        ["予期しないエラーが発生しました。作業中の文書を保存してから、mdEditor を再起動してください。"] =
+            "An unexpected error occurred. Save your document, then restart mdEditor."
     };
 
     public static string Language { get; set; } = DefaultLanguage();

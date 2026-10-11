@@ -1,9 +1,9 @@
 /*
-  File: MainWindow.xaml.cs
-  Description: Loads, saves, renders, and safely previews Markdown documents
-  Author: 5garashi.com設計事務所 / 5garashi.com Design Office
-  Created: 2026-10-10
-  License: MIT
+  ファイル名 / File: MainWindow.xaml.cs
+  概要 / Description: Loads, saves, renders, and safely previews Markdown documents
+  作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
+  作成日 / Created: 2026-10-10
+  ライセンス / License: MIT
   SPDX-License-Identifier: MIT
 */
 using System.ComponentModel;
@@ -14,9 +14,16 @@ using System.Security;
 using System.Text;
 using System.Text.Json;
 using System.Windows;
+using System.Windows.Interop;
+using System.Windows.Media;
 using System.Windows.Threading;
 using Ganss.Xss;
 using Markdig;
+using Markdig.Renderers;
+using Markdig.Renderers.Html;
+using Markdig.Renderers.Html.Inlines;
+using Markdig.Syntax;
+using Markdig.Syntax.Inlines;
 using Microsoft.Win32;
 using Microsoft.Web.WebView2.Core;
 
@@ -26,15 +33,23 @@ public partial class MainWindow : Window
 {
     private readonly string? _initialPath;
     private readonly MarkdownPipeline _markdownPipeline =
-        new MarkdownPipelineBuilder().UseAdvancedExtensions().DisableHtml().Build();
+        new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
     private readonly HtmlSanitizer _htmlSanitizer = new();
     private readonly DispatcherTimer _previewTimer = new()
     {
         Interval = TimeSpan.FromMilliseconds(200)
     };
+    private const string DocumentHost = "document.mdeditor.local";
+    private static readonly UTF8Encoding Utf8NoBom = new(false);
     private string _text = string.Empty;
     private string? _filePath;
+    // Encoding the document was read with, so saving does not silently convert it.
+    private Encoding _encoding = Utf8NoBom;
+    // Incremented on every edit; a save only clears the dirty flag if no edit
+    // arrived while it was writing.
+    private long _changeVersion;
     private bool _isDirty;
+    private int _previewRequestId;
     private bool _pageReady;
     private bool _allowClose;
     private bool _closePromptActive;
@@ -46,10 +61,22 @@ public partial class MainWindow : Window
     private ResizeMode _windowedResizeMode;
     private Rect _windowedBounds;
 
+    private const int DwmwaUseImmersiveDarkMode = 20;
+    private const string SettingsKeyPath = @"Software\mdEditor";
+    // "auto", "light", or "dark". Kept in the registry so it applies before the page paints.
+    private string _theme = LoadTheme();
+
+    [DllImport("dwmapi.dll")]
+    private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attribute, ref int value, int size);
+
     public MainWindow(string? initialPath)
     {
         InitializeComponent();
         _initialPath = initialPath;
+        ApplyTheme();
+        SourceInitialized += (_, _) => ApplyTheme();
+        SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
+        Closed += (_, _) => SystemEvents.UserPreferenceChanged -= SystemEvents_UserPreferenceChanged;
         _previewTimer.Tick += (_, _) =>
         {
             _previewTimer.Stop();
@@ -60,42 +87,73 @@ public partial class MainWindow : Window
         _htmlSanitizer.AllowedTags.UnionWith(
         [
             "a", "blockquote", "br", "code", "del", "div", "em", "h1", "h2", "h3", "h4", "h5",
-            "h6", "hr", "img", "li", "ol", "p", "pre", "span", "strong", "table", "tbody", "td",
-            "th", "thead", "tr", "ul"
+            "h6", "hr", "img", "input", "li", "ol", "p", "pre", "span", "strong", "table", "tbody",
+            "td", "th", "thead", "tr", "ul"
         ]);
         _htmlSanitizer.AllowedAttributes.Clear();
         _htmlSanitizer.AllowedAttributes.UnionWith(
         [
-            "alt", "class", "colspan", "href", "rowspan", "src", "title"
+            "alt", "checked", "class", "colspan", "disabled", "href", "rowspan", "src", "style",
+            "title", "type"
         ]);
+        // Markdig writes table alignment as style="text-align: ..."; nothing else is kept.
+        _htmlSanitizer.AllowedCssProperties.Clear();
+        _htmlSanitizer.AllowedCssProperties.Add("text-align");
         _htmlSanitizer.AllowedSchemes.Clear();
         _htmlSanitizer.AllowedSchemes.UnionWith(["http", "https", "mailto"]);
+        // Task-list items are the only inputs Markdig emits; keep them read-only checkboxes.
+        _htmlSanitizer.PostProcessNode += (_, e) =>
+        {
+            if (e.Node is AngleSharp.Dom.IElement { TagName: "INPUT" } input)
+            {
+                if (!string.Equals(input.GetAttribute("type"), "checkbox", StringComparison.OrdinalIgnoreCase))
+                {
+                    input.Remove();
+                }
+                else
+                {
+                    input.SetAttribute("disabled", "disabled");
+                }
+            }
+        };
     }
 
     private async void Window_Loaded(object sender, RoutedEventArgs e)
     {
         try
         {
-            await EditorWebView.EnsureCoreWebView2Async();
+            // The default data folder sits beside the exe, which is read-only for
+            // installed (MSIX or Program Files) copies, so keep it in LocalAppData.
+            var userDataFolder = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "mdEditor",
+                "WebView2");
+            var environment = await CoreWebView2Environment.CreateAsync(null, userDataFolder);
+            await EditorWebView.EnsureCoreWebView2Async(environment);
         }
         catch (WebView2RuntimeNotFoundException ex)
         {
-            MessageBox.Show(
-                $"{Strings.Tr("Microsoft Edge WebView2 Runtime が必要です。")}\n\n{ex.Message}",
-                Strings.Tr("mdEditor を起動できません"),
-                MessageBoxButton.OK,
-                MessageBoxImage.Error);
-            Close();
+            ShowStartupError(Strings.Tr("Microsoft Edge WebView2 Runtime が必要です。"), ex);
+            return;
+        }
+        catch (Exception ex) when (ex is COMException or IOException or UnauthorizedAccessException
+                                       or InvalidOperationException or ArgumentException)
+        {
+            ShowStartupError(Strings.Tr("画面の表示機能（WebView2）を初期化できませんでした。"), ex);
             return;
         }
 
         EditorWebView.CoreWebView2.Settings.AreDevToolsEnabled = false;
+        ApplyTheme();
         EditorWebView.CoreWebView2.SetVirtualHostNameToFolderMapping(
             "mdeditor.local",
             Path.Combine(AppContext.BaseDirectory, "wwwroot"),
             CoreWebView2HostResourceAccessKind.DenyCors);
         EditorWebView.CoreWebView2.WebMessageReceived += WebMessageReceived;
         EditorWebView.CoreWebView2.NavigationStarting += NavigationStarting;
+        EditorWebView.CoreWebView2.AddWebResourceRequestedFilter(
+            $"https://{DocumentHost}/*", CoreWebView2WebResourceContext.Image);
+        EditorWebView.CoreWebView2.WebResourceRequested += DocumentResourceRequested;
         EditorWebView.Source = new Uri("https://mdeditor.local/index.html");
     }
 
@@ -119,6 +177,7 @@ public partial class MainWindow : Window
                 {
                     SendToPage(new { type = "language", lang = Strings.ForcedLanguage });
                 }
+                SendToPage(new { type = "theme", theme = _theme });
                 if (!string.IsNullOrWhiteSpace(_initialPath))
                 {
                     await LoadDocumentAsync(_initialPath);
@@ -129,6 +188,11 @@ public partial class MainWindow : Window
                     SendPreview();
                 }
                 break;
+            case "setTheme":
+                _theme = NormalizeTheme(root.GetProperty("theme").GetString());
+                SaveTheme();
+                ApplyTheme();
+                break;
             case "setLanguage":
                 Strings.Language = root.GetProperty("lang").GetString() == "en" ? "en" : "ja";
                 SendDocumentInfo();
@@ -137,7 +201,8 @@ public partial class MainWindow : Window
                 await HandleDropAsync(e);
                 break;
             case "change":
-                _text =  root.GetProperty("text").GetString() ?? string.Empty;
+                _text = root.GetProperty("text").GetString() ?? string.Empty;
+                _changeVersion++;
                 _isDirty = true;
                 SendDocumentInfo();
                 _previewTimer.Stop();
@@ -162,7 +227,13 @@ public partial class MainWindow : Window
                 SetWindowFullscreen(false);
                 break;
             case "previewRendered":
-                _previewRendered?.TrySetResult();
+                // Only the render that the PDF export asked for counts.
+                if (root.TryGetProperty("requestId", out var requestId)
+                    && requestId.ValueKind == JsonValueKind.Number
+                    && requestId.GetInt32() == _previewRequestId)
+                {
+                    _previewRendered?.TrySetResult();
+                }
                 break;
             case "exportPdf":
                 await ExportPdfAsync();
@@ -253,9 +324,11 @@ public partial class MainWindow : Window
         try
         {
             var fullPath = Path.GetFullPath(path);
-            var text = await File.ReadAllTextAsync(fullPath);
+            var (text, encoding) = DecodeDocument(await File.ReadAllBytesAsync(fullPath));
             _filePath = fullPath;
             _text = text;
+            _encoding = encoding;
+            _changeVersion++;
             _isDirty = false;
             SendDocumentInfo();
             SendToPage(new { type = "setText", text = _text });
@@ -300,10 +373,7 @@ public partial class MainWindow : Window
 
         try
         {
-            await File.WriteAllTextAsync(_filePath, _text, new UTF8Encoding(false));
-            _isDirty = false;
-            SendDocumentInfo();
-            return true;
+            return await WriteDocumentAsync(_filePath);
         }
         catch (UnauthorizedAccessException ex)
         {
@@ -346,10 +416,14 @@ public partial class MainWindow : Window
         try
         {
             var fullPath = Path.GetFullPath(dialog.FileName);
-            await File.WriteAllTextAsync(fullPath, _text, new UTF8Encoding(false));
+            if (!await WriteDocumentAsync(fullPath))
+            {
+                return false;
+            }
+
             _filePath = fullPath;
-            _isDirty = false;
             SendDocumentInfo();
+            SendPreview();
             return true;
         }
         catch (UnauthorizedAccessException ex)
@@ -374,6 +448,171 @@ public partial class MainWindow : Window
         }
 
         return false;
+    }
+
+    // BOMs win; otherwise strict UTF-8, falling back to the system ANSI code page
+    // (Shift_JIS on Japanese Windows) for older files.
+    private static (string Text, Encoding Encoding) DecodeDocument(byte[] bytes)
+    {
+        ReadOnlySpan<byte> data = bytes;
+        if (data.StartsWith((ReadOnlySpan<byte>)[0xEF, 0xBB, 0xBF]))
+        {
+            return (Encoding.UTF8.GetString(data[3..]), new UTF8Encoding(true));
+        }
+        if (data.StartsWith((ReadOnlySpan<byte>)[0xFF, 0xFE]))
+        {
+            return (Encoding.Unicode.GetString(data[2..]), Encoding.Unicode);
+        }
+        if (data.StartsWith((ReadOnlySpan<byte>)[0xFE, 0xFF]))
+        {
+            return (Encoding.BigEndianUnicode.GetString(data[2..]), Encoding.BigEndianUnicode);
+        }
+
+        try
+        {
+            var strictUtf8 = new UTF8Encoding(false, throwOnInvalidBytes: true);
+            return (strictUtf8.GetString(bytes), Utf8NoBom);
+        }
+        catch (DecoderFallbackException)
+        {
+            var legacy = Encoding.GetEncoding(
+                System.Globalization.CultureInfo.CurrentCulture.TextInfo.ANSICodePage);
+            return (legacy.GetString(bytes), legacy);
+        }
+    }
+
+    // Writes to a temporary file beside the target and then swaps it in, so a
+    // failure part-way through never leaves a truncated document.
+    private async Task<bool> WriteDocumentAsync(string path)
+    {
+        var version = _changeVersion;
+        var text = _text;
+        byte[] bytes;
+        try
+        {
+            bytes = EncodeDocument(text, _encoding);
+        }
+        catch (EncoderFallbackException)
+        {
+            var answer = MessageBox.Show(
+                string.Format(
+                    Strings.Tr("この文書には {0} で保存できない文字があります。UTF-8 で保存しますか？"),
+                    _encoding.WebName),
+                "mdEditor",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+            if (answer != MessageBoxResult.Yes)
+            {
+                return false;
+            }
+
+            _encoding = Utf8NoBom;
+            bytes = EncodeDocument(text, _encoding);
+        }
+
+        var directory = Path.GetDirectoryName(path) ?? ".";
+        var tempPath = Path.Combine(directory, $".{Path.GetFileName(path)}.{Guid.NewGuid():N}.tmp");
+        try
+        {
+            await using (var stream = new FileStream(
+                             tempPath, FileMode.CreateNew, FileAccess.Write, FileShare.None,
+                             4096, FileOptions.WriteThrough | FileOptions.Asynchronous))
+            {
+                await stream.WriteAsync(bytes);
+            }
+
+            if (File.Exists(path))
+            {
+                try
+                {
+                    File.Replace(tempPath, path, null, ignoreMetadataErrors: true);
+                }
+                catch (IOException)
+                {
+                    // Some network shares do not support ReplaceFile.
+                    File.Copy(tempPath, path, overwrite: true);
+                }
+            }
+            else
+            {
+                File.Move(tempPath, path);
+            }
+        }
+        finally
+        {
+            if (File.Exists(tempPath))
+            {
+                File.Delete(tempPath);
+            }
+        }
+
+        if (_changeVersion == version)
+        {
+            _isDirty = false;
+        }
+        SendDocumentInfo();
+        return true;
+    }
+
+    private static byte[] EncodeDocument(string text, Encoding encoding)
+    {
+        var strict = (Encoding)encoding.Clone();
+        strict.EncoderFallback = EncoderFallback.ExceptionFallback;
+        return [.. encoding.GetPreamble(), .. strict.GetBytes(text)];
+    }
+
+    private static readonly Dictionary<string, string> ImageContentTypes =
+        new(StringComparer.OrdinalIgnoreCase)
+        {
+            [".png"] = "image/png",
+            [".jpg"] = "image/jpeg",
+            [".jpeg"] = "image/jpeg",
+            [".gif"] = "image/gif",
+            [".webp"] = "image/webp",
+            [".avif"] = "image/avif",
+            [".bmp"] = "image/bmp",
+            [".ico"] = "image/x-icon",
+            [".svg"] = "image/svg+xml"
+        };
+
+    // Relative images (images/a.png) are requested from DocumentHost and served
+    // here from the document's folder: image files only, never above that folder,
+    // and only for <img> loads (the filter's resource context), not for scripts.
+    private async void DocumentResourceRequested(
+        object? sender,
+        CoreWebView2WebResourceRequestedEventArgs e)
+    {
+        var core = EditorWebView.CoreWebView2;
+        var folder = _filePath is null ? null : Path.GetDirectoryName(_filePath);
+        if (core is null || folder is null || !Uri.TryCreate(e.Request.Uri, UriKind.Absolute, out var uri))
+        {
+            return;
+        }
+
+        using var deferral = e.GetDeferral();
+        try
+        {
+            var root = Path.GetFullPath(folder).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+            var relative = Uri.UnescapeDataString(uri.AbsolutePath).TrimStart('/');
+            var path = Path.GetFullPath(Path.Combine(root, relative));
+            if (!path.StartsWith(root, StringComparison.OrdinalIgnoreCase)
+                || !ImageContentTypes.TryGetValue(Path.GetExtension(path), out var contentType)
+                || !File.Exists(path))
+            {
+                e.Response = core.Environment.CreateWebResourceResponse(null, 404, "Not Found", "");
+                return;
+            }
+
+            var bytes = await File.ReadAllBytesAsync(path);
+            e.Response = core.Environment.CreateWebResourceResponse(
+                new MemoryStream(bytes), 200, "OK", $"Content-Type: {contentType}");
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException
+                                       or ArgumentException or NotSupportedException
+                                       or SecurityException)
+        {
+            e.Response = core.Environment.CreateWebResourceResponse(null, 404, "Not Found", "");
+        }
     }
 
     private async Task ExportPdfAsync()
@@ -412,8 +651,10 @@ public partial class MainWindow : Window
             _previewTimer.Stop();
             var settings = EditorWebView.CoreWebView2.Environment.CreatePrintSettings();
             settings.MediaSize = CoreWebView2PrintMediaSize.Custom;
-            settings.PageWidth = 8.27;
-            settings.PageHeight = 11.69;
+            // US Letter where the region uses US customary units, A4 elsewhere.
+            var useLetter = !System.Globalization.RegionInfo.CurrentRegion.IsMetric;
+            settings.PageWidth = useLetter ? 8.5 : 8.27;
+            settings.PageHeight = useLetter ? 11 : 11.69;
             settings.Orientation = CoreWebView2PrintOrientation.Portrait;
             settings.ColorMode = CoreWebView2PrintColorMode.Color;
             settings.MarginTop = 0.59;
@@ -427,20 +668,36 @@ public partial class MainWindow : Window
             try
             {
                 // Diagrams and math are drawn by the page, so wait until it reports the preview is complete.
-                _previewRendered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-                SendPreview(notifyRendered: true);
-                await Task.WhenAny(_previewRendered.Task, Task.Delay(TimeSpan.FromSeconds(15)));
+                var rendered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+                _previewRendered = rendered;
+                // PDFs always use the day palette, so diagrams are redrawn in the light theme.
+                SendPreview(notifyRendered: true, forPrint: true);
+                var finished = await Task.WhenAny(rendered.Task, Task.Delay(TimeSpan.FromSeconds(15)))
+                               == rendered.Task;
                 _previewRendered = null;
+                if (!finished && MessageBox.Show(
+                        Strings.Tr("図や数式の描画が15秒以内に終わりませんでした。このままPDFに書き出しますか？"),
+                        Strings.Tr("PDFの書き出し"),
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Warning) != MessageBoxResult.Yes)
+                {
+                    return;
+                }
                 await EditorWebView.CoreWebView2.ExecuteScriptAsync(
                     "document.body.classList.add('printing-preview')");
+                // WebView2 fills the PDF page margins with the control's default
+                // background (cream, or dark green in dark mode), not with CSS.
+                EditorWebView.DefaultBackgroundColor = System.Drawing.Color.White;
                 saved = await EditorWebView.CoreWebView2.PrintToPdfAsync(
                     dialog.FileName,
                     settings);
             }
             finally
             {
+                ApplyTheme();
                 await EditorWebView.CoreWebView2.ExecuteScriptAsync(
                     "document.body.classList.remove('printing-preview')");
+                SendPreview();
             }
 
             if (!saved)
@@ -488,6 +745,81 @@ public partial class MainWindow : Window
         {
             _pdfExportActive = false;
             SendDocumentInfo();
+        }
+    }
+
+    private static bool IsSystemDarkTheme()
+    {
+        using var key = Registry.CurrentUser.OpenSubKey(
+            @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
+        return key?.GetValue("AppsUseLightTheme") is int value && value == 0;
+    }
+
+    private static string NormalizeTheme(string? theme) =>
+        theme is "light" or "dark" ? theme : "auto";
+
+    private static string LoadTheme()
+    {
+        using var key = Registry.CurrentUser.OpenSubKey(SettingsKeyPath);
+        return NormalizeTheme(key?.GetValue("Theme") as string);
+    }
+
+    private void SaveTheme()
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.CreateSubKey(SettingsKeyPath);
+            key.SetValue("Theme", _theme);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            // The choice still applies to this session.
+        }
+        catch (IOException)
+        {
+            // The choice still applies to this session.
+        }
+        catch (SecurityException)
+        {
+            // The choice still applies to this session.
+        }
+    }
+
+    // The page's prefers-color-scheme comes from the WebView2 profile setting, so
+    // the CSS night palette, logos, and Mermaid theme switch with it. The title bar
+    // and the background shown before the page paints follow the same choice.
+    private void ApplyTheme()
+    {
+        if (EditorWebView.CoreWebView2 is { } core)
+        {
+            core.Profile.PreferredColorScheme = _theme switch
+            {
+                "light" => CoreWebView2PreferredColorScheme.Light,
+                "dark" => CoreWebView2PreferredColorScheme.Dark,
+                _ => CoreWebView2PreferredColorScheme.Auto
+            };
+        }
+
+        var dark = _theme == "dark" || (_theme == "auto" && IsSystemDarkTheme());
+        // Night paper #1A2212 or day cream #FFF3D6, matching the page background.
+        var background = dark ? Color.FromRgb(0x1A, 0x22, 0x12) : Color.FromRgb(0xFF, 0xF3, 0xD6);
+        Background = new SolidColorBrush(background);
+        EditorWebView.DefaultBackgroundColor =
+            System.Drawing.Color.FromArgb(background.R, background.G, background.B);
+
+        var handle = new WindowInteropHelper(this).Handle;
+        if (handle != IntPtr.Zero)
+        {
+            var useDarkMode = dark ? 1 : 0;
+            DwmSetWindowAttribute(handle, DwmwaUseImmersiveDarkMode, ref useDarkMode, sizeof(int));
+        }
+    }
+
+    private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
+    {
+        if (e.Category == UserPreferenceCategory.General)
+        {
+            Dispatcher.BeginInvoke(ApplyTheme);
         }
     }
 
@@ -589,15 +921,92 @@ public partial class MainWindow : Window
         });
     }
 
-    private void SendPreview(bool notifyRendered = false)
+    private void SendPreview(bool notifyRendered = false, bool forPrint = false)
     {
         if (!_pageReady)
         {
             return;
         }
 
-        var html = Markdown.ToHtml(_text, _markdownPipeline);
-        SendToPage(new { type = "preview", html = _htmlSanitizer.Sanitize(html), notifyRendered });
+        SendToPage(new
+        {
+            type = "preview",
+            html = _htmlSanitizer.Sanitize(RenderMarkdown(_text)),
+            notifyRendered,
+            forPrint,
+            requestId = notifyRendered ? ++_previewRequestId : 0
+        });
+    }
+
+    // Raw HTML is parsed only so comments can be recognized: comments are notes in
+    // the source (such as file headers) and are dropped, and all other HTML is
+    // escaped and shown as text, as before.
+    private string RenderMarkdown(string text)
+    {
+        using var writer = new StringWriter();
+        var renderer = new HtmlRenderer(writer);
+        _markdownPipeline.Setup(renderer);
+        renderer.ObjectRenderers.ReplaceOrAdd<HtmlBlockRenderer>(new EscapedHtmlBlockRenderer());
+        renderer.ObjectRenderers.ReplaceOrAdd<HtmlInlineRenderer>(new EscapedHtmlInlineRenderer());
+        var document = Markdown.Parse(text, _markdownPipeline);
+        ResolveRelativeImages(document);
+        renderer.Render(document);
+        writer.Flush();
+        return writer.ToString();
+    }
+
+    // Points relative image paths at the document folder host (served by
+    // DocumentResourceRequested). "../" cannot climb above that folder.
+    private void ResolveRelativeImages(MarkdownDocument document)
+    {
+        if (_filePath is null)
+        {
+            return;
+        }
+
+        var baseUri = new Uri($"https://{DocumentHost}/");
+        foreach (var image in document.Descendants<LinkInline>().Where(link => link.IsImage))
+        {
+            var url = image.Url;
+            if (string.IsNullOrWhiteSpace(url)
+                || url.StartsWith('/')
+                || url.StartsWith('#')
+                || Uri.TryCreate(url, UriKind.Absolute, out _))
+            {
+                continue;
+            }
+
+            if (Uri.TryCreate(baseUri, url.Replace('\\', '/'), out var resolved))
+            {
+                image.Url = resolved.AbsoluteUri;
+            }
+        }
+    }
+
+    private sealed class EscapedHtmlBlockRenderer : HtmlObjectRenderer<HtmlBlock>
+    {
+        protected override void Write(HtmlRenderer renderer, HtmlBlock obj)
+        {
+            if (obj.Type == HtmlBlockType.Comment)
+            {
+                return;
+            }
+
+            renderer.Write("<p>");
+            renderer.WriteLeafRawLines(obj, true, true);
+            renderer.WriteLine("</p>");
+        }
+    }
+
+    private sealed class EscapedHtmlInlineRenderer : HtmlObjectRenderer<HtmlInline>
+    {
+        protected override void Write(HtmlRenderer renderer, HtmlInline obj)
+        {
+            if (!obj.Tag.StartsWith("<!--", StringComparison.Ordinal))
+            {
+                renderer.WriteEscape(obj.Tag);
+            }
+        }
     }
 
     private void SendToPage(object message)
@@ -643,5 +1052,15 @@ public partial class MainWindow : Window
             "mdEditor",
             MessageBoxButton.OK,
             MessageBoxImage.Error);
+    }
+
+    private void ShowStartupError(string message, Exception ex)
+    {
+        MessageBox.Show(
+            $"{message}\n\n{ex.Message}",
+            Strings.Tr("mdEditor を起動できません"),
+            MessageBoxButton.OK,
+            MessageBoxImage.Error);
+        Close();
     }
 }
