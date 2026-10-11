@@ -105,6 +105,6 @@ mdEditor は、左で書くと右にすぐ仕上がりが表示される Windows
 ## Before you submit / 提出前の確認
 
 - Reserve the name in Partner Center and confirm it is available. Use the same spelling ("5garashi.com Design Office") in the Store, the app, and the website.
-- Replace the privacy, support, and company links if the final URLs differ (the company URL in the app is `https://5garashi.com/`, an assumption to confirm).
+- Replace the privacy or support links if the final URLs differ. The company URL in the app is `https://www.5garashi.com/`.
 - "Worldwide" distribution and "all languages" are different settings. The app supports Japanese and English only.
 - Capture the screenshots on a real PC; they have not been taken yet.
