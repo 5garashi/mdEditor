@@ -41,32 +41,13 @@ New-Item -ItemType Directory -Path $staging, "$staging\Assets" -Force | Out-Null
 dotnet publish (Join-Path $root 'mdEditor.csproj') --configuration Release --runtime win-x64 --self-contained true --output $staging -p:PublishSingleFile=true
 if ($LASTEXITCODE -ne 0) { throw '発行に失敗しました。' }
 
-# Store の必須サイズのアイコンを、既存のマークから生成します。
-Add-Type -AssemblyName System.Drawing
-$iconBytes = [IO.File]::ReadAllBytes((Join-Path $root 'wwwroot\assets\5garashi_mark_simple.ico'))
-$best = 0; $bestSize = 0
-for ($k = 0; $k -lt [BitConverter]::ToUInt16($iconBytes, 4); $k++) {
-    $size = [BitConverter]::ToUInt32($iconBytes, 6 + 16 * $k + 8)
-    if ($size -gt $bestSize) { $best = $k; $bestSize = $size }
+# ロゴは store\assets の画像（render-assets.ps1 でマークの SVG から描いたもの）を使います。
+# 表示倍率ごと（scale-100〜400）とタスクバーの大きさごと（targetsize）の画像があります。
+$assets = Join-Path $here 'assets'
+if (-not (Get-ChildItem $assets -Filter '*.png' -ErrorAction SilentlyContinue)) {
+    throw 'store\assets にロゴがありません。先に store\render-assets.ps1 を実行してください。'
 }
-$offset = [BitConverter]::ToUInt32($iconBytes, 6 + 16 * $best + 12)
-# 最大の画像は PNG 形式で格納されているので、そのまま読み込みます。
-$source = [System.Drawing.Bitmap]::new([IO.MemoryStream]::new($iconBytes[$offset..($offset + $bestSize - 1)]))
-function New-Logo([int]$Width, [int]$Height, [string]$Name) {
-    $bitmap = New-Object System.Drawing.Bitmap($Width, $Height)
-    $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
-    $graphics.InterpolationMode = 'HighQualityBicubic'
-    $graphics.SmoothingMode = 'HighQuality'
-    $size = [int]([Math]::Min($Width, $Height) * 0.8)
-    $graphics.DrawImage($source, [int](($Width - $size) / 2), [int](($Height - $size) / 2), $size, $size)
-    $graphics.Dispose()
-    $bitmap.Save((Join-Path "$staging\Assets" $Name), [System.Drawing.Imaging.ImageFormat]::Png)
-    $bitmap.Dispose()
-}
-New-Logo 50 50 'StoreLogo.png'
-New-Logo 44 44 'Square44x44Logo.png'
-New-Logo 150 150 'Square150x150Logo.png'
-$source.Dispose()
+Copy-Item (Join-Path $assets '*.png') "$staging\Assets"
 
 $manifest = Get-Content (Join-Path $here 'AppxManifest.template.xml') -Raw -Encoding utf8
 $values = @{
@@ -77,6 +58,20 @@ foreach ($key in $values.Keys) {
     $manifest = $manifest.Replace("@$key@", [System.Security.SecurityElement]::Escape($values[$key]))
 }
 [IO.File]::WriteAllText((Join-Path $staging 'AppxManifest.xml'), $manifest, (New-Object System.Text.UTF8Encoding($false)))
+
+# resources.pri があると、Windows が表示倍率や大きさに合ったロゴを選びます。
+$makepri = Join-Path (Split-Path $makeappx.FullName) 'makepri.exe'
+if (-not (Test-Path $makepri)) { throw 'makepri.exe が見つかりません。Windows 10/11 SDK をインストールしてください。' }
+$priConfig = Join-Path $OutputDir 'priconfig.xml'
+& $makepri createconfig /cf $priConfig /dq en-US /pv 10.0.0 /o | Out-Null
+if ($LASTEXITCODE -ne 0) { throw 'resources.pri の設定を作成できませんでした。' }
+# 既定の設定は倍率ごとの画像を別のリソース パッケージに分けるため、1つの MSIX にすべて入れます。
+$config = [xml](Get-Content $priConfig -Raw)
+$config.SelectNodes('//packaging') | ForEach-Object { [void]$_.ParentNode.RemoveChild($_) }
+$config.Save($priConfig)
+& $makepri new /pr $staging /cf $priConfig /mn (Join-Path $staging 'AppxManifest.xml') /of (Join-Path $staging 'resources.pri') /o | Out-Null
+if ($LASTEXITCODE -ne 0) { throw 'resources.pri を作成できませんでした。' }
+Remove-Item $priConfig
 
 & $makeappx.FullName pack /d $staging /p $package /o
 if ($LASTEXITCODE -ne 0) { throw 'MSIX の作成に失敗しました。' }

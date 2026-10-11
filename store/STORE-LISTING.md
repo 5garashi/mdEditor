@@ -32,7 +32,7 @@ mdEditor is a Markdown editor for Windows that shows your writing as a finished 
 
 **Your work stays safe**
 - Saving never damages your original file, even if something goes wrong mid-write.
-- Unsaved changes are backed up automatically, so a crash or power loss does not cost you your work.
+- Unsaved changes are backed up automatically, so a crash does not cost you your work.
 - Older Japanese files open correctly. Shift_JIS, EUC-JP, and UTF-8 are detected, and you choose how to save.
 
 **Private and quiet**
@@ -55,7 +55,7 @@ Available in Japanese and English. Made by 5garashi.com Design Office. Open Abou
 - Keyboard-first, screen reader friendly, dark mode
 - No ads, no tracking, no account
 
-**Search terms:** markdown, editor, preview, mermaid, katex, pdf, notes, diagram
+**Search terms (up to 7):** markdown, editor, preview, mermaid, katex, pdf, diagram
 
 **Privacy policy URL:** https://github.com/5garashi/mdEditor/blob/main/PRIVACY.md
 
@@ -66,6 +66,20 @@ Available in Japanese and English. Made by 5garashi.com Design Office. Open Abou
 2. Diagrams and math: the "Diagrams and math" sample. Caption: "Diagrams and formulas appear as you type."
 3. PDF: the Save as PDF button in the toolbar, with the resulting PDF open beside it. Caption: "Save the preview as a PDF."
 4. Viewer: a longer document with the preview expanded to fill the window. Caption: "Also a clean Markdown viewer."
+
+## Store art / ストア用の画像
+
+The images in `store/listing/` are drawn from the official mark SVG by `store/render-assets.ps1`, on the paper ground with the clear space of Identity 3-5. Upload them under Store listing > Store logos. All are optional, but the 2:3 poster art is the one Windows shows first.
+`store/listing/` の画像は `store/render-assets.ps1` が公式マークの SVG から描いたものです（紙色の地、Identity 3-5 の余白）。登録情報の「ストア ロゴ」に入れます。どれも任意ですが、Windows では 2:3 のポスター アートが最初に表示されます。
+
+| Partner Center | File | Size |
+| :--- | :--- | :--- |
+| 2:3 Poster art | `poster-2x3@2x.png` (or `poster-2x3.png`) | 1440 x 2160 (720 x 1080) |
+| 1:1 Box art | `boxart-1x1@2x.png` (or `boxart-1x1.png`) | 2160 x 2160 (1080 x 1080) |
+| 16:9 Super hero art | `hero-16x9@2x.png` (or `hero-16x9.png`) | 3840 x 2160 (1920 x 1080) |
+
+The app's own logos (Start, taskbar, File Explorer) are in `store/assets/` and are packed into the MSIX by `build-msix.ps1`.
+アプリ自体のロゴ（スタート・タスクバー・エクスプローラー）は `store/assets/` にあり、`build-msix.ps1` が MSIX に入れます。
 
 ## 日本語 (ja-JP)
 
@@ -89,7 +103,7 @@ mdEditor は、左で書くと右にすぐ仕上がりが表示される Windows
 
 **書いたものを守る**
 - 保存の途中で失敗しても、元のファイルを壊しません。
-- 保存していない変更は自動でバックアップ。異常終了や停電でも、次の起動で復元できます。
+- 保存していない変更は自動でバックアップ。アプリが異常終了しても、次の起動で復元できます。
 - 古い日本語のファイルも正しく開けます。Shift_JIS・EUC-JP・UTF-8 を判定し、保存する文字コードも選べます。
 
 **静かで、安心**
@@ -101,6 +115,18 @@ mdEditor は、左で書くと右にすぐ仕上がりが表示される Windows
 - 画面読み上げ対応、PC 内の音声による読み上げ、BIZ UD ゴシック、文字の大きさ・行間の調整、コントラスト対応、ダークモード。
 
 日本語と英語に対応します。5garashi.com Design Office が作りました。アプリの「このアプリについて」から、会社紹介・サポート・プライバシーポリシーを開けます。
+
+**製品の機能（箇条書き）:**
+- 書きながら横で仕上がりを確認。スクロールも連動
+- ビューアとしても。プレビューをウィンドウいっぱいに表示
+- 図と数式をオフラインで表示
+- プレビューそのままの PDF をワンクリックで
+- 安全な保存と、異常終了からの自動復元
+- Shift_JIS・EUC-JP・UTF-8 のファイルを開ける
+- キーボードで全操作、画面読み上げ対応、ダークモード
+- 広告なし、計測なし、アカウント不要
+
+**検索用語（7つまで）:** Markdown, マークダウン, エディタ, プレビュー, PDF, Mermaid, 数式
 
 ## Before you submit / 提出前の確認
 
