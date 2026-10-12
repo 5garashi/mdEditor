@@ -12,6 +12,12 @@
 
 The version number lives in [VERSION](./VERSION). Add each new version at the top, with a `## version — date` heading (used as the GitHub Release notes).
 
+## 1.0.5 — 2026-10-12
+
+- 幅の狭いウィンドウ（760px 以下や 200% の拡大）で、ツールバーのファイル名の行の下に大きな空白ができていたのを直した。
+
+- Fixed a large blank space under the file name in the toolbar in narrow windows (760 px or less, or at 200% zoom).
+
 ## 1.0.4 — 2026-10-12
 
 - プレビューを別のウィンドウで表示できるようにした（2 台目のディスプレイなど）。編集欄とのスクロールの連動、見出しへのリンク、保存などの操作はそのまま使える。ウィンドウの位置・大きさ・最大化と、別ウィンドウにしていたかどうかは次回の起動でも使う。別ウィンドウでも F11 で全画面表示にできる。
