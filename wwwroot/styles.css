@@ -1036,6 +1036,51 @@ body.dragging {
   }
 }
 
+/* The preview in its own window (index.html?view=preview): only the preview pane. */
+:root.preview-window .brand-bar,
+:root.preview-window .toolbar,
+:root.preview-window .notice,
+:root.preview-window .editor-pane,
+:root.preview-window .pane-divider,
+:root.preview-window .pane-fullscreen-button {
+  display: none !important;
+}
+
+[data-detach][hidden] {
+  display: none;
+}
+
+/* While the preview has its own window, the editor uses the whole width here. */
+@media screen {
+  body.preview-detached .preview-pane,
+  body.preview-detached .pane-divider {
+    display: none;
+  }
+
+  body.preview-detached .workspace {
+    grid-template: minmax(0, 1fr) / minmax(0, 1fr) !important;
+  }
+}
+
+/*
+ * Long lines are hard to read on a wide screen, so the preview text keeps a
+ * comfortable measure (about 44 full-width characters), centered. Code,
+ * tables, diagrams, and display math may be wider. Settings can turn this off.
+ */
+/* Measured in body text (rem times the text size setting), so headings line up with it. */
+:root:not(.preview-full-width) .preview-content > * {
+  max-width: calc(44rem * var(--doc-scale, 1));
+  margin-inline: auto;
+}
+
+:root:not(.preview-full-width) .preview-content > :is(pre, table, .mermaid, .math) {
+  max-width: min(100%, calc(80rem * var(--doc-scale, 1)));
+}
+
+:root:not(.preview-full-width) .preview-content > table {
+  width: fit-content;
+}
+
 body.editor-focused .preview-pane,
 body.editor-focused .pane-divider,
 body.preview-focused .editor-pane,
@@ -1111,6 +1156,16 @@ body.preview-focused .pane-heading {
     overflow: visible;
     border: 0;
     background: #FFFFFF;
+  }
+
+  /* PDFs use the page width as it is. */
+  body.printing-preview .preview-content > * {
+    max-width: none !important;
+  }
+
+  body.printing-preview .preview-content > table {
+    width: auto !important;
+    margin-inline: 0 !important;
   }
 
   body.printing-preview .preview-content {
