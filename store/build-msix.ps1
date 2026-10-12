@@ -15,8 +15,8 @@ param(
     [string]$Publisher = 'CN=REPLACE-WITH-PARTNER-CENTER-PUBLISHER-ID',
     [string]$PublisherDisplayName = '5garashi.com Design Office',
     [string]$DisplayName = 'mdEditor by 5garashi.com',
-    # Store 提出では末尾の桁を 0 にします（例: 1.0.0.0）。
-    [string]$Version = '1.0.0.0',
+    # 省略すると VERSION ファイルの番号に .0 を付けます（例: 1.0.3 → 1.0.3.0）。
+    [string]$Version,
     [string]$OutputDir
 )
 
@@ -26,6 +26,11 @@ $root = (Resolve-Path (Join-Path $here '..')).Path
 if (-not $OutputDir) { $OutputDir = Join-Path $root 'artifacts' }
 New-Item -ItemType Directory -Path $OutputDir -Force | Out-Null
 $OutputDir = (Resolve-Path $OutputDir).Path
+$appVersion = (Get-Content (Join-Path $root 'VERSION') -Raw).Trim()
+if (-not $Version) { $Version = "$appVersion.0" }
+if ($Version -ne "$appVersion.0") {
+    throw "Version ($Version) が VERSION ファイル ($appVersion) と合いません。VERSION を書き換えてください。"
+}
 $staging = Join-Path $OutputDir 'msix-layout'
 $package = Join-Path $OutputDir "mdEditor_${Version}_x64.msix"
 

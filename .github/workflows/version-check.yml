@@ -1,0 +1,48 @@
+# File: .github/workflows/version-check.yml
+# Description: Checks on pull requests that VERSION, CHANGELOG.md, and README.md agree
+# Author: 5garashi.com Design Office
+# Created: 2026-10-12
+# License: MIT
+# SPDX-License-Identifier: MIT
+name: Version check
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check VERSION, CHANGELOG.md, and README.md
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -eu
+          v=$(tr -d '[:space:]' < VERSION)
+          echo "VERSION: $v"
+          if ! printf '%s' "$v" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error file=VERSION::VERSION must be three numbers such as 1.0.3 (got '$v')."
+            exit 1
+          fi
+          escaped=$(printf '%s' "$v" | sed 's/\./\\./g')
+          if ! grep -Eq "^## ${escaped}( |$)" CHANGELOG.md; then
+            echo "::error file=CHANGELOG.md::Add a '## $v — YYYY-MM-DD' section to CHANGELOG.md."
+            exit 1
+          fi
+          if ! grep -Fq "Version: $v" README.md; then
+            echo "::error file=README.md::Update the 'バージョン / Version' line in README.md to $v."
+            exit 1
+          fi
+          # A raised version must not reuse a tag that already exists.
+          if ! git diff --quiet "$BASE_SHA" HEAD -- VERSION && git rev-parse -q --verify "refs/tags/v$v" > /dev/null; then
+            echo "::error file=VERSION::Tag v$v already exists. Raise VERSION to a new number."
+            exit 1
+          fi
+          echo "VERSION, CHANGELOG.md, and README.md agree on $v."

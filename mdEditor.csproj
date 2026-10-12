@@ -17,6 +17,9 @@
     <RootNamespace>MdEditor</RootNamespace>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <ApplicationIcon>wwwroot\assets\5garashi_mark_simple.ico</ApplicationIcon>
+    <!-- The version is kept only in the VERSION file at the repository root. -->
+    <Version>$([System.IO.File]::ReadAllText('$(MSBuildProjectDirectory)\VERSION').Trim())</Version>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
   </PropertyGroup>
   <ItemGroup>
     <!-- WebView2 serves these from a real folder, so keep them beside the single-file exe. -->
