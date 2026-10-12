@@ -22,6 +22,13 @@
   let documentDirty = false;
   let pdfStarting = false;
   let pointerId = null;
+  // The preview can open in its own window (for example on a second display).
+  // That window loads this page with ?view=preview and shows only the preview;
+  // the host relays the preview, the scroll position, and commands between them.
+  const previewWindow = new URLSearchParams(window.location.search).get("view") === "preview";
+  if (previewWindow) document.documentElement.classList.add("preview-window");
+  let previewDetached = false;
+  let previewLines = 0;
 
   const messages = {
     ja: {
@@ -44,6 +51,7 @@
       dividerTitle: "ドラッグまたは矢印キーで左右の幅を調整します",
       fullscreenEditor: "編集画面をウィンドウ全体に表示", fullscreenPreview: "プレビューをウィンドウ全体に表示",
       fullscreenExit: "元の表示に戻す", saved: "保存済み", unsaved: "未保存の変更",
+      detachPreview: "別ウィンドウで表示", attachPreview: "本体に戻す", attachPreviewMain: "プレビューを本体に戻す",
       pdfStarting: "PDF出力を開始しています",
       findReplace: "検索・置換", findReplaceTitle: "検索・置換 (Ctrl+H)",
       help: "書き方", helpTitle: "Markdown の書き方 (F1)", helpHeading: "Markdown の簡単な書き方",
@@ -58,6 +66,7 @@
       settingsSpacing: "行間", settingsSpacingNormal: "標準", settingsSpacingWide: "広め", settingsSpacingWider: "とても広い",
       settingsZoom: "画面全体の表示倍率", zoomOut: "縮小", zoomIn: "拡大", zoomReset: "100% に戻す",
       zoomNote: "Ctrl + マウスホイール、Ctrl + プラス／マイナス、Ctrl + 0 でも変えられます。倍率は次回の起動でも使います。",
+      settingsFullWidth: "プレビューの本文の幅を制限しない（広い画面で1行を長くする）",
       settingsEditor: "編集欄", settingsActiveLine: "いまの行を強調する", settingsThickCaret: "カーソルを太くする",
       settingsReader: "読み上げ", settingsReaderOn: "読み上げ機能を使う（プレビューの見出しに操作ボタンを表示）",
       settingsReaderRate: "速さ", rateSlow: "ゆっくり", rateSlower: "少しゆっくり", rateNormal: "ふつう",
@@ -91,7 +100,8 @@
         findReplace: "検索・置換", findNext: "次を検索", findPrev: "前を検索", replaceAll: "すべて置換",
         help: "Markdown の書き方", shortcuts: "キー操作の一覧", fullscreenEditor: "編集画面をウィンドウ全体に表示",
         fullscreenPreview: "プレビューをウィンドウ全体に表示", nextPane: "次の欄へ移動", previousPane: "前の欄へ移動",
-        windowFullscreen: "ウィンドウの全画面表示", settings: "設定", readAloud: "読み上げ・一時停止", stopReading: "読み上げを停止"
+        windowFullscreen: "ウィンドウの全画面表示", settings: "設定", readAloud: "読み上げ・一時停止", stopReading: "読み上げを停止",
+        detachPreview: "プレビューを別ウィンドウで表示・本体に戻す"
       },
       helpIntro: "左の書き方で入力すると、右のように表示されます。「挿入」を押すと、編集欄のカーソル位置に例を入れます。",
       helpItem: "項目", helpSyntax: "書き方", helpResult: "表示", helpInsert: "挿入",
@@ -144,6 +154,7 @@
       dividerTitle: "Drag or use the arrow keys to resize",
       fullscreenEditor: "Fill window with editor", fullscreenPreview: "Fill window with preview",
       fullscreenExit: "Restore layout", saved: "Saved", unsaved: "Unsaved changes",
+      detachPreview: "Open in its own window", attachPreview: "Return to main window", attachPreviewMain: "Return preview here",
       pdfStarting: "Starting PDF export",
       findReplace: "Find/Replace", findReplaceTitle: "Find/Replace (Ctrl+H)",
       help: "Syntax", helpTitle: "Markdown syntax (F1)", helpHeading: "Markdown quick reference",
@@ -158,6 +169,7 @@
       settingsSpacing: "Line spacing", settingsSpacingNormal: "Standard", settingsSpacingWide: "Wide", settingsSpacingWider: "Wider",
       settingsZoom: "Zoom (whole window)", zoomOut: "Zoom out", zoomIn: "Zoom in", zoomReset: "Reset to 100%",
       zoomNote: "Ctrl + mouse wheel, Ctrl + plus/minus, and Ctrl + 0 also work. The zoom level is remembered.",
+      settingsFullWidth: "Don't limit the preview text width (longer lines on wide screens)",
       settingsEditor: "Editor", settingsActiveLine: "Highlight the current line", settingsThickCaret: "Use a thick cursor",
       settingsReader: "Read aloud", settingsReaderOn: "Use read-aloud (shows controls in the preview heading)",
       settingsReaderRate: "Speed", rateSlow: "Slow", rateSlower: "A little slow", rateNormal: "Normal",
@@ -191,7 +203,8 @@
         findReplace: "Find/Replace", findNext: "Find next", findPrev: "Find previous", replaceAll: "Replace all",
         help: "Markdown syntax", shortcuts: "Keyboard shortcuts", fullscreenEditor: "Fill window with editor",
         fullscreenPreview: "Fill window with preview", nextPane: "Next pane", previousPane: "Previous pane",
-        windowFullscreen: "Window full screen", settings: "Settings", readAloud: "Read aloud / pause", stopReading: "Stop reading"
+        windowFullscreen: "Window full screen", settings: "Settings", readAloud: "Read aloud / pause", stopReading: "Stop reading",
+        detachPreview: "Preview in its own window / return"
       },
       helpIntro: "Type the syntax on the left to get the result on the right. Insert puts the example at the cursor in the editor.",
       helpItem: "Item", helpSyntax: "Syntax", helpResult: "Result", helpInsert: "Insert",
@@ -264,6 +277,7 @@
     saveState.textContent = pdfStarting ? t("pdfStarting") : statusText();
     setEditorRatio(editorRatio, false);
     setDisplayMode(displayMode);
+    updateDetachButtons();
     // The typeface follows the UI language, so redraw diagrams with it.
     if (lastPreviewHtml !== null) renderPreview(lastPreviewHtml);
   };
@@ -280,7 +294,8 @@
   // textarea made Narrator stall for 20+ seconds on each selection change).
   const { Compartment, EditorSelection, EditorState, EditorView, defaultKeymap, drawSelection, highlightActiveLine, history, historyKeymap, keymap } = window.CodeMirror;
   const displayDefaults = {
-    font: "standard", size: "1", spacing: "1.7", activeLine: false, thickCaret: false, reader: false, rate: "1", pause: "0.5"
+    font: "standard", size: "1", spacing: "1.7", fullWidth: false, activeLine: false, thickCaret: false,
+    reader: false, rate: "1", pause: "0.5"
   };
   const displayStorageKey = "mdeditor-display";
   let displaySettings = (() => {
@@ -517,6 +532,30 @@
       setDisplayMode(displayMode === mode ? "normal" : mode);
     });
   });
+
+  // The preview pane's button opens the preview in its own window; the editor
+  // pane's button (or that window's own button) brings it back.
+  const detachButtons = document.querySelectorAll("[data-detach]");
+  const toggleDetachedPreview = () => {
+    post({ type: previewWindow || previewDetached ? "attachPreview" : "detachPreview" });
+  };
+  const updateDetachButtons = () => {
+    for (const button of detachButtons) {
+      const inEditor = button.dataset.detach === "editor";
+      button.hidden = previewWindow ? inEditor : inEditor !== previewDetached;
+      button.textContent = previewWindow ? t("attachPreview") : inEditor ? t("attachPreviewMain") : t("detachPreview");
+    }
+  };
+  const setPreviewDetached = (detached) => {
+    previewDetached = detached;
+    document.body.classList.toggle("preview-detached", detached);
+    if (detached && displayMode === "preview") setDisplayMode("normal");
+    // Reading runs in the window that shows the preview, so it can be marked on screen.
+    if (detached) stopReading();
+    updateDetachButtons();
+    requestAnimationFrame(() => syncFrom(editorScroller));
+  };
+  detachButtons.forEach((button) => button.addEventListener("click", toggleDetachedPreview));
 
   divider.addEventListener("pointerdown", (event) => {
     if (displayMode === "preview") {
@@ -792,6 +831,7 @@
     font: document.getElementById("setting-font"),
     size: document.getElementById("setting-size"),
     spacing: document.getElementById("setting-spacing"),
+    fullWidth: document.getElementById("setting-full-width"),
     activeLine: document.getElementById("setting-active-line"),
     thickCaret: document.getElementById("setting-thick-caret"),
     reader: document.getElementById("setting-reader"),
@@ -812,6 +852,7 @@
     root.classList.toggle("font-ud", displaySettings.font === "ud");
     root.style.setProperty("--doc-scale", displaySettings.size);
     root.style.setProperty("--doc-line-height", displaySettings.spacing);
+    root.classList.toggle("preview-full-width", Boolean(displaySettings.fullWidth));
     view.dispatch({ effects: editorExtras.reconfigure(editorExtrasFor(displaySettings)) });
     readerControls.hidden = !displaySettings.reader;
     if (!displaySettings.reader) stopReading();
@@ -974,14 +1015,17 @@
     { id: "help", keys: "F1", button: "help-button", run: () => openHelp() },
     { id: "shortcuts", keys: "Shift+F1", button: "shortcuts-button", run: () => openShortcutDialog() },
     { id: "fullscreenEditor", keys: "Ctrl+Shift+1", selector: "[data-fullscreen-mode='editor']", run: () => setDisplayMode(displayMode === "editor" ? "normal" : "editor") },
-    { id: "fullscreenPreview", keys: "Ctrl+Shift+2", selector: "[data-fullscreen-mode='preview']", run: () => setDisplayMode(displayMode === "preview" ? "normal" : "preview") },
+    { id: "fullscreenPreview", keys: "Ctrl+Shift+2", selector: "[data-fullscreen-mode='preview']", run: () => { if (!previewDetached) setDisplayMode(displayMode === "preview" ? "normal" : "preview"); } },
     { id: "nextPane", keys: "F6", run: () => movePaneFocus(1) },
     { id: "previousPane", keys: "Shift+F6", run: () => movePaneFocus(-1) },
     { id: "windowFullscreen", keys: "F11", run: () => post({ type: "toggleWindowFullscreen" }) },
     { id: "settings", keys: "Ctrl+Shift+O", button: "settings-button", run: () => openSettings() },
-    { id: "readAloud", keys: "Ctrl+Shift+Y", button: "reader-play", run: () => toggleReading() },
-    { id: "stopReading", keys: "Ctrl+Shift+U", button: "reader-stop", run: () => stopReading() }
+    { id: "readAloud", keys: "Ctrl+Shift+Y", button: "reader-play", run: () => (previewDetached ? post({ type: "popupCommand", id: "readAloud" }) : toggleReading()) },
+    { id: "stopReading", keys: "Ctrl+Shift+U", button: "reader-stop", run: () => (previewDetached ? post({ type: "popupCommand", id: "stopReading" }) : stopReading()) },
+    { id: "detachPreview", keys: "Ctrl+Shift+3", selector: "[data-detach]", run: () => toggleDetachedPreview() }
   ];
+  // In the preview window these run there; every other command goes to the main window.
+  const previewWindowCommands = new Set(["readAloud", "stopReading", "detachPreview", "windowFullscreen", "nextPane", "previousPane"]);
   // Editing keys and the window's find stay with the editor and the browser.
   const reservedShortcuts = new Set(["Ctrl+A", "Ctrl+C", "Ctrl+F", "Ctrl+V", "Ctrl+X", "Ctrl+Y", "Ctrl+Z", "Ctrl+Shift+Z"]);
   const shortcutStorageKey = "mdeditor-shortcuts";
@@ -1225,7 +1269,7 @@
       event.preventDefault();
       if (reader) {
         stopReading();
-      } else if (displayMode !== "normal") {
+      } else if (displayMode !== "normal" && !previewWindow) {
         setDisplayMode("normal");
       } else {
         post({ type: "exitWindowFullscreen" });
@@ -1237,7 +1281,8 @@
     const definition = keys && shortcutDefinitions.find((item) => shortcutKeys(item) === keys);
     if (!definition) return;
     event.preventDefault();
-    definition.run();
+    if (previewWindow && !previewWindowCommands.has(definition.id)) post({ type: "command", id: definition.id });
+    else definition.run();
   });
 
   // Scroll sync between the editor and the preview. The host marks each preview
@@ -1272,7 +1317,7 @@
       const last = points[points.length - 1];
       if (point.line >= last.line && point.top >= last.top) points.push(point);
     }
-    points.push({ line: view.state.doc.lines, top: preview.scrollHeight });
+    points.push({ line: previewLines || view.state.doc.lines, top: preview.scrollHeight });
     return points;
   };
   const interpolate = (points, value, from, to) => {
@@ -1291,22 +1336,39 @@
     ignoreTimer = setTimeout(() => { ignoreScrollOf = null; }, 120);
   };
 
+  // A pane at its top or bottom edge follows to the same edge.
+  const scrollEdge = (element) => {
+    if (element.scrollTop <= 0) return "top";
+    if (element.scrollTop >= element.scrollHeight - element.clientHeight - 1) return "bottom";
+    return null;
+  };
+  const scrollPreviewToLine = (line, edge) => {
+    if (edge) scrollWithoutEcho(preview, edge === "top" ? 0 : preview.scrollHeight);
+    else scrollWithoutEcho(preview, interpolate(previewAnchors(), line, "line", "top"));
+  };
+  const scrollEditorToLine = (line, edge) => {
+    if (edge) scrollWithoutEcho(editorScroller, edge === "top" ? 0 : editorScroller.scrollHeight);
+    else scrollWithoutEcho(editorScroller, editorTopOfLine(line));
+  };
+
+  // When the preview has its own window, the position (a source line, not
+  // pixels, so different window sizes and displays still match) goes through
+  // the host to the other window.
+  let lastSyncedLine = { line: 0, edge: "top" };
   const syncFrom = (source) => {
-    if (editorScroller.clientHeight === 0 || preview.clientHeight === 0) return;
-    const target = source === editorScroller ? preview : editorScroller;
-    const atTop = source.scrollTop <= 0;
-    const atBottom = source.scrollTop >= source.scrollHeight - source.clientHeight - 1;
-    if (atTop || atBottom) {
-      scrollWithoutEcho(target, atTop ? 0 : target.scrollHeight);
+    if (source.clientHeight === 0) return;
+    const edge = scrollEdge(source);
+    if (previewWindow || previewDetached) {
+      const line = edge ? 0
+        : source === editorScroller ? editorLineAtTop()
+          : interpolate(previewAnchors(), preview.scrollTop, "top", "line");
+      lastSyncedLine = { line, edge };
+      post({ type: "syncLine", line, edge });
       return;
     }
-    const points = previewAnchors();
-    if (source === editorScroller) {
-      scrollWithoutEcho(preview, interpolate(points, editorLineAtTop(), "line", "top"));
-    } else {
-      const line = interpolate(points, preview.scrollTop, "top", "line");
-      scrollWithoutEcho(editorScroller, editorTopOfLine(line));
-    }
+    if (editorScroller.clientHeight === 0 || preview.clientHeight === 0) return;
+    if (source === editorScroller) scrollPreviewToLine(editorLineAtTop(), edge);
+    else scrollEditorToLine(interpolate(previewAnchors(), preview.scrollTop, "top", "line"), edge);
   };
 
   const onPaneScroll = (event) => {
@@ -1541,8 +1603,9 @@
     }
   };
 
-  const renderPreview = async (html, forPrint = false) => {
+  const renderPreview = async (html, forPrint = false, lines = 0) => {
     const generation = ++renderGeneration;
+    if (!forPrint && lines > 0) previewLines = lines;
     const diagramCache = useMermaidTheme(forPrint);
     if (reader && !forPrint && html !== lastPreviewHtml) stopReading();
     if (!forPrint) lastPreviewHtml = html;
@@ -1555,9 +1618,13 @@
     labelTaskCheckboxes();
     showUnsupportedDiagrams();
     renderMath();
-    if (view.hasFocus) syncFrom(editorScroller);
+    const keepPlace = () => {
+      if (previewWindow) scrollPreviewToLine(lastSyncedLine.line, lastSyncedLine.edge);
+      else if (view.hasFocus) syncFrom(editorScroller);
+    };
+    keepPlace();
     await renderDiagrams(generation, previousSvgs, diagramCache);
-    if (generation === renderGeneration && view.hasFocus) syncFrom(editorScroller);
+    if (generation === renderGeneration) keepPlace();
   };
 
   darkScheme.addEventListener("change", () => {
@@ -1602,6 +1669,14 @@
     } else if (message.type === "language") {
       language = message.lang === "en" ? "en" : "ja";
       applyLanguage();
+    } else if (message.type === "previewDetached") {
+      setPreviewDetached(Boolean(message.detached));
+    } else if (message.type === "syncLine") {
+      lastSyncedLine = { line: message.line, edge: message.edge };
+      if (previewWindow) scrollPreviewToLine(message.line, message.edge);
+      else scrollEditorToLine(message.line, message.edge);
+    } else if (message.type === "runCommand") {
+      shortcutDefinitions.find((item) => item.id === message.id)?.run();
     } else if (message.type === "appInfo") {
       document.getElementById("app-version").textContent = message.version;
     } else if (message.type === "scrollToAnchor") {
@@ -1626,8 +1701,9 @@
       // A newly loaded document starts at the top, not where the last one was.
       editorScroller.scrollTop = 0;
       preview.scrollTop = 0;
+      if (previewDetached) post({ type: "syncLine", line: 0, edge: "top" });
     } else if (message.type === "preview") {
-      renderPreview(message.html, message.forPrint).finally(() => {
+      renderPreview(message.html, message.forPrint, message.lines).finally(() => {
         if (message.notifyRendered) post({ type: "previewRendered", requestId: message.requestId });
       });
     } else if (message.type === "pdfExportStatus") {
@@ -1635,6 +1711,25 @@
     }
   });
 
+  // Both windows use the same storage, so a setting changed in one shows in the other.
+  window.addEventListener("storage", (event) => {
+    if (event.key === displayStorageKey) {
+      try {
+        displaySettings = { ...displayDefaults, ...JSON.parse(event.newValue || "{}") };
+      } catch {
+        return;
+      }
+      applyDisplaySettings();
+    } else if (event.key === "mdeditor-language" && (event.newValue === "ja" || event.newValue === "en")) {
+      language = event.newValue;
+      applyLanguage();
+    } else if (event.key === shortcutStorageKey) {
+      shortcutSettings = loadShortcutSettings();
+      applyShortcutHints();
+    }
+  });
+
+  if (previewWindow) displayMode = "preview";
   applyDisplaySettings(false);
   applyLanguage();
   post({ type: "ready", lang: language });

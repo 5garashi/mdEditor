@@ -12,6 +12,16 @@
 
 The version number lives in [VERSION](./VERSION). Add each new version at the top, with a `## version — date` heading (used as the GitHub Release notes).
 
+## 1.0.4 — 2026-10-12
+
+- プレビューを別のウィンドウで表示できるようにした（2 台目のディスプレイなど）。編集欄とのスクロールの連動、見出しへのリンク、保存などの操作はそのまま使える。ウィンドウの位置・大きさ・最大化と、別ウィンドウにしていたかどうかは次回の起動でも使う。別ウィンドウでも F11 で全画面表示にできる。
+- 広い画面でプレビューの 1 行が長くなりすぎないよう、本文の幅を全角でおよそ 44 字までにした（中央に置く）。表・図・コード・数式は広く表示する。「設定」で制限しないこともできる。
+- F11 などのウィンドウの全画面表示の処理を、本体とプレビューのウィンドウで共通にした。
+
+- The preview can open in its own window (for example on a second display). Scrolling stays in sync with the editor, and heading links and commands such as Save keep working. The window's position, size, and maximized state, and whether the preview was in its own window, are remembered. F11 makes that window full screen too.
+- On wide screens the preview text keeps a comfortable width (about 44 full-width characters), centered; tables, diagrams, code, and display math may be wider. Settings can turn this off.
+- Window full screen (F11) works the same way in the main and preview windows.
+
 ## 1.0.3 — 2026-10-12
 
 - 「このアプリについて」にバージョンを表示するようにした。

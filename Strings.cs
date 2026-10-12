@@ -42,6 +42,9 @@ internal static class Strings
         ["この環境ではPDFを書き出せません。WebView2 Runtime を最新にしてから、もう一度お試しください"] = "PDF export is not available in this environment. Update WebView2 Runtime, then try again",
         ["変更を保存しますか？"] = "Save your changes?",
         ["未保存の変更"] = "Unsaved changes",
+        ["プレビュー"] = "Preview",
+        ["プレビューのウィンドウを開けませんでした。mdEditor を再起動してから、もう一度お試しください。"] =
+            "The preview window could not be opened. Restart mdEditor, then try again.",
         ["リンクを開けませんでした。リンク先の場所を確かめて、ブラウザーやエクスプローラーから開いてください。"] = "The link could not be opened. Check where it points, then open it from your browser or File Explorer.",
         ["保存していない文書では、ほかのファイルへのリンクを開けません。先に文書を保存してください。"] =
             "Links to other files cannot be opened from a document that has not been saved. Save the document first.",

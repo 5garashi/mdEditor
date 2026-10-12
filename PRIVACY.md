@@ -27,8 +27,8 @@ mdEditor（以下「本アプリ」）は、5garashi.com設計事務所が提供
 
 本アプリは、次の設定を利用者の PC に保存します。これらが外部に送られることはありません。
 
-- 表示テーマ（自動・ライト・ダーク）、PDF の用紙、表示倍率、自動バックアップのオン・オフ: Windows レジストリ `HKEY_CURRENT_USER\Software\mdEditor`
-- 表示言語、編集欄とプレビューの幅、キーボードショートカット、設定画面の表示の設定（書体・文字の大きさ・行間・編集欄・読み上げ）: 画面表示の部品（Microsoft Edge WebView2）のデータフォルダー `%LOCALAPPDATA%\mdEditor\WebView2`
+- 表示テーマ（自動・ライト・ダーク）、PDF の用紙、表示倍率、自動バックアップのオン・オフ、プレビューの別ウィンドウの位置・大きさ・表示倍率と、別ウィンドウにしていたかどうか: Windows レジストリ `HKEY_CURRENT_USER\Software\mdEditor`
+- 表示言語、編集欄とプレビューの幅、キーボードショートカット、設定画面の表示の設定（書体・文字の大きさ・行間・プレビューの本文の幅・編集欄・読み上げ）: 画面表示の部品（Microsoft Edge WebView2）のデータフォルダー `%LOCALAPPDATA%\mdEditor\WebView2`
 
 ### 通信が発生する場合
 
@@ -62,8 +62,8 @@ mdEditor (the "app") is a Markdown editor for Windows provided by 5garashi.com D
 
 The app stores the following settings on your PC. They are never sent anywhere.
 
-- Theme (Auto, Light, Dark), PDF paper size, zoom level, and whether automatic backup is on: Windows registry `HKEY_CURRENT_USER\Software\mdEditor`
-- Display language, the width of the editor and preview, keyboard shortcuts, and the display options in Settings (typeface, text size, line spacing, editor aids, read-aloud): the data folder of the display component (Microsoft Edge WebView2), `%LOCALAPPDATA%\mdEditor\WebView2`
+- Theme (Auto, Light, Dark), PDF paper size, zoom level, whether automatic backup is on, and the preview window's position, size, zoom, and whether it was open: Windows registry `HKEY_CURRENT_USER\Software\mdEditor`
+- Display language, the width of the editor and preview, keyboard shortcuts, and the display options in Settings (typeface, text size, line spacing, preview text width, editor aids, read-aloud): the data folder of the display component (Microsoft Edge WebView2), `%LOCALAPPDATA%\mdEditor\WebView2`
 
 ### When network connections happen
 

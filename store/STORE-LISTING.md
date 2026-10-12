@@ -25,6 +25,7 @@ mdEditor is a Markdown editor for Windows that shows your writing as a finished 
 
 **Write, see, share**
 - Live preview on the right, your text on the left. Both scroll together.
+- Two displays? Open the preview in its own window and put it on the second screen, maximized or full screen. It still scrolls with the editor, line by line, and Save, Find, and every other command work from either window.
 - Also a Markdown viewer. Set mdEditor as the app for .md files, or drop a file onto it, and expand the preview to fill the window for comfortable reading, with no editing in the way. Links to headings and to other Markdown files in the same folder work too.
 - Draw flowcharts, sequence diagrams, Gantt charts, and pie charts with a few lines of text (Mermaid). Write formulas the way you say them (KaTeX).
 - Save a PDF that looks exactly like the preview, diagrams and math included. A4 or Letter.
@@ -47,6 +48,7 @@ Available in Japanese and English. Made by 5garashi.com Design Office. Open Abou
 
 **Features (bullets):**
 - Live side-by-side preview that scrolls with you
+- Preview on a second display, still in sync with the editor
 - Works as a Markdown viewer too: full-window preview for reading
 - Diagrams and math with no internet connection
 - One-click PDF that matches the preview
@@ -55,7 +57,7 @@ Available in Japanese and English. Made by 5garashi.com Design Office. Open Abou
 - Keyboard-first, screen reader friendly, dark mode
 - No ads, no tracking, no account
 
-**Search terms (up to 7):** markdown, editor, preview, mermaid, katex, pdf, diagram
+**Search terms (up to 7):** markdown editor, markdown, preview, mermaid, pdf, diagram, dual monitor
 
 **Privacy policy URL:** https://github.com/5garashi/mdEditor/blob/main/PRIVACY.md
 
@@ -96,6 +98,7 @@ mdEditor は、左で書くと右にすぐ仕上がりが表示される Windows
 
 **書く・見る・渡す**
 - 左が文章、右が仕上がり。スクロールが連動します。
+- ディスプレイが 2 台なら、プレビューだけを別のウィンドウにして 2 台目に表示できます。最大化しても全画面にしても、編集欄と同じ行を表示し続けます。保存や検索などの操作は、どちらのウィンドウからでも使えます。
 - ビューアとしても使えます。`.md` ファイルの既定アプリにするか、ファイルをドロップして開き、プレビューをウィンドウいっぱいに広げれば、編集欄なしで読めます。見出しへのリンクや、同じフォルダーのほかの Markdown ファイルへのリンクも使えます。
 - 数行のテキストで、フローチャート・シーケンス図・ガントチャート・円グラフを描けます（Mermaid）。数式も書いたまま表示します（KaTeX）。
 - プレビューそのままの見た目で PDF に保存。図も数式も含みます。用紙は A4 と Letter。
@@ -118,6 +121,7 @@ mdEditor は、左で書くと右にすぐ仕上がりが表示される Windows
 
 **製品の機能（箇条書き）:**
 - 書きながら横で仕上がりを確認。スクロールも連動
+- 2 台目のディスプレイにプレビューを表示。編集と連動
 - ビューアとしても。プレビューをウィンドウいっぱいに表示
 - 図と数式をオフラインで表示
 - プレビューそのままの PDF をワンクリックで
@@ -126,7 +130,7 @@ mdEditor は、左で書くと右にすぐ仕上がりが表示される Windows
 - キーボードで全操作、画面読み上げ対応、ダークモード
 - 広告なし、計測なし、アカウント不要
 
-**検索用語（7つまで）:** Markdown, マークダウン, エディタ, プレビュー, PDF, Mermaid, 数式
+**検索用語（7つまで）:** Markdown, マークダウン, エディタ, プレビュー, PDF, 数式, デュアルモニター
 
 ## Before you submit / 提出前の確認
 

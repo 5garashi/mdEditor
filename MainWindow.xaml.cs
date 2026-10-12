@@ -61,12 +61,14 @@ public partial class MainWindow : Window
     private bool _allowClose;
     private bool _closePromptActive;
     private bool _pdfExportActive;
-    private bool _windowFullscreen;
+    private readonly WindowFullscreen _fullscreen = new();
     private TaskCompletionSource? _previewRendered;
-    private WindowState _windowedState;
-    private WindowStyle _windowedStyle;
-    private ResizeMode _windowedResizeMode;
-    private Rect _windowedBounds;
+    private CoreWebView2Environment? _environment;
+    // The preview in its own window, and the last scroll position sent to it.
+    private PreviewWindow? _previewWindow;
+    private bool _closingApp;
+    private double _lastSyncLine;
+    private string? _lastSyncEdge = "top";
 
     private const int DwmwaUseImmersiveDarkMode = 20;
     private const string SettingsKeyPath = @"Software\mdEditor";
@@ -113,6 +115,11 @@ public partial class MainWindow : Window
         _backupTimer.Start();
         // A normal exit (saved, or changes deliberately discarded) leaves no copy behind.
         Closed += (_, _) => DeleteRecoveryCopy();
+        Closed += (_, _) =>
+        {
+            _closingApp = true;
+            _previewWindow?.Close();
+        };
 
         _htmlSanitizer.AllowedTags.Clear();
         _htmlSanitizer.AllowedTags.UnionWith(
@@ -160,6 +167,7 @@ public partial class MainWindow : Window
                 "mdEditor",
                 "WebView2");
             var environment = await CoreWebView2Environment.CreateAsync(null, userDataFolder);
+            _environment = environment;
             await EditorWebView.EnsureCoreWebView2Async(environment);
         }
         catch (WebView2RuntimeNotFoundException ex)
@@ -225,13 +233,18 @@ public partial class MainWindow : Window
                     await LoadDocumentAsync(_initialPath);
                     if (!string.IsNullOrEmpty(_initialAnchor))
                     {
-                        SendToPage(new { type = "scrollToAnchor", name = _initialAnchor });
+                        SendScrollToAnchor(_initialAnchor);
                     }
                 }
                 else
                 {
                     SendDocumentInfo();
                     SendPreview();
+                }
+
+                if (LoadSetting("PreviewDetached") == "on")
+                {
+                    await OpenPreviewWindowAsync();
                 }
                 break;
             case "setTheme":
@@ -268,6 +281,7 @@ public partial class MainWindow : Window
             case "setLanguage":
                 Strings.Language = root.GetProperty("lang").GetString() == "en" ? "en" : "ja";
                 SendDocumentInfo();
+                UpdatePreviewWindowTitle();
                 break;
             case "dropFile":
                 await HandleDropAsync(e);
@@ -296,10 +310,24 @@ public partial class MainWindow : Window
                 OpenDocumentLink(root.GetProperty("href").GetString());
                 break;
             case "toggleWindowFullscreen":
-                SetWindowFullscreen(!_windowFullscreen);
+                _fullscreen.Set(this, !_fullscreen.IsOn);
                 break;
             case "exitWindowFullscreen":
-                SetWindowFullscreen(false);
+                _fullscreen.Set(this, false);
+                break;
+            case "detachPreview":
+                await OpenPreviewWindowAsync();
+                break;
+            case "attachPreview":
+                _previewWindow?.Close();
+                break;
+            case "syncLine":
+                _lastSyncLine = root.GetProperty("line").GetDouble();
+                _lastSyncEdge = root.TryGetProperty("edge", out var edge) ? edge.GetString() : null;
+                SendToPreviewWindow(new { type = "syncLine", line = _lastSyncLine, edge = _lastSyncEdge });
+                break;
+            case "popupCommand":
+                SendToPreviewWindow(new { type = "runCommand", id = root.GetProperty("id").GetString() });
                 break;
             case "previewRendered":
                 // Only the render that the PDF export asked for counts.
@@ -383,7 +411,7 @@ public partial class MainWindow : Window
         {
             if (fragment.Length > 0)
             {
-                SendToPage(new { type = "scrollToAnchor", name = fragment });
+                SendScrollToAnchor(fragment);
             }
 
             return;
@@ -787,8 +815,8 @@ public partial class MainWindow : Window
         ?? typeof(MainWindow).Assembly.GetName().Version?.ToString(3)
         ?? string.Empty;
 
-    private static double LoadZoom() =>
-        double.TryParse(LoadSetting("Zoom"), System.Globalization.NumberStyles.Float,
+    private static double LoadZoom(string name = "Zoom") =>
+        double.TryParse(LoadSetting(name), System.Globalization.NumberStyles.Float,
                 System.Globalization.CultureInfo.InvariantCulture, out var zoom) && zoom >= 0.25 && zoom <= 5
             ? zoom
             : 1.0;
@@ -1135,9 +1163,9 @@ public partial class MainWindow : Window
         object? sender,
         CoreWebView2WebResourceRequestedEventArgs e)
     {
-        var core = EditorWebView.CoreWebView2;
+        var environment = _environment;
         var folder = _filePath is null ? null : Path.GetDirectoryName(_filePath);
-        if (core is null || folder is null || !Uri.TryCreate(e.Request.Uri, UriKind.Absolute, out var uri))
+        if (environment is null || folder is null || !Uri.TryCreate(e.Request.Uri, UriKind.Absolute, out var uri))
         {
             return;
         }
@@ -1152,19 +1180,19 @@ public partial class MainWindow : Window
                 || !ImageContentTypes.TryGetValue(Path.GetExtension(path), out var contentType)
                 || !File.Exists(path))
             {
-                e.Response = core.Environment.CreateWebResourceResponse(null, 404, "Not Found", "");
+                e.Response = environment.CreateWebResourceResponse(null, 404, "Not Found", "");
                 return;
             }
 
             var bytes = await File.ReadAllBytesAsync(path);
-            e.Response = core.Environment.CreateWebResourceResponse(
+            e.Response = environment.CreateWebResourceResponse(
                 new MemoryStream(bytes), 200, "OK", $"Content-Type: {contentType}");
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException
                                        or ArgumentException or NotSupportedException
                                        or SecurityException)
         {
-            e.Response = core.Environment.CreateWebResourceResponse(null, 404, "Not Found", "");
+            e.Response = environment.CreateWebResourceResponse(null, 404, "Not Found", "");
         }
     }
 
@@ -1401,6 +1429,28 @@ public partial class MainWindow : Window
             var useDarkMode = dark ? 1 : 0;
             DwmSetWindowAttribute(handle, DwmwaUseImmersiveDarkMode, ref useDarkMode, sizeof(int));
         }
+
+        ApplyPreviewTheme();
+    }
+
+    private void ApplyPreviewTheme()
+    {
+        if (_previewWindow is not { } window)
+        {
+            return;
+        }
+
+        var dark = _theme == "dark" || (_theme == "auto" && IsSystemDarkTheme());
+        var background = dark ? Color.FromRgb(0x1A, 0x22, 0x12) : Color.FromRgb(0xFF, 0xF3, 0xD6);
+        window.Background = new SolidColorBrush(background);
+        window.WebView.DefaultBackgroundColor =
+            System.Drawing.Color.FromArgb(background.R, background.G, background.B);
+        var handle = new WindowInteropHelper(window).Handle;
+        if (handle != IntPtr.Zero)
+        {
+            var useDarkMode = dark ? 1 : 0;
+            DwmSetWindowAttribute(handle, DwmwaUseImmersiveDarkMode, ref useDarkMode, sizeof(int));
+        }
     }
 
     private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
@@ -1409,44 +1459,6 @@ public partial class MainWindow : Window
         {
             Dispatcher.BeginInvoke(ApplyTheme);
         }
-    }
-
-    private void SetWindowFullscreen(bool isFullscreen)
-    {
-        var wasFullscreen = _windowFullscreen;
-        if (wasFullscreen == isFullscreen)
-        {
-            return;
-        }
-
-        if (!wasFullscreen && isFullscreen)
-        {
-            _windowedState = WindowState;
-            _windowedStyle = WindowStyle;
-            _windowedResizeMode = ResizeMode;
-            var bounds = WindowState == WindowState.Normal
-                ? new Rect(Left, Top, Width, Height)
-                : RestoreBounds;
-            _windowedBounds = new Rect(bounds.Left, bounds.Top, bounds.Width, bounds.Height);
-
-            WindowState = WindowState.Normal;
-            WindowStyle = WindowStyle.None;
-            ResizeMode = ResizeMode.NoResize;
-            WindowState = WindowState.Maximized;
-        }
-        else if (wasFullscreen && !isFullscreen)
-        {
-            WindowState = WindowState.Normal;
-            WindowStyle = _windowedStyle;
-            ResizeMode = _windowedResizeMode;
-            Left = _windowedBounds.Left;
-            Top = _windowedBounds.Top;
-            Width = _windowedBounds.Width;
-            Height = _windowedBounds.Height;
-            WindowState = _windowedState;
-        }
-
-        _windowFullscreen = isFullscreen;
     }
 
     private async Task<bool> ConfirmSaveChangesAsync()
@@ -1515,21 +1527,35 @@ public partial class MainWindow : Window
         });
     }
 
-    private void SendPreview(bool notifyRendered = false, bool forPrint = false)
+    private void SendPreview(bool notifyRendered = false, bool forPrint = false, bool previewWindowOnly = false)
     {
-        if (!_pageReady)
+        var toPreviewWindow = !forPrint && _previewWindow is { PageReady: true };
+        var toPage = _pageReady && !previewWindowOnly;
+        if (!toPage && !toPreviewWindow)
         {
             return;
         }
 
-        SendToPage(new
+        var html = _htmlSanitizer.Sanitize(RenderMarkdown(_text));
+        // The number of source lines lets either window map scroll positions to lines.
+        var lines = _text.Count(character => character == '\n') + 1;
+        if (toPage)
         {
-            type = "preview",
-            html = _htmlSanitizer.Sanitize(RenderMarkdown(_text)),
-            notifyRendered,
-            forPrint,
-            requestId = notifyRendered ? ++_previewRequestId : 0
-        });
+            SendToPage(new
+            {
+                type = "preview",
+                html,
+                lines,
+                notifyRendered,
+                forPrint,
+                requestId = notifyRendered ? ++_previewRequestId : 0
+            });
+        }
+
+        if (toPreviewWindow)
+        {
+            SendToPreviewWindow(new { type = "preview", html, lines, notifyRendered = false, forPrint = false, requestId = 0 });
+        }
     }
 
     // Raw HTML is parsed only so comments can be recognized: comments are notes in
@@ -1613,6 +1639,171 @@ public partial class MainWindow : Window
     private void SendToPage(object message)
     {
         EditorWebView.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(message));
+    }
+
+    private void SendToPreviewWindow(object message)
+    {
+        if (_previewWindow is { PageReady: true } window)
+        {
+            window.WebView.CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(message));
+        }
+    }
+
+    // A link to a heading scrolls whichever window shows the preview.
+    private void SendScrollToAnchor(string name)
+    {
+        if (_previewWindow is { PageReady: true })
+        {
+            SendToPreviewWindow(new { type = "scrollToAnchor", name });
+        }
+        else
+        {
+            SendToPage(new { type = "scrollToAnchor", name });
+        }
+    }
+
+    // The preview in its own window, for example on a second display. It shares
+    // the WebView2 environment, so the page settings (language, text size, and
+    // so on) are the same; this window relays the preview, the scroll position
+    // (as a source line), and document commands such as Save between the two.
+    private async Task OpenPreviewWindowAsync()
+    {
+        if (_previewWindow is not null)
+        {
+            _previewWindow.Activate();
+            return;
+        }
+
+        if (_environment is null)
+        {
+            return;
+        }
+
+        var window = new PreviewWindow(LoadSetting("PreviewWindow"), new WindowInteropHelper(this).Handle) { Icon = Icon };
+        _previewWindow = window;
+        UpdatePreviewWindowTitle();
+        window.SourceInitialized += (_, _) => ApplyPreviewTheme();
+        window.Closing += (_, _) =>
+        {
+            if (window.SavePlacement() is { } placement)
+            {
+                SaveSetting("PreviewWindow", placement);
+            }
+        };
+        window.Closed += (_, _) =>
+        {
+            _previewWindow = null;
+            if (_closingApp)
+            {
+                // Closed with the app: it opens again at the next start.
+                return;
+            }
+
+            SaveSetting("PreviewDetached", "off");
+            SendToPage(new { type = "previewDetached", detached = false });
+            Activate();
+        };
+        window.Show();
+        // The editor keeps the keyboard focus.
+        Activate();
+
+        try
+        {
+            await window.WebView.EnsureCoreWebView2Async(_environment);
+        }
+        catch (Exception ex) when (ex is COMException or InvalidOperationException or ArgumentException)
+        {
+            window.Close();
+            MessageBox.Show(
+                $"{Strings.Tr("プレビューのウィンドウを開けませんでした。mdEditor を再起動してから、もう一度お試しください。")}\n\n{ex.Message}",
+                "mdEditor",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+            return;
+        }
+
+        if (_previewWindow != window)
+        {
+            return;
+        }
+
+        var core = window.WebView.CoreWebView2;
+        core.Settings.AreDevToolsEnabled = false;
+        window.WebView.ZoomFactor = LoadZoom("PreviewZoom");
+        window.WebView.ZoomFactorChanged += (_, _) => SaveSetting(
+            "PreviewZoom",
+            window.WebView.ZoomFactor.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture));
+        ApplyPreviewTheme();
+        core.SetVirtualHostNameToFolderMapping(
+            "mdeditor.local",
+            Path.Combine(AppContext.BaseDirectory, "wwwroot"),
+            CoreWebView2HostResourceAccessKind.DenyCors);
+        core.WebMessageReceived += PreviewMessageReceived;
+        core.NavigationStarting += NavigationStarting;
+        core.AddWebResourceRequestedFilter($"https://{DocumentHost}/*", CoreWebView2WebResourceContext.Image);
+        core.WebResourceRequested += DocumentResourceRequested;
+        window.WebView.Source = new Uri("https://mdeditor.local/index.html?view=preview");
+        SaveSetting("PreviewDetached", "on");
+        SendToPage(new { type = "previewDetached", detached = true });
+    }
+
+    private async void PreviewMessageReceived(object? sender, CoreWebView2WebMessageReceivedEventArgs e)
+    {
+        if (_previewWindow is not { } window)
+        {
+            return;
+        }
+
+        using var message = JsonDocument.Parse(e.WebMessageAsJson);
+        var root = message.RootElement;
+        switch (root.GetProperty("type").GetString())
+        {
+            case "ready":
+                window.PageReady = true;
+                if (Strings.ForcedLanguage is not null)
+                {
+                    SendToPreviewWindow(new { type = "language", lang = Strings.ForcedLanguage });
+                }
+                SendToPreviewWindow(new { type = "theme", theme = _theme });
+                SendPreview(previewWindowOnly: true);
+                SendToPreviewWindow(new { type = "syncLine", line = _lastSyncLine, edge = _lastSyncEdge });
+                break;
+            case "syncLine":
+                _lastSyncLine = root.GetProperty("line").GetDouble();
+                _lastSyncEdge = root.TryGetProperty("edge", out var edge) ? edge.GetString() : null;
+                SendToPage(new { type = "syncLine", line = _lastSyncLine, edge = _lastSyncEdge });
+                break;
+            case "command":
+                // Document commands (Save, Open, Find, Settings, ...) belong to this window.
+                SendToPage(new { type = "runCommand", id = root.GetProperty("id").GetString() });
+                break;
+            case "attachPreview":
+                window.Close();
+                break;
+            case "externalLink":
+                OpenExternalLink(root.GetProperty("url").GetString());
+                break;
+            case "documentLink":
+                OpenDocumentLink(root.GetProperty("href").GetString());
+                break;
+            case "toggleWindowFullscreen":
+                window.Fullscreen.Set(window, !window.Fullscreen.IsOn);
+                break;
+            case "exitWindowFullscreen":
+                window.Fullscreen.Set(window, false);
+                break;
+            case "dropFile":
+                await HandleDropAsync(e);
+                break;
+        }
+    }
+
+    private void UpdatePreviewWindowTitle()
+    {
+        if (_previewWindow is { } window)
+        {
+            window.Title = $"{Strings.Tr("プレビュー")} - mdEditor by 5garashi.com";
+        }
     }
 
     private void OpenExternalLink(string? value)
