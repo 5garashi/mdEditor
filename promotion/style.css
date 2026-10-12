@@ -1,0 +1,18 @@
+/*
+File: promotion/style.css
+Description: Identity v4.12.0 styling for mdEditor promotion pages
+Author: 5garashi.com Design Office
+Created: 2026-10-12
+Version: 1.0.5
+License: MIT
+SPDX-License-Identifier: MIT
+*/
+:root{--paper:#F9EFCB;--head:#FFE699;--ink:#385723;--steel:#7B4A21;--volt:#B92613;--deep:#8C1B0D;--card:#FFFDF2;--line:#DFCF9A;--cream:#FFF3D6}
+*{box-sizing:border-box}html{scroll-behavior:auto}body{margin:0;background:var(--paper);color:var(--ink);font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','Noto Sans JP','Yu Gothic',Meiryo,sans-serif;font-size:18px;font-weight:600;line-height:1.7}
+html[lang=en] body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'Noto Sans','Hiragino Kaku Gothic ProN','Noto Sans JP','Yu Gothic',Meiryo,sans-serif}
+main,header,footer{max-width:1080px;margin:auto;padding:32px}header{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:center;background:var(--head)}.brand{display:block;padding:28px}.brand img{display:block;width:210px;height:auto;max-width:100%}.logo-night{display:none}a{color:var(--ink);text-underline-offset:.2em;overflow-wrap:anywhere}a:hover{text-decoration-thickness:3px}h1,h2{font-weight:800;letter-spacing:.04em;overflow-wrap:anywhere}h1{font-size:clamp(36px,6vw,68px);line-height:1.2;margin:28px 0}h2{font-size:28px;line-height:1.4}.lead{font-size:24px;max-width:800px}.tag,small{color:var(--steel);font-weight:700;letter-spacing:.06em}.tag{font-size:14px}.button{display:inline-flex;align-items:center;min-height:44px;background:var(--ink);color:var(--head);padding:14px 22px;text-decoration:none;border:2px solid var(--ink);border-radius:5px;margin:8px 12px 8px 0}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:24px}.card{padding:28px;background:var(--card);border:1px solid var(--line);border-radius:8px;min-width:0}section{margin:64px 0}video{width:100%;max-width:100%;border-radius:8px;background:var(--head)}small{display:block;font-size:14px}.notice{border-left:4px solid var(--volt);padding:16px 22px;background:var(--card)}footer{border-top:1px solid var(--line);color:var(--steel)}a:focus-visible,video:focus-visible{outline:3px solid var(--volt);outline-offset:5px}header>a:not(.brand),li>a{display:inline-block;min-height:44px;padding:8px 0}.skip{position:absolute;left:16px;top:-200px;background:var(--card);padding:16px;z-index:10}.skip:focus{top:16px}.version{font:800 14px ui-monospace,monospace;color:var(--deep)}
+@media(max-width:600px){main,header,footer{padding:20px}.brand{padding:28px}h1{font-size:36px}.lead{font-size:20px}.card{padding:22px}}
+@media(prefers-color-scheme:dark){:root{--paper:#1A2212;--head:#2B3A20;--ink:#C9C1A5;--steel:#D9B98C;--volt:#F07B5F;--deep:#F7A58E;--card:#222C1A;--line:#4C5C3B;--cream:#1A2212}.logo-day{display:none}.logo-night{display:block}.button{color:var(--paper)}}
+@media print{:root{--paper:#FFFFFF;--head:#FFE699;--ink:#385723;--steel:#7B4A21;--volt:#B92613;--deep:#8C1B0D;--card:#FFFDF2;--line:#DFCF9A;--cream:#FFF3D6}html,body{background:#FFFFFF}.logo-day{display:block}.logo-night{display:none}video,.skip{display:none}.button{color:var(--head)}section{break-inside:avoid}}
+@media(forced-colors:active){body,header,.card,.notice,footer{background:Canvas;color:CanvasText}a{color:LinkText}.button{background:ButtonFace;color:ButtonText;border-color:ButtonText}.card,.notice,footer{border-color:CanvasText}a:focus-visible,video:focus-visible{outline-color:Highlight}.tag,small,.version{color:CanvasText}.logo-day{display:block}.logo-night{display:none}}
+a{min-width:44px;min-height:44px;display:inline-block;padding:6px 2px}.brand{padding:28px}.button{padding:14px 22px}.skip{padding:16px}
