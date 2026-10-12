@@ -12,6 +12,7 @@ OUT=ROOT.parent.parent/'deliverables';OUT.mkdir(exist_ok=True)
 public=[ROOT/name for name in ['index.html','en.html','style.css','player.js','VERSION','LICENSE','README.md','CHANGELOG.md','PRIVACY.md','THIRD-PARTY-NOTICES.md','IDENTITY-CHECK.md','RECORDING.md','IMPLEMENTATION.md']]
 public+=list((ROOT/'samples').glob('*.md'))+list((ROOT/'licenses').glob('*'))
 public+=[p for p in (ROOT/'assets').iterdir() if p.name not in ['mdEditor-intro-en.mp4','video-poster.png']]
+if (ROOT/'multichannel').exists():public+=[p for p in (ROOT/'multichannel').rglob('*') if p.is_file()]
 assert all(p.is_file() for p in public)
 manifest={'kit_version':VERSION,'app_source_version':'1.0.5','app_source_commit':'6440a2edbe0c570de9fffe8636e7e0233711d978','files':[{'path':p.relative_to(ROOT).as_posix(),'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in sorted(public)]}
 (ROOT/'manifest.json').write_text(json.dumps(manifest,indent=2),encoding='utf-8')
@@ -23,3 +24,15 @@ with zipfile.ZipFile(OUT/f'mdEditor-review-{VERSION}.zip','w',zipfile.ZIP_DEFLAT
 for p in [OUT/f'mdEditor-promotion-{VERSION}.zip',OUT/f'mdEditor-review-{VERSION}.zip']:
     with zipfile.ZipFile(p) as z:assert z.testzip() is None
     print(str(p)+' ('+str(p.stat().st_size)+' bytes)')
+if (ROOT/'multichannel').exists():
+    media_zip=OUT/f'mdEditor-multichannel-{VERSION}.zip'
+    with zipfile.ZipFile(media_zip,'w',zipfile.ZIP_DEFLATED) as z:
+        media_files=[p for p in (ROOT/'multichannel').rglob('*') if p.is_file()]
+        # Preserve article-relative sample, screen and video links.
+        media_files+=list((ROOT/'samples').glob('*.md'))
+        media_files+=[ROOT/'assets'/name for name in ['app-ja.png','app-en.png','mdEditor-demo-ja.mp4','mdEditor-demo-en.mp4']]
+        media_files+=[ROOT/name for name in ['LICENSE','THIRD-PARTY-NOTICES.md','PRIVACY.md','VERSION']]
+        media_files+=list((ROOT/'licenses').glob('*'))
+        for p in sorted(media_files):z.write(p,p.relative_to(ROOT).as_posix())
+    with zipfile.ZipFile(media_zip) as z:assert z.testzip() is None
+    print(str(media_zip)+' ('+str(media_zip.stat().st_size)+' bytes)')

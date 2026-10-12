@@ -3,14 +3,14 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.1.0
+版 / Version: 1.2.0
 ライセンス / License: MIT
 最終更新 / Last updated: 2026-10-13
 SPDX-License-Identifier: MIT
 -->
 # 素材・権利表記 / Asset and license notices
 
-版 / Version: 1.1.0
+版 / Version: 1.2.0
 
 ## 公式ロゴ・マーク / Official logos and mark
 
@@ -29,6 +29,12 @@ mdEditorのソースライセンスはMIT、Copyright (c) 2026 5garashi.com設�
 字幕のMeiryo、ページと画面のYu Gothic・Segoe UI等はWindowsなどにインストールされた書体を使用。フォントファイルは同梱していません。アプリ画面にMermaid・KaTeX・CodeMirrorの描画は含まれますが、それらのソフトウェア自体はこのキットに同梱しません。アプリの部品の名前・版・ライセンスは[mdEditor THIRD-PARTY-NOTICES.md](https://github.com/5garashi/mdEditor/blob/main/THIRD-PARTY-NOTICES.md)を参照してください。
 
 制作・検証ではffmpeg、Chrome、Python、PyMuPDF、Pillow、pywinauto、pywin32、websockets、ローカルappAutoTesterを利用しました。これらの実行ファイルやライブラリは配布ZIPに含めません。検証スクリプトは開発用です。
+
+## 追加媒体素材 / Additional media materials
+
+投稿画像・PDF・記事の文章とレイアウトはMIT。組み込んだ公式ロゴ・マークは引き続きCC BY-ND 4.0です。画像の編集用HTMLとPDFの元HTMLは同梱しています。QRにロゴを重ねたり、読み取り先を短縮サービスや計測サービスに置き換えたりしていません。
+
+QRの制作にはqrcode 8.2（BSDライセンス、内包コードにMIT表記）を作業用フォルダーで使用しました。ライブラリそのものは配布ZIPに含めません。QRコードの生成先はMicrosoft Storeの正式URLと事務所の正式URLです。QRの読み取り確認にはOpenCVを使用し、PDF・画像はChromeで出力しました。これらのツールも同梱しません。
 
 ---
 

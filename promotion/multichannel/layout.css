@@ -1,0 +1,27 @@
+/*
+File: promotion/multichannel/layout.css
+Description: Native media and print layouts
+Author: 5garashi.com Design Office
+Created: 2026-10-13
+Version: 1.2.0
+License: MIT
+SPDX-License-Identifier: MIT
+*/
+
+:root{--paper:#F9EFCB;--head:#FFE699;--ink:#385723;--steel:#7B4A21;--volt:#B92613;--deep:#8C1B0D;--card:#FFFDF2;--line:#DFCF9A}
+/* Official pairs: ink/paper 7.14:1, ink/card 8.05:1, steel/paper 6.41:1.
+   Additional print pairs: ink/white 8.22:1, steel/white 7.38:1,
+   deep/white 9.22:1. Calculation: tools/media-check.py. */
+*{box-sizing:border-box}body{margin:0;color:var(--ink);font-family:'Yu Gothic',Meiryo,sans-serif;font-weight:600;line-height:1.7}html[lang=en] body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'Noto Sans','Yu Gothic',Meiryo,sans-serif}h1,h2,h3{margin:0;font-weight:800;line-height:1.3}p{margin:0}img{display:block;max-width:100%;height:auto}a{color:var(--ink);text-underline-offset:.2em}a:focus-visible{outline:3px solid var(--volt);outline-offset:4px}.brandbar{display:flex;align-items:center;justify-content:space-between;background:var(--head);border-bottom:3px solid var(--ink);padding:28px 40px}.logo{width:156px}.mark{width:40px;margin:0 28px}.small{font-size:16px;font-weight:700;color:var(--steel)}.version{font:800 14px ui-monospace,monospace;color:var(--deep);white-space:nowrap}
+.social{background:var(--paper);overflow:hidden}.social .brandbar{height:124px}.social .body{padding:42px 52px}.social h1{font-size:56px;letter-spacing:.04em}.social .lead{font-size:26px;line-height:1.65;margin-top:24px}.social .tag{font-size:24px;font-weight:800;color:var(--deep);margin-bottom:16px}.social .screen{border:1px solid var(--line);background:var(--card)}.social .screen-note{font-size:17px;color:var(--steel);font-weight:700;margin-top:12px}.social .creator{font-size:24px;font-weight:800}.social .address{font:800 19px ui-monospace,monospace;color:var(--deep)}.social footer{padding:0 52px 32px}.social .credit{font-size:14px;font-weight:700;color:var(--steel);margin-top:12px}.landscape{width:1600px;height:900px}.landscape .body{display:grid;grid-template-columns:520px 1fr;gap:36px;align-items:center;height:592px}.landscape footer{padding-top:18px}.square{width:1080px;height:1080px}.square .body{padding:32px 48px 20px}.square h1{font-size:49px}.square .lead{font-size:23px;margin-top:14px}.square .tag{font-size:21px;margin-bottom:10px}.square .copy{margin-bottom:26px}.square .screen{width:984px}.square footer{padding:0 48px 28px}.square .creator{font-size:22px}.square .address{font-size:17px}.square .credit{font-size:13px}
+.flyer{background:#FFFFFF;font-size:16px}.flyer main{padding:22px 4px}.flyer .brandbar{padding:28px 30px;height:109px}.flyer .logo{width:128px}.flyer .mark{width:30px}.flyer h1{font-size:34px;letter-spacing:.03em}.flyer .intro{font-size:17px;margin:12px 0 18px}.flyer .pill{font-weight:800;color:var(--deep);font-size:16px}.flyer .screen{border:1px solid var(--line);margin:10px 0}.flyer .screen-labels{display:flex;justify-content:space-around;font-weight:800;font-size:15px}.flyer .benefits{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:18px 0}.flyer .benefits h2{font-size:17px}.flyer .benefits p{font-size:14px;line-height:1.65;margin-top:6px}.flyer .qr-row{display:grid;grid-template-columns:1.2fr 1fr;gap:20px;padding-top:16px;border-top:1px solid var(--line)}.flyer .qr-block{display:flex;gap:16px;align-items:center;min-width:0}.flyer .qr-block img{width:144px;flex-shrink:0}.flyer .qr-block.office img{width:116px}.flyer .qr-block h2{font-size:17px}.flyer .qr-block p{font-size:13px;font-weight:700;color:var(--steel)}.flyer .plain-link{font-family:ui-monospace,monospace;font-size:12px;overflow-wrap:anywhere}.flyer footer{margin-top:12px;border-top:1px solid var(--line);padding-top:9px;font-size:12px;line-height:1.65;font-weight:700;color:var(--steel)}.flyer .fine{font-size:12px;font-weight:700;color:var(--steel)}
+@page{size:A4 portrait;margin:12mm}@media print{html,body{background:#FFFFFF}.flyer{width:auto;margin:0}.flyer main{padding-bottom:8px}a{color:var(--ink)}.flyer footer{break-inside:avoid}}
+@media screen{.flyer{width:702px;min-height:1032px;margin:24px auto;padding:0 0 20px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+@media(forced-colors:active){body,.brandbar{background:Canvas;color:CanvasText}.small,.version,.flyer .fine{color:CanvasText}a{color:LinkText}a:focus-visible{outline-color:Highlight}.logo,.mark,.qr-image{forced-color-adjust:none}}
+
+.square .body{padding-top:24px}.square .screen{width:860px;margin:0 auto}.square h1{font-size:47px}.square .lead{font-size:22px}
+.flyer h1{font-size:30px}.flyer main{padding-top:12px}.flyer .screen{width:540px;margin:10px auto}.flyer .intro{font-size:16px;line-height:1.6;margin:8px 0 12px}.flyer .benefits{gap:12px;margin:14px 0}.flyer .qr-block img{width:128px}.flyer .qr-block.office img{width:116px}
+.flyer .plain-link{display:inline-block;min-width:44px;min-height:44px}
+.separate-screens{display:grid;grid-template-columns:884fr 634fr;gap:12px}.separate-screens img{width:100%;border:1px solid var(--line)}.separate-screens p{font-size:17px;font-weight:800;margin-bottom:8px}.square .separate-screens{width:860px;margin:auto}.square .screen-note{margin-left:0}
+.landscape.topic-window:lang(ja) h1{font-size:50px}

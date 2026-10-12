@@ -3,12 +3,19 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.1.0
+版 / Version: 1.2.0
 ライセンス / License: MIT
 最終更新 / Last updated: 2026-10-13
 SPDX-License-Identifier: MIT
 -->
 # 変更履歴 / Changelog
+
+## 1.2.0 — 2026-10-13
+
+- 日英のSNS投稿文を3題材で追加。横長1600×900・正方形1080×1080の画像12枚と編集用HTML。
+- Markdownで図と数式の技術メモを作る用途記事を日英で追加。
+- Store・事務所サイトのQR付きA4・1ページPDFを日英で追加。2つのQRの機械読取とクリックできるリンクを確認。
+- 媒体別一覧、代替テキスト、配布用ZIP、制作・検証記録を追加。投稿や公開は未実施。
 
 ## 1.1.0 — 2026-10-13
 

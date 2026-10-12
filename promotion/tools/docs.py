@@ -196,6 +196,38 @@ TabとEnter・Spaceで本文への移動、リンク・動画操作部品への�
 静的紹介ページには文書編集・自動バックアップ・復元機能がないため、異常終了時の復元試験は対象外です。
 '''
 
+DOCS['README.md']=DOCS['README.md'].replace('## 開く / Open','''## 追加した媒体素材 / Added media materials
+
+[媒体別の一覧・使い方](multichannel/README.md)に、日英の投稿文、横長・正方形の投稿画像12枚、用途記事2本、QR付きA4・1ページPDF2枚をまとめました。未投稿・未公開の素材です。無料配布は所有者の確認とStore掲載情報に基づいて記載しています。
+
+## 開く / Open''',1)
+DOCS['CHANGELOG.md']=DOCS['CHANGELOG.md'].replace('## {version} — 2026-10-13','''## {version} — 2026-10-13
+
+- 日英のSNS投稿文を3題材で追加。横長1600×900・正方形1080×1080の画像12枚と編集用HTML。
+- Markdownで図と数式の技術メモを作る用途記事を日英で追加。
+- Store・事務所サイトのQR付きA4・1ページPDFを日英で追加。2つのQRの機械読取とクリックできるリンクを確認。
+- 媒体別一覧、代替テキスト、配布用ZIP、制作・検証記録を追加。投稿や公開は未実施。
+
+## 1.1.0 — 2026-10-13''',1)
+DOCS['THIRD-PARTY-NOTICES.md']+='''
+## 追加媒体素材 / Additional media materials
+
+投稿画像・PDF・記事の文章とレイアウトはMIT。組み込んだ公式ロゴ・マークは引き続きCC BY-ND 4.0です。画像の編集用HTMLとPDFの元HTMLは同梱しています。QRにロゴを重ねたり、読み取り先を短縮サービスや計測サービスに置き換えたりしていません。
+
+QRの制作にはqrcode 8.2（BSDライセンス、内包コードにMIT表記）を作業用フォルダーで使用しました。ライブラリそのものは配布ZIPに含めません。QRコードの生成先はMicrosoft Storeの正式URLと事務所の正式URLです。QRの読み取り確認にはOpenCVを使用し、PDF・画像はChromeで出力しました。これらのツールも同梱しません。
+'''
+DOCS['IDENTITY-CHECK.md']+='''
+## 追加媒体の検証 / Additional media verification
+
+日英SNS画像12枚は実Chromeで描画。横長1600×900、正方形1080×1080の実寸と、本文・画像・フッターの欠けを確認しました。SVG原本を埋め込み、配色は昼のパレットです。
+
+日英PDFはChromeのタグ付きPDF出力を使い、PyMuPDFでA4相当・各1ページ・文字の抽出・リンクを確認。余白は白。OpenCVで各PDFを画像化した状態から2つのQRを読み取り、Storeと事務所サイトの正式URLに一致しました。実際の紙への印刷とスマートフォンのカメラでは未検証です。タグ付きPDFの生成と、PDF/UAやスクリーンリーダーでの全面的な検証は区別しています。
+
+技術記事は日英とも未投稿のMarkdown原稿です。相対画像・サンプル・動画リンクは媒体フォルダーを含む公開用パッケージ内で検証します。別の掲載先へ転載する際は画像をアップロードし、相対リンクを公開URLへ置き換える必要があります。SNS画像はStore掲載用スクリーンショットとは区別します。
+
+証拠はvalidation/multichannel-results.jsonとmultichannel/printのPDFプレビュー画像。公開・投稿は行っていません。
+'''
+
 for name,body in DOCS.items():
     (ROOT/name).write_text(header('promotion/'+name)+body.replace('{version}',VERSION)+SIGNATURE,encoding='utf-8',newline='\n')
 (ROOT/'validation/contrast-results.json').write_text(json.dumps(ratios,indent=2),encoding='utf-8')

@@ -3,14 +3,14 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.1.0
+版 / Version: 1.2.0
 ライセンス / License: MIT
 最終更新 / Last updated: 2026-10-13
 SPDX-License-Identifier: MIT
 -->
 # Windows実演の制作記録 / Windows recording record
 
-版 / Version: 1.1.0
+版 / Version: 1.2.0
 
 日本語・英語を別々に録画しました。動画はスライドやWeb上の再現画面ではなく、変更していないmdEditor 1.0.5のWPF/WebView2ウィンドウをWindowsデスクトップから収録したものです。
 

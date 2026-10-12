@@ -3,16 +3,20 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.1.0
+版 / Version: 1.2.0
 ライセンス / License: MIT
 最終更新 / Last updated: 2026-10-13
 SPDX-License-Identifier: MIT
 -->
 # mdEditor 宣伝キット / Promotion kit
 
-バージョン / Version: 1.1.0 · [CHANGELOG.md](CHANGELOG.md)
+バージョン / Version: 1.2.0 · [CHANGELOG.md](CHANGELOG.md)
 
 Windows版の実操作を使った日英紹介ページ、40秒の実演動画、初めて試すための日英6サンプルです。公開前のローカル成果物です。
+
+## 追加した媒体素材 / Added media materials
+
+[媒体別の一覧・使い方](multichannel/README.md)に、日英の投稿文、横長・正方形の投稿画像12枚、用途記事2本、QR付きA4・1ページPDF2枚をまとめました。未投稿・未公開の素材です。無料配布は所有者の確認とStore掲載情報に基づいて記載しています。
 
 ## 開く / Open
 

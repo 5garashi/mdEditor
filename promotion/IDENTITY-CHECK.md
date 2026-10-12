@@ -3,14 +3,14 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.1.0
+版 / Version: 1.2.0
 ライセンス / License: MIT
 最終更新 / Last updated: 2026-10-13
 SPDX-License-Identifier: MIT
 -->
 # Identity適用・検証記録 / Identity and verification record
 
-版 / Version: 1.1.0。確認日: 2026-10-12〜13 JST。
+版 / Version: 1.2.0。確認日: 2026-10-12〜13 JST。
 
 基準: [Design Office Identity v4.12.0](https://5garashi.github.io/5garashi-identity/)。原本文書はデザイン資料として参照。第3・4・6〜9・11〜13条に照合しました。
 
@@ -76,6 +76,16 @@ TabとEnter・Spaceで本文への移動、リンク・動画操作部品への�
 - WCAG 2.2 AAおよびWCAG2ICTの全面的な適合評価。適用と確認範囲を記録し、完全準拠とは表記しない。
 
 静的紹介ページには文書編集・自動バックアップ・復元機能がないため、異常終了時の復元試験は対象外です。
+
+## 追加媒体の検証 / Additional media verification
+
+日英SNS画像12枚は実Chromeで描画。横長1600×900、正方形1080×1080の実寸と、本文・画像・フッターの欠けを確認しました。SVG原本を埋め込み、配色は昼のパレットです。
+
+日英PDFはChromeのタグ付きPDF出力を使い、PyMuPDFでA4相当・各1ページ・文字の抽出・リンクを確認。余白は白。OpenCVで各PDFを画像化した状態から2つのQRを読み取り、Storeと事務所サイトの正式URLに一致しました。実際の紙への印刷とスマートフォンのカメラでは未検証です。タグ付きPDFの生成と、PDF/UAやスクリーンリーダーでの全面的な検証は区別しています。
+
+技術記事は日英とも未投稿のMarkdown原稿です。相対画像・サンプル・動画リンクは媒体フォルダーを含む公開用パッケージ内で検証します。別の掲載先へ転載する際は画像をアップロードし、相対リンクを公開URLへ置き換える必要があります。SNS画像はStore掲載用スクリーンショットとは区別します。
+
+証拠はvalidation/multichannel-results.jsonとmultichannel/printのPDFプレビュー画像。公開・投稿は行っていません。
 
 ---
 

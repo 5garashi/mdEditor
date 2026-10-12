@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-13 JST",
+  "settings_restored": true,
+  "results": [
+    {
+      "language": "ja",
+      "actual_windows": 2,
+      "source_version": "1.0.5",
+      "preview_diagram_and_math": true,
+      "files": [
+        "window-editor-ja.png",
+        "window-preview-ja.png"
+      ]
+    },
+    {
+      "language": "en",
+      "actual_windows": 2,
+      "source_version": "1.0.5",
+      "preview_diagram_and_math": true,
+      "files": [
+        "window-editor-en.png",
+        "window-preview-en.png"
+      ]
+    }
+  ]
+}

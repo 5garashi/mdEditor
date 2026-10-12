@@ -1,0 +1,16 @@
+[
+  {
+    "name": "store",
+    "url": "https://apps.microsoft.com/detail/9nww2qrclmhc",
+    "modules": 33,
+    "quiet_zone_modules": 4,
+    "error_correction": "M"
+  },
+  {
+    "name": "office",
+    "url": "https://www.5garashi.com/",
+    "modules": 25,
+    "quiet_zone_modules": 4,
+    "error_correction": "M"
+  }
+]
