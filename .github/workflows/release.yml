@@ -1,0 +1,45 @@
+# File: .github/workflows/release.yml
+# Description: When VERSION changes on main, tags the commit vX.Y.Z and creates a GitHub Release from CHANGELOG.md
+# Author: 5garashi.com Design Office
+# Created: 2026-10-12
+# License: MIT
+# SPDX-License-Identifier: MIT
+name: Tag and release
+
+on:
+  push:
+    branches: [main]
+    paths: [VERSION]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create the tag and the Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          v=$(tr -d '[:space:]' < VERSION)
+          if git ls-remote --exit-code --tags origin "refs/tags/v$v" > /dev/null; then
+            echo "Tag v$v already exists; nothing to do."
+            exit 0
+          fi
+          # The notes are the CHANGELOG.md section for this version, without its heading.
+          # The pattern goes through the environment so awk keeps its backslashes.
+          PATTERN="^## $(printf '%s' "$v" | sed 's/\./\\./g')( |$)" awk '
+            BEGIN { pattern = ENVIRON["PATTERN"] }
+            $0 ~ pattern { found = 1; next }
+            found && /^## / { exit }
+            found { print }
+          ' CHANGELOG.md > notes.md
+          if [ ! -s notes.md ]; then
+            echo "::error file=CHANGELOG.md::No '## $v' section in CHANGELOG.md."
+            exit 1
+          fi
+          gh release create "v$v" --target "$GITHUB_SHA" --title "mdEditor v$v" --notes-file notes.md
+          echo "Created v$v at $GITHUB_SHA."

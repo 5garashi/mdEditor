@@ -9,6 +9,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
@@ -214,6 +215,7 @@ public partial class MainWindow : Window
                 SendPaper();
                 SendZoom();
                 SendToPage(new { type = "autoBackup", enabled = _autoBackup });
+                SendToPage(new { type = "appInfo", version = AppVersion });
                 if (await OfferRecoveryAsync())
                 {
                     // The recovered document is shown instead of the file passed at start.
@@ -778,6 +780,12 @@ public partial class MainWindow : Window
         1252 => "windows-1252",
         _ => encoding.WebName
     };
+
+    // From the VERSION file, through <Version> in mdEditor.csproj.
+    private static string AppVersion { get; } =
+        typeof(MainWindow).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
+        ?? typeof(MainWindow).Assembly.GetName().Version?.ToString(3)
+        ?? string.Empty;
 
     private static double LoadZoom() =>
         double.TryParse(LoadSetting("Zoom"), System.Globalization.NumberStyles.Float,

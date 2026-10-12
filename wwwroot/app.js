@@ -30,7 +30,7 @@
       sampleIntro: "図と数式を含む短い文書を、編集欄に入れて試せます。選んだときだけ入ります。",
       sampleOpen: "開く", sampleOpenLabel: (name) => `サンプル「${name}」を編集欄に入れる`,
       sampleConfirm: "編集欄の内容をサンプルに置き換えます。よろしいですか？",
-      about: "このアプリについて", aboutHeading: "このアプリについて",
+      about: "このアプリについて", aboutHeading: "このアプリについて", aboutVersion: "バージョン",
       aboutIntro: "mdEditor は 5garashi.com Design Office が作った、Markdown の編集・プレビュー・PDF 書き出しのアプリです。",
       aboutCompany: "5garashi.com Design Office の紹介", aboutWorks: "作品・ほかのアプリ",
       aboutSupport: "サポート・お問い合わせ", aboutPrivacy: "プライバシーポリシー",
@@ -130,7 +130,7 @@
       sampleIntro: "Try a short document with diagrams and math. Nothing is inserted until you choose one.",
       sampleOpen: "Open", sampleOpenLabel: (name) => `Put the sample "${name}" in the editor`,
       sampleConfirm: "This replaces the editor content with the sample. Continue?",
-      about: "About", aboutHeading: "About this app",
+      about: "About", aboutHeading: "About this app", aboutVersion: "Version",
       aboutIntro: "mdEditor is a Markdown editor, previewer, and PDF exporter made by 5garashi.com Design Office.",
       aboutCompany: "About 5garashi.com Design Office", aboutWorks: "Works and other apps",
       aboutSupport: "Support and contact", aboutPrivacy: "Privacy policy",
@@ -1602,6 +1602,8 @@
     } else if (message.type === "language") {
       language = message.lang === "en" ? "en" : "ja";
       applyLanguage();
+    } else if (message.type === "appInfo") {
+      document.getElementById("app-version").textContent = message.version;
     } else if (message.type === "scrollToAnchor") {
       // Sent after another document opens from a link with #heading.
       requestAnimationFrame(() => scrollToAnchor(message.name));

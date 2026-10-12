@@ -12,6 +12,8 @@ Windows で Markdown ファイルを開き、テキストと整形済み表示�
 
 *A Windows app that opens Markdown files and lets you edit the text side by side with a rendered preview.* [日本語](#特長) / [English](#english)
 
+バージョン / Version: 1.0.3（変更の記録 / Changes: [CHANGELOG.md](./CHANGELOG.md)）
+
 ## 特長
 
 Markdown を書きながら、整形された仕上がりをすぐ横で確かめられるエディタです。図や数式もそのまま表示し、PDF に書き出せます。書く・読む・残すが、PC の中だけで完結します。
@@ -45,6 +47,16 @@ Windows は既定アプリをユーザーの操作で設定するため、セッ
 Microsoft Edge WebView2 Runtime が必要です。Microsoft Edge がインストールされている環境では、通常このランタイムも利用できます。
 
 **Microsoft Store 用のパッケージ**: `setup.cmd` は開発用の手順です。Store 向けには、Windows SDK を入れた PC で `store\build-msix.ps1`（Partner Center の「製品の ID」の値を `-IdentityName` と `-Publisher` に指定）を実行すると、署名前の MSIX が `artifacts` に作られます。署名は Store が行います。
+
+## バージョンの管理
+
+バージョンは、リポジトリの一番上にある [VERSION](./VERSION) ファイルだけに書きます。アプリ（「このアプリについて」に表示）と Microsoft Store 用の MSIX（末尾に `.0` を付けた 4 桁）は、ここから読み取ります。新しい版を出すときは、次の 3 つを同じプルリクエストで変えます。
+
+1. `VERSION` の番号を上げる（例: `1.0.3` → `1.0.4`）。
+2. [CHANGELOG.md](./CHANGELOG.md) に `## 1.0.4` の節を足す。
+3. この README の「バージョン / Version」の行を合わせる。
+
+プルリクエストでは、GitHub Actions がこの 3 つがそろっているかを確かめます。main にマージされると、`v1.0.4` のタグと GitHub の Release（本文は CHANGELOG の節）が自動で作られます。
 
 ## 操作
 
@@ -234,6 +246,16 @@ Windows requires the user to set default apps, so choose `mdEditor` for `.md` in
 Microsoft Edge WebView2 Runtime is required. It is normally available wherever Microsoft Edge is installed.
 
 **Package for the Microsoft Store**: `setup.cmd` is the development procedure. For the Store, run `store\build-msix.ps1` on a PC with the Windows SDK, passing the values from Partner Center's Product identity as `-IdentityName` and `-Publisher`. It creates an unsigned MSIX in `artifacts`; the Store signs it.
+
+### Versioning
+
+The version lives only in the [VERSION](./VERSION) file at the repository root. The app (shown in About) and the Microsoft Store MSIX (four parts, with `.0` added) read it from there. To release a new version, change these three in the same pull request:
+
+1. Raise the number in `VERSION` (for example, `1.0.3` to `1.0.4`).
+2. Add a `## 1.0.4` section to [CHANGELOG.md](./CHANGELOG.md).
+3. Update the "バージョン / Version" line near the top of this README.
+
+On pull requests, GitHub Actions checks that the three match. When merged into main, the `v1.0.4` tag and a GitHub Release (with the CHANGELOG section as its notes) are created automatically.
 
 ### Usage
 
