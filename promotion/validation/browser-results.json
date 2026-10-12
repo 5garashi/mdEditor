@@ -1,0 +1,3760 @@
+{
+  "date": "2026-10-13 JST",
+  "browser": "Google Chrome",
+  "cases": [
+    {
+      "case": "ja-light-normal-1280",
+      "metrics": {
+        "width": 1280,
+        "scrollWidth": 1265,
+        "font": "16px",
+        "logo": "http://127.0.0.1:60580/promotion/assets/5garashi_logotype_outlined.svg",
+        "background": "rgb(249, 239, 203)",
+        "brokenImages": [],
+        "smallTargets": [],
+        "overflow": [],
+        "keyboard_visited": [
+          {
+            "tag": "A",
+            "text": "Microsoft Storeで見る",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプルを試す",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "再生",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "停止して先頭へ",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "動画を保存（MP4）",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "字幕を保存（VTT）",
+            "id": ""
+          },
+          {
+            "tag": "SUMMARY",
+            "text": "動画の操作手順を読む",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 図と数式のメモ",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 文書レビューの手順",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 回答を整理するメモ",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "より多くの図を試す既存サンプル",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "プライバシーポリシーを読む",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "事務所・開発相談",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "不具合・要望",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "mdEditor · GitHub",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "ライセンス",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "素材の出典",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "このページの通信",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Design Office Identity v4.12.0",
+            "id": ""
+          },
+          {
+            "tag": "BODY",
+            "text": "\n本文へ移動\nサンプルEnglish\nmdEditor · WINDOWS書く。確かめる。PDFに残す。図も数式も、Ma",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "本文へ移動",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプル",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "English",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Microsoft Storeで見る",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプルを試す",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "再生",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "停止して先頭へ",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          }
+        ],
+        "focus_outline": "3px"
+      }
+    },
+    {
+      "case": "ja-http-downloads",
+      "result": "Three actual Chrome downloads; exact filenames and bytes match"
+    },
+    {
+      "case": "ja-light-normal-320",
+      "metrics": {
+        "width": 320,
+        "scrollWidth": 305,
+        "font": "16px",
+        "logo": "http://127.0.0.1:60580/promotion/assets/5garashi_logotype_outlined.svg",
+        "background": "rgb(249, 239, 203)",
+        "brokenImages": [],
+        "smallTargets": [],
+        "overflow": [],
+        "keyboard_visited": [
+          {
+            "tag": "A",
+            "text": "Microsoft Storeで見る",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプルを試す",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "再生",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "停止して先頭へ",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "動画を保存（MP4）",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "字幕を保存（VTT）",
+            "id": ""
+          },
+          {
+            "tag": "SUMMARY",
+            "text": "動画の操作手順を読む",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 図と数式のメモ",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 文書レビューの手順",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 回答を整理するメモ",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "より多くの図を試す既存サンプル",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "プライバシーポリシーを読む",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "事務所・開発相談",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "不具合・要望",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "mdEditor · GitHub",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "ライセンス",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "素材の出典",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "このページの通信",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Design Office Identity v4.12.0",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "本文へ移動",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプル",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "English",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Microsoft Storeで見る",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプルを試す",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "再生",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "停止して先頭へ",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "動画を保存（MP4）",
+            "id": ""
+          }
+        ],
+        "focus_outline": "3px"
+      }
+    },
+    {
+      "case": "ja-dark-normal-1280",
+      "metrics": {
+        "width": 1280,
+        "scrollWidth": 1265,
+        "font": "16px",
+        "logo": "http://127.0.0.1:60580/promotion/assets/5garashi_logotype_reversed_outlined.svg",
+        "background": "rgb(26, 34, 18)",
+        "brokenImages": [],
+        "smallTargets": [],
+        "overflow": [],
+        "keyboard_visited": [
+          {
+            "tag": "A",
+            "text": "Microsoft Storeで見る",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプルを試す",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "再生",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "停止して先頭へ",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "動画を保存（MP4）",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "字幕を保存（VTT）",
+            "id": ""
+          },
+          {
+            "tag": "SUMMARY",
+            "text": "動画の操作手順を読む",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 図と数式のメモ",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 文書レビューの手順",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 回答を整理するメモ",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "より多くの図を試す既存サンプル",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "プライバシーポリシーを読む",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "事務所・開発相談",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "不具合・要望",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "mdEditor · GitHub",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "ライセンス",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "素材の出典",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "このページの通信",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Design Office Identity v4.12.0",
+            "id": ""
+          },
+          {
+            "tag": "BODY",
+            "text": "\n本文へ移動\nサンプルEnglish\nmdEditor · WINDOWS書く。確かめる。PDFに残す。図も数式も、Ma",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "本文へ移動",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプル",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "English",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Microsoft Storeで見る",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプルを試す",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "再生",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "停止して先頭へ",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          }
+        ],
+        "focus_outline": "3px"
+      }
+    },
+    {
+      "case": "ja-dark-normal-320",
+      "metrics": {
+        "width": 320,
+        "scrollWidth": 305,
+        "font": "16px",
+        "logo": "http://127.0.0.1:60580/promotion/assets/5garashi_logotype_reversed_outlined.svg",
+        "background": "rgb(26, 34, 18)",
+        "brokenImages": [],
+        "smallTargets": [],
+        "overflow": [],
+        "keyboard_visited": [
+          {
+            "tag": "A",
+            "text": "Microsoft Storeで見る",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプルを試す",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "再生",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "停止して先頭へ",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "動画を保存（MP4）",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "字幕を保存（VTT）",
+            "id": ""
+          },
+          {
+            "tag": "SUMMARY",
+            "text": "動画の操作手順を読む",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 図と数式のメモ",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 文書レビューの手順",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 回答を整理するメモ",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "より多くの図を試す既存サンプル",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "プライバシーポリシーを読む",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "事務所・開発相談",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "不具合・要望",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "mdEditor · GitHub",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "ライセンス",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "素材の出典",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "このページの通信",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Design Office Identity v4.12.0",
+            "id": ""
+          },
+          {
+            "tag": "BODY",
+            "text": "\n本文へ移動\nサンプルEnglish\nmdEditor · WINDOWS書く。確かめる。PDFに残す。図も数式も、Ma",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "本文へ移動",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプル",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "English",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Microsoft Storeで見る",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプルを試す",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "再生",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "停止して先頭へ",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          }
+        ],
+        "focus_outline": "3px"
+      }
+    },
+    {
+      "case": "en-light-normal-1280",
+      "metrics": {
+        "width": 1280,
+        "scrollWidth": 1265,
+        "font": "16px",
+        "logo": "http://127.0.0.1:60580/promotion/assets/5garashi_logotype_en_outlined.svg",
+        "background": "rgb(249, 239, 203)",
+        "brokenImages": [],
+        "smallTargets": [],
+        "overflow": [],
+        "keyboard_visited": [
+          {
+            "tag": "A",
+            "text": "View in Microsoft Store",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Try a sample",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Play",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Stop and restart",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Full screen",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download video (MP4)",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download captions (VTT)",
+            "id": ""
+          },
+          {
+            "tag": "SUMMARY",
+            "text": "Read the video steps",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Diagrams and math",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Document review",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Organize an answer",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Existing sample with more diagram types",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Read the privacy policy",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Meet the office / discuss a project",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Feedback and support",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "mdEditor · GitHub",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "License",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Asset credits",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Page privacy",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Design Office Identity v4.12.0",
+            "id": ""
+          },
+          {
+            "tag": "BODY",
+            "text": "\nSkip to content\nSamples日本語\nmdEditor · WINDOWSWrite. Preview",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Skip to content",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Samples",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "日本語",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "View in Microsoft Store",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Try a sample",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Play",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Stop and restart",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Full screen",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          }
+        ],
+        "focus_outline": "3px"
+      }
+    },
+    {
+      "case": "en-http-downloads",
+      "result": "Three actual Chrome downloads; exact filenames and bytes match"
+    },
+    {
+      "case": "en-light-normal-320",
+      "metrics": {
+        "width": 320,
+        "scrollWidth": 305,
+        "font": "16px",
+        "logo": "http://127.0.0.1:60580/promotion/assets/5garashi_logotype_en_outlined.svg",
+        "background": "rgb(249, 239, 203)",
+        "brokenImages": [],
+        "smallTargets": [],
+        "overflow": [],
+        "keyboard_visited": [
+          {
+            "tag": "A",
+            "text": "View in Microsoft Store",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Try a sample",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Play",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Stop and restart",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Full screen",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download video (MP4)",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download captions (VTT)",
+            "id": ""
+          },
+          {
+            "tag": "SUMMARY",
+            "text": "Read the video steps",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Diagrams and math",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Document review",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Organize an answer",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Existing sample with more diagram types",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Read the privacy policy",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Meet the office / discuss a project",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Feedback and support",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "mdEditor · GitHub",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "License",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Asset credits",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Page privacy",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Design Office Identity v4.12.0",
+            "id": ""
+          },
+          {
+            "tag": "BODY",
+            "text": "\nSkip to content\nSamples日本語\nmdEditor · WINDOWSWrite. Preview",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Skip to content",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Samples",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "日本語",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "View in Microsoft Store",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Try a sample",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Play",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Stop and restart",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Full screen",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          }
+        ],
+        "focus_outline": "3px"
+      }
+    },
+    {
+      "case": "en-dark-normal-1280",
+      "metrics": {
+        "width": 1280,
+        "scrollWidth": 1265,
+        "font": "16px",
+        "logo": "http://127.0.0.1:60580/promotion/assets/5garashi_logotype_en_reversed_outlined.svg",
+        "background": "rgb(26, 34, 18)",
+        "brokenImages": [],
+        "smallTargets": [],
+        "overflow": [],
+        "keyboard_visited": [
+          {
+            "tag": "A",
+            "text": "View in Microsoft Store",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Try a sample",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Play",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Stop and restart",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Full screen",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download video (MP4)",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download captions (VTT)",
+            "id": ""
+          },
+          {
+            "tag": "SUMMARY",
+            "text": "Read the video steps",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Diagrams and math",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Document review",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Organize an answer",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Existing sample with more diagram types",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Read the privacy policy",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Meet the office / discuss a project",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Feedback and support",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "mdEditor · GitHub",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "License",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Asset credits",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Page privacy",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Design Office Identity v4.12.0",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Skip to content",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Samples",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "日本語",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "View in Microsoft Store",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Try a sample",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Play",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Stop and restart",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Full screen",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download video (MP4)",
+            "id": ""
+          }
+        ],
+        "focus_outline": "3px"
+      }
+    },
+    {
+      "case": "en-dark-normal-320",
+      "metrics": {
+        "width": 320,
+        "scrollWidth": 305,
+        "font": "16px",
+        "logo": "http://127.0.0.1:60580/promotion/assets/5garashi_logotype_en_reversed_outlined.svg",
+        "background": "rgb(26, 34, 18)",
+        "brokenImages": [],
+        "smallTargets": [],
+        "overflow": [],
+        "keyboard_visited": [
+          {
+            "tag": "A",
+            "text": "View in Microsoft Store",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Try a sample",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Play",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Stop and restart",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Full screen",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download video (MP4)",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download captions (VTT)",
+            "id": ""
+          },
+          {
+            "tag": "SUMMARY",
+            "text": "Read the video steps",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Diagrams and math",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Document review",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Organize an answer",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Existing sample with more diagram types",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Read the privacy policy",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Meet the office / discuss a project",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Feedback and support",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "mdEditor · GitHub",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "License",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Asset credits",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Page privacy",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Design Office Identity v4.12.0",
+            "id": ""
+          },
+          {
+            "tag": "BODY",
+            "text": "\nSkip to content\nSamples日本語\nmdEditor · WINDOWSWrite. Preview",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Skip to content",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Samples",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "日本語",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "View in Microsoft Store",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Try a sample",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Play",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Stop and restart",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Full screen",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          }
+        ],
+        "focus_outline": "3px"
+      }
+    },
+    {
+      "case": "ja-forced-colors",
+      "metrics": {
+        "border": "2px",
+        "focus": "3px",
+        "width": 320,
+        "scroll": 305
+      }
+    },
+    {
+      "case": "en-forced-colors",
+      "metrics": {
+        "border": "2px",
+        "focus": "3px",
+        "width": 320,
+        "scroll": 305
+      }
+    },
+    {
+      "case": "ja-standalone-isolated",
+      "result": "OK; images, CSS, sample downloads and video embedded"
+    },
+    {
+      "case": "en-standalone-isolated",
+      "result": "OK; images, CSS, sample downloads and video embedded"
+    },
+    {
+      "case": "ja-light-zoom200-1280",
+      "metrics": {
+        "width": 640,
+        "scrollWidth": 632,
+        "font": "16px",
+        "logo": "http://127.0.0.1:60580/promotion/assets/5garashi_logotype_outlined.svg",
+        "background": "rgb(249, 239, 203)",
+        "brokenImages": [],
+        "smallTargets": [],
+        "overflow": [],
+        "keyboard_visited": [
+          {
+            "tag": "A",
+            "text": "Microsoft Storeで見る",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプルを試す",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "再生",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "停止して先頭へ",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "動画を保存（MP4）",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "字幕を保存（VTT）",
+            "id": ""
+          },
+          {
+            "tag": "SUMMARY",
+            "text": "動画の操作手順を読む",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 図と数式のメモ",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 文書レビューの手順",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 回答を整理するメモ",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "より多くの図を試す既存サンプル",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "プライバシーポリシーを読む",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "事務所・開発相談",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "不具合・要望",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "mdEditor · GitHub",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "ライセンス",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "素材の出典",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "このページの通信",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Design Office Identity v4.12.0",
+            "id": ""
+          },
+          {
+            "tag": "BODY",
+            "text": "\n本文へ移動\nサンプルEnglish\nmdEditor · WINDOWS書く。確かめる。PDFに残す。図も数式も、Ma",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "本文へ移動",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプル",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "English",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Microsoft Storeで見る",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプルを試す",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "再生",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "停止して先頭へ",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          }
+        ],
+        "focus_outline": "3px"
+      }
+    },
+    {
+      "case": "ja-dark-zoom200-1280",
+      "metrics": {
+        "width": 640,
+        "scrollWidth": 632,
+        "font": "16px",
+        "logo": "http://127.0.0.1:60580/promotion/assets/5garashi_logotype_reversed_outlined.svg",
+        "background": "rgb(26, 34, 18)",
+        "brokenImages": [],
+        "smallTargets": [],
+        "overflow": [],
+        "keyboard_visited": [
+          {
+            "tag": "A",
+            "text": "Microsoft Storeで見る",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプルを試す",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "再生",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "停止して先頭へ",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "動画を保存（MP4）",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "字幕を保存（VTT）",
+            "id": ""
+          },
+          {
+            "tag": "SUMMARY",
+            "text": "動画の操作手順を読む",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 図と数式のメモ",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 文書レビューの手順",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 回答を整理するメモ",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "より多くの図を試す既存サンプル",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "プライバシーポリシーを読む",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "事務所・開発相談",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "不具合・要望",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "mdEditor · GitHub",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "ライセンス",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "素材の出典",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "このページの通信",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Design Office Identity v4.12.0",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "本文へ移動",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプル",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "English",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Microsoft Storeで見る",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプルを試す",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "再生",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "停止して先頭へ",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "動画を保存（MP4）",
+            "id": ""
+          }
+        ],
+        "focus_outline": "3px"
+      }
+    },
+    {
+      "case": "en-light-zoom200-1280",
+      "metrics": {
+        "width": 640,
+        "scrollWidth": 632,
+        "font": "16px",
+        "logo": "http://127.0.0.1:60580/promotion/assets/5garashi_logotype_en_outlined.svg",
+        "background": "rgb(249, 239, 203)",
+        "brokenImages": [],
+        "smallTargets": [],
+        "overflow": [],
+        "keyboard_visited": [
+          {
+            "tag": "A",
+            "text": "View in Microsoft Store",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Try a sample",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Play",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Stop and restart",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Full screen",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download video (MP4)",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download captions (VTT)",
+            "id": ""
+          },
+          {
+            "tag": "SUMMARY",
+            "text": "Read the video steps",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Diagrams and math",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Document review",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Organize an answer",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Existing sample with more diagram types",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Read the privacy policy",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Meet the office / discuss a project",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Feedback and support",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "mdEditor · GitHub",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "License",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Asset credits",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Page privacy",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Design Office Identity v4.12.0",
+            "id": ""
+          },
+          {
+            "tag": "BODY",
+            "text": "\nSkip to content\nSamples日本語\nmdEditor · WINDOWSWrite. Preview",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Skip to content",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Samples",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "日本語",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "View in Microsoft Store",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Try a sample",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Play",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Stop and restart",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Full screen",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          }
+        ],
+        "focus_outline": "3px"
+      }
+    },
+    {
+      "case": "en-dark-zoom200-1280",
+      "metrics": {
+        "width": 640,
+        "scrollWidth": 632,
+        "font": "16px",
+        "logo": "http://127.0.0.1:60580/promotion/assets/5garashi_logotype_en_reversed_outlined.svg",
+        "background": "rgb(26, 34, 18)",
+        "brokenImages": [],
+        "smallTargets": [],
+        "overflow": [],
+        "keyboard_visited": [
+          {
+            "tag": "A",
+            "text": "View in Microsoft Store",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Try a sample",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Play",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Stop and restart",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Full screen",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download video (MP4)",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download captions (VTT)",
+            "id": ""
+          },
+          {
+            "tag": "SUMMARY",
+            "text": "Read the video steps",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Diagrams and math",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Document review",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Organize an answer",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Existing sample with more diagram types",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Read the privacy policy",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Meet the office / discuss a project",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Feedback and support",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "mdEditor · GitHub",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "License",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Asset credits",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Page privacy",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Design Office Identity v4.12.0",
+            "id": ""
+          },
+          {
+            "tag": "BODY",
+            "text": "\nSkip to content\nSamples日本語\nmdEditor · WINDOWSWrite. Preview",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Skip to content",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Samples",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "日本語",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "View in Microsoft Store",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Try a sample",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Play",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Stop and restart",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Full screen",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          }
+        ],
+        "focus_outline": "3px"
+      }
+    },
+    {
+      "case": "ja-light-text200-1280",
+      "metrics": {
+        "width": 1280,
+        "scrollWidth": 1265,
+        "font": "32px",
+        "logo": "http://127.0.0.1:60580/promotion/assets/5garashi_logotype_outlined.svg",
+        "background": "rgb(249, 239, 203)",
+        "brokenImages": [],
+        "smallTargets": [],
+        "overflow": [],
+        "keyboard_visited": [
+          {
+            "tag": "A",
+            "text": "Microsoft Storeで見る",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプルを試す",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "再生",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "停止して先頭へ",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "動画を保存（MP4）",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "字幕を保存（VTT）",
+            "id": ""
+          },
+          {
+            "tag": "SUMMARY",
+            "text": "動画の操作手順を読む",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 図と数式のメモ",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 文書レビューの手順",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 回答を整理するメモ",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "より多くの図を試す既存サンプル",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "プライバシーポリシーを読む",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "事務所・開発相談",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "不具合・要望",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "mdEditor · GitHub",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "ライセンス",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "素材の出典",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "このページの通信",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Design Office Identity v4.12.0",
+            "id": ""
+          },
+          {
+            "tag": "BODY",
+            "text": "\n本文へ移動\nサンプルEnglish\nmdEditor · WINDOWS書く。確かめる。PDFに残す。図も数式も、Ma",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "本文へ移動",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプル",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "English",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Microsoft Storeで見る",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプルを試す",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "再生",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "停止して先頭へ",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          }
+        ],
+        "focus_outline": "3px"
+      }
+    },
+    {
+      "case": "ja-light-text200-320",
+      "metrics": {
+        "width": 320,
+        "scrollWidth": 305,
+        "font": "32px",
+        "logo": "http://127.0.0.1:60580/promotion/assets/5garashi_logotype_outlined.svg",
+        "background": "rgb(249, 239, 203)",
+        "brokenImages": [],
+        "smallTargets": [],
+        "overflow": [],
+        "keyboard_visited": [
+          {
+            "tag": "A",
+            "text": "Microsoft Storeで見る",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプルを試す",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "再生",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "停止して先頭へ",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "動画を保存（MP4）",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "字幕を保存（VTT）",
+            "id": ""
+          },
+          {
+            "tag": "SUMMARY",
+            "text": "動画の操作手順を読む",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 図と数式のメモ",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 文書レビューの手順",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 回答を整理するメモ",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "より多くの図を試す既存サンプル",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "プライバシーポリシーを読む",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "事務所・開発相談",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "不具合・要望",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "mdEditor · GitHub",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "ライセンス",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "素材の出典",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "このページの通信",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Design Office Identity v4.12.0",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "本文へ移動",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプル",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "English",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Microsoft Storeで見る",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプルを試す",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "再生",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "停止して先頭へ",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "動画を保存（MP4）",
+            "id": ""
+          }
+        ],
+        "focus_outline": "3px"
+      }
+    },
+    {
+      "case": "ja-dark-text200-1280",
+      "metrics": {
+        "width": 1280,
+        "scrollWidth": 1265,
+        "font": "32px",
+        "logo": "http://127.0.0.1:60580/promotion/assets/5garashi_logotype_reversed_outlined.svg",
+        "background": "rgb(26, 34, 18)",
+        "brokenImages": [],
+        "smallTargets": [],
+        "overflow": [],
+        "keyboard_visited": [
+          {
+            "tag": "A",
+            "text": "Microsoft Storeで見る",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプルを試す",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "再生",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "停止して先頭へ",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "動画を保存（MP4）",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "字幕を保存（VTT）",
+            "id": ""
+          },
+          {
+            "tag": "SUMMARY",
+            "text": "動画の操作手順を読む",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 図と数式のメモ",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 文書レビューの手順",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 回答を整理するメモ",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "より多くの図を試す既存サンプル",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "プライバシーポリシーを読む",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "事務所・開発相談",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "不具合・要望",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "mdEditor · GitHub",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "ライセンス",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "素材の出典",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "このページの通信",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Design Office Identity v4.12.0",
+            "id": ""
+          },
+          {
+            "tag": "BODY",
+            "text": "\n本文へ移動\nサンプルEnglish\nmdEditor · WINDOWS書く。確かめる。PDFに残す。図も数式も、Ma",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "本文へ移動",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプル",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "English",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Microsoft Storeで見る",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプルを試す",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "再生",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "停止して先頭へ",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          }
+        ],
+        "focus_outline": "3px"
+      }
+    },
+    {
+      "case": "ja-dark-text200-320",
+      "metrics": {
+        "width": 320,
+        "scrollWidth": 305,
+        "font": "32px",
+        "logo": "http://127.0.0.1:60580/promotion/assets/5garashi_logotype_reversed_outlined.svg",
+        "background": "rgb(26, 34, 18)",
+        "brokenImages": [],
+        "smallTargets": [],
+        "overflow": [],
+        "keyboard_visited": [
+          {
+            "tag": "A",
+            "text": "Microsoft Storeで見る",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプルを試す",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "再生",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "停止して先頭へ",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "動画を保存（MP4）",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "字幕を保存（VTT）",
+            "id": ""
+          },
+          {
+            "tag": "SUMMARY",
+            "text": "動画の操作手順を読む",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 図と数式のメモ",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 文書レビューの手順",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Markdownを保存 — 回答を整理するメモ",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "より多くの図を試す既存サンプル",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "プライバシーポリシーを読む",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "事務所・開発相談",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "不具合・要望",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "mdEditor · GitHub",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "ライセンス",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "素材の出典",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "このページの通信",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Design Office Identity v4.12.0",
+            "id": ""
+          },
+          {
+            "tag": "BODY",
+            "text": "\n本文へ移動\nサンプルEnglish\nmdEditor · WINDOWS書く。確かめる。PDFに残す。図も数式も、Ma",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "本文へ移動",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプル",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "English",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Microsoft Storeで見る",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "サンプルを試す",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "再生",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "停止して先頭へ",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          }
+        ],
+        "focus_outline": "3px"
+      }
+    },
+    {
+      "case": "en-light-text200-1280",
+      "metrics": {
+        "width": 1280,
+        "scrollWidth": 1265,
+        "font": "32px",
+        "logo": "http://127.0.0.1:60580/promotion/assets/5garashi_logotype_en_outlined.svg",
+        "background": "rgb(249, 239, 203)",
+        "brokenImages": [],
+        "smallTargets": [],
+        "overflow": [],
+        "keyboard_visited": [
+          {
+            "tag": "A",
+            "text": "View in Microsoft Store",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Try a sample",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Play",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Stop and restart",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Full screen",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download video (MP4)",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download captions (VTT)",
+            "id": ""
+          },
+          {
+            "tag": "SUMMARY",
+            "text": "Read the video steps",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Diagrams and math",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Document review",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Organize an answer",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Existing sample with more diagram types",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Read the privacy policy",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Meet the office / discuss a project",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Feedback and support",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "mdEditor · GitHub",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "License",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Asset credits",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Page privacy",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Design Office Identity v4.12.0",
+            "id": ""
+          },
+          {
+            "tag": "BODY",
+            "text": "\nSkip to content\nSamples日本語\nmdEditor · WINDOWSWrite. Preview",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Skip to content",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Samples",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "日本語",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "View in Microsoft Store",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Try a sample",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Play",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Stop and restart",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Full screen",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          }
+        ],
+        "focus_outline": "3px"
+      }
+    },
+    {
+      "case": "en-light-text200-320",
+      "metrics": {
+        "width": 320,
+        "scrollWidth": 305,
+        "font": "32px",
+        "logo": "http://127.0.0.1:60580/promotion/assets/5garashi_logotype_en_outlined.svg",
+        "background": "rgb(249, 239, 203)",
+        "brokenImages": [],
+        "smallTargets": [],
+        "overflow": [],
+        "keyboard_visited": [
+          {
+            "tag": "A",
+            "text": "View in Microsoft Store",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Try a sample",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Play",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Stop and restart",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Full screen",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download video (MP4)",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download captions (VTT)",
+            "id": ""
+          },
+          {
+            "tag": "SUMMARY",
+            "text": "Read the video steps",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Diagrams and math",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Document review",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Organize an answer",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Existing sample with more diagram types",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Read the privacy policy",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Meet the office / discuss a project",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Feedback and support",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "mdEditor · GitHub",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "License",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Asset credits",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Page privacy",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Design Office Identity v4.12.0",
+            "id": ""
+          },
+          {
+            "tag": "BODY",
+            "text": "\nSkip to content\nSamples日本語\nmdEditor · WINDOWSWrite. Preview",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Skip to content",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Samples",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "日本語",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "View in Microsoft Store",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Try a sample",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Play",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Stop and restart",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Full screen",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          }
+        ],
+        "focus_outline": "3px"
+      }
+    },
+    {
+      "case": "en-dark-text200-1280",
+      "metrics": {
+        "width": 1280,
+        "scrollWidth": 1265,
+        "font": "32px",
+        "logo": "http://127.0.0.1:60580/promotion/assets/5garashi_logotype_en_reversed_outlined.svg",
+        "background": "rgb(26, 34, 18)",
+        "brokenImages": [],
+        "smallTargets": [],
+        "overflow": [],
+        "keyboard_visited": [
+          {
+            "tag": "A",
+            "text": "View in Microsoft Store",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Try a sample",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Play",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Stop and restart",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Full screen",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download video (MP4)",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download captions (VTT)",
+            "id": ""
+          },
+          {
+            "tag": "SUMMARY",
+            "text": "Read the video steps",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Diagrams and math",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Document review",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Organize an answer",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Existing sample with more diagram types",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Read the privacy policy",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Meet the office / discuss a project",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Feedback and support",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "mdEditor · GitHub",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "License",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Asset credits",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Page privacy",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Design Office Identity v4.12.0",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Skip to content",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Samples",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "日本語",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "View in Microsoft Store",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Try a sample",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Play",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Stop and restart",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Full screen",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download video (MP4)",
+            "id": ""
+          }
+        ],
+        "focus_outline": "3px"
+      }
+    },
+    {
+      "case": "en-dark-text200-320",
+      "metrics": {
+        "width": 320,
+        "scrollWidth": 305,
+        "font": "32px",
+        "logo": "http://127.0.0.1:60580/promotion/assets/5garashi_logotype_en_reversed_outlined.svg",
+        "background": "rgb(26, 34, 18)",
+        "brokenImages": [],
+        "smallTargets": [],
+        "overflow": [],
+        "keyboard_visited": [
+          {
+            "tag": "A",
+            "text": "View in Microsoft Store",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Try a sample",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Play",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Stop and restart",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Full screen",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download video (MP4)",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download captions (VTT)",
+            "id": ""
+          },
+          {
+            "tag": "SUMMARY",
+            "text": "Read the video steps",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Diagrams and math",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Document review",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Download Markdown — Organize an answer",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Existing sample with more diagram types",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Read the privacy policy",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Meet the office / discuss a project",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Feedback and support",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "mdEditor · GitHub",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "License",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Asset credits",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Page privacy",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Design Office Identity v4.12.0",
+            "id": ""
+          },
+          {
+            "tag": "BODY",
+            "text": "\nSkip to content\nSamples日本語\nmdEditor · WINDOWSWrite. Preview",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Skip to content",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Samples",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "日本語",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "View in Microsoft Store",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "Try a sample",
+            "id": ""
+          },
+          {
+            "tag": "A",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Play",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Stop and restart",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Full screen",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          }
+        ],
+        "focus_outline": "3px"
+      }
+    }
+  ]
+}

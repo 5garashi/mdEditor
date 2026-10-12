@@ -1,96 +1,29 @@
 <!--
 ファイル名 / File: promotion/index.html
-概要 / Description: mdEditor 紹介資料 / mdEditor promotion material
+概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.0.5
+版 / Version: 1.1.0
 ライセンス / License: MIT
+最終更新 / Last updated: 2026-10-13
 SPDX-License-Identifier: MIT
 -->
 <!doctype html>
-<html lang="ja">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>mdEditor | Windows用Markdownエディター | 5garashi.com</title>
-<meta name="description" content="図・数式・表を見ながら編集し、そのままPDFへ。Windows用Markdownエディター mdEditor。">
-<link rel="icon" href="assets/5garashi_mark_simple.svg">
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark">
+<title>mdEditor — 図・数式と書くMarkdown | 5garashi.com</title>
+<meta name="description" content="WindowsでMarkdownを編集し、図・数式・表をプレビュー。そのままPDFに保存。実演動画と試せるサンプル。" >
+<link rel="icon" type="image/svg+xml" href="assets/5garashi_mark_simple.svg"><link rel="stylesheet" href="style.css"><script src="player.js" defer></script></head><body>
 <a class="skip" href="#main">本文へ移動</a>
-<header>
-<a class="brand" href="https://www.5garashi.com/" aria-label="5garashi.com Design Office">
-<img class="logo-day" src="assets/5garashi_logotype_outlined.svg" alt="5garashi.com Design Office">
-<img class="logo-night" src="assets/5garashi_logotype_reversed_outlined.svg" alt="5garashi.com Design Office">
-</a>
-<a href="en.html">English</a>
-</header>
-<main id="main">
-<p class="tag">WINDOWS · MARKDOWN · PDF</p>
-<h1>Markdownを、伝わる文書に。</h1>
-<p class="lead">図・数式・表を見ながら編集し、そのままPDFへ。Windows用Markdownエディター mdEditor。</p>
-<a class="button" href="https://apps.microsoft.com/detail/9nww2qrclmhc?hl=ja-JP&gl=JP">Microsoft Storeで見る</a>
-<a href="#samples">サンプルを試す</a>
-<p class="notice">このページはv1.0.5の機能を紹介しています。同版は認定中です。Storeで提供中の版とは機能が異なる場合があります。</p>
-<section>
-<div class="cards">
-<article class="card">
-<h2>図と数式を文書に</h2>
-<p>Mermaidの図、KaTeXの数式、表をプレビュー。PDFにも含められます。</p>
-</article>
-<article class="card">
-<h2>書く画面と読む画面</h2>
-<p>連動するプレビュー。別ウィンドウに出して、2台のディスプレイでも使えます。</p>
-</article>
-<article class="card">
-<h2>自分に合う読みやすさ</h2>
-<p>文字拡大、行間調整、キーボード操作、PC内の音声による読み上げ。</p>
-</article>
-</div>
-</section>
-<section>
-<h2>40秒でわかるmdEditor</h2>
-<video controls preload="metadata" src="assets/mdEditor-intro-en.mp4" poster="assets/video-poster.png">
-</video>
-<small>英語字幕と公式テーマ音源による機能紹介です。Windows実機の操作録画ではありません。</small>
-</section>
-<section id="samples">
-<h2>まずは1つ、開いてみる。</h2>
-<ol>
-<li>Storeからインストールする。</li>
-<li>下のサンプルを保存してmdEditorで開く。</li>
-<li>本文を編集し、Ctrl+Shift+PでPDFに保存する。</li>
-</ol>
-<ul>
-<li>
-<a href="../samples/quickstart-workflow.md" download>業務手順書</a>
-</li>
-<li>
-<a href="../samples/quickstart-engineering-note.md" download>図と数式の技術メモ</a>
-</li>
-<li>
-<a href="../samples/quickstart-ai-notes.md" download>AI回答を文書に整理</a>
-</li>
-</ul>
-<p>
-<a href="https://github.com/5garashi/mdEditor/blob/main/samples/diagram-test.md">各種の図を試す既存サンプル</a>
-</p>
-</section>
-<section>
-<h2>文書は、あなたのPCに。</h2>
-<p>文書や個人情報を収集・送信しません。図と数式の表示もPC内で処理します。文書に外部画像がある場合は、その画像サーバーに接続します。</p>
-<a href="https://github.com/5garashi/mdEditor/blob/main/PRIVACY.md">Privacy</a>
-</section>
-<section>
-<h2>5garashi.com 設計事務所</h2>
-<p>現場の作業を、使いやすい道具に。mdEditorは当事務所の開発作品です。業務ツールや技術システムのご相談は、事務所サイトをご覧ください。</p>
-<a class="button" href="https://www.5garashi.com/">事務所・開発相談</a>
-<a href="https://github.com/5garashi/mdEditor/issues">不具合・ご要望</a>
-</section>
-</main>
-<footer>mdEditor · 5garashi.com Design Office · <a href="https://github.com/5garashi/mdEditor">GitHub</a>
-<p class="version">資料の版: <span data-version>1.0.5</span> · Identity v4.12.0</p>
-</footer>
-</body>
-</html>
+<header class="site-header"><div class="header-inner"><a class="brand" href="https://www.5garashi.com/" aria-label="5garashi.com設計事務所のサイト"><picture><source media="screen and (prefers-color-scheme:dark)" srcset="assets/5garashi_logotype_reversed_outlined.svg"><img src="assets/5garashi_logotype_outlined.svg" width="140" height="54" alt="5garashi.com設計事務所 / 5garashi.com Design Office"></picture></a><nav aria-label="ページ案内"><a href="#samples">サンプル</a><a class="language-link" href="en.html" lang="en">English</a></nav><img class="brand-mark" src="assets/5garashi_mark_simple.svg" width="36" height="36" alt="" aria-hidden="true"></div></header>
+<main id="main" tabindex="-1"><section class="hero" aria-labelledby="hero-heading"><div class="hero-copy"><p class="eyebrow">mdEditor · WINDOWS</p><h1 id="hero-heading">書く。確かめる。<br>PDFに残す。</h1><p class="lead">図も数式も、Markdownと一緒に。<br>編集した文書を、その場で確認できます。</p><div class="actions"><a class="button primary" href="https://apps.microsoft.com/detail/9nww2qrclmhc?hl=ja-JP&gl=JP">Microsoft Storeで見る</a><a class="button" href="#samples">サンプルを試す</a></div><p class="note">Windows用。提供版・価格・動作要件はStoreで確認できます。</p></div>
+<figure class="app-figure"><a class="image-link" href="assets/app-ja.png" aria-label="mdEditorの実画面を大きく見る"><img src="assets/app-ja.png" width="1264" height="610" alt="Windows版mdEditorの実画面。左のMarkdown編集欄と、右の図・数式・表のプレビュー。"></a><figcaption>実際のWindows版mdEditor。左で編集、右で仕上がりを確認。</figcaption></figure></section>
+<section class="features" aria-label="できること"><article><h2>図と数式も、そのまま</h2><p>Mermaidの図、KaTeXの数式、表を表示。プレビューの内容をPDFに保存できます。</p></article><article><h2>書く画面と、読む画面</h2><p>編集とプレビューが連動。プレビューを別ウィンドウに出して使うこともできます。</p></article><article><h2>自分に合う読みやすさ</h2><p>文字の大きさ・行間・書体を調整。キーボード操作と、PC内の音声による読み上げに対応。</p></article></section>
+<section class="demo" aria-labelledby="demo-heading"><div class="section-heading"><p class="eyebrow">実際の操作</p><h2 id="demo-heading">開いて、直して、PDFへ。</h2><p>Windows版を操作した実演です。字幕だけで手順が分かります。</p></div>
+<div class="video-stage"><video controls playsinline preload="metadata" poster="assets/video-poster-ja.png" aria-label="mdEditorのWindows実演動画。無音・日本語字幕。"><source src="assets/mdEditor-demo-ja.mp4" type="video/mp4"><track kind="captions" src="assets/demo-ja.vtt" srclang="ja" label="日本語"><p>動画を再生できません。下のリンクから保存してください。</p></video>
+<div class="player-controls" hidden><div class="play-actions"><button type="button" data-play>再生</button><button type="button" data-stop>停止して先頭へ</button><button type="button" data-fullscreen>全画面表示</button><output class="player-clock" aria-live="off">00:00 / 00:40</output></div><label class="seek-label">再生位置<input type="range" min="0" max="40" step="0.1" value="0" aria-label="動画の再生位置"></label></div></div><p class="player-error" role="alert" hidden>動画を再生できませんでした。下の「動画を保存」からMP4を保存し、動画プレーヤーで開いてください。</p>
+<div class="media-links"><a href="assets/mdEditor-demo-ja.mp4" download>動画を保存（MP4）</a><a href="assets/demo-ja.vtt" download>字幕を保存（VTT）</a></div>
+<details><summary>動画の操作手順を読む</summary><ol><li>「開く」からサンプル文書を選ぶ。</li><li>見出しを変更し、プレビューへの反映を確認する。</li><li>数式とMermaidの図をプレビューで確認する。</li><li>「PDFに保存」で保存先を選び、保存完了を確認する。</li></ol></details><p class="note">撮影・検証はソース版mdEditor 1.0.5。Storeの公開版・認定状況は未確認です。動画に音声・BGMはありません。</p></section>
+<section id="samples" aria-labelledby="samples-heading"><div class="section-heading"><p class="eyebrow">まずは1つ</p><h2 id="samples-heading">この文書で、試してみる。</h2><p>外部画像のない、短いサンプルです。PCに保存して使えます。</p></div><ol class="steps"><li><strong>保存する</strong><span>下からMarkdown文書を保存。元の文書を残したい場合はコピーを使います。</span></li><li><strong>開いて、変える</strong><span>mdEditorの「開く」で選択。文書内の「試してみる」に沿って編集します。</span></li><li><strong>PDFに残す</strong><span>「保存」で文書を保存し、「PDFに保存」でPDFを書き出します。</span></li></ol><div class="sample-grid"><article class="sample-card"><h3>図と数式のメモ</h3><p>まずはこれから。見出しと図の文字を変え、数式・表ごとPDFへ。</p><a class="sample-download" href="samples/quickstart-engineering-note.md" download="quickstart-engineering-note.md">Markdownを保存<span class="sr-only"> — 図と数式のメモ</span></a></article><article class="sample-card"><h3>文書レビューの手順</h3><p>フローチャート、表、チェックリストで作業の流れを残す。</p><a class="sample-download" href="samples/quickstart-workflow.md" download="quickstart-workflow.md">Markdownを保存<span class="sr-only"> — 文書レビューの手順</span></a></article><article class="sample-card"><h3>回答を整理するメモ</h3><p>回答の要点・出典・次の行動を整理する記入用テンプレート。</p><a class="sample-download" href="samples/quickstart-ai-notes.md" download="quickstart-ai-notes.md">Markdownを保存<span class="sr-only"> — 回答を整理するメモ</span></a></article></div><p class="note">回答整理のサンプルは記入用です。mdEditorにAI生成機能はありません。数式・表の値は自動計算されません。</p><a href="https://github.com/5garashi/mdEditor/blob/main/samples/diagram-test.md">より多くの図を試す既存サンプル</a></section>
+<section class="privacy" aria-labelledby="privacy-heading"><h2 id="privacy-heading">文書は、PCの中で。</h2><p>文書の編集、図・数式の描画、PDF保存はPC内で処理します。mdEditor自体は文書や個人情報を収集・送信しません。</p><p>文書の外部画像は、その画像サーバーに接続します。WebView2の更新・診断はMicrosoftの設定に従います。</p><a href="https://github.com/5garashi/mdEditor/blob/main/PRIVACY.md">プライバシーポリシーを読む</a></section>
+<section class="office" aria-labelledby="office-heading"><p class="eyebrow">5garashi.com DESIGN OFFICE</p><h2 id="office-heading">現場の作業を、使える道具に。</h2><p>mdEditorは、5garashi.com設計事務所の開発作品です。文書作成や業務の手順を支える道具、技術システムの開発について、事務所サイトからご相談ください。</p><div class="actions"><a class="button primary" href="https://www.5garashi.com/">事務所・開発相談</a><a class="button" href="https://github.com/5garashi/mdEditor/issues">不具合・要望</a></div></section></main>
+<footer><p><a href="https://github.com/5garashi/mdEditor">mdEditor · GitHub</a><a href="LICENSE">ライセンス</a><a href="THIRD-PARTY-NOTICES.md">素材の出典</a><a href="PRIVACY.md">このページの通信</a></p><p class="note">資料の版: <span class="version" data-version>1.1.0</span> · 2026-10-13 JST</p><p class="note">デザイン基準出典: <a href="https://5garashi.github.io/5garashi-identity/">Design Office Identity v4.12.0</a></p><p class="note">作成者: 5garashi.com設計事務所 / 5garashi.com Design Office<br>最終更新: 2026-10-13 JST</p></footer></body></html>
