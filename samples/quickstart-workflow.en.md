@@ -1,3 +1,12 @@
+<!--
+File: samples/quickstart-workflow.en.md
+Description: mdEditor promotion material
+Author: 5garashi.com Design Office
+Created: 2026-10-12
+Version: 1.0.5
+License: MIT
+SPDX-License-Identifier: MIT
+-->
 # Work procedure
 
 Open in mdEditor, edit, then press Ctrl+Shift+P to save as PDF.

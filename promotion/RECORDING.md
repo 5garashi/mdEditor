@@ -1,3 +1,12 @@
+<!--
+ファイル名 / File: promotion/RECORDING.md
+概要 / Description: mdEditor 紹介資料 / mdEditor promotion material
+作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
+作成日 / Created: 2026-10-12
+版 / Version: 1.0.5
+ライセンス / License: MIT
+SPDX-License-Identifier: MIT
+-->
 # 実機での40秒操作録画台本
 
 この環境ではWindows版を起動できないため、同梱MP4は字幕付き機能紹介です。実演動画への差替えは下記で行ってください。個人情報のないサンプルを使います。

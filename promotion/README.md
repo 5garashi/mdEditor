@@ -1,3 +1,12 @@
+<!--
+ファイル名 / File: promotion/README.md
+概要 / Description: mdEditor 紹介資料 / mdEditor promotion material
+作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
+作成日 / Created: 2026-10-12
+版 / Version: 1.0.5
+ライセンス / License: MIT
+SPDX-License-Identifier: MIT
+-->
 # mdEditor promotion kit
 
 - 日本語紹介ページ: index.html
@@ -13,3 +22,10 @@ promotion/とsamples/を同じ親ディレクトリに配置してください�
 GitHub Pagesを使う場合はリポジトリ全体を静的公開し、/promotion/を入口にできます。公開とドメイン設定は未実施です。
 
 ロゴは既存の公式SVGを改変せず複製しています。各SVG内の著作権とCC BY-ND 4.0を維持します。
+
+## Identity適用 / Identity application
+
+公式Identity v4.12.0（2026-10-12）に基づき、昼夜の配色、書体、ロゴの保護余白、フォーカス表示、印刷色、署名と版表示を整えました。
+公式ロゴと音源はCC BY-ND 4.0で、元データを改変せず使用しています。音源は再生操作をしたときだけ鳴り、動画プレーヤーで停止・音量調整ができます。ページに計測や外部フォントは追加していません。
+
+今回の修正は紹介資料の体裁をIdentityに合わせるもので、アプリのVERSIONは変更していません。各資料のヘッダーはルートVERSIONの値を記載しています。

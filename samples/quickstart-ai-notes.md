@@ -1,3 +1,12 @@
+<!--
+ファイル名 / File: samples/quickstart-ai-notes.md
+概要 / Description: mdEditor 紹介資料 / mdEditor promotion material
+作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
+作成日 / Created: 2026-10-12
+版 / Version: 1.0.5
+ライセンス / License: MIT
+SPDX-License-Identifier: MIT
+-->
 # AI回答を文書に整理
 
 mdEditorで開き、編集して、Ctrl+Shift+PでPDFに保存してください。

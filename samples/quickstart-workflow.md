@@ -1,3 +1,12 @@
+<!--
+ファイル名 / File: samples/quickstart-workflow.md
+概要 / Description: mdEditor 紹介資料 / mdEditor promotion material
+作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
+作成日 / Created: 2026-10-12
+版 / Version: 1.0.5
+ライセンス / License: MIT
+SPDX-License-Identifier: MIT
+-->
 # 業務手順書
 
 mdEditorで開き、編集して、Ctrl+Shift+PでPDFに保存してください。
