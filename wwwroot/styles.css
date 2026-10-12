@@ -985,8 +985,10 @@ body.dragging {
     flex-direction: column;
   }
 
-  /* Narrow screens wrap the status row so the full file name stays readable. */
+  /* Narrow screens wrap the status row so the full file name stays readable.
+     The toolbar is a column here, so the 380px basis would become a height. */
   .document-status {
+    flex: 0 0 auto;
     width: 100%;
     flex-wrap: wrap;
   }
