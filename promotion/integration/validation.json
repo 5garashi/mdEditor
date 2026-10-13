@@ -1,0 +1,446 @@
+{
+  "integration_version": "1.0.0",
+  "date": "2026-10-13 JST",
+  "local_references": "pass",
+  "cases": [
+    {
+      "page": "resources.html",
+      "theme": "light",
+      "width": 1280,
+      "text_px": 16,
+      "scrollWidth": 1265,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "resources.html",
+      "theme": "light",
+      "width": 320,
+      "text_px": 16,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "resources.html",
+      "theme": "light",
+      "width": 640,
+      "text_px": 16,
+      "scrollWidth": 625,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "resources.html",
+      "theme": "light",
+      "width": 320,
+      "text_px": 32,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "resources.html",
+      "theme": "dark",
+      "width": 1280,
+      "text_px": 16,
+      "scrollWidth": 1265,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "resources.html",
+      "theme": "dark",
+      "width": 320,
+      "text_px": 16,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "resources.html",
+      "theme": "dark",
+      "width": 640,
+      "text_px": 16,
+      "scrollWidth": 625,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "resources.html",
+      "theme": "dark",
+      "width": 320,
+      "text_px": 32,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "resources-en.html",
+      "theme": "light",
+      "width": 1280,
+      "text_px": 16,
+      "scrollWidth": 1265,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "resources-en.html",
+      "theme": "light",
+      "width": 320,
+      "text_px": 16,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "resources-en.html",
+      "theme": "light",
+      "width": 640,
+      "text_px": 16,
+      "scrollWidth": 625,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "resources-en.html",
+      "theme": "light",
+      "width": 320,
+      "text_px": 32,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "resources-en.html",
+      "theme": "dark",
+      "width": 1280,
+      "text_px": 16,
+      "scrollWidth": 1265,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "resources-en.html",
+      "theme": "dark",
+      "width": 320,
+      "text_px": 16,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "resources-en.html",
+      "theme": "dark",
+      "width": 640,
+      "text_px": 16,
+      "scrollWidth": 625,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "resources-en.html",
+      "theme": "dark",
+      "width": 320,
+      "text_px": 32,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "case-study.html",
+      "theme": "light",
+      "width": 1280,
+      "text_px": 16,
+      "scrollWidth": 1265,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "case-study.html",
+      "theme": "light",
+      "width": 320,
+      "text_px": 16,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "case-study.html",
+      "theme": "light",
+      "width": 640,
+      "text_px": 16,
+      "scrollWidth": 625,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "case-study.html",
+      "theme": "light",
+      "width": 320,
+      "text_px": 32,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "case-study.html",
+      "theme": "dark",
+      "width": 1280,
+      "text_px": 16,
+      "scrollWidth": 1265,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "case-study.html",
+      "theme": "dark",
+      "width": 320,
+      "text_px": 16,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "case-study.html",
+      "theme": "dark",
+      "width": 640,
+      "text_px": 16,
+      "scrollWidth": 625,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "case-study.html",
+      "theme": "dark",
+      "width": 320,
+      "text_px": 32,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "case-study-en.html",
+      "theme": "light",
+      "width": 1280,
+      "text_px": 16,
+      "scrollWidth": 1265,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "case-study-en.html",
+      "theme": "light",
+      "width": 320,
+      "text_px": 16,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "case-study-en.html",
+      "theme": "light",
+      "width": 640,
+      "text_px": 16,
+      "scrollWidth": 625,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "case-study-en.html",
+      "theme": "light",
+      "width": 320,
+      "text_px": 32,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "case-study-en.html",
+      "theme": "dark",
+      "width": 1280,
+      "text_px": 16,
+      "scrollWidth": 1265,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "case-study-en.html",
+      "theme": "dark",
+      "width": 320,
+      "text_px": 16,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "case-study-en.html",
+      "theme": "dark",
+      "width": 640,
+      "text_px": 16,
+      "scrollWidth": 625,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "case-study-en.html",
+      "theme": "dark",
+      "width": 320,
+      "text_px": 32,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "office-card-ja.html",
+      "theme": "light",
+      "width": 1280,
+      "text_px": 16,
+      "scrollWidth": 1280,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "office-card-ja.html",
+      "theme": "light",
+      "width": 320,
+      "text_px": 16,
+      "scrollWidth": 320,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "office-card-ja.html",
+      "theme": "light",
+      "width": 640,
+      "text_px": 16,
+      "scrollWidth": 640,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "office-card-ja.html",
+      "theme": "light",
+      "width": 320,
+      "text_px": 32,
+      "scrollWidth": 312,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "office-card-ja.html",
+      "theme": "dark",
+      "width": 1280,
+      "text_px": 16,
+      "scrollWidth": 1280,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "office-card-ja.html",
+      "theme": "dark",
+      "width": 320,
+      "text_px": 16,
+      "scrollWidth": 320,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "office-card-ja.html",
+      "theme": "dark",
+      "width": 640,
+      "text_px": 16,
+      "scrollWidth": 640,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "office-card-ja.html",
+      "theme": "dark",
+      "width": 320,
+      "text_px": 32,
+      "scrollWidth": 312,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "office-card-en.html",
+      "theme": "light",
+      "width": 1280,
+      "text_px": 16,
+      "scrollWidth": 1280,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "office-card-en.html",
+      "theme": "light",
+      "width": 320,
+      "text_px": 16,
+      "scrollWidth": 320,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "office-card-en.html",
+      "theme": "light",
+      "width": 640,
+      "text_px": 16,
+      "scrollWidth": 640,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "office-card-en.html",
+      "theme": "light",
+      "width": 320,
+      "text_px": 32,
+      "scrollWidth": 312,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "office-card-en.html",
+      "theme": "dark",
+      "width": 1280,
+      "text_px": 16,
+      "scrollWidth": 1280,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "office-card-en.html",
+      "theme": "dark",
+      "width": 320,
+      "text_px": 16,
+      "scrollWidth": 320,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "office-card-en.html",
+      "theme": "dark",
+      "width": 640,
+      "text_px": 16,
+      "scrollWidth": 640,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "office-card-en.html",
+      "theme": "dark",
+      "width": 320,
+      "text_px": 32,
+      "scrollWidth": 312,
+      "broken": 0,
+      "small": 0
+    }
+  ],
+  "unverified": [
+    "Google Sites embed",
+    "live GitHub Pages",
+    "Narrator",
+    "actual Windows forced colors"
+  ],
+  "browser": "Chrome/155.0.8059.39"
+}

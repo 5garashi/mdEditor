@@ -1,0 +1,35 @@
+# File: .github/workflows/promotion-pages.yml (installation destination)
+# Description: Manually publish the promotion source to GitHub Pages
+# Author: 5garashi.com Design Office
+# Created: 2026-10-13
+# License: MIT
+# SPDX-License-Identifier: MIT
+name: Publish mdEditor materials
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: mdeditor-pages
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/configure-pages@v5
+      - run: python promotion/integration/build.py --output _site
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4
