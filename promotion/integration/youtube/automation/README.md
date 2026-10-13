@@ -142,7 +142,7 @@ python promotion/integration/youtube/automation/sync.py sync --recover-key demo-
 
 ## 検証・制約 / Verification and limits
 
-認証不要のテストで、重複防止、応答不明時の停止、途中失敗後のID再利用、別チャンネル拒否、公開前の素材一致、限定公開の最新版除外、既存IDの回収を確認しました。Google OAuth・実YouTube API・GitHub Actionsの実投稿・実Pages配信はまだ未検証です。モックの成功を実投稿の成功とは扱いません。
+認証不要の14件のテストで、重複防止、応答不明時の停止、途中失敗後のID再利用、別チャンネル拒否、公開前の素材一致、限定公開の最新版除外、既存IDの回収、旧動画へのリンク追記、最新版ページ生成を確認しました。[GitHub Actionsの検証実行](https://github.com/5garashi/mdEditor/actions/runs/38371234040)も成功。Googleクライアント導入・APIメソッド読み込みと、既存サイトの生成を確認しました。Google OAuth・実YouTube API・GitHub Actionsの実投稿・実Pages配信はまだ未検証です。モックの成功を実投稿の成功とは扱いません。
 
 Git状態には公開可能な動画ID・ハッシュ・状態だけを保存します。OAuth情報はローカルの非Git管理ファイルとGitHub Secretsのみ。Googleには動画、字幕、サムネイル、説明文と認証情報を送信します。状態と生成した公開ページはGitHubへ送信します。普段のMarkdown文書は送信しません。
 
