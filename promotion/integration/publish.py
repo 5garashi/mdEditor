@@ -11,7 +11,7 @@ from pathlib import Path
 from build import generate, PROMO
 
 def run(*args, cwd):
-    return subprocess.run(args,cwd=cwd,check=True,text=True,capture_output=True).stdout.strip()
+    return subprocess.run(args,cwd=cwd,check=True,text=True,encoding='utf-8',capture_output=True).stdout.strip()
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser()
