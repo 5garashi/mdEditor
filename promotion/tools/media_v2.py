@@ -43,6 +43,8 @@ Style: Default,Meiryo,24,&H00235738,&H00235738,&H00CBEFF9,&H00CBEFF9,-1,0,0,0,10
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 '''
     vtt=f'WEBVTT\n\nNOTE\nFile: demo-{lang}.vtt\nDescription: Extended Windows demonstration captions\nAuthor: 5garashi.com Design Office\nCreated: 2026-10-14\nVersion: 1.1.0\nLicense: MIT\nSPDX-License-Identifier: MIT\n\n'
+    if lang=='ja':
+        vtt=vtt.replace('File:', 'ファイル名 / File:').replace('Description: Extended Windows demonstration captions','概要 / Description: 拡張Windows実演の字幕 / Extended Windows demonstration captions').replace('Author: 5garashi.com Design Office','作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office').replace('Created:', '作成日 / Created:').replace('Version:', '版 / Version:').replace('License: MIT','ライセンス / License: MIT')
     for a,b,ja,en in CAPTIONS:
         t=en if lang=='en' else ja
         ass+=f'Dialogue: 0,{stamp(a,True)},{stamp(b,True)},Default,,0,0,0,,{t}\n'
