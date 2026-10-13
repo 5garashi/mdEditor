@@ -84,6 +84,10 @@ revision 1.1.0を日英とも一般公開しました。別ウィンドウ、ダ
 - 紹介ページと最新YouTube入口はクリーンなworktreeからpublish.pyで反映済み。公開MP4の原本との一致も確認。
 - 初回のpublish要求は新revision未同期のため停止し、その後sync → publishの順に実行。新revisionの公開時には同じ順序が必要。
 
+### 旧版の削除 / Old demos deleted — 2026-10-14
+
+ユーザーの明示的な削除依頼に基づき、旧版pxWoPoUcOLI（英語）とnuddUJCy42k（日本語）を削除しました。元の動画とメタデータはwork/youtube-retired-1.0.0へ保存済みです。新版KPgQHi1yYlA / 0cZfUyZr01Mは引き続きpublic。stateの旧版をdeletedにし、新版から削除済み動画へのprevious_idを除去しました。上記「旧日英動画は保持」は削除前の制作・公開工程の記録です。
+
 ---
 
 **作成者 / Author**: 5garashi.com設計事務所 / 5garashi.com Design Office

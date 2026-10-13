@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-14 JST",
+  "deleted": [
+    {
+      "language": "en",
+      "id": "pxWoPoUcOLI",
+      "deleted": true,
+      "backup": "C:\\miFfplay\\mdEditorPromotion\\work\\youtube-retired-1.0.0\\mdEditor-demo-en-1.0.0.mp4"
+    },
+    {
+      "language": "ja",
+      "id": "nuddUJCy42k",
+      "deleted": true,
+      "backup": "C:\\miFfplay\\mdEditorPromotion\\work\\youtube-retired-1.0.0\\mdEditor-demo-ja-1.0.0.mp4"
+    }
+  ],
+  "current_public": {
+    "en": "KPgQHi1yYlA",
+    "ja": "0cZfUyZr01M"
+  },
+  "backup_source_commit": "361c5bf",
+  "state_tombstones_saved": true
+}

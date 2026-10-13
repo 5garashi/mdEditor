@@ -45,6 +45,14 @@ YouTubeは動画の差し替えを提供しないため、revision 1.1.0の新�
 
 今後も新しいrevisionでは、release.jsonのoperationをsyncにしてGitHubへ反映 → 同期成功を確認 → operationをpublishにして反映、の順に進めてください。未同期版をpublishだけで公開する処理は意図的に停止します。PROMOTION_REPO_TOKENは未設定なので、今回のPages更新はユーザーの未コミット変更を含めないクリーンなworktreeから既存publish.pyで実施しました。
 
+## 旧版の削除 / Retirement of previous videos
+
+2026-10-14、ユーザーから「差し替えできない場合は古い動画を削除」と明示的な依頼を受け、旧英語pxWoPoUcOLIと旧日本語nuddUJCy42k（revision 1.0.0、各40秒）をYouTubeから完全削除しました。同じURLを保った動画差し替えはできないことを[YouTube公式ヘルプ](https://support.google.com/youtube/answer/55770?co=GENIE.Platform%3DDesktop&hl=ja)で確認しています。
+
+削除前にチャンネル・版の識別・再生時間を照合し、元のMP4をGitコミット361c5bfから取り出して、YouTube連携に保存したSHA-256と一致することを確認しました。動画と削除前のメタデータはwork/youtube-retired-1.0.0へバックアップ済み。旧版のAPI検索結果が空、更新版2本がpublicのままであることを確認しました。削除直後のAPI反映には短い待ち時間があり、再取得して完了を確認しています。
+
+promotion/youtube-stateでは旧版レコードを削除済みとして保持し、新版のprevious_id参照を除去しました。これにより新版を再公開しても削除済みの旧動画へ説明文を書き込もうとしません。新しい動画・Pagesの最新版入口は変更していません。検証記録はvalidation/youtube-old-deletion.jsonです。前節およびyoutube-v2-results.jsonの旧動画publicは、削除前の公開確認時点の履歴です。
+
 ---
 
 **作成者 / Author**: 5garashi.com設計事務所 / 5garashi.com Design Office
