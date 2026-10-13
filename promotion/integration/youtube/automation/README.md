@@ -84,7 +84,7 @@ python -m venv .youtube-runtime/venv
 認証情報は次のコマンドでファイルから直接登録します。中身を画面やチャットに表示する必要はありません。
 
 ```powershell
-gh secret set YOUTUBE_CREDENTIALS_JSON --repo 5garashi/mdEditor --body-file "$youtubePrivate/youtube-credentials.json"
+Get-Content -Raw -LiteralPath "$youtubePrivate/youtube-credentials.json" | gh secret set YOUTUBE_CREDENTIALS_JSON --repo 5garashi/mdEditor
 ```
 
 紹介ページも自動更新する場合は、GitHubで **5garashi/mdEditorのみ**を対象とするfine-grained Personal Access Tokenを作り、Contentsの読み書き権限を付けます。GitHubのSecrets設定画面で **PROMOTION_REPO_TOKEN** に登録します。このトークンは状態ブランチとgh-pagesへの保存に使います。
