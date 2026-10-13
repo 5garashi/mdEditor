@@ -1,7 +1,7 @@
 {
   "enabled": true,
   "operation": "sync",
-  "request_id": "2026-10-13-initial-setup",
+  "request_id": "2026-10-13-public-release",
   "channel_id": "UCI_NiKGav2fQZu0IRMxQUeg",
   "videos": [
     {
@@ -15,7 +15,7 @@
       "captions": "promotion/assets/demo-en.vtt",
       "category_id": "28",
       "tags": ["Markdown", "Windows", "Mermaid", "KaTeX", "mdEditor"],
-      "target_privacy": "unlisted"
+      "target_privacy": "public"
     },
     {
       "key": "demo-ja",
@@ -28,7 +28,7 @@
       "captions": "promotion/assets/demo-ja.vtt",
       "category_id": "28",
       "tags": ["Markdown", "Windows", "Mermaid", "KaTeX", "mdEditor"],
-      "target_privacy": "unlisted"
+      "target_privacy": "public"
     }
   ]
 }

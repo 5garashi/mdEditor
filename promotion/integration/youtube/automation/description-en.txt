@@ -10,7 +10,7 @@ SPDX-License-Identifier: MIT
 mdEditor is a free Markdown editor for Windows, developed by 5garashi.com Design Office.
 
 This demo shows opening a document, editing Markdown, previewing diagrams and equations, and saving a PDF.
-Recorded using source build 1.0.5. The Microsoft Store build number has not been verified.
+Recorded using source build 1.0.5. The developer confirmed that version 1.0.5 was published on Microsoft Store on 2026-10-13. This recording was not made using the Store-installed build.
 
 Guide, demos and sample documents:
 https://5garashi.github.io/mdEditor/en.html

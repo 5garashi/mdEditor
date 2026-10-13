@@ -10,7 +10,7 @@ SPDX-License-Identifier: MIT
 mdEditorは、5garashi.com設計事務所が開発した無料のWindows用Markdownエディターです。
 
 文書を開く、Markdownを編集する、図・数式をプレビューする、PDFに保存する操作を紹介します。
-録画はソース版1.0.5を使用しています。Microsoft Storeの提供版番号は未確認です。
+録画はソース版1.0.5を使用しています。2026-10-13に、開発者からMicrosoft Storeでの1.0.5公開を確認しました。Storeからインストールした版での録画ではありません。
 
 使い方・操作デモ・サンプル文書：
 https://5garashi.github.io/mdEditor/
