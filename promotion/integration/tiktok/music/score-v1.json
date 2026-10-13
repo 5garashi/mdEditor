@@ -1,0 +1,3516 @@
+{
+  "title": "Light Steps / 軽快なステップ",
+  "version": "1.0.0",
+  "date": "2026-10-14",
+  "composition_and_synthesis": "Codex, commissioned by 5garashi.com Design Office",
+  "music_license": "not specified",
+  "original_composition": true,
+  "official_theme_used": false,
+  "bpm": 125,
+  "meter": "5/4",
+  "grouping": "3+2",
+  "duration_seconds": 49,
+  "sample_rate": 44100,
+  "notes": [
+    {
+      "note": 50,
+      "beat": 0,
+      "length": 0.55,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 50,
+      "beat": 2,
+      "length": 0.4,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 50,
+      "beat": 3,
+      "length": 0.6,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 50,
+      "beat": 4,
+      "length": 0.35,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 62,
+      "beat": 0,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 0,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 0,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 1.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 1.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 1.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 3,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 3,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 3,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 4,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 4,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 4,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 78,
+      "beat": 0,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 0.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 83,
+      "beat": 1.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 2,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 3,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 47,
+      "beat": 5,
+      "length": 0.55,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 47,
+      "beat": 7,
+      "length": 0.4,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 47,
+      "beat": 8,
+      "length": 0.6,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 47,
+      "beat": 9,
+      "length": 0.35,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 59,
+      "beat": 5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 59,
+      "beat": 6.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 6.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 6.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 59,
+      "beat": 8,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 8,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 8,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 59,
+      "beat": 9,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 9,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 9,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 83,
+      "beat": 5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 5.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 6.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 74,
+      "beat": 7,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 8,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 52,
+      "beat": 10,
+      "length": 0.55,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 52,
+      "beat": 12,
+      "length": 0.4,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 52,
+      "beat": 13,
+      "length": 0.6,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 52,
+      "beat": 14,
+      "length": 0.35,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 64,
+      "beat": 10,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 10,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 71,
+      "beat": 10,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 11.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 11.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 71,
+      "beat": 11.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 13,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 13,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 71,
+      "beat": 13,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 14,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 14,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 71,
+      "beat": 14,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 76,
+      "beat": 10,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 10.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 11.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 83,
+      "beat": 12,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 86,
+      "beat": 13,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 83,
+      "beat": 13.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 14,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 63
+    },
+    {
+      "note": 78,
+      "beat": 14.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 45,
+      "beat": 15,
+      "length": 0.55,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 45,
+      "beat": 17,
+      "length": 0.4,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 45,
+      "beat": 18,
+      "length": 0.6,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 45,
+      "beat": 19,
+      "length": 0.35,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 57,
+      "beat": 15,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 15,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 15,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 57,
+      "beat": 16.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 16.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 16.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 57,
+      "beat": 18,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 18,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 18,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 57,
+      "beat": 19,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 19,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 19,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 81,
+      "beat": 15,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 15.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 76,
+      "beat": 16.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 74,
+      "beat": 17,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 76,
+      "beat": 18,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 18.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 19,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 63
+    },
+    {
+      "note": 74,
+      "beat": 19.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 50,
+      "beat": 20,
+      "length": 0.55,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 50,
+      "beat": 22,
+      "length": 0.4,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 50,
+      "beat": 23,
+      "length": 0.6,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 50,
+      "beat": 24,
+      "length": 0.35,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 62,
+      "beat": 20,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 20,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 20,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 21.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 21.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 21.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 23,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 23,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 23,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 24,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 24,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 24,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 78,
+      "beat": 20,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 20.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 83,
+      "beat": 21.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 22,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 23,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 76,
+      "beat": 23.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 24,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 63
+    },
+    {
+      "note": 81,
+      "beat": 24.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 47,
+      "beat": 25,
+      "length": 0.55,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 47,
+      "beat": 27,
+      "length": 0.4,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 47,
+      "beat": 28,
+      "length": 0.6,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 47,
+      "beat": 29,
+      "length": 0.35,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 59,
+      "beat": 25,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 25,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 25,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 59,
+      "beat": 26.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 26.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 26.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 59,
+      "beat": 28,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 28,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 28,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 59,
+      "beat": 29,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 29,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 29,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 83,
+      "beat": 25,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 25.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 26.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 74,
+      "beat": 27,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 28,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 28.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 29,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 63
+    },
+    {
+      "note": 76,
+      "beat": 29.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 52,
+      "beat": 30,
+      "length": 0.55,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 52,
+      "beat": 32,
+      "length": 0.4,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 52,
+      "beat": 33,
+      "length": 0.6,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 52,
+      "beat": 34,
+      "length": 0.35,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 64,
+      "beat": 30,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 30,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 71,
+      "beat": 30,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 31.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 31.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 71,
+      "beat": 31.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 33,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 33,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 71,
+      "beat": 33,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 34,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 34,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 71,
+      "beat": 34,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 76,
+      "beat": 30,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 30.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 31.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 83,
+      "beat": 32,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 86,
+      "beat": 33,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 83,
+      "beat": 33.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 34,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 63
+    },
+    {
+      "note": 78,
+      "beat": 34.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 45,
+      "beat": 35,
+      "length": 0.55,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 45,
+      "beat": 37,
+      "length": 0.4,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 45,
+      "beat": 38,
+      "length": 0.6,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 45,
+      "beat": 39,
+      "length": 0.35,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 57,
+      "beat": 35,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 35,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 35,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 57,
+      "beat": 36.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 36.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 36.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 57,
+      "beat": 38,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 38,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 38,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 57,
+      "beat": 39,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 39,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 39,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 81,
+      "beat": 35,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 35.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 76,
+      "beat": 36.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 74,
+      "beat": 37,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 76,
+      "beat": 38,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 38.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 39,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 63
+    },
+    {
+      "note": 74,
+      "beat": 39.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 50,
+      "beat": 40,
+      "length": 0.55,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 50,
+      "beat": 42,
+      "length": 0.4,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 50,
+      "beat": 43,
+      "length": 0.6,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 50,
+      "beat": 44,
+      "length": 0.35,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 62,
+      "beat": 40,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 40,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 40,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 41.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 41.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 41.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 43,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 43,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 43,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 44,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 44,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 44,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 78,
+      "beat": 40,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 40.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 83,
+      "beat": 41.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 42,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 43,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 76,
+      "beat": 43.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 44,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 63
+    },
+    {
+      "note": 81,
+      "beat": 44.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 74,
+      "beat": 41,
+      "length": 0.2,
+      "voice": "pluck",
+      "velocity": 44
+    },
+    {
+      "note": 78,
+      "beat": 42.5,
+      "length": 0.2,
+      "voice": "pluck",
+      "velocity": 44
+    },
+    {
+      "note": 81,
+      "beat": 44,
+      "length": 0.2,
+      "voice": "pluck",
+      "velocity": 44
+    },
+    {
+      "note": 47,
+      "beat": 45,
+      "length": 0.55,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 47,
+      "beat": 47,
+      "length": 0.4,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 47,
+      "beat": 48,
+      "length": 0.6,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 47,
+      "beat": 49,
+      "length": 0.35,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 59,
+      "beat": 45,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 45,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 45,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 59,
+      "beat": 46.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 46.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 46.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 59,
+      "beat": 48,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 48,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 48,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 59,
+      "beat": 49,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 49,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 49,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 83,
+      "beat": 45,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 45.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 46.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 74,
+      "beat": 47,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 48,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 48.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 49,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 63
+    },
+    {
+      "note": 76,
+      "beat": 49.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 71,
+      "beat": 46,
+      "length": 0.2,
+      "voice": "pluck",
+      "velocity": 44
+    },
+    {
+      "note": 74,
+      "beat": 47.5,
+      "length": 0.2,
+      "voice": "pluck",
+      "velocity": 44
+    },
+    {
+      "note": 78,
+      "beat": 49,
+      "length": 0.2,
+      "voice": "pluck",
+      "velocity": 44
+    },
+    {
+      "note": 52,
+      "beat": 50,
+      "length": 0.55,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 52,
+      "beat": 52,
+      "length": 0.4,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 52,
+      "beat": 53,
+      "length": 0.6,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 52,
+      "beat": 54,
+      "length": 0.35,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 64,
+      "beat": 50,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 50,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 71,
+      "beat": 50,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 51.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 51.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 71,
+      "beat": 51.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 53,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 53,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 71,
+      "beat": 53,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 54,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 54,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 71,
+      "beat": 54,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 76,
+      "beat": 50,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 50.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 51.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 83,
+      "beat": 52,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 86,
+      "beat": 53,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 83,
+      "beat": 53.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 54,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 63
+    },
+    {
+      "note": 78,
+      "beat": 54.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 76,
+      "beat": 51,
+      "length": 0.2,
+      "voice": "pluck",
+      "velocity": 44
+    },
+    {
+      "note": 81,
+      "beat": 52.5,
+      "length": 0.2,
+      "voice": "pluck",
+      "velocity": 44
+    },
+    {
+      "note": 83,
+      "beat": 54,
+      "length": 0.2,
+      "voice": "pluck",
+      "velocity": 44
+    },
+    {
+      "note": 45,
+      "beat": 55,
+      "length": 0.55,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 45,
+      "beat": 57,
+      "length": 0.4,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 45,
+      "beat": 58,
+      "length": 0.6,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 45,
+      "beat": 59,
+      "length": 0.35,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 57,
+      "beat": 55,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 55,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 55,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 57,
+      "beat": 56.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 56.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 56.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 57,
+      "beat": 58,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 58,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 58,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 57,
+      "beat": 59,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 59,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 59,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 81,
+      "beat": 55,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 55.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 76,
+      "beat": 56.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 74,
+      "beat": 57,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 76,
+      "beat": 58,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 58.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 59,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 63
+    },
+    {
+      "note": 74,
+      "beat": 59.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 69,
+      "beat": 56,
+      "length": 0.2,
+      "voice": "pluck",
+      "velocity": 44
+    },
+    {
+      "note": 76,
+      "beat": 57.5,
+      "length": 0.2,
+      "voice": "pluck",
+      "velocity": 44
+    },
+    {
+      "note": 81,
+      "beat": 59,
+      "length": 0.2,
+      "voice": "pluck",
+      "velocity": 44
+    },
+    {
+      "note": 50,
+      "beat": 60,
+      "length": 0.55,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 50,
+      "beat": 62,
+      "length": 0.4,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 50,
+      "beat": 63,
+      "length": 0.6,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 50,
+      "beat": 64,
+      "length": 0.35,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 62,
+      "beat": 60,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 60,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 60,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 61.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 61.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 61.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 63,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 63,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 63,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 64,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 64,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 64,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 78,
+      "beat": 60,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 60.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 83,
+      "beat": 61.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 62,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 63,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 76,
+      "beat": 63.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 64,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 63
+    },
+    {
+      "note": 81,
+      "beat": 64.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 74,
+      "beat": 61,
+      "length": 0.2,
+      "voice": "pluck",
+      "velocity": 44
+    },
+    {
+      "note": 78,
+      "beat": 62.5,
+      "length": 0.2,
+      "voice": "pluck",
+      "velocity": 44
+    },
+    {
+      "note": 81,
+      "beat": 64,
+      "length": 0.2,
+      "voice": "pluck",
+      "velocity": 44
+    },
+    {
+      "note": 47,
+      "beat": 65,
+      "length": 0.55,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 47,
+      "beat": 67,
+      "length": 0.4,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 47,
+      "beat": 68,
+      "length": 0.6,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 47,
+      "beat": 69,
+      "length": 0.35,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 59,
+      "beat": 65,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 65,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 65,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 59,
+      "beat": 66.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 66.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 66.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 59,
+      "beat": 68,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 68,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 68,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 59,
+      "beat": 69,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 69,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 69,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 83,
+      "beat": 65,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 65.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 66.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 74,
+      "beat": 67,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 68,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 68.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 69,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 63
+    },
+    {
+      "note": 76,
+      "beat": 69.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 71,
+      "beat": 66,
+      "length": 0.2,
+      "voice": "pluck",
+      "velocity": 44
+    },
+    {
+      "note": 74,
+      "beat": 67.5,
+      "length": 0.2,
+      "voice": "pluck",
+      "velocity": 44
+    },
+    {
+      "note": 78,
+      "beat": 69,
+      "length": 0.2,
+      "voice": "pluck",
+      "velocity": 44
+    },
+    {
+      "note": 52,
+      "beat": 70,
+      "length": 0.55,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 52,
+      "beat": 72,
+      "length": 0.4,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 52,
+      "beat": 73,
+      "length": 0.6,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 52,
+      "beat": 74,
+      "length": 0.35,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 64,
+      "beat": 70,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 70,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 71,
+      "beat": 70,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 71.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 71.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 71,
+      "beat": 71.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 73,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 73,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 71,
+      "beat": 73,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 74,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 74,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 71,
+      "beat": 74,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 76,
+      "beat": 70,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 70.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 71.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 83,
+      "beat": 72,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 86,
+      "beat": 73,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 83,
+      "beat": 73.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 74,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 63
+    },
+    {
+      "note": 78,
+      "beat": 74.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 76,
+      "beat": 71,
+      "length": 0.2,
+      "voice": "pluck",
+      "velocity": 44
+    },
+    {
+      "note": 81,
+      "beat": 72.5,
+      "length": 0.2,
+      "voice": "pluck",
+      "velocity": 44
+    },
+    {
+      "note": 83,
+      "beat": 74,
+      "length": 0.2,
+      "voice": "pluck",
+      "velocity": 44
+    },
+    {
+      "note": 45,
+      "beat": 75,
+      "length": 0.55,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 45,
+      "beat": 77,
+      "length": 0.4,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 45,
+      "beat": 78,
+      "length": 0.6,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 45,
+      "beat": 79,
+      "length": 0.35,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 57,
+      "beat": 75,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 75,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 75,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 57,
+      "beat": 76.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 76.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 76.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 57,
+      "beat": 78,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 78,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 78,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 57,
+      "beat": 79,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 79,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 79,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 81,
+      "beat": 75,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 75.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 76,
+      "beat": 76.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 74,
+      "beat": 77,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 76,
+      "beat": 78,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 78.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 79,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 63
+    },
+    {
+      "note": 74,
+      "beat": 79.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 69,
+      "beat": 76,
+      "length": 0.2,
+      "voice": "pluck",
+      "velocity": 44
+    },
+    {
+      "note": 76,
+      "beat": 77.5,
+      "length": 0.2,
+      "voice": "pluck",
+      "velocity": 44
+    },
+    {
+      "note": 81,
+      "beat": 79,
+      "length": 0.2,
+      "voice": "pluck",
+      "velocity": 44
+    },
+    {
+      "note": 50,
+      "beat": 80,
+      "length": 0.55,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 50,
+      "beat": 82,
+      "length": 0.4,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 50,
+      "beat": 83,
+      "length": 0.6,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 50,
+      "beat": 84,
+      "length": 0.35,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 62,
+      "beat": 80,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 80,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 80,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 81.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 81.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 81.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 83,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 83,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 83,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 84,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 84,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 84,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 78,
+      "beat": 80,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 80.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 83,
+      "beat": 81.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 82,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 83,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 76,
+      "beat": 83.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 84,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 63
+    },
+    {
+      "note": 81,
+      "beat": 84.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 47,
+      "beat": 85,
+      "length": 0.55,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 47,
+      "beat": 87,
+      "length": 0.4,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 47,
+      "beat": 88,
+      "length": 0.6,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 47,
+      "beat": 89,
+      "length": 0.35,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 59,
+      "beat": 85,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 85,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 85,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 59,
+      "beat": 86.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 86.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 86.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 59,
+      "beat": 88,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 88,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 88,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 59,
+      "beat": 89,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 62,
+      "beat": 89,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 66,
+      "beat": 89,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 83,
+      "beat": 85,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 85.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 86.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 74,
+      "beat": 87,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 88,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 88.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 89,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 63
+    },
+    {
+      "note": 76,
+      "beat": 89.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 52,
+      "beat": 90,
+      "length": 0.55,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 52,
+      "beat": 92,
+      "length": 0.4,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 52,
+      "beat": 93,
+      "length": 0.6,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 52,
+      "beat": 94,
+      "length": 0.35,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 64,
+      "beat": 90,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 90,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 71,
+      "beat": 90,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 91.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 91.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 71,
+      "beat": 91.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 93,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 93,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 71,
+      "beat": 93,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 94,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 94,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 71,
+      "beat": 94,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 76,
+      "beat": 90,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 90.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 91.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 83,
+      "beat": 92,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 86,
+      "beat": 93,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 83,
+      "beat": 93.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 81,
+      "beat": 94,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 63
+    },
+    {
+      "note": 78,
+      "beat": 94.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 45,
+      "beat": 95,
+      "length": 0.55,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 45,
+      "beat": 97,
+      "length": 0.4,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 45,
+      "beat": 98,
+      "length": 0.6,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 45,
+      "beat": 99,
+      "length": 0.35,
+      "voice": "bass",
+      "velocity": 69
+    },
+    {
+      "note": 57,
+      "beat": 95,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 95,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 95,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 57,
+      "beat": 96.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 96.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 96.5,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 57,
+      "beat": 98,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 98,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 98,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 57,
+      "beat": 99,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 64,
+      "beat": 99,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 69,
+      "beat": 99,
+      "length": 0.28,
+      "voice": "keys",
+      "velocity": 42
+    },
+    {
+      "note": 81,
+      "beat": 95,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 78,
+      "beat": 95.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 76,
+      "beat": 96.5,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 74,
+      "beat": 97,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 76,
+      "beat": 98,
+      "length": 0.32,
+      "voice": "pluck",
+      "velocity": 56
+    },
+    {
+      "note": 50,
+      "beat": 100,
+      "length": 0.5,
+      "voice": "keys",
+      "velocity": 51
+    },
+    {
+      "note": 62,
+      "beat": 100,
+      "length": 0.5,
+      "voice": "keys",
+      "velocity": 46
+    },
+    {
+      "note": 66,
+      "beat": 100,
+      "length": 0.5,
+      "voice": "keys",
+      "velocity": 46
+    },
+    {
+      "note": 69,
+      "beat": 100,
+      "length": 0.5,
+      "voice": "keys",
+      "velocity": 46
+    },
+    {
+      "note": 74,
+      "beat": 100,
+      "length": 0.5,
+      "voice": "keys",
+      "velocity": 46
+    }
+  ]
+}

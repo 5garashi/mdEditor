@@ -3,7 +3,7 @@
 概要 / Description: TikTokプロフィールの設定記録 / TikTok profile setup record
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-13
-版 / Version: 1.2.0
+版 / Version: 1.3.0
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
@@ -35,7 +35,22 @@ Web版の今回の編集フォームには、独立したWebsite入力欄は表�
 
 `video/mdEditor-demo-vertical-en.mp4` は英語字幕付きの縦動画です。名称は **mdEditor Demo** とし、秒数を名称に含めません。この版の長さは49秒、1080×1920、20fps、音声なしです。字幕は映像に焼き込み、別途demo-en.vttも用意しました。
 
-### BGM付き版 / Version with BGM
+### オリジナルBGM「Light Steps」 / Original upbeat BGM
+
+本人から公式テーマは重く感じるとの意見を受け、軽快な操作感を連想させる別のオリジナル曲を作曲しました。現在review.htmlに表示する動画は `video/mdEditor-demo-vertical-en-light-steps-v1.mp4` です。
+
+- 5/4拍子、125 BPM。「3＋2」のまとまりを持つリズムと5拍目のアクセント。
+- Dメジャー・ペンタトニックの短い旋律、軽いプラック音、短い鍵盤の伴奏、控えめなベースとシェーカー。
+- 20小節で48秒、その後1秒の終止と余韻。動画と同じ49秒。
+- 公式テーマの音源・MIDI・旋律を使わない新規曲。アップテンポの指定は今回の本人の依頼に基づくもので、公式テーマの改版ではありません。
+
+作曲・音源生成はCodex（依頼: 5garashi.com設計事務所 / 5garashi.com Design Office）。曲名は **Light Steps / 軽快なステップ v1**。音楽の公開ライセンスは未指定です。コードのMITおよび公式ロゴのCC BY-ND 4.0を、新しい音楽に自動で適用しません。
+
+`music/` にWAV原本、MP3試聴用、MIDI編集用、score-v1.jsonの音符・テンポ・制作情報、validation-v1.jsonの検証記録を保存しました。MIDIは合成WAVの音色を内包しないため、再生ソフトにより音色が変わります。シェーカーの音源は合成WAVに含まれ、MIDIには旋律・伴奏・ベースを保存しています。
+
+再制作は `python promotion/integration/tiktok/compose_music.py`。Python、NumPy、ffmpegを使用します。既存のWAVがあれば停止するため、改作は別の版番号で保存してください。動画は映像ストリームをコピーし、無音版との全フレーム一致を検証しています。音楽は自動再生しません。公式テーマ付き版・無音版も比較用に保持し、SNSへは未投稿です。音の印象は試聴して判断してください。TikTok圧縮後の音質・音量は未確認です。
+
+### 以前の公式テーマ付き版 / Previous official-theme version
 
 2026-10-14の本人の依頼に基づき、`video/mdEditor-demo-vertical-en-bgm.mp4` を追加しました。公式テーマ曲 `5garashi_theme.wav`（5/4拍子、96 BPM、Dメジャー・ペンタトニック）を使っています。曲のテンポ・音色・旋律はそのまま、冒頭49秒を使用し、音量を6 dB下げ、開始0.15秒と終了1.5秒にフェードを付けました。公式原本は改変せず作業用フォルダーへ保存し、Identityへの書き込みは行いません。
 
