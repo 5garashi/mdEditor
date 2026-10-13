@@ -15,12 +15,12 @@ SPDX-License-Identifier: MIT
 | --- | --- | --- | --- |
 | 1 | 5garashi.com (Google Sites) | 公開紹介ページ index.html / en.html | 公開済み。日英の幅広リンクボタンを追加。Store直リンクを維持 |
 | 2 | LinkedIn | multichannel/social/posts-ja.md / posts-en.md の長文、landscape PNG | 開発者として投稿。英語は英語の紹介ページへ、日本語は日本語へ |
-| 3 | Zenn | multichannel/articles/technical-note-ja.md | 手順記事として編集・確認。画像はアップロード、サンプルは公開Pages URLに変更 |
+| 3 | Zenn | 連携済みリポジトリの articles/mdeditor-diagrams-math-pdf.md | 日本語記事を公開済み。画像・サンプルは公開Pages URLを参照。更新元は zenn/README.md に記録 |
 | 後続 | X | social/posts-*.md の短文、landscape PNG | 本文と画像・代替テキストを組み合わせる |
 | 後続 | YouTube | assets/mdEditor-demo-ja.mp4 / en.mp4 | 横長の操作実演。概要欄は紹介ページ・Store・事務所のリンク |
 | 後続 | TikTok | 既存動画は参考用 | 縦画面で文字が読める実演を別途制作。横長動画を未検証のまま完成扱いしない |
 
-5garashi.comとLinkedIn英語投稿は2026-10-13に公開確認済み。LinkedInの公開原稿・画像・URLは[LINKEDIN-FIRST-POST.md](LINKEDIN-FIRST-POST.md)に記録しています。Zenn、X、YouTube、TikTokへの投稿はまだ行っていません。次にZennを進めます。配布済み素材と公開済み投稿を区別し、公開URL・日付・使用した資料版を記録します。SNSの閲覧・相談件数などは実際に確認できた結果だけ記録します。
+5garashi.com、LinkedIn英語投稿、Zenn日本語記事は2026-10-13に公開確認済み。LinkedInの記録は[LINKEDIN-FIRST-POST.md](LINKEDIN-FIRST-POST.md)、Zennの記事更新元と公開URLは[zenn/README.md](zenn/README.md)に記録しています。X、YouTube、TikTokへの投稿はまだ行っていません。配布済み素材と公開済み投稿を区別し、公開URL・日付・使用した資料版を記録します。SNSの閲覧・相談件数などは実際に確認できた結果だけ記録します。
 
 ## Google Sites: GitHubに集約する埋め込み / Single-source embed
 
@@ -50,11 +50,11 @@ HTMLのiframeを使う場合（Google Sitesでは「埋め込みコード」）:
 
 長文投稿にStoreリンクを残し、使い方の公開ページを追加します。日本語 https://5garashi.github.io/mdEditor/ 、英語 https://5garashi.github.io/mdEditor/en.html 。画像は read-ja-landscape.png / read-en-landscape.png から開始します。投稿先の個人プロフィールまたは会社ページURL、投稿者名、公開する言語を確認して投稿します。本人の開発作品であることを明記します。
 
-## Zenn: その次の実装 / Following channel
+## Zenn: 公開済み / Published
 
-記事の検証・開発者表示を維持し、宣伝だけの記事にしません。相対サンプルリンクを https://5garashi.github.io/mdEditor/samples/quickstart-engineering-note.md に変更。本文画像はZennへアップロードして、そのURLへ差し替えます。開発相談のリンクは末尾にまとめます。公開記事URLをGitHubに記録し、記事内容を改訂した場合は原本へ反映します。Zennへの転載後は同期を自動化していません。
+開発のきっかけ、実画面、図・数式、別ウィンドウ、PDF保存を説明する記事を公開しました。既存のZenn連携を維持し、5garashi/galois-theory-introduction の articles/mdeditor-diagrams-math-pdf.md を記事の更新元にしています。このファイルをmasterへ反映するとZennへ自動同期します。本文画像・サンプルはmdEditorの公開Pages URLを使用しています。詳細と検証結果は[zenn/README.md](zenn/README.md)に記録しています。
 
-English: Maintain source materials on GitHub and publish a generated gh-pages branch. The office site now uses two native links to the Japanese and English pages. Embedded cards were removed after live narrow-screen checks revealed nested scrolling. The office website was implemented first; LinkedIn is next, then Zenn. Other channel posts are not published yet; TikTok needs a separate readable portrait recording.
+English: Maintain source materials on GitHub and publish a generated gh-pages branch. The office site now uses two native links to the Japanese and English pages. Embedded cards were removed after live narrow-screen checks revealed nested scrolling. The office website, English LinkedIn post and Japanese Zenn article are published. The Zenn article syncs from the existing connected repository; see zenn/README.md. Other channel posts are not published yet; TikTok needs a separate readable portrait recording.
 
 デザイン基準 / Design reference: [Design Office Identity v4.12.0](https://5garashi.github.io/5garashi-identity/)。コードはMIT、公式SVGは原本のCC BY-ND 4.0を維持します。
 
