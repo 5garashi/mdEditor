@@ -1,0 +1,117 @@
+{
+  "encoding": {
+    "programs": [],
+    "streams": [
+      {
+        "codec_type": "video",
+        "width": 1080,
+        "height": 1920
+      }
+    ],
+    "format": {
+      "duration": "49.000000"
+    }
+  },
+  "capture": {
+    "date": "2026-10-14 JST",
+    "app": "Unmodified Windows source build 1.0.5",
+    "events": [
+      {
+        "seconds": 3.01,
+        "action": "Open native file dialog"
+      },
+      {
+        "seconds": 6.77,
+        "action": "Expand editor using app control"
+      },
+      {
+        "seconds": 9.07,
+        "action": "Type heading edit"
+      },
+      {
+        "seconds": 14.03,
+        "action": "Preview updated heading and equation"
+      },
+      {
+        "seconds": 20.0,
+        "action": "Mermaid diagram preview"
+      },
+      {
+        "seconds": 28.04,
+        "action": "Actual separate preview window opened"
+      },
+      {
+        "seconds": 31.23,
+        "action": "Markdown saved"
+      },
+      {
+        "seconds": 34.75,
+        "action": "Native PDF destination dialog"
+      },
+      {
+        "seconds": 39.26,
+        "action": "Native PDF save confirmation"
+      }
+    ],
+    "pdf_confirmation": "The PDF was saved.\n\nC:\\miFfplay\\mdEditorPromotion\\work\\tiktok-v3\\diagrams-and-math.pdf",
+    "pdf_pages": 2,
+    "pdf_edited_heading_verified": true,
+    "separate_preview_window_verified": true
+  },
+  "published": false,
+  "review_browser": {
+    "engine": "Chrome/155.0.8059.39",
+    "playback_verified": true,
+    "layouts": [
+      {
+        "width": 320,
+        "theme": "light",
+        "text_percent": 100,
+        "horizontal_overflow": false
+      },
+      {
+        "width": 320,
+        "theme": "light",
+        "text_percent": 200,
+        "horizontal_overflow": false
+      },
+      {
+        "width": 320,
+        "theme": "dark",
+        "text_percent": 100,
+        "horizontal_overflow": false
+      },
+      {
+        "width": 320,
+        "theme": "dark",
+        "text_percent": 200,
+        "horizontal_overflow": false
+      },
+      {
+        "width": 1280,
+        "theme": "light",
+        "text_percent": 100,
+        "horizontal_overflow": false
+      },
+      {
+        "width": 1280,
+        "theme": "light",
+        "text_percent": 200,
+        "horizontal_overflow": false
+      },
+      {
+        "width": 1280,
+        "theme": "dark",
+        "text_percent": 100,
+        "horizontal_overflow": false
+      },
+      {
+        "width": 1280,
+        "theme": "dark",
+        "text_percent": 200,
+        "horizontal_overflow": false
+      }
+    ],
+    "physical_phone_and_tiktok_playback": "not verified"
+  }
+}

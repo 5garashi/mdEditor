@@ -3,7 +3,7 @@
 概要 / Description: TikTokプロフィールの設定記録 / TikTok profile setup record
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-13
-版 / Version: 1.0.0
+版 / Version: 1.1.0
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
@@ -23,11 +23,35 @@ SPDX-License-Identifier: MIT
 
 profile.jsonは再設定時の入力原稿です。公式SVGは変更せず、既存のPNGを使用しました。TikTokの円形切り抜きでマークが欠けないことを目視確認しました。
 
+2026-10-14追記: 本人がプロフィール写真を添付のクリーム色背景のマークへ変更しました。その写真を維持します。company-logo.pngには本人の未コミット変更があり、company-logo2.pngも存在するため、この工程では上書き・コミットしません。
+
+次回変更できるときの希望値は `@5garashi.com` / `5garashi.com Design Office` です。planned-profile.jsonに保存しました。変更間隔と、その時点のユーザー名の利用可否を確認してから適用します。現在のプロフィールURLは引き続き上記のアンダースコア入りです。
+
 画面に表示された変更間隔は、ユーザー名30日間に1度、名前7日間に1度。本人が依頼した値で変更を確定しました。
 
 Web版の今回の編集フォームには、独立したWebsite入力欄は表示されていませんでした。アカウントの種別変更や有料機能の契約は行っていません。投稿、フォロー、メッセージ送信も行っていません。
 
-次の制作: スマートフォンで文字が読める縦画面のmdEditor操作デモ。既存の横長動画をそのまま投稿して完成扱いにはしません。動画制作と投稿はプロフィール設定とは別の工程です。
+## 縦画面の操作デモ / Vertical demo
+
+`video/mdEditor-demo-vertical-en.mp4` は英語字幕付きの縦動画です。名称は **mdEditor Demo** とし、秒数を名称に含めません。この版の長さは49秒、1080×1920、20fps、音声なしです。字幕は映像に焼き込み、別途demo-en.vttも用意しました。
+
+専用プロファイルで未改変のWindows版ソースビルド1.0.5を操作した、新しい実録画です。Microsoft Storeからインストールしたバイナリの録画ではありません。ユーザーからStore版1.0.5公開の連絡を受けています。
+
+1. 文書を開く。
+2. アプリの全体表示ボタンで編集欄を広げ、見出しを変更する。
+3. 更新された見出し・KaTeX数式・Mermaid図を表示する。
+4. 実際にプレビューの別ウィンドウを開く。
+5. Markdownを保存し、ネイティブの保存ダイアログでPDFを保存する。
+
+録画中の別ウィンドウの存在、PDF保存完了の通知、PDF中の編集後の見出しと図を確認しました。video/validation.jsonに操作時刻とエンコード検証を保存しています。PDFは作業用フォルダーwork/tiktok-v3にあり、宣伝用配布には含めません。使用したサンプルは既存の英語版quickstart-engineering-note.en.mdです。最初の2回の収録は描画待ち、ウィンドウの重なり、ダイアログ位置に問題があったため、work/tiktok-v1とv2に保持し、再収録しました。
+
+実画面は664×712で取得し、896×960へ拡大して縦キャンバスの中央に配置しました。アプリ画面の色や表示内容を合成で変更していません。上下の見出し・字幕・案内は編集時に付加しています。録画用の編集は文書のコピーのみ。別ウィンドウの配置等のアプリ設定は終了時に元へ戻します。
+
+再制作は `python promotion/integration/tiktok/record_vertical.py` → `python promotion/integration/tiktok/encode_vertical.py` の順です。前者はWindows、ffmpeg、pywin32、pywinauto、PyMuPDFと、C:\miFfplay\appAutoTesterの補助ライブラリーを使います。既存の録画とPDFがあれば停止するため、再収録にはWORKを新しいフォルダーへ変更してください。アプリ本体や既存の横動画は変更しません。
+
+確認画面はreview.html、投稿原稿はPOST.md。Chromeで動画のデコード・再生を確認しました。確認ページは昼夜・幅320/1280px・文字サイズ100/200%で横にはみ出さないこととロゴの読み込みを検証しました。動画の見出し、別ウィンドウの表示、保存完了通知を抽出フレームでも目視確認しました。これらはWCAG完全準拠やTikTok実機検証を意味しません。
+
+まず動画を確認し、TikTokのアップロード画面で公開範囲・プレビュー・字幕とUIの重なりを確認してから公開します。**この工程ではTikTokへ投稿していません。** TikTok上の圧縮後の読みやすさ・実機再生・画面UIとの重なりは未確認です。PDFは2ページで、既存のサンプルで確認済みの末尾の空白ページの制約も残っています。アプリの修正はこの制作には含めません。
 
 English: The new TikTok profile was configured as @5garashi_com, with the office name, bilingual bio and unchanged official mark. The saved profile was visually verified. No videos, follows or messages were published.
 
@@ -36,4 +60,4 @@ English: The new TikTok profile was configured as @5garashi_com, with the office
 ---
 
 **作成者 / Author**: 5garashi.com設計事務所 / 5garashi.com Design Office
-**最終更新 / Last updated**: 2026-10-13 JST
+**最終更新 / Last updated**: 2026-10-14 JST
