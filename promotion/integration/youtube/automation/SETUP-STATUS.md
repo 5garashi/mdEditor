@@ -72,7 +72,19 @@ PROMOTION_REPO_TOKENはまだ登録していないため、将来の一般公開
 - Pages公開コミット: 3c256915b46d6ff03b1c5c03263068419ee70ebf。
 - 今回の公開はローカルで実施。PROMOTION_REPO_TOKEN未登録のため、将来のActionsからのPages自動更新は引き続き未有効。
 
+## 操作デモ更新 / Extended demos — 2026-10-14
+
+revision 1.1.0を日英とも一般公開しました。別ウィンドウ、ダークモード、Syntax（書き方）、Light Steps BGMを含みます。
+
+- English: https://www.youtube.com/watch?v=KPgQHi1yYlA
+- 日本語: https://www.youtube.com/watch?v=0cZfUyZr01M
+- [公開ワークフロー](https://github.com/5garashi/mdEditor/actions/runs/38436292206)成功。APIでpublicと字幕serving、匿名oEmbedのHTTP 200を確認。
+- 旧日英動画は保持して説明文に新版リンクを追加。latestの状態も新版IDへ更新。
+- 元MP4は75秒。YouTube側の再生時間表示は1分16秒。
+- 紹介ページと最新YouTube入口はクリーンなworktreeからpublish.pyで反映済み。公開MP4の原本との一致も確認。
+- 初回のpublish要求は新revision未同期のため停止し、その後sync → publishの順に実行。新revisionの公開時には同じ順序が必要。
+
 ---
 
 **作成者 / Author**: 5garashi.com設計事務所 / 5garashi.com Design Office
-**最終更新 / Last updated**: 2026-10-13 JST
+**最終更新 / Last updated**: 2026-10-14 JST

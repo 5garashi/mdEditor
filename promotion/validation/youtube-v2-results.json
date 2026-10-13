@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-14 JST",
+  "videos": [
+    {
+      "id": "KPgQHi1yYlA",
+      "privacy": "public",
+      "youtube_duration": "PT1M16S",
+      "new": true
+    },
+    {
+      "id": "0cZfUyZr01M",
+      "privacy": "public",
+      "youtube_duration": "PT1M16S",
+      "new": true
+    },
+    {
+      "id": "pxWoPoUcOLI",
+      "privacy": "public",
+      "youtube_duration": "PT40S",
+      "new": false
+    },
+    {
+      "id": "nuddUJCy42k",
+      "privacy": "public",
+      "youtube_duration": "PT40S",
+      "new": false
+    }
+  ],
+  "source_mp4_seconds": 75,
+  "new_captions_serving": true,
+  "old_descriptions_link_to_new": true,
+  "anonymous_oembed_http": 200,
+  "public_pages_mp4_byte_match": true
+}

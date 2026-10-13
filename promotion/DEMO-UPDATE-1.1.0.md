@@ -32,6 +32,19 @@ BGMはLight Steps v1の20小節48秒を繰り返し、75秒の映像に合わせ
 
 YouTubeは動画の差し替えを提供しないため、revision 1.1.0の新規動画を作り、前版は保持して説明文に最新版リンクを追加する仕組みを使います。GitHub Pagesと単体確認用ページのMP4・VTTは更新します。既に投稿したTikTokの縦動画はこの日英横動画更新では変更しません。
 
+## 公開結果 / Publication results
+
+- 日本語: https://www.youtube.com/watch?v=0cZfUyZr01M
+- English: https://www.youtube.com/watch?v=KPgQHi1yYlA
+- 一般公開と日英字幕の配信状態servingをYouTube APIで確認。ログイン不要の公式oEmbedも両方HTTP 200。
+- 元のMP4は各75秒。YouTube APIの再生時間表示は双方PT1M16Sで、配信側の表示と原本の秒数を区別して記録。
+- 旧動画pxWoPoUcOLI / nuddUJCy42kは一般公開のまま保持し、説明文末尾に各言語の新版リンクを追加済み。
+- 公開処理: https://github.com/5garashi/mdEditor/actions/runs/38436292206 （成功）。非公開同期を先に行い、字幕の管理情報を確定した後に公開。
+- 紹介ページ: https://5garashi.github.io/mdEditor/ と https://5garashi.github.io/mdEditor/en.html 。公開MP4が検証済み原本とSHA-256一致することを確認。
+- 最新版入口youtube.html / youtube-en.htmlも新版IDへ更新。Pagesの配布元コミットはee544f2b899d31e59723cc2a44ea385bca4fb123。
+
+今後も新しいrevisionでは、release.jsonのoperationをsyncにしてGitHubへ反映 → 同期成功を確認 → operationをpublishにして反映、の順に進めてください。未同期版をpublishだけで公開する処理は意図的に停止します。PROMOTION_REPO_TOKENは未設定なので、今回のPages更新はユーザーの未コミット変更を含めないクリーンなworktreeから既存publish.pyで実施しました。
+
 ---
 
 **作成者 / Author**: 5garashi.com設計事務所 / 5garashi.com Design Office
