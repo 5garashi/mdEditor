@@ -1,5 +1,5 @@
 {
-  "kit_version": "1.2.0",
+  "kit_version": "1.3.0",
   "app_source_version": "1.0.5",
   "app_source_commit": "6440a2edbe0c570de9fffe8636e7e0233711d978",
   "files": [
@@ -40,48 +40,63 @@
     },
     {
       "path": "assets/demo-en.vtt",
-      "bytes": 826,
-      "sha256": "4b4363e401cb83cf81afffd3072afe07ce602df068ac520a3d668de17ffce0a3"
+      "bytes": 1329,
+      "sha256": "1525503c1bd769eb35eb60ee7bec3ca400f060da78572390be631ab11fbcb116"
     },
     {
       "path": "assets/demo-ja.vtt",
-      "bytes": 1001,
-      "sha256": "a1878b1edee8cdd7ae5247cd0d64a73af34b1e8ab91c8abca7461e34e17620bc"
+      "bytes": 1396,
+      "sha256": "a7225e37c6d48225fd1441faeb1a16f8ff4d2bdd97f8f592b5092c373efece80"
     },
     {
       "path": "assets/mdEditor-demo-en.mp4",
-      "bytes": 816799,
-      "sha256": "507129ecff58d6ce4a48e2b3b44da732350a7f3c722759ad576b274533338d18"
+      "bytes": 3414024,
+      "sha256": "d2f732472a137b47d5fa847f0c89f9a13b2a5255c4bf7a0b35be281e55815849"
     },
     {
       "path": "assets/mdEditor-demo-ja.mp4",
-      "bytes": 851410,
-      "sha256": "a7a27de9fc10efa68f21e383b7cb96b746957d88acff2fc791d6d6ea8d396955"
+      "bytes": 3466678,
+      "sha256": "5ac5875bcaaee020d1a66cb23c9ee79cec23035250341ef0438cc085be7adb70"
+    },
+    {
+      "path": "assets/microsoft-store-badge-en.png",
+      "bytes": 16885,
+      "sha256": "1ffcf905605f107460702bdf78ececccef8766f550dcb2ac7c3e2ab58a69404f"
+    },
+    {
+      "path": "assets/microsoft-store-badge-en.svg",
+      "bytes": 26533,
+      "sha256": "0e0cd666d0b351bc2680658faf8485a5d2d78d2ab14086d37fca7f0e8c12fa69"
+    },
+    {
+      "path": "assets/MICROSOFT-STORE-BADGE.md",
+      "bytes": 1718,
+      "sha256": "1af0554dc3ccbc48fa68bd8d95cb6d6397cddfe39cc461e2e963706974376450"
     },
     {
       "path": "assets/video-poster-en.png",
-      "bytes": 236953,
-      "sha256": "15b952d8159d6466486d304f02a72ac59c05585489c7efd255490c6a6a4ac1fc"
+      "bytes": 270419,
+      "sha256": "09ff8cc11a1bc6063101e6f5a3e990473447190edd2c2e36b5ef3d4399d7a4c9"
     },
     {
       "path": "assets/video-poster-ja.png",
-      "bytes": 251511,
-      "sha256": "ce791f55ee35c7734946d44cc29edf8547d212e6b6cc2b01341f65ccb17b64bc"
+      "bytes": 294239,
+      "sha256": "cd14ddbb298d4df3381851732efa2954b87aa07dd2f38abca7de2b2510bd82b8"
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 1762,
-      "sha256": "d375eb5cc29f38c8871c6e3bccb033f1a66ce930e2c194d98a0e36851b3eaeb4"
+      "bytes": 2264,
+      "sha256": "2e842b03655dc576482ea92a0e87c68125cfcfaeb66902274fbfed4917ab02ca"
     },
     {
       "path": "en.html",
-      "bytes": 8334,
-      "sha256": "8d015258bf2781312d670377b8b3092174c2e899746700f77dfd042bc2fec80b"
+      "bytes": 8798,
+      "sha256": "b93e669b6d8246a67b69bb4db8d87f7f5178a242c5bd1d2fd0550ea430be057c"
     },
     {
       "path": "IDENTITY-CHECK.md",
-      "bytes": 7796,
-      "sha256": "11440b18671071016d8986fe9865e3ccb06fb819a8bbf584e43d3089193eab0d"
+      "bytes": 7984,
+      "sha256": "503ff8968ee6d63af55b6175864636cd2dba5e957afc4ce89e42ad5df35217a3"
     },
     {
       "path": "IMPLEMENTATION.md",
@@ -90,8 +105,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 9290,
-      "sha256": "7daeb228ddf7c59c2ecbadb3ddd57bc6a367d9f3b99fa431c25a32057066c8ac"
+      "bytes": 9788,
+      "sha256": "2410e1204920dba460739ff9e60dedea569b74cf2160dc043650c5f6b4380990"
     },
     {
       "path": "LICENSE",
@@ -330,8 +345,8 @@
     },
     {
       "path": "player.js",
-      "bytes": 3089,
-      "sha256": "94e01480f7a1ab76e4490152a1b90df34daa379f4ea6107ed4c47e027640edc1"
+      "bytes": 4153,
+      "sha256": "8ec2f2d12ba9a2321e5468cd14f48e280f2650c20b2180b37505b6eea4f4e24d"
     },
     {
       "path": "PRIVACY.md",
@@ -340,13 +355,13 @@
     },
     {
       "path": "README.md",
-      "bytes": 6777,
-      "sha256": "71a55a84dc55be904186aab08dd08ed58d5db2fda5c272984d1a72e9b64f6807"
+      "bytes": 6905,
+      "sha256": "89295e106504cbc0ccda2dd817414b5d09fd02cd08ac6fc123a1926c190adf65"
     },
     {
       "path": "RECORDING.md",
-      "bytes": 3104,
-      "sha256": "00addf4234ce296a77fab3ad532134b51a43c1a22140059095670d2ad411c21b"
+      "bytes": 3406,
+      "sha256": "8a202e4377108b8981b67390641a26b73a1b323b7b461cd15c5fcd458e0a2575"
     },
     {
       "path": "samples/quickstart-ai-notes.en.md",
@@ -385,13 +400,13 @@
     },
     {
       "path": "THIRD-PARTY-NOTICES.md",
-      "bytes": 3510,
-      "sha256": "d11d8d987e2da0e2e96e10336926a6090b2f4d2630172c83722ea786b495ab61"
+      "bytes": 4044,
+      "sha256": "fa2e7782267579b1a808549f15defcf53f023071e1ec418fa4267b3fd5096992"
     },
     {
       "path": "VERSION",
       "bytes": 6,
-      "sha256": "1e5b51cde515396a9fa762909cf8ca6584ccc564b325d2eebeea76175fe95c4d"
+      "sha256": "64d23f858ef51b0f996e4966d4e27c0371b437e2d2787890b1f7ad22d4ec5663"
     }
   ]
 }

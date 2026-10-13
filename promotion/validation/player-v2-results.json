@@ -1,0 +1,122 @@
+{
+  "date": "2026-10-14 JST",
+  "browser": "Chrome/155.0.8059.39",
+  "duration": 75,
+  "autoplay": false,
+  "keyboard": "play, mute/unmute, volume, zero-volume recovery, Esc pause, seek verified",
+  "layouts": [
+    {
+      "lang": "ja",
+      "width": 320,
+      "theme": "light",
+      "text_percent": 100,
+      "horizontal_overflow": false
+    },
+    {
+      "lang": "ja",
+      "width": 320,
+      "theme": "light",
+      "text_percent": 200,
+      "horizontal_overflow": false
+    },
+    {
+      "lang": "ja",
+      "width": 320,
+      "theme": "dark",
+      "text_percent": 100,
+      "horizontal_overflow": false
+    },
+    {
+      "lang": "ja",
+      "width": 320,
+      "theme": "dark",
+      "text_percent": 200,
+      "horizontal_overflow": false
+    },
+    {
+      "lang": "ja",
+      "width": 1280,
+      "theme": "light",
+      "text_percent": 100,
+      "horizontal_overflow": false
+    },
+    {
+      "lang": "ja",
+      "width": 1280,
+      "theme": "light",
+      "text_percent": 200,
+      "horizontal_overflow": false
+    },
+    {
+      "lang": "ja",
+      "width": 1280,
+      "theme": "dark",
+      "text_percent": 100,
+      "horizontal_overflow": false
+    },
+    {
+      "lang": "ja",
+      "width": 1280,
+      "theme": "dark",
+      "text_percent": 200,
+      "horizontal_overflow": false
+    },
+    {
+      "lang": "en",
+      "width": 320,
+      "theme": "light",
+      "text_percent": 100,
+      "horizontal_overflow": false
+    },
+    {
+      "lang": "en",
+      "width": 320,
+      "theme": "light",
+      "text_percent": 200,
+      "horizontal_overflow": false
+    },
+    {
+      "lang": "en",
+      "width": 320,
+      "theme": "dark",
+      "text_percent": 100,
+      "horizontal_overflow": false
+    },
+    {
+      "lang": "en",
+      "width": 320,
+      "theme": "dark",
+      "text_percent": 200,
+      "horizontal_overflow": false
+    },
+    {
+      "lang": "en",
+      "width": 1280,
+      "theme": "light",
+      "text_percent": 100,
+      "horizontal_overflow": false
+    },
+    {
+      "lang": "en",
+      "width": 1280,
+      "theme": "light",
+      "text_percent": 200,
+      "horizontal_overflow": false
+    },
+    {
+      "lang": "en",
+      "width": 1280,
+      "theme": "dark",
+      "text_percent": 100,
+      "horizontal_overflow": false
+    },
+    {
+      "lang": "en",
+      "width": 1280,
+      "theme": "dark",
+      "text_percent": 200,
+      "horizontal_overflow": false
+    }
+  ],
+  "physical_assistive_technology": "not verified in this update"
+}

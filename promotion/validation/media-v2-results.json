@@ -1,0 +1,167 @@
+{
+  "date": "2026-10-14 JST",
+  "demo_revision": "1.1.0",
+  "music": "Light Steps v1 — 125 BPM, 5/4, 20-bar excerpt repeated",
+  "results": [
+    {
+      "file": "mdEditor-demo-en.mp4",
+      "capture": {
+        "date": "2026-10-14 JST",
+        "source_build": "1.0.5",
+        "language": "en",
+        "events": [
+          {
+            "seconds": 4.74,
+            "action": "Open document dialog"
+          },
+          {
+            "seconds": 9.07,
+            "action": "Heading edited"
+          },
+          {
+            "seconds": 13.0,
+            "action": "KaTeX equation"
+          },
+          {
+            "seconds": 17.25,
+            "action": "Mermaid edited"
+          },
+          {
+            "seconds": 23.12,
+            "action": "Markdown saved"
+          },
+          {
+            "seconds": 25.1,
+            "action": "Syntax / 書き方 reference opened"
+          },
+          {
+            "seconds": 33.01,
+            "action": "Syntax closed"
+          },
+          {
+            "seconds": 37.93,
+            "action": "Two actual Windows windows with rendered diagram and math"
+          },
+          {
+            "seconds": 46.28,
+            "action": "Dark mode in editor and separate preview"
+          },
+          {
+            "seconds": 53.12,
+            "action": "Preview returned to main window"
+          },
+          {
+            "seconds": 56.6,
+            "action": "PDF destination"
+          },
+          {
+            "seconds": 60.47,
+            "action": "PDF save confirmed while dark mode selected"
+          }
+        ],
+        "native_pdf_confirmation": "The PDF was saved.\n\nC:\\miFfplay\\mdEditorPromotion\\work\\demo-v2-take2\\demo-en.pdf",
+        "pdf_pages": 2,
+        "edited_heading_and_diagram_verified": true,
+        "settings_restored_after_run": true
+      },
+      "encoding": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720
+          },
+          {
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "duration": "75.000000"
+        }
+      }
+    },
+    {
+      "file": "mdEditor-demo-ja.mp4",
+      "capture": {
+        "date": "2026-10-14 JST",
+        "source_build": "1.0.5",
+        "language": "ja",
+        "events": [
+          {
+            "seconds": 4.32,
+            "action": "Open document dialog"
+          },
+          {
+            "seconds": 9.09,
+            "action": "Heading edited"
+          },
+          {
+            "seconds": 13.0,
+            "action": "KaTeX equation"
+          },
+          {
+            "seconds": 17.32,
+            "action": "Mermaid edited"
+          },
+          {
+            "seconds": 23.11,
+            "action": "Markdown saved"
+          },
+          {
+            "seconds": 25.19,
+            "action": "Syntax / 書き方 reference opened"
+          },
+          {
+            "seconds": 33.01,
+            "action": "Syntax closed"
+          },
+          {
+            "seconds": 37.81,
+            "action": "Two actual Windows windows with rendered diagram and math"
+          },
+          {
+            "seconds": 46.14,
+            "action": "Dark mode in editor and separate preview"
+          },
+          {
+            "seconds": 53.11,
+            "action": "Preview returned to main window"
+          },
+          {
+            "seconds": 56.77,
+            "action": "PDF destination"
+          },
+          {
+            "seconds": 62.17,
+            "action": "PDF save confirmed while dark mode selected"
+          }
+        ],
+        "native_pdf_confirmation": "PDFを保存しました。\n\nC:\\miFfplay\\mdEditorPromotion\\work\\demo-v2-take2\\demo-ja.pdf",
+        "pdf_pages": 2,
+        "edited_heading_and_diagram_verified": true,
+        "settings_restored_after_run": true
+      },
+      "encoding": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_type": "video",
+            "width": 1280,
+            "height": 720
+          },
+          {
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2
+          }
+        ],
+        "format": {
+          "duration": "75.000000"
+        }
+      }
+    }
+  ]
+}

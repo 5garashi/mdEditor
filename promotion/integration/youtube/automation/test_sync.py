@@ -58,6 +58,8 @@ class SyncTests(unittest.TestCase):
         self.config = sync.load_config()
         self.config['videos'] = [self.config['videos'][0]]
         self.config['videos'][0]['target_privacy'] = 'unlisted'
+        # Tests use a fixed fixture revision, independent of the live release.
+        self.config['videos'][0]['revision'] = '1.0.0'
         self.store = Store()
         self.api = API(self.config['channel_id'])
 

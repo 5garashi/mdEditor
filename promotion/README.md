@@ -3,7 +3,7 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.2.0
+版 / Version: 1.3.0
 ライセンス / License: MIT
 最終更新 / Last updated: 2026-10-13
 SPDX-License-Identifier: MIT
@@ -12,7 +12,7 @@ SPDX-License-Identifier: MIT
 
 バージョン / Version: 1.2.0 · [CHANGELOG.md](CHANGELOG.md)
 
-Windows版の実操作を使った日英紹介ページ、40秒の実演動画、初めて試すための日英6サンプルです。公開前のローカル成果物です。
+Windows版の実操作を使った日英紹介ページ、操作デモ、初めて試すための日英6サンプルです。日英動画の更新版1.1.0は75秒で、別ウィンドウ、ダークモード、Syntax（日本語では「書き方」）とLight StepsのBGMを含みます。
 
 ## 追加した媒体素材 / Added media materials
 
@@ -22,7 +22,7 @@ Windows版の実操作を使った日英紹介ページ、40秒の実演動画�
 
 - 公開用: [日本語](index.html)、[English](en.html)。promotionフォルダーをそのまま配置します。
 - 単体確認用: [日本語](review/index.html)、[English](review/en.html)。各ファイルにCSS、操作スクリプト、公式SVG、実画面、MP4、字幕、サンプル、ライセンス案内を埋め込みました。ファイルを別のフォルダーに移しても表示・動画再生・サンプル保存ができます。言語ごとに独立したファイルで、言語切替リンクはありません。
-- 実演動画: [日本語MP4](assets/mdEditor-demo-ja.mp4)、[English MP4](assets/mdEditor-demo-en.mp4)。各40秒、1280×720、20fps、H.264。無音、字幕を画面下部に焼き込み。VTTも同梱します。
+- 実演動画: [日本語MP4](assets/mdEditor-demo-ja.mp4)、[English MP4](assets/mdEditor-demo-en.mp4)。各75秒、1280×720、20fps、H.264、ステレオAAC BGM。字幕を画面下部に焼き込み、VTTも同梱します。
 - 主サンプル: [図と数式のメモ](samples/quickstart-engineering-note.md)、[Diagrams and math](samples/quickstart-engineering-note.en.md)。全6文書はsamplesフォルダーにあります。
 - 検証: [IDENTITY-CHECK.md](IDENTITY-CHECK.md)。ソース作業コピーのvalidationに画面・PDF・JSONを保存。開発用のtoolsとvalidationは公開用ZIPに含めていません。
 

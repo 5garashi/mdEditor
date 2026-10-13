@@ -10,6 +10,8 @@ SPDX-License-Identifier: MIT
 -->
 # Windows実演の制作記録 / Windows recording record
 
+2026-10-14更新: 現在の日英MP4は各75秒の操作デモrevision 1.1.0です。別ウィンドウ・ダークモード・Syntax・Light Steps BGMを追加した[更新記録](DEMO-UPDATE-1.1.0.md)を参照してください。以下は旧revision 1.0.0の収録記録として保持します。
+
 版 / Version: 1.2.0
 
 日本語・英語を別々に録画しました。動画はスライドやWeb上の再現画面ではなく、変更していないmdEditor 1.0.5のWPF/WebView2ウィンドウをWindowsデスクトップから収録したものです。

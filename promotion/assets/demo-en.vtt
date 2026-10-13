@@ -1,10 +1,10 @@
 WEBVTT
 
 NOTE
-File: promotion/assets/demo-en.vtt
-Description: Windows demonstration captions
+File: demo-en.vtt
+Description: Extended Windows demonstration captions
 Author: 5garashi.com Design Office
-Created: 2026-10-13
+Created: 2026-10-14
 Version: 1.1.0
 License: MIT
 SPDX-License-Identifier: MIT
@@ -27,12 +27,30 @@ Edit a Mermaid label. The diagram updates.
 00:00:23.000 --> 00:00:25.000
 Save the Markdown document
 
-00:00:25.000 --> 00:00:30.000
+00:00:25.000 --> 00:00:33.000
+Syntax opens a Markdown reference with examples
+
+00:00:33.000 --> 00:00:35.000
+Close the reference and return to editing
+
+00:00:35.000 --> 00:00:46.000
+Open the preview in a separate window beside the editor
+
+00:00:46.000 --> 00:00:53.000
+Switch to dark mode. The separate preview follows.
+
+00:00:53.000 --> 00:00:56.000
+Return the preview to the main window
+
+00:00:56.000 --> 00:01:03.000
 Choose Save as PDF, then a destination
 
-00:00:30.000 --> 00:00:35.000
-PDF saved — including the diagram and equation
+00:01:03.000 --> 00:01:08.000
+PDF saved. PDF pages stay white, even in dark mode.
 
-00:00:35.000 --> 00:00:40.000
-mdEditor · Microsoft Store / 5garashi.com
+00:01:08.000 --> 00:01:10.000
+Return to the document
+
+00:01:10.000 --> 00:01:15.000
+mdEditor · Free on Microsoft Store / 5garashi.com
 

@@ -1,12 +1,12 @@
 WEBVTT
 
 NOTE
-ファイル名 / File: promotion/assets/demo-ja.vtt
-概要 / Description: Windows実演の字幕 / Windows demonstration captions
-作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
-作成日 / Created: 2026-10-13
-版 / Version: 1.1.0
-ライセンス / License: MIT
+File: demo-ja.vtt
+Description: Extended Windows demonstration captions
+Author: 5garashi.com Design Office
+Created: 2026-10-14
+Version: 1.1.0
+License: MIT
 SPDX-License-Identifier: MIT
 
 00:00:00.000 --> 00:00:03.000
@@ -16,10 +16,10 @@ mdEditor — WindowsでMarkdownを編集
 「開く」から、図と数式のサンプルを選択
 
 00:00:09.000 --> 00:00:13.000
-見出しを編集すると、右のプレビューも更新
+見出しを編集。プレビューも更新
 
 00:00:13.000 --> 00:00:17.000
-数式はKaTeXで表示
+KaTeXで数式を表示
 
 00:00:17.000 --> 00:00:23.000
 Mermaidの文字を変更。図にも反映
@@ -27,12 +27,30 @@ Mermaidの文字を変更。図にも反映
 00:00:23.000 --> 00:00:25.000
 Markdownを保存
 
-00:00:25.000 --> 00:00:30.000
-「PDFに保存」で、保存先を選択
+00:00:25.000 --> 00:00:33.000
+「書き方」（英語ではSyntax）で書式と表示例を確認
 
-00:00:30.000 --> 00:00:35.000
-保存完了。図・数式を含むPDFを書き出し
+00:00:33.000 --> 00:00:35.000
+一覧を閉じて、編集画面へ
 
-00:00:35.000 --> 00:00:40.000
-mdEditor · Microsoft Store / 5garashi.com
+00:00:35.000 --> 00:00:46.000
+プレビューを別ウィンドウへ。編集画面と並べて確認
+
+00:00:46.000 --> 00:00:53.000
+ダークモードへ。別ウィンドウも切り替わる
+
+00:00:53.000 --> 00:00:56.000
+プレビューを本体に戻す
+
+00:00:56.000 --> 00:01:03.000
+「PDFに保存」で保存先を選ぶ
+
+00:01:03.000 --> 00:01:08.000
+保存完了。PDFはダークモードでも白い紙面
+
+00:01:08.000 --> 00:01:10.000
+編集画面に戻る
+
+00:01:10.000 --> 00:01:15.000
+mdEditor · Microsoft Storeで無料 / 5garashi.com
 
