@@ -20,7 +20,7 @@ SPDX-License-Identifier: MIT
 | 後続 | YouTube | assets/mdEditor-demo-ja.mp4 / en.mp4 | 横長の操作実演。概要欄は紹介ページ・Store・事務所のリンク |
 | 後続 | TikTok | 既存動画は参考用 | 縦画面で文字が読める実演を別途制作。横長動画を未検証のまま完成扱いしない |
 
-LinkedIn、Zenn、X、YouTube、TikTokへの投稿はまだ行っていません。5garashi.comは2026-10-13に公開確認済み。次にLinkedIn、その後Zennを進めます。配布済み素材と公開済み投稿を区別し、公開URL・日付・使用した資料版を記録します。SNSの閲覧・相談件数などは実際に確認できた結果だけ記録します。
+5garashi.comとLinkedIn英語投稿は2026-10-13に公開確認済み。LinkedInの公開原稿・画像・URLは[LINKEDIN-FIRST-POST.md](LINKEDIN-FIRST-POST.md)に記録しています。Zenn、X、YouTube、TikTokへの投稿はまだ行っていません。次にZennを進めます。配布済み素材と公開済み投稿を区別し、公開URL・日付・使用した資料版を記録します。SNSの閲覧・相談件数などは実際に確認できた結果だけ記録します。
 
 ## Google Sites: GitHubに集約する埋め込み / Single-source embed
 
@@ -46,7 +46,7 @@ HTMLのiframeを使う場合（Google Sitesでは「埋め込みコード」）:
 
 高さ620pxは開始値です。320px幅、文字拡大、日英で確認して必要な高さに調整します。Google Sites側の外枠も調整します。公開紹介枠はリンクが新しいタブで開くことを明記し、iframe内の遷移でサイト全体の操作を閉じ込めません。公開配信の埋め込み可否・Google Sites内での表示は実機確認が必要です。
 
-## LinkedIn: 次の実装 / Next channel
+## LinkedIn: 初回公開済み / First post published
 
 長文投稿にStoreリンクを残し、使い方の公開ページを追加します。日本語 https://5garashi.github.io/mdEditor/ 、英語 https://5garashi.github.io/mdEditor/en.html 。画像は read-ja-landscape.png / read-en-landscape.png から開始します。投稿先の個人プロフィールまたは会社ページURL、投稿者名、公開する言語を確認して投稿します。本人の開発作品であることを明記します。
 
