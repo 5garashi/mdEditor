@@ -11,6 +11,8 @@ SPDX-License-Identifier: MIT
 
 プロフィール: https://www.tiktok.com/@5garashi_com
 
+**現在の公開状態 / Current publication:** 2026-10-14にLight Steps付き動画を「誰でも」で公開しました。[投稿を見る](https://www.tiktok.com/@5garashi_com/video/7696190069094272263)。設定・確認範囲は[PUBLICATION.md](PUBLICATION.md)を参照してください。以下の制作記録の「未投稿」は、公開前の工程時点の記述です。
+
 本人の依頼に基づき、ログイン済みの新規アカウントを以下の内容へ設定し、保存後の画面で反映を確認しました。
 
 | 項目 | 保存内容 |
