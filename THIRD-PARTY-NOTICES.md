@@ -3,14 +3,14 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.2.0
+版 / Version: 1.3.0
 ライセンス / License: MIT
 最終更新 / Last updated: 2026-10-13
 SPDX-License-Identifier: MIT
 -->
 # 素材・権利表記 / Asset and license notices
 
-版 / Version: 1.2.0
+版 / Version: 1.3.0
 
 ## 公式ロゴ・マーク / Official logos and mark
 
@@ -24,7 +24,7 @@ License: Creative Commons Attribution-NoDerivatives 4.0 International (CC BY-ND 
 
 mdEditorのソースライセンスはMIT、Copyright (c) 2026 5garashi.com設計事務所 / 5garashi.com Design Office。本キットのコード・文書・字幕もMIT。[LICENSE](LICENSE)に本文を同梱します。画面内の公式ロゴ・マークには上記CC BY-ND 4.0が適用されます。
 
-日英の実演はmdEditorソース版1.0.5のWindows操作を録画し、字幕と余白を追加しています。公式テーマ音源・ナレーション・その他の音楽は使用していません。ロゴを再着色・変形していません。
+日英の実演はmdEditorソース版1.0.5のWindows操作を録画し、字幕と余白を追加しています。更新版1.1.0のBGMはオリジナル曲Light Steps v1（125 BPM、5/4）。5garashi.com設計事務所の依頼に基づきCodexが作曲・音源生成しました。20小節48秒を繰り返し、75秒に合わせて末尾をフェードしています。音楽の公開ライセンスは制作元記録では未指定で、コード・字幕のMITや公式ロゴのCC BY-ND 4.0を自動適用しません。[制作元](https://github.com/5garashi/mdEditor/tree/promotion/site-integration/promotion/integration/tiktok/music)を参照してください。公式テーマ曲やナレーションは使用していません。ロゴを再着色・変形していません。
 
 字幕のMeiryo、ページと画面のYu Gothic・Segoe UI等はWindowsなどにインストールされた書体を使用。フォントファイルは同梱していません。アプリ画面にMermaid・KaTeX・CodeMirrorの描画は含まれますが、それらのソフトウェア自体はこのキットに同梱しません。アプリの部品の名前・版・ライセンスは[mdEditor THIRD-PARTY-NOTICES.md](https://github.com/5garashi/mdEditor/blob/main/THIRD-PARTY-NOTICES.md)を参照してください。
 
