@@ -8,6 +8,7 @@ SPDX-License-Identifier: MIT
 import copy
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 import sync
 
@@ -157,6 +158,30 @@ class SyncTests(unittest.TestCase):
             self.assertIn('watch?v=AbCdEf12345', page)
             self.assertIn('Demo &lt;title&gt;', page)
             self.assertIn('youtube-en.html', (p/'en.html').read_text())
+
+    def test_public_visibility_eventual_consistency(self):
+        self.config['videos'][0]['target_privacy'] = 'public'
+        sync.sync(self.config, self.store, self.api, 'sync')
+        original = self.api.video
+        reads = [0]
+        def delayed(video_id, channel):
+            result = original(video_id, channel)
+            if self.api.status == 'public':
+                reads[0] += 1
+                if reads[0] <= 2: result['status']['privacyStatus'] = 'private'
+            return result
+        self.api.video = delayed
+        with patch('sync.time.sleep'):
+            sync.sync(self.config, self.store, self.api, 'publish')
+        self.assertEqual(self.store.data['latest']['en']['id'], 'test-video-id')
+
+    def test_visibility_restriction_does_not_mark_public(self):
+        self.config['videos'][0]['target_privacy'] = 'public'
+        sync.sync(self.config, self.store, self.api, 'sync')
+        self.api.privacy = lambda *args: None
+        with patch('sync.time.sleep'), self.assertRaisesRegex(RuntimeError, 'Visibility differs'):
+            sync.sync(self.config, self.store, self.api, 'publish')
+        self.assertEqual(self.store.data['latest'], {})
 
 
 if __name__ == '__main__':

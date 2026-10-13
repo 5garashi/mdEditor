@@ -13,6 +13,7 @@ from pathlib import Path
 import re
 import subprocess
 import sys
+import time
 
 ROOT = Path(__file__).resolve().parents[4]
 CONFIG = Path(__file__).with_name('release.json')
@@ -239,6 +240,11 @@ def sync(config, state, api, action, recover=None):
             api.privacy(video_id, video, v['target_privacy'])
             # Confirm actual privacy; do not assume the API/project allows public visibility.
             verified = api.video(video_id, config['channel_id'])
+            for _ in range(5):
+                if verified['status']['privacyStatus'] == v['target_privacy']:
+                    break
+                time.sleep(2)
+                verified = api.video(video_id, config['channel_id'])
             if verified['status']['privacyStatus'] != v['target_privacy']:
                 raise RuntimeError('Visibility differs from requested setting; check Studio/API project.')
             record['phase'] = 'published'
