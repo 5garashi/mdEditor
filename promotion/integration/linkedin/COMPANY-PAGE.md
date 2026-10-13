@@ -9,7 +9,7 @@ SPDX-License-Identifier: MIT
 -->
 # LinkedIn会社ページ / LinkedIn company page
 
-状態: 本人ログイン後に会社ページの新規作成を試みましたが、LinkedInのつながり数制限で停止。会社ページは未作成・未公開。紹介文と画像は準備済みです。
+状態: 本人ログイン後に会社ページの新規作成を試みましたが、LinkedInのつながり数制限で停止。その後、本人の指示で保留。会社ページは未作成・未公開。紹介文と画像は準備済みです。
 
 管理者は、以前mdEditor紹介を投稿した個人プロフィール https://www.linkedin.com/in/motomasa-igarashi-83b575355/ の本人アカウントを使用します。X登録に使用した別アカウントと混同しません。
 
