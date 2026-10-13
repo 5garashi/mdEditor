@@ -10,3 +10,9 @@ artifacts/
 
 # CodeMirror build tooling
 tools/codemirror/node_modules/
+
+# YouTube OAuth credentials and generated deployment state (never publish secrets).
+.youtube-runtime/
+client_secret*.json
+youtube-credentials*.json
+promotion/integration/youtube/automation/__pycache__/

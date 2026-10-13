@@ -99,6 +99,8 @@ SPDX-License-Identifier: MIT
         (HERE/f'office-card-{lang}.html').write_text(bridge,encoding='utf-8')
         # Embed this URL in Google Sites to keep card maintenance in GitHub too.
         (output/f'office-card-{lang}.html').write_text(bridge,encoding='utf-8')
+    from youtube.automation.latest_pages import generate_latest
+    generate_latest(output, PROMO.parent / '.youtube-runtime' / 'state.json')
     print('Built:', output)
 
 if __name__ == '__main__':

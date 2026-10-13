@@ -1,0 +1,31 @@
+<!--
+File: description-en.txt
+Description: English YouTube demo description; header omitted from API upload
+Author: 5garashi.com Design Office
+Created: 2026-10-13
+Version: 1.0.0
+License: MIT
+SPDX-License-Identifier: MIT
+-->
+mdEditor is a free Markdown editor for Windows, developed by 5garashi.com Design Office.
+
+This demo shows opening a document, editing Markdown, previewing diagrams and equations, and saving a PDF.
+Recorded using source build 1.0.5. The Microsoft Store build number has not been verified.
+
+Guide, demos and sample documents:
+https://5garashi.github.io/mdEditor/en.html
+
+Get mdEditor from Microsoft Store:
+https://apps.microsoft.com/detail/9nww2qrclmhc?hl=en-US&gl=US
+
+Electronic design, software development and digital support:
+https://www.5garashi.com/
+
+Source code and feedback:
+https://github.com/5garashi/mdEditor
+
+Design reference: 5garashi.com Design Office Identity v4.12.0
+https://5garashi.github.io/5garashi-identity/
+Official logo: CC BY-ND 4.0. Description: MIT.
+Author: 5garashi.com Design Office
+Last updated: 2026-10-13 JST

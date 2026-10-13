@@ -19,11 +19,19 @@ if __name__=='__main__':
     args=parser.parse_args()
     repo=PROMO.parent
     remote=run('git','remote','get-url','origin',cwd=repo)
-    if remote!='https://github.com/5garashi/mdEditor.git':
+    if remote.removesuffix('.git')!='https://github.com/5garashi/mdEditor':
         raise RuntimeError('Unexpected remote; no publication performed.')
     if run('git','status','--porcelain',cwd=repo):
         raise RuntimeError('Commit source changes first; no publication performed.')
     sha=run('git','rev-parse','HEAD',cwd=repo)
+    # Preserve latest YouTube links when Pages is rebuilt outside the release workflow.
+    youtube_branch = 'promotion/youtube-state'
+    if run('git','ls-remote','--heads','origin',youtube_branch,cwd=repo):
+        run('git','fetch','origin',youtube_branch,cwd=repo)
+        state = run('git','show','FETCH_HEAD:state.json',cwd=repo)
+        runtime = repo / '.youtube-runtime'
+        runtime.mkdir(exist_ok=True)
+        (runtime / 'state.json').write_text(state, encoding='utf-8')
     scratch=repo.parent/'work'
     scratch.mkdir(exist_ok=True)
     with tempfile.TemporaryDirectory(prefix='mdeditor-pages-',dir=scratch) as tmp:

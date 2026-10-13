@@ -1,0 +1,8 @@
+# File: requirements.txt
+# Description: YouTube automation and local OAuth dependencies
+# Author: 5garashi.com Design Office
+# Created: 2026-10-13
+# License: MIT
+# SPDX-License-Identifier: MIT
+google-api-python-client==2.201.0
+google-auth-oauthlib==1.5.0

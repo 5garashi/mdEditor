@@ -1,0 +1,34 @@
+{
+  "enabled": false,
+  "operation": "sync",
+  "request_id": "2026-10-13-initial-setup",
+  "channel_id": "UCI_NiKGav2fQZu0IRMxQUeg",
+  "videos": [
+    {
+      "key": "demo-en",
+      "revision": "1.0.0",
+      "media": "promotion/assets/mdEditor-demo-en.mp4",
+      "language": "en",
+      "title": "mdEditor Demo — Preview Markdown, Diagrams & Math on Windows",
+      "description_file": "promotion/integration/youtube/automation/description-en.txt",
+      "thumbnail": "promotion/multichannel/social/read-en-landscape.png",
+      "captions": "promotion/assets/demo-en.vtt",
+      "category_id": "28",
+      "tags": ["Markdown", "Windows", "Mermaid", "KaTeX", "mdEditor"],
+      "target_privacy": "unlisted"
+    },
+    {
+      "key": "demo-ja",
+      "revision": "1.0.0",
+      "media": "promotion/assets/mdEditor-demo-ja.mp4",
+      "language": "ja",
+      "title": "mdEditor 操作デモ — Markdown・図・数式を表示してPDFに保存",
+      "description_file": "promotion/integration/youtube/automation/description-ja.txt",
+      "thumbnail": "promotion/multichannel/social/read-ja-landscape.png",
+      "captions": "promotion/assets/demo-ja.vtt",
+      "category_id": "28",
+      "tags": ["Markdown", "Windows", "Mermaid", "KaTeX", "mdEditor"],
+      "target_privacy": "unlisted"
+    }
+  ]
+}
