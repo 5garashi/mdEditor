@@ -109,7 +109,7 @@ Get-Content -Raw -LiteralPath "$youtubePrivate/youtube-credentials.json" | gh se
 4. 一般公開をAPIで再取得して確認後、最新版を状態ブランチへ記録します。PROMOTION_REPO_TOKENがあればgh-pagesも更新します。
 5. 紹介ページには最新版の入口 **youtube.html / youtube-en.html** が追加されます。動画のURLが変わっても、この入口URLは変わりません。YouTubeへの通信はリンクをクリックした後に発生します。
 
-現在、最新版入口URLはまだ生成・公開していません。一般公開動画の確認後に初めて生成されます。Google SitesやSNS本文のリンクは自動変更しません。今後はこの固定入口を案内すると、リンクの貼り替えを減らせます。
+最新版入口URLは、一般公開動画の確認後に生成します。2026-10-13に、ローカルの公開処理からyoutube.html / youtube-en.htmlを公開し、日英紹介ページのナビゲーションへ追加しました。日英ともHTTP 200と正しい動画リンクを確認済みです。Google SitesやSNS本文のリンクは自動変更しません。今後はこの固定入口を案内すると、リンクの貼り替えを減らせます。
 
 ## 更新時の操作 / Future updates
 

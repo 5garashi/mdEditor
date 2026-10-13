@@ -62,6 +62,16 @@ PROMOTION_REPO_TOKENはまだ登録していないため、将来の一般公開
 
 最新版の動画ID・URLはpromotion/youtube-stateに保存済みです。PROMOTION_REPO_TOKENが未設定のため、この実行では紹介ページの自動更新をスキップしています。YouTubeの一般公開自体は完了しています。
 
+## 紹介ページとの接続 / Landing-page integration — 2026-10-13
+
+その後、ローカルのpublish.pyから最新版の状態を読み込み、既存のgh-pagesへ公開しました。WindowsでGitのUTF-8出力を読み取る修正を行っています。
+
+- 日本語入口: https://5garashi.github.io/mdEditor/youtube.html
+- 英語入口: https://5garashi.github.io/mdEditor/youtube-en.html
+- 両方のHTTP 200と、各言語の正しい動画IDを確認。日英紹介ページにも入口リンクを追加。
+- Pages公開コミット: 3c256915b46d6ff03b1c5c03263068419ee70ebf。
+- 今回の公開はローカルで実施。PROMOTION_REPO_TOKEN未登録のため、将来のActionsからのPages自動更新は引き続き未有効。
+
 ---
 
 **作成者 / Author**: 5garashi.com設計事務所 / 5garashi.com Design Office
