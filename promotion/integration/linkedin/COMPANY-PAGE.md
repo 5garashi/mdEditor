@@ -9,7 +9,7 @@ SPDX-License-Identifier: MIT
 -->
 # LinkedIn会社ページ / LinkedIn company page
 
-状態: 原稿を準備中。現在のブラウザーはLinkedIn未ログイン。会社ページの有無は未確認。新規作成・公開はまだ実施していません。
+状態: 本人ログイン後に会社ページの新規作成を試みましたが、LinkedInのつながり数制限で停止。会社ページは未作成・未公開。紹介文と画像は準備済みです。
 
 管理者は、以前mdEditor紹介を投稿した個人プロフィール https://www.linkedin.com/in/motomasa-igarashi-83b575355/ の本人アカウントを使用します。X登録に使用した別アカウントと混同しません。
 
@@ -22,7 +22,7 @@ SPDX-License-Identifier: MIT
 | Website | https://www.5garashi.com/ |
 | タグライン | Electronic design, software development and practical digital support. |
 | 業種候補 | Engineering Services。実画面の選択肢と事業内容に合わせて確認 |
-| 規模・組織形態 | 本人に確認中。未確認の人数や法人形態を入力しない |
+| 規模・組織形態 | 本人確認済み: 個人事業、自分1人。実画面で対応する選択肢を選ぶ |
 | 所在地・設立年 | 必要になった場合に本人へ確認。公開住所は推測しない |
 
 ## 英語の概要 / English About
@@ -80,6 +80,16 @@ https://5garashi.github.io/mdEditor/
 ## 実装後の記録 / Publication record
 
 公開URL、作成日、確認した管理者、保存した項目、未確認の項目をここに追記します。会社ページの作成と、会社名義の投稿を区別します。今回の設定依頼だけで会社名義の投稿を公開した扱いにしません。
+
+### 2026-10-13: 作成条件による停止 / Creation blocked by platform requirements
+
+- 本人がMOTOMASA IGARASHIプロフィールへログインしたことを確認。
+- MeメニューのManageにはPosts & Activity、Job Posting Accountが表示され、管理中の会社ページは表示されなかった。
+- For Business → Create a Company Page → Companyへ進んだところ、作成フォームではなく制限ダイアログが表示された。
+- 表示: `Feature not available` / `You don’t have enough connections to create a LinkedIn Page`。
+- LinkedIn側の作成条件を満たしていないため、会社ページの作成は実施できていない。必要なつながり数は画面に表示されていない。
+- 知人への招待は送信していない。本人が実際に知っている相手とつながり、作成条件が満たされた後に再開する。
+- カバー・ロゴのアップロード、日英概要・会社情報の保存は、作成フォームへ進めていないため未実施。
 
 参考: [LinkedIn公式の会社ページ作成手順](https://www.linkedin.com/help/linkedin/answer/a544879)、[事務所ホームページ](https://www.5garashi.com/)。デザイン基準: [Design Office Identity v4.12.0](https://5garashi.github.io/5garashi-identity/)。本文はMIT、公式ロゴはCC BY-ND 4.0。
 
