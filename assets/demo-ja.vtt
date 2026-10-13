@@ -1,0 +1,38 @@
+WEBVTT
+
+NOTE
+ファイル名 / File: promotion/assets/demo-ja.vtt
+概要 / Description: Windows実演の字幕 / Windows demonstration captions
+作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
+作成日 / Created: 2026-10-13
+版 / Version: 1.1.0
+ライセンス / License: MIT
+SPDX-License-Identifier: MIT
+
+00:00:00.000 --> 00:00:03.000
+mdEditor — WindowsでMarkdownを編集
+
+00:00:03.000 --> 00:00:09.000
+「開く」から、図と数式のサンプルを選択
+
+00:00:09.000 --> 00:00:13.000
+見出しを編集すると、右のプレビューも更新
+
+00:00:13.000 --> 00:00:17.000
+数式はKaTeXで表示
+
+00:00:17.000 --> 00:00:23.000
+Mermaidの文字を変更。図にも反映
+
+00:00:23.000 --> 00:00:25.000
+Markdownを保存
+
+00:00:25.000 --> 00:00:30.000
+「PDFに保存」で、保存先を選択
+
+00:00:30.000 --> 00:00:35.000
+保存完了。図・数式を含むPDFを書き出し
+
+00:00:35.000 --> 00:00:40.000
+mdEditor · Microsoft Store / 5garashi.com
+

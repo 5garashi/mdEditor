@@ -1,0 +1,38 @@
+WEBVTT
+
+NOTE
+File: promotion/assets/demo-en.vtt
+Description: Windows demonstration captions
+Author: 5garashi.com Design Office
+Created: 2026-10-13
+Version: 1.1.0
+License: MIT
+SPDX-License-Identifier: MIT
+
+00:00:00.000 --> 00:00:03.000
+mdEditor — Markdown on Windows
+
+00:00:03.000 --> 00:00:09.000
+Open a sample with diagrams and math
+
+00:00:09.000 --> 00:00:13.000
+Edit the heading. The preview updates.
+
+00:00:13.000 --> 00:00:17.000
+Preview the equation with KaTeX
+
+00:00:17.000 --> 00:00:23.000
+Edit a Mermaid label. The diagram updates.
+
+00:00:23.000 --> 00:00:25.000
+Save the Markdown document
+
+00:00:25.000 --> 00:00:30.000
+Choose Save as PDF, then a destination
+
+00:00:30.000 --> 00:00:35.000
+PDF saved — including the diagram and equation
+
+00:00:35.000 --> 00:00:40.000
+mdEditor · Microsoft Store / 5garashi.com
+
