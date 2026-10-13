@@ -24,7 +24,7 @@ assert not broken,broken
 port=free_port()
 proc=subprocess.Popen([r'C:\Program Files\Google\Chrome\Application\chrome.exe','--headless','--disable-gpu','--no-first-run',f'--user-data-dir={OUT.parent/"integration-browser"}',f'--remote-debugging-port={port}','about:blank'],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
 cdp=None
-results={'integration_version':'1.0.0','date':'2026-10-13 JST','local_references':'pass','cases':[],'unverified':['Google Sites embed','live GitHub Pages','Narrator','actual Windows forced colors']}
+results={'integration_version':(HERE/'VERSION').read_text().strip(),'date':'2026-10-13 JST','local_references':'pass','cases':[],'unverified':['Google Sites embed','live GitHub Pages','Narrator','actual Windows forced colors']}
 try:
     cdp=CdpSession(wait_for_page(port,timeout=20)['webSocketDebuggerUrl'])
     results['browser']=cdp.send('Browser.getVersion')['product']

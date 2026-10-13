@@ -3,11 +3,15 @@
 概要 / Description: GitHubで一元管理する公開構成 / Single-source publication plan
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-13
-版 / Version: 1.0.0
+版 / Version: 1.1.0
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
 # GitHub一元管理と5garashi.comからの導線 / Single-source publication
+
+2026-10-13更新: ユーザーのGitHub・Google Sites実装依頼により、原本ブランチ promotion/site-integration と公開生成物 gh-pages を使用する方式へ進めます。運用と媒体順は [CHANNELS.md](CHANNELS.md) を参照してください。以下のActions手動公開案はmain統合後の選択肢で、現在の公開方式とは異なります。公開履歴は DEPLOYMENT.md に記録します。
+
+現在の公開手順: 原本をコミット・pushした後、`python promotion/integration/publish.py --push` を実行。GitHub Pagesをgh-pagesのルートから公開する設定にします。公開生成物は原本から作り、mainの変更やマージを伴いません。Google Sitesには office-card-ja.html / office-card-en.html の公開URLを埋め込みます。
 
 資料原本は `5garashi/mdEditor` の `promotion/` に置きます。公開HTML・画像・動画・サンプル・PDFをGitHub Pagesから配信し、5garashi.comには紹介文とリンクだけを置きます。記事の原本はGitHubのMarkdown表示で読みます。動画、PDFをGoogle Sitesに複製しません。
 

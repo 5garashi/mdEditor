@@ -15,6 +15,8 @@ HERE = Path(__file__).resolve().parent
 PROMO = HERE.parent
 BASE = 'https://5garashi.github.io/mdEditor/'
 VERSION = (HERE / 'VERSION').read_text().strip()
+SOURCE_REF = 'promotion/site-integration'
+SOURCE = 'https://github.com/5garashi/mdEditor/'
 
 def generate(output):
     if output == PROMO or PROMO in output.parents or output in PROMO.parents:
@@ -60,6 +62,8 @@ def generate(output):
 SPDX-License-Identifier: MIT
 -->
 <!doctype html><html lang="{lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark"><title>{html.escape(title)} | 5garashi.com</title><link rel="stylesheet" href="style.css"><script src="player.js" defer></script><style>main{{padding-top:2rem}}section{{max-width:900px}}.actions{{align-items:start}}</style></head><body><a class="skip" href="#main">{t('本文へ移動','Skip to content')}</a>{header}<main id="main"><h1>{title}</h1>{body}</main><footer><p>{link('https://www.5garashi.com/', t('開発した事務所','Developer'))}{link('https://github.com/5garashi/mdEditor/tree/main/promotion', t('資料の原本・更新履歴','Source and history'))}</p><p class="note">{t('資料キット','Material kit')}: {(PROMO/'VERSION').read_text().strip()} · {t('導線','Integration')}: {VERSION}</p><p class="note">Design Office Identity v4.12.0 · <a href="https://5garashi.github.io/5garashi-identity/">{t('デザイン基準','Design reference')}</a></p><p class="note">5garashi.com設計事務所 / 5garashi.com Design Office · 2026-10-13 JST</p></footer></body></html>'''
+            doc = doc.replace(SOURCE+'tree/main/promotion',SOURCE+'tree/'+SOURCE_REF+'/promotion')
+            doc = doc.replace(SOURCE+'blob/main/promotion',SOURCE+'blob/'+SOURCE_REF+'/promotion')
             (output / filename).write_text(doc, encoding='utf-8')
         body = '<p>' + t('無料のWindowsアプリmdEditorを試すための資料です。', 'Resources for trying mdEditor, a free Windows app.') + '</p><div class="actions">' + link(store,t('Microsoft Storeで無料入手','Get it free from Microsoft Store')) + link(landing+'#demo',t('40秒の実演を見る','Watch the 40-second demo')) + '</div>'
         body += section(t('サンプルを保存して開く','Save and open a sample'), '<p>'+t('MarkdownファイルをPCに保存し、mdEditorの「開く」で選びます。','Save the Markdown file to your PC, then choose Open in mdEditor.')+'</p><div class="actions">'+''.join(link('samples/'+name+('.en' if en else '')+'.md',label) for name,label in [('quickstart-engineering-note',t('図と数式の技術メモ','Diagrams and math')),('quickstart-workflow',t('業務手順書','Workflow')),('quickstart-ai-notes',t('回答整理用テンプレート','Answer notes template'))])+'</div><p class="note">'+t('リンク先が表示された場合はブラウザーの保存操作で保存してください。AI生成や数値の自動計算機能はありません。','If your browser displays the file, save it using the browser. No AI generation or automatic calculation is provided.')+'</p>')
@@ -93,6 +97,8 @@ SPDX-License-Identifier: MIT
         if not en:
             bridge=bridge.replace('<!-- File:', '<!-- ファイル名 / File:').replace(' | Author: 5garashi.com Design Office', ' | 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office').replace(' | Created:', ' | 作成日 / Created:').replace(' | Version:', ' | 版 / Version:').replace(' | License:', ' | ライセンス / License:')
         (HERE/f'office-card-{lang}.html').write_text(bridge,encoding='utf-8')
+        # Embed this URL in Google Sites to keep card maintenance in GitHub too.
+        (output/f'office-card-{lang}.html').write_text(bridge,encoding='utf-8')
     print('Built:', output)
 
 if __name__ == '__main__':
