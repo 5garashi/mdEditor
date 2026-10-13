@@ -1,6 +1,6 @@
 {
   "enabled": true,
-  "operation": "sync",
+  "operation": "publish",
   "request_id": "2026-10-13-public-release-sync-2",
   "channel_id": "UCI_NiKGav2fQZu0IRMxQUeg",
   "videos": [
