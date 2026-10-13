@@ -3,11 +3,18 @@
 概要 / Description: YouTube自動更新の変更履歴 / YouTube automation changes
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-13
-版 / Version: 1.0.0
+版 / Version: 1.0.1
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
 # 変更履歴 / Changelog
+
+## 1.0.1 — 2026-10-13
+
+- 公開直後のYouTube状態反映待ちに対応し、読み取りだけを上限付きで再実行。
+- テストの公開範囲を本番のrelease.jsonから分離。16件のテストを確認。
+- 本人の指示で日英の動画を一般公開。APIのpublic状態と匿名oEmbedのHTTP 200を確認。
+- Store版1.0.5の公開を、開発者からの確認として日英の動画説明に反映。
 
 ## 1.0.0 — 2026-10-13
 

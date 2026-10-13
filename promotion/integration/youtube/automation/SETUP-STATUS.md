@@ -3,7 +3,7 @@
 概要 / Description: Google Cloud初期設定の実施記録 / Google Cloud setup status
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-13
-版 / Version: 1.0.0
+版 / Version: 1.0.1
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
@@ -25,7 +25,7 @@ SPDX-License-Identifier: MIT
 | クライアントJSON | ダウンロードし、専用プロジェクトを照合。Git非管理の .youtube-runtime/client_secret.json に保存。内容はログへ出力していない |
 | 初回アクセス許可 | 本人による許可が完了。APIで対象チャンネルIDを確認 |
 | GitHub Secret | YOUTUBE_CREDENTIALS_JSONを登録済み。値はログへ表示していない |
-| YouTube API実投稿 | 日英2本をGitHub Actionsから非公開で同期。release.jsonはenabled:true、operation:sync |
+| YouTube API実投稿 | 日英2本を非公開同期後、本人の明示的な承認で一般公開。release.jsonはenabled:true、operation:publish、target_privacy:public |
 
 既存のAuth-5garashiプロジェクトやWorkspace組織全体の認証設定は変更していません。課金登録・VM等の作成は行っていません。
 
@@ -47,6 +47,20 @@ SPDX-License-Identifier: MIT
 PROMOTION_REPO_TOKENはまだ登録していないため、将来の一般公開に伴うPagesの自動更新は未有効です。現在は公開動画がないので、最新版入口ページの公開も行っていません。
 
 次の作業: 非公開動画を実プレーヤーで確認 → 必要な修正 → 公開範囲を指定してpublish。手順は[README.md](README.md)を参照してください。
+
+## 一般公開 / Public release — 2026-10-13
+
+所有者から「動画内容は後で修正するので、現在の動画を公開」と明示的な指示を受け、日英2本を一般公開しました。動画の再録画は行っていません。
+
+- 日本語: https://www.youtube.com/watch?v=nuddUJCy42k
+- English: https://www.youtube.com/watch?v=pxWoPoUcOLI
+- YouTube APIで両方のprivacyStatus:publicを再取得して確認。
+- 認証情報を付けないYouTube oEmbedの取得が両方ともHTTP 200であることを確認。
+- 説明文には、Store版1.0.5公開を2026-10-13の開発者確認として反映。録画がソース版1.0.5であることを維持。Storeから入手した版での録画・再検証とは記載していません。
+- [公開確定の自動処理](https://github.com/5garashi/mdEditor/actions/runs/38399050166)が成功。
+- 公開直後の読み取りで反映待ちが生じたため、上限付きの状態再取得を実装。テスト用公開範囲を本番設定から独立させ、16件のテストを確認。
+
+最新版の動画ID・URLはpromotion/youtube-stateに保存済みです。PROMOTION_REPO_TOKENが未設定のため、この実行では紹介ページの自動更新をスキップしています。YouTubeの一般公開自体は完了しています。
 
 ---
 

@@ -3,13 +3,13 @@
 概要 / Description: GitHubからYouTubeへ更新する仕組みと初期設定 / YouTube release automation and setup
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-13
-版 / Version: 1.0.0
+版 / Version: 1.0.1
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
 # GitHubからYouTubeを更新する / YouTube release automation
 
-**現状: 本人の認証とGitHub Secrets登録が完了し、日英2本の非公開同期が成功。`enabled: true`、`operation: sync`。** 初期の無効設定は認証後に有効化しました。一般公開・限定公開はまだ行っていません。動画URLと実施結果は[SETUP-STATUS.md](SETUP-STATUS.md)を参照してください。追加機能を含む新しい録画はこの仕組みでは制作しません。
+**現状: 本人の認証とGitHub Secrets登録、日英2本の非公開同期と一般公開が完了。`enabled: true`、`operation: publish`、`target_privacy: public`。** 公開は本人の明示的な指示に基づき実行しました。動画URLと実施結果は[SETUP-STATUS.md](SETUP-STATUS.md)を参照してください。追加機能を含む新しい録画はこの仕組みでは制作しません。
 
 ## 仕組み / How it works
 
