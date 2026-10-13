@@ -23,15 +23,30 @@ SPDX-License-Identifier: MIT
 | サポート・連絡先 | moto@5garashi.com |
 | OAuthクライアント | デスクトップアプリ、5garashi Promotion PC |
 | クライアントJSON | ダウンロードし、専用プロジェクトを照合。Git非管理の .youtube-runtime/client_secret.json に保存。内容はログへ出力していない |
-| 初回アクセス許可 | PCの認証ヘルパーを起動。Googleの選択・許可操作は本人に引き継ぎ |
-| GitHub Secret | まだ登録していない |
-| YouTube API実投稿 | 未実施。release.jsonはenabled:falseのまま |
+| 初回アクセス許可 | 本人による許可が完了。APIで対象チャンネルIDを確認 |
+| GitHub Secret | YOUTUBE_CREDENTIALS_JSONを登録済み。値はログへ表示していない |
+| YouTube API実投稿 | 日英2本をGitHub Actionsから非公開で同期。release.jsonはenabled:true、operation:sync |
 
 既存のAuth-5garashiプロジェクトやWorkspace組織全体の認証設定は変更していません。課金登録・VM等の作成は行っていません。
 
-本人が認証を完了すると .youtube-runtime/youtube-credentials.json に保存されます。クライアントJSONはChromeのダウンロードフォルダーにも保存されています。両方とも公開リポジトリへ追加せず、GitHubにはSecrets経由で登録します。
+本人認証後の情報は .youtube-runtime/youtube-credentials.json に保存されています。クライアントJSONはChromeのダウンロードフォルダーにも保存されています。いずれも公開リポジトリへ追加せず、認証情報はGitHub Secrets経由で登録しました。
 
-次の作業: 本人のアクセス許可 → 対象チャンネル確認 → GitHub Secrets登録 → 非公開動画の初回同期・実機検証。手順は[README.md](README.md)を参照してください。
+## 初回同期の検証 / First live synchronization
+
+[GitHub Actions実行](https://github.com/5garashi/mdEditor/actions/runs/38387765873)が成功しました。
+
+| 動画 | YouTube URL | API読み取り確認 |
+| --- | --- | --- |
+| English | https://www.youtube.com/watch?v=pxWoPoUcOLI | private、processing:succeeded、タイトル・説明が原稿と一致、英語字幕serving |
+| 日本語 | https://www.youtube.com/watch?v=nuddUJCy42k | private、processing:succeeded、タイトル・説明が原稿と一致、日本語字幕serving |
+
+サムネイル設定APIも成功しました。一般公開・限定公開への切り替えはまだ実行していません。動画URLは所有者アカウントでログインして確認します。実プレーヤーでの字幕・画質・透かしの目視確認はまだ未実施です。
+
+同じGitHub Actions実行を再実行し、成功を確認。状態ブランチの動画レコードは2件のままで、両方のIDとready状態が維持されました。再実行で新しい動画を作らず更新できることを実環境で確認しました。
+
+PROMOTION_REPO_TOKENはまだ登録していないため、将来の一般公開に伴うPagesの自動更新は未有効です。現在は公開動画がないので、最新版入口ページの公開も行っていません。
+
+次の作業: 非公開動画を実プレーヤーで確認 → 必要な修正 → 公開範囲を指定してpublish。手順は[README.md](README.md)を参照してください。
 
 ---
 

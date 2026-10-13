@@ -9,7 +9,7 @@ SPDX-License-Identifier: MIT
 -->
 # GitHubからYouTubeを更新する / YouTube release automation
 
-**現状: コードと設定ファイルを作成済み。認証未設定のため実投稿は未実施。`enabled: false`。** 今回の既存動画は日英2本。追加機能を含む新しい録画はこの仕組みでは制作しません。
+**現状: 本人の認証とGitHub Secrets登録が完了し、日英2本の非公開同期が成功。`enabled: true`、`operation: sync`。** 初期の無効設定は認証後に有効化しました。一般公開・限定公開はまだ行っていません。動画URLと実施結果は[SETUP-STATUS.md](SETUP-STATUS.md)を参照してください。追加機能を含む新しい録画はこの仕組みでは制作しません。
 
 ## 仕組み / How it works
 
@@ -142,13 +142,13 @@ python promotion/integration/youtube/automation/sync.py sync --recover-key demo-
 
 ## 検証・制約 / Verification and limits
 
-認証不要の14件のテストで、重複防止、応答不明時の停止、途中失敗後のID再利用、別チャンネル拒否、公開前の素材一致、限定公開の最新版除外、既存IDの回収、旧動画へのリンク追記、最新版ページ生成を確認しました。[GitHub Actionsの検証実行](https://github.com/5garashi/mdEditor/actions/runs/38371234040)も成功。Googleクライアント導入・APIメソッド読み込みと、既存サイトの生成を確認しました。Google OAuth・実YouTube API・GitHub Actionsの実投稿・実Pages配信はまだ未検証です。モックの成功を実投稿の成功とは扱いません。
+認証不要の14件のテストで、重複防止、応答不明時の停止、途中失敗後のID再利用、別チャンネル拒否、公開前の素材一致、限定公開の最新版除外、既存IDの回収、旧動画へのリンク追記、最新版ページ生成を確認しました。[GitHub Actionsの検証実行](https://github.com/5garashi/mdEditor/actions/runs/38371234040)も成功。Googleクライアント導入・APIメソッド読み込みと、既存サイトの生成を確認しました。その後、本人OAuth、実YouTube API、GitHub Actionsからの非公開アップロード・説明・サムネイル・字幕設定が成功しました。APIで処理完了、private、原稿一致、字幕servingを確認しました。実プレーヤーの目視確認、一般公開、実Pages配信はまだ未検証です。モックの成功を実投稿の成功とは扱いません。
 
 Git状態には公開可能な動画ID・ハッシュ・状態だけを保存します。OAuth情報はローカルの非Git管理ファイルとGitHub Secretsのみ。Googleには動画、字幕、サムネイル、説明文と認証情報を送信します。状態と生成した公開ページはGitHubへ送信します。普段のMarkdown文書は送信しません。
 
 今回の依存ライブラリはgoogle-api-python-client 2.201.0（Apache-2.0）、google-auth-oauthlib 1.5.0（Apache-2.0）。Actions実行時にインストールし、mdEditorアプリ配布物へは同梱しません。推移依存もpipで導入されます。既存アプリのLICENSE・PRIVACYは変更しません。
 
-English: GitHub is the source for videos and metadata. Explicit release.json changes trigger the workflow. Sync uploads new files privately and updates existing metadata without changing visibility. Publish verifies processing and asset identity before applying the requested visibility. Durable Git reservations stop ambiguous uploads from being retried automatically. Public releases update stable demo links when the Pages token is configured. OAuth setup and live API verification remain outstanding.
+English: GitHub is the source for videos and metadata. Explicit release.json changes trigger the workflow. Sync uploads new files privately and updates existing metadata without changing visibility. Publish verifies processing and asset identity before applying the requested visibility. Durable Git reservations stop ambiguous uploads from being retried automatically. Public releases update stable demo links when the Pages token is configured. User OAuth and the first private bilingual uploads have succeeded. Player review, public release and live Pages integration remain outstanding.
 
 ## 一次資料 / Primary references
 
