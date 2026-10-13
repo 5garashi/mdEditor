@@ -3,7 +3,7 @@
 概要 / Description: TikTokプロフィールの設定記録 / TikTok profile setup record
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-13
-版 / Version: 1.1.0
+版 / Version: 1.2.0
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
@@ -34,6 +34,16 @@ Web版の今回の編集フォームには、独立したWebsite入力欄は表�
 ## 縦画面の操作デモ / Vertical demo
 
 `video/mdEditor-demo-vertical-en.mp4` は英語字幕付きの縦動画です。名称は **mdEditor Demo** とし、秒数を名称に含めません。この版の長さは49秒、1080×1920、20fps、音声なしです。字幕は映像に焼き込み、別途demo-en.vttも用意しました。
+
+### BGM付き版 / Version with BGM
+
+2026-10-14の本人の依頼に基づき、`video/mdEditor-demo-vertical-en-bgm.mp4` を追加しました。公式テーマ曲 `5garashi_theme.wav`（5/4拍子、96 BPM、Dメジャー・ペンタトニック）を使っています。曲のテンポ・音色・旋律はそのまま、冒頭49秒を使用し、音量を6 dB下げ、開始0.15秒と終了1.5秒にフェードを付けました。公式原本は改変せず作業用フォルダーへ保存し、Identityへの書き込みは行いません。
+
+音源出典: [Design Office Identity 第11条](https://5garashi.github.io/5garashi-identity/#a11)。著作者は5garashi.com設計事務所 / 5garashi.com Design Office、原本ライセンスはCC BY-ND 4.0です。同条の紹介動画・デモBGM用途と、本人のBGM追加依頼に基づく制作です。これは新しい公式テーマの改版ではありません。映像への同期・抜粋・フェードを含むこの処理を、第三者一般への改変許諾として案内しません。
+
+再制作: 無音版を生成した後、`python promotion/integration/tiktok/add_audio.py` を実行します。公式リポジトリのコミットと原本SHA-256を固定し、取得した音源の一致を確認します。動画ストリームはコピーするため、映像・字幕は再圧縮しません。デコードした全フレームのハッシュが無音版と一致し、長さ49秒・ステレオAAC音声・ピークが0 dBTP未満であることを確認します。記録は `video/audio-validation.json`。元の無音版も保持しています。
+
+review.htmlではBGM版を表示します。自動再生はせず、再生・一時停止・音量調整はプレーヤーで操作します。音楽には操作情報を持たせず、字幕だけでも内容が分かります。TikTokへは未投稿で、圧縮後の音量・再生・商用投稿時の音源判定は未確認です。投稿原稿に音楽のクレジットを追加しています。
 
 専用プロファイルで未改変のWindows版ソースビルド1.0.5を操作した、新しい実録画です。Microsoft Storeからインストールしたバイナリの録画ではありません。ユーザーからStore版1.0.5公開の連絡を受けています。
 

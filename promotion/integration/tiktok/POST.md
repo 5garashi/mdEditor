@@ -19,6 +19,8 @@ Guide and samples: https://5garashi.github.io/mdEditor/en.html
 Microsoft Store: https://apps.microsoft.com/detail/9nww2qrclmhc
 
 #Markdown #Windows #Mermaid #Engineering
+
+Music: 5garashi.com Design Office — 5garashi theme, Identity v4.12.0 (CC BY-ND 4.0).
 ```
 
 日本語の紹介原稿:
@@ -33,9 +35,11 @@ Windows用mdEditorをMicrosoft Storeで無料公開しています。
 Microsoft Store: https://apps.microsoft.com/detail/9nww2qrclmhc
 
 #Markdown #Windows #Mermaid #技術メモ
+
+音楽: 5garashi.com設計事務所 — 5garashi theme、Identity v4.12.0（CC BY-ND 4.0）。
 ```
 
-本文中のURLがクリックできるかはTikTokの表示とアカウントの機能に依存します。投稿プレビューで確認し、クリック可能なリンクとは未確認のまま案内しません。追加の楽曲は使わず、映像の焼き込み字幕を維持します。投稿時の商用コンテンツ開示については、その時点のTikTok画面の案内に従い自社紹介であることを明示してください。
+本文中のURLがクリックできるかはTikTokの表示とアカウントの機能に依存します。投稿プレビューで確認し、クリック可能なリンクとは未確認のまま案内しません。BGM版の動画に公式テーマが入っています。TikTok側で追加の楽曲を重ねず、焼き込み字幕を維持します。投稿時の商用コンテンツ開示については、その時点のTikTok画面の案内に従い自社紹介であることを明示してください。
 
 ---
 
