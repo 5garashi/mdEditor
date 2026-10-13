@@ -56,6 +56,7 @@ class SyncTests(unittest.TestCase):
     def setUp(self):
         self.config = sync.load_config()
         self.config['videos'] = [self.config['videos'][0]]
+        self.config['videos'][0]['target_privacy'] = 'unlisted'
         self.store = Store()
         self.api = API(self.config['channel_id'])
 
