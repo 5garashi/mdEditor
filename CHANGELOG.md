@@ -12,6 +12,16 @@
 
 The version number lives in [VERSION](./VERSION). Add each new version at the top, with a `## version — date` heading (used as the GitHub Release notes).
 
+## 1.0.6 — 2026-10-14
+
+- 「HTMLに保存」（Ctrl+Shift+M）を加えた。プレビューの見た目のまま、1 つの HTML ファイルに書き出す。図は SVG、数式は MathML で入り、文書と同じフォルダーの画像はファイルの中に埋め込む。開く側がダークモードなら夜の配色で表示し、外部への通信は起きない（文書の中のネット上の画像を除く）。
+- 「サンプル」から、すべての図・チャート・数式を確かめる「図・チャート表示テスト」（日本語・英語）を開けるようにした（samples/ の 2 つのファイルをアプリに同梱）。
+- 短い文書を PDF にすると、白紙のページが 1 枚増えていたのを直した。PDF の紙の幅でも狭い画面向けの配置が使われ、本文の最小の高さが 1 ページ分になっていたため。
+
+- Added Save as HTML (Ctrl+Shift+M): the preview as it looks, in one HTML file. Diagrams are SVG, math is MathML, and images beside the document are embedded. It switches to the night palette when the reader's system is dark, and makes no connections when opened (except for web images in the document).
+- Samples can open the "Diagram and chart test" of every supported diagram, chart, and formula (Japanese and English; the two files in samples/ are bundled with the app).
+- Fixed an extra blank page in PDFs of short documents. The narrow-screen layout also applied to the PDF page width and made the body at least one page tall.
+
 ## 1.0.5 — 2026-10-12
 
 - 幅の狭いウィンドウ（760px 以下や 200% の拡大）で、ツールバーのファイル名の行の下に大きな空白ができていたのを直した。

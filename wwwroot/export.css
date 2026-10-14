@@ -1,0 +1,204 @@
+/*
+  File: wwwroot/export.css
+  Description: Styles embedded in documents saved as HTML (the preview's look, with no app interface)
+  Author: 5garashi.com Design Office
+  Created: 2026-10-14
+  License: MIT
+  SPDX-License-Identifier: MIT
+*/
+/* Document surface colors (Identity 4-3); the night values apply when the reader's system asks for dark. */
+:root {
+  --document-background: #FFFFFF;
+  --document-foreground: #1A1A1A;
+  --document-rule: #D0D0D0;
+  --document-selection: #C7D0C1;
+  color-scheme: light dark;
+  /* Identity Art. 6: on Windows, Yu Gothic then Meiryo. */
+  font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP", "Yu Gothic UI", "Yu Gothic", "Meiryo", sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+:root:lang(en) {
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Noto Sans", "Yu Gothic UI", "Meiryo", sans-serif;
+}
+
+@media screen and (prefers-color-scheme: dark) {
+  :root {
+    --document-background: #121314;
+    --document-foreground: #BFBFBF;
+    --document-rule: #2B2B2B;
+    --document-selection: #494740;
+  }
+
+  /* Diagrams were drawn in the day palette, so they keep a white ground. */
+  .mermaid svg {
+    padding: 8px;
+    border-radius: 6px;
+    background: #FFFFFF;
+  }
+}
+
+body {
+  margin: 0;
+  color: var(--document-foreground);
+  background: var(--document-background);
+  /* Document surface body text is W4 (Identity 4-3 (4)). */
+  font-weight: 400;
+}
+
+::selection {
+  background: var(--document-selection);
+}
+
+/* A comfortable measure (about 44 full-width characters), centered; code,
+   tables, diagrams, and display math may be wider. */
+main {
+  padding: 24px 18px 48px;
+  overflow-wrap: anywhere;
+}
+
+main > * {
+  max-width: 44rem;
+  margin-inline: auto;
+}
+
+main > :is(pre, table, .mermaid, .math, math) {
+  max-width: min(100%, 80rem);
+}
+
+main > table {
+  width: fit-content;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--document-foreground);
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+/* Headings stay larger than body text (Identity 4-3 (2), (4)). */
+h4 { font-size: 1.12em; }
+h5 { font-size: 1.08em; }
+h6 { font-size: 1.04em; }
+
+h1, h2 {
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--document-rule);
+}
+
+a {
+  color: var(--document-foreground);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+blockquote {
+  margin-left: 0;
+  padding: 4px 14px;
+  border-left: 4px solid var(--document-foreground);
+}
+
+pre {
+  padding: 12px;
+  overflow: auto;
+  border: 1px solid var(--document-foreground);
+  border-radius: 6px;
+}
+
+code {
+  font-family: Consolas, "Cascadia Mono", monospace;
+  font-size: 0.92em;
+}
+
+:not(pre) > code {
+  padding: 1px 4px;
+}
+
+table {
+  display: block;
+  max-width: 100%;
+  border-collapse: collapse;
+  overflow-x: auto;
+}
+
+th, td {
+  padding: 6px 10px;
+  border: 1px solid var(--document-foreground);
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  font-weight: 800;
+}
+
+hr {
+  border: 0;
+  border-top: 2px solid var(--document-rule);
+}
+
+.contains-task-list {
+  padding-left: 1.2em;
+}
+
+.task-list-item {
+  list-style: none;
+}
+
+.task-list-item input {
+  margin: 0 0.45em 0 0;
+  accent-color: var(--document-foreground);
+  vertical-align: middle;
+}
+
+.mermaid {
+  margin: 1em 0;
+  overflow-x: auto;
+  overflow-wrap: normal;
+  text-align: center;
+}
+
+.mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.diagram-error-message {
+  margin: 0 0 6px;
+  padding: 6px 10px;
+  border-left: 4px solid #B92613;
+  white-space: pre-wrap;
+}
+
+math[display="block"] {
+  padding-block: 4px;
+  overflow-x: auto;
+}
+
+@media print {
+  :root {
+    --document-background: #FFFFFF;
+    --document-foreground: #1A1A1A;
+    --document-rule: #D0D0D0;
+  }
+
+  main {
+    padding: 0;
+  }
+
+  main > * {
+    max-width: none;
+  }
+
+  pre, blockquote, tr, img, .mermaid, math[display="block"] {
+    break-inside: avoid;
+  }
+}

@@ -341,6 +341,9 @@ public partial class MainWindow : Window
             case "exportPdf":
                 await ExportPdfAsync();
                 break;
+            case "exportHtml":
+                await ExportHtmlAsync();
+                break;
         }
     }
 
@@ -1159,13 +1162,212 @@ public partial class MainWindow : Window
     // Relative images (images/a.png) are requested from DocumentHost and served
     // here from the document's folder: image files only, never above that folder,
     // and only for <img> loads (the filter's resource context), not for scripts.
+    // A document image (relative to the open file) as a local path, never above
+    // the document's folder and only for image types.
+    private bool TryResolveDocumentImage(string relativeUrlPath, out string path, out string contentType)
+    {
+        path = string.Empty;
+        contentType = string.Empty;
+        var folder = _filePath is null ? null : Path.GetDirectoryName(_filePath);
+        if (folder is null)
+        {
+            return false;
+        }
+
+        try
+        {
+            var root = Path.GetFullPath(folder).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+            var relative = Uri.UnescapeDataString(relativeUrlPath).TrimStart('/');
+            path = Path.GetFullPath(Path.Combine(root, relative));
+            if (!path.StartsWith(root, StringComparison.OrdinalIgnoreCase)
+                || !ImageContentTypes.TryGetValue(Path.GetExtension(path), out var type)
+                || !File.Exists(path))
+            {
+                return false;
+            }
+
+            contentType = type;
+            return true;
+        }
+        catch (Exception ex) when (ex is ArgumentException or NotSupportedException or PathTooLongException
+                                       or SecurityException or UriFormatException)
+        {
+            return false;
+        }
+    }
+
+    // Save as HTML: one self-contained file with the preview as it looks (day
+    // palette, switching to the night palette when the reader's system is dark),
+    // document images embedded, and no address that is contacted on opening
+    // except the document's own web images.
+    private async Task ExportHtmlAsync()
+    {
+        if (_pdfExportActive)
+        {
+            return;
+        }
+
+        _pdfExportActive = true;
+        try
+        {
+            SendToPage(new { type = "pdfExportStatus", message = Strings.Tr("HTMLの保存先を選択してください") });
+            var defaultName = _filePath is null
+                ? Strings.Tr("新しい文書.html")
+                : Path.ChangeExtension(_filePath, ".html");
+            var dialog = new SaveFileDialog
+            {
+                Filter = Strings.Tr("HTML ファイル (*.html)|*.html"),
+                DefaultExt = ".html",
+                AddExtension = true,
+                CheckPathExists = true,
+                OverwritePrompt = true,
+                FileName = Path.GetFileName(defaultName)
+            };
+            Activate();
+            if (dialog.ShowDialog(this) != true)
+            {
+                return;
+            }
+
+            _previewTimer.Stop();
+            var rendered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            _previewRendered = rendered;
+            // Diagrams are redrawn in the day palette, as for a PDF.
+            SendPreview(notifyRendered: true, forPrint: true);
+            var finished = await Task.WhenAny(rendered.Task, Task.Delay(TimeSpan.FromSeconds(15))) == rendered.Task;
+            _previewRendered = null;
+            string json;
+            try
+            {
+                if (!finished && MessageBox.Show(
+                        Strings.Tr("図や数式の描画が15秒以内に終わりませんでした。このままHTMLに書き出しますか？"),
+                        Strings.Tr("HTMLの書き出し"),
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Warning) != MessageBoxResult.Yes)
+                {
+                    return;
+                }
+
+                json = await EditorWebView.CoreWebView2.ExecuteScriptAsync("window.mdeditorExportHtml()");
+            }
+            finally
+            {
+                SendPreview();
+            }
+
+            using var result = JsonDocument.Parse(json);
+            var page = result.RootElement;
+            var body = EmbedDocumentImages(page.GetProperty("html").GetString() ?? string.Empty);
+            var title = page.GetProperty("title").GetString();
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                title = Path.GetFileNameWithoutExtension(dialog.FileName);
+            }
+
+            var styles = await File.ReadAllTextAsync(Path.Combine(AppContext.BaseDirectory, "wwwroot", "export.css"));
+            var lang = DocumentLanguage(_text);
+            var document = $"""
+                <!doctype html>
+                <html lang="{lang}">
+                <head>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1">
+                <meta name="generator" content="mdEditor {AppVersion}">
+                <title>{System.Net.WebUtility.HtmlEncode(title)}</title>
+                <style>
+                {styles}
+                </style>
+                </head>
+                <body>
+                <main>
+                {body}
+                </main>
+                </body>
+                </html>
+
+                """;
+
+            // Write beside the target first so a failure never damages an existing file.
+            var tempPath = Path.Combine(
+                Path.GetDirectoryName(Path.GetFullPath(dialog.FileName))!,
+                $".mdEditor-{Guid.NewGuid():N}.tmp");
+            try
+            {
+                await File.WriteAllTextAsync(tempPath, document, Utf8NoBom);
+                File.Move(tempPath, dialog.FileName, overwrite: true);
+            }
+            finally
+            {
+                if (File.Exists(tempPath))
+                {
+                    try { File.Delete(tempPath); } catch (IOException) { } catch (UnauthorizedAccessException) { }
+                }
+            }
+
+            MessageBox.Show(
+                $"{Strings.Tr("HTMLを保存しました。")}\n\n{dialog.FileName}",
+                Strings.Tr("HTMLの書き出し"),
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            ShowFileError("HTMLを書き込めません。同じ名前のファイルをほかのアプリで開いている場合は閉じるか、別の名前で保存してください", ex);
+        }
+        catch (IOException ex)
+        {
+            ShowFileError("HTMLを書き込めません。同じ名前のファイルをほかのアプリで開いている場合は閉じるか、別の名前で保存してください", ex);
+        }
+        catch (Exception ex) when (ex is COMException or InvalidOperationException or JsonException or KeyNotFoundException)
+        {
+            ShowFileError("HTMLを書き出せません。少し待ってから、もう一度お試しください", ex);
+        }
+        finally
+        {
+            _pdfExportActive = false;
+            SendDocumentInfo();
+        }
+    }
+
+    // The language of the document itself (not of the app): Japanese when its
+    // kana and kanji are at least a quarter as many as its Latin letters.
+    private static string DocumentLanguage(string text)
+    {
+        var japanese = text.Count(c => c is (>= '぀' and <= 'ヿ') or (>= '㐀' and <= '鿿'));
+        var latin = text.Count(char.IsAsciiLetter);
+        return japanese * 4 >= latin && japanese > 0 ? "ja" : "en";
+    }
+
+    // Document images reach the page as https://document.mdeditor.local/...; in
+    // the saved file they become data: URLs, so the file stands on its own.
+    private string EmbedDocumentImages(string html) =>
+        System.Text.RegularExpressions.Regex.Replace(
+            html,
+            "src=\"https://" + System.Text.RegularExpressions.Regex.Escape(DocumentHost) + "(/[^\"]*)\"",
+            match =>
+            {
+                var urlPath = System.Net.WebUtility.HtmlDecode(match.Groups[1].Value);
+                if (!TryResolveDocumentImage(urlPath, out var path, out var contentType))
+                {
+                    return match.Value;
+                }
+
+                try
+                {
+                    return $"src=\"data:{contentType};base64,{Convert.ToBase64String(File.ReadAllBytes(path))}\"";
+                }
+                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+                {
+                    return match.Value;
+                }
+            });
+
     private async void DocumentResourceRequested(
         object? sender,
         CoreWebView2WebResourceRequestedEventArgs e)
     {
         var environment = _environment;
-        var folder = _filePath is null ? null : Path.GetDirectoryName(_filePath);
-        if (environment is null || folder is null || !Uri.TryCreate(e.Request.Uri, UriKind.Absolute, out var uri))
+        if (environment is null || _filePath is null || !Uri.TryCreate(e.Request.Uri, UriKind.Absolute, out var uri))
         {
             return;
         }
@@ -1173,12 +1375,7 @@ public partial class MainWindow : Window
         using var deferral = e.GetDeferral();
         try
         {
-            var root = Path.GetFullPath(folder).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
-            var relative = Uri.UnescapeDataString(uri.AbsolutePath).TrimStart('/');
-            var path = Path.GetFullPath(Path.Combine(root, relative));
-            if (!path.StartsWith(root, StringComparison.OrdinalIgnoreCase)
-                || !ImageContentTypes.TryGetValue(Path.GetExtension(path), out var contentType)
-                || !File.Exists(path))
+            if (!TryResolveDocumentImage(uri.AbsolutePath, out var path, out var contentType))
             {
                 e.Response = environment.CreateWebResourceResponse(null, 404, "Not Found", "");
                 return;

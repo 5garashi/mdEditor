@@ -955,7 +955,9 @@ body.dragging {
  * scroll the whole page vertically so the editor and preview keep a usable
  * height instead of being squeezed under the header and toolbar.
  */
-@media (max-width: 760px), (max-height: 600px) {
+/* Screen only: a PDF page is narrower than 760px too, and min-height: 100vh
+   there made every short document one page plus a blank one. */
+@media screen and (max-width: 760px), screen and (max-height: 600px) {
   html {
     height: auto;
     overflow-x: hidden;
@@ -979,7 +981,7 @@ body.dragging {
   }
 }
 
-@media (max-width: 760px) {
+@media screen and (max-width: 760px) {
   .toolbar {
     align-items: flex-start;
     flex-direction: column;
@@ -1115,6 +1117,8 @@ body.preview-focused .pane-heading {
   :root {
     color-scheme: light;
     background: #FFFFFF;
+    height: auto;
+    overflow: visible;
   }
 
   body,
@@ -1124,6 +1128,7 @@ body.preview-focused .pane-heading {
     display: block;
     width: auto;
     height: auto;
+    min-height: 0;
     overflow: visible;
     color: #1A1A1A;
     background: #FFFFFF;

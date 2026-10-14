@@ -19,7 +19,7 @@ mdEditor（以下「本アプリ」）は、5garashi.com設計事務所が提供
 ### 文書の扱い
 
 - 開いた文書は、利用者の PC の上だけで読み込み、表示し、保存します。文書の内容を5garashi.com設計事務所や第三者に送ることはありません。
-- PDF の書き出しも PC の中で行います。
+- PDF と HTML の書き出しも PC の中で行います。書き出した HTML は、開いても外部に通信しません（文書の中のネット上の画像だけは、その画像のサーバーから読み込みます）。
 - 自動バックアップ（設定でオフにできます）は、保存していない変更を15秒ごとに `%LOCALAPPDATA%\mdEditor\Recovery` に控えます。控えは保存するか正常に終了すると消え、異常終了したときだけ次の起動で復元に使います。
 - 読み上げ（設定でオンにしたときだけ）は、この PC に入っている Windows の音声だけを使います。文章をインターネット上の音声サービスに送ることはありません。
 
@@ -54,7 +54,7 @@ mdEditor (the "app") is a Markdown editor for Windows provided by 5garashi.com D
 ### Your documents
 
 - Documents you open are read, displayed, and saved only on your PC. Their contents are never sent to 5garashi.com Design Office or to any third party.
-- PDF export also happens entirely on your PC.
+- PDF and HTML export also happen entirely on your PC. A saved HTML file makes no connections when opened, except that web images in the document load from their servers.
 - Automatic backup (can be turned off in Settings) copies unsaved changes every 15 seconds to `%LOCALAPPDATA%\mdEditor\Recovery`. The copy is removed when you save or close normally, and is used only to restore your work after an abnormal exit.
 - Read-aloud (only when turned on in Settings) uses only the Windows voices installed on this PC. Text is never sent to an online speech service.
 
