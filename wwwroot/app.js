@@ -34,7 +34,8 @@
     ja: {
       toolbar: "文書操作",
       sample: "サンプル", sampleHeading: "サンプルを開く",
-      sampleIntro: "図と数式を含む短い文書を、編集欄に入れて試せます。選んだときだけ入ります。",
+      sampleIntro: "図と数式を含む文書を、編集欄に入れて試せます。短い例のほかに、使えるすべての図・チャート・数式を確かめる長い文書（日本語・英語）もあります。選んだときだけ入ります。",
+      sampleLoadFailed: "サンプルを読み込めませんでした。mdEditor を入れ直してから、もう一度お試しください。",
       sampleOpen: "開く", sampleOpenLabel: (name) => `サンプル「${name}」を編集欄に入れる`,
       sampleConfirm: "編集欄の内容をサンプルに置き換えます。よろしいですか？",
       about: "このアプリについて", aboutHeading: "このアプリについて", aboutVersion: "バージョン",
@@ -51,6 +52,7 @@
       dividerTitle: "ドラッグまたは矢印キーで左右の幅を調整します",
       fullscreenEditor: "編集画面をウィンドウ全体に表示", fullscreenPreview: "プレビューをウィンドウ全体に表示",
       fullscreenExit: "元の表示に戻す", saved: "保存済み", unsaved: "未保存の変更",
+      html: "HTMLに保存",
       detachPreview: "別ウィンドウで表示", attachPreview: "本体に戻す", attachPreviewMain: "プレビューを本体に戻す",
       pdfStarting: "PDF出力を開始しています",
       findReplace: "検索・置換", findReplaceTitle: "検索・置換 (Ctrl+H)",
@@ -100,7 +102,7 @@
         findReplace: "検索・置換", findNext: "次を検索", findPrev: "前を検索", replaceAll: "すべて置換",
         help: "Markdown の書き方", shortcuts: "キー操作の一覧", fullscreenEditor: "編集画面をウィンドウ全体に表示",
         fullscreenPreview: "プレビューをウィンドウ全体に表示", nextPane: "次の欄へ移動", previousPane: "前の欄へ移動",
-        windowFullscreen: "ウィンドウの全画面表示", settings: "設定", readAloud: "読み上げ・一時停止", stopReading: "読み上げを停止",
+        windowFullscreen: "ウィンドウの全画面表示", settings: "設定", readAloud: "読み上げ・一時停止", stopReading: "読み上げを停止", html: "HTMLに保存",
         detachPreview: "プレビューを別ウィンドウで表示・本体に戻す"
       },
       helpIntro: "左の書き方で入力すると、右のように表示されます。「挿入」を押すと、編集欄のカーソル位置に例を入れます。",
@@ -137,7 +139,8 @@
     en: {
       toolbar: "Document actions",
       sample: "Samples", sampleHeading: "Open a sample",
-      sampleIntro: "Try a short document with diagrams and math. Nothing is inserted until you choose one.",
+      sampleIntro: "Try a document with diagrams and math. Besides the short examples, there are long tests of every supported diagram, chart, and formula (Japanese and English). Nothing is inserted until you choose one.",
+      sampleLoadFailed: "The sample could not be loaded. Reinstall mdEditor, then try again.",
       sampleOpen: "Open", sampleOpenLabel: (name) => `Put the sample "${name}" in the editor`,
       sampleConfirm: "This replaces the editor content with the sample. Continue?",
       about: "About", aboutHeading: "About this app", aboutVersion: "Version",
@@ -154,6 +157,7 @@
       dividerTitle: "Drag or use the arrow keys to resize",
       fullscreenEditor: "Fill window with editor", fullscreenPreview: "Fill window with preview",
       fullscreenExit: "Restore layout", saved: "Saved", unsaved: "Unsaved changes",
+      html: "Save as HTML",
       detachPreview: "Open in its own window", attachPreview: "Return to main window", attachPreviewMain: "Return preview here",
       pdfStarting: "Starting PDF export",
       findReplace: "Find/Replace", findReplaceTitle: "Find/Replace (Ctrl+H)",
@@ -203,7 +207,7 @@
         findReplace: "Find/Replace", findNext: "Find next", findPrev: "Find previous", replaceAll: "Replace all",
         help: "Markdown syntax", shortcuts: "Keyboard shortcuts", fullscreenEditor: "Fill window with editor",
         fullscreenPreview: "Fill window with preview", nextPane: "Next pane", previousPane: "Previous pane",
-        windowFullscreen: "Window full screen", settings: "Settings", readAloud: "Read aloud / pause", stopReading: "Stop reading",
+        windowFullscreen: "Window full screen", settings: "Settings", readAloud: "Read aloud / pause", stopReading: "Stop reading", html: "Save as HTML",
         detachPreview: "Preview in its own window / return"
       },
       helpIntro: "Type the syntax on the left to get the result on the right. Insert puts the example at the cursor in the editor.",
@@ -416,6 +420,8 @@
     saveState.textContent = t("pdfStarting");
     post({ type: "exportPdf" });
   });
+  document.getElementById("html-button").addEventListener("click", () => post({ type: "exportHtml" }));
+
   // Encoding: shown beside the file name, chosen in a dialog, and announced in a
   // notice when it had to be guessed or some bytes could not be read.
   const encodingIds = ["utf-8", "utf-8-bom", "utf-16le", "utf-16be", "shift_jis", "euc-jp", "iso-2022-jp", "windows-1252"];
@@ -1004,6 +1010,7 @@
     { id: "save", keys: "Ctrl+S", button: "save-button", run: () => post({ type: "save" }) },
     { id: "saveAs", keys: "Ctrl+Shift+S", button: "save-as-button", run: () => post({ type: "saveAs" }) },
     { id: "pdf", keys: "Ctrl+Shift+P", button: "pdf-button", run: () => document.getElementById("pdf-button").click() },
+    { id: "html", keys: "Ctrl+Shift+M", button: "html-button", run: () => post({ type: "exportHtml" }) },
     { id: "paper", keys: "Ctrl+Shift+A", button: "paper-button", run: () => paperButton.click() },
     { id: "theme", keys: "Ctrl+Shift+T", button: "theme-button", run: () => themeButton.click() },
     { id: "language", keys: "Ctrl+Shift+L", button: "language-button", run: () => languageButton.click() },
@@ -1187,7 +1194,10 @@
     { ja: "基本の書き方", en: "Basic writing",
       text: {
         ja: "# はじめての Markdown\n\n**太字**、*斜体*、[リンク](https://example.com) が使えます。\n\n1. 見出し\n2. リスト\n3. 引用\n\n> 引用はこのように書きます。\n\n```\nコードはこのように書きます。\n```\n",
-        en: "# Your first Markdown\n\nYou can use **bold**, *italic*, and [links](https://example.com).\n\n1. Headings\n2. Lists\n3. Quotes\n\n> Quotes look like this.\n\n```\nCode looks like this.\n```\n" } }
+        en: "# Your first Markdown\n\nYou can use **bold**, *italic*, and [links](https://example.com).\n\n1. Headings\n2. Lists\n3. Quotes\n\n> Quotes look like this.\n\n```\nCode looks like this.\n```\n" } },
+    // The full rendering tests from samples/ (bundled with the app as wwwroot/samples/).
+    { ja: "図・チャート表示テスト（すべての種類・日本語）", en: "Diagram and chart test (every type, Japanese)", file: "samples/diagram-test.md" },
+    { ja: "図・チャート表示テスト（すべての種類・英語）", en: "Diagram and chart test (every type, English)", file: "samples/diagram-test.en.md" }
   ];
   const sampleDialog = document.getElementById("sample-dialog");
   const sampleList = document.getElementById("sample-list");
@@ -1202,10 +1212,21 @@
       button.type = "button";
       button.textContent = t("sampleOpen");
       button.setAttribute("aria-label", t("sampleOpenLabel")(name));
-      button.addEventListener("click", () => {
+      button.addEventListener("click", async () => {
         if (view.state.doc.length > 0 && !window.confirm(t("sampleConfirm"))) return;
         sampleDialog.close();
-        view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: sample.text[language] } });
+        let text = sample.text?.[language];
+        if (sample.file) {
+          try {
+            const response = await fetch(sample.file);
+            if (!response.ok) throw new Error(String(response.status));
+            text = await response.text();
+          } catch {
+            showNoticeMessage(t("sampleLoadFailed"));
+            return;
+          }
+        }
+        view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: text } });
         editorScroller.scrollTop = 0;
         preview.scrollTop = 0;
         view.focus();
@@ -1625,6 +1646,31 @@
     keepPlace();
     await renderDiagrams(generation, previousSvgs, diagramCache);
     if (generation === renderGeneration) keepPlace();
+  };
+
+  // Save as HTML: the host renders the preview in the day palette (as for a PDF)
+  // and asks for its markup. Math becomes MathML, which browsers show without
+  // the KaTeX fonts; heading ids come back; app-only attributes are dropped.
+  window.mdeditorExportHtml = () => {
+    const copy = preview.cloneNode(true);
+    for (const selector of [".katex-display", ".katex"]) {
+      for (const element of copy.querySelectorAll(selector)) {
+        const math = element.querySelector(".katex-mathml math");
+        if (math) element.replaceWith(math);
+      }
+    }
+    for (const element of copy.querySelectorAll("*")) {
+      if (element.dataset.anchor) element.id = element.dataset.anchor;
+      element.removeAttribute("data-line");
+      element.removeAttribute("data-anchor");
+      if (element.getAttribute("tabindex") === "-1") element.removeAttribute("tabindex");
+      element.classList.remove("reading", "diagram-rendered", "diagram-pending");
+      if (element.classList.length === 0) element.removeAttribute("class");
+    }
+    return {
+      title: copy.querySelector("h1")?.textContent.trim() ?? "",
+      html: copy.innerHTML
+    };
   };
 
   darkScheme.addEventListener("change", () => {

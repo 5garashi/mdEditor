@@ -43,6 +43,17 @@ internal static class Strings
         ["変更を保存しますか？"] = "Save your changes?",
         ["未保存の変更"] = "Unsaved changes",
         ["プレビュー"] = "Preview",
+        ["HTML ファイル (*.html)|*.html"] = "HTML files (*.html)|*.html",
+        ["新しい文書.html"] = "Untitled.html",
+        ["HTMLの保存先を選択してください"] = "Choose where to save the HTML file",
+        ["HTMLの書き出し"] = "HTML export",
+        ["HTMLを保存しました。"] = "The HTML file was saved.",
+        ["図や数式の描画が15秒以内に終わりませんでした。このままHTMLに書き出しますか？"] =
+            "Drawing the diagrams and math did not finish within 15 seconds. Save as HTML anyway?",
+        ["HTMLを書き込めません。同じ名前のファイルをほかのアプリで開いている場合は閉じるか、別の名前で保存してください"] =
+            "The HTML file cannot be written. If another app has a file with this name open, close it there, or save under another name",
+        ["HTMLを書き出せません。少し待ってから、もう一度お試しください"] =
+            "The HTML file cannot be exported. Wait a moment, then try again",
         ["プレビューのウィンドウを開けませんでした。mdEditor を再起動してから、もう一度お試しください。"] =
             "The preview window could not be opened. Restart mdEditor, then try again.",
         ["リンクを開けませんでした。リンク先の場所を確かめて、ブラウザーやエクスプローラーから開いてください。"] = "The link could not be opened. Check where it points, then open it from your browser or File Explorer.",
