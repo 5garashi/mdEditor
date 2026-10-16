@@ -30,6 +30,10 @@ The 5garashi.com logotype and symbol mark in `wwwroot/assets/` are not covered b
 | Microsoft.Web.WebView2 (SDK) | 1.0.4258.31 | BSD-3-Clause (Microsoft) | Copyright (C) Microsoft Corporation | https://www.nuget.org/packages/Microsoft.Web.WebView2 |
 | Mermaid | 11.17.2 | MIT | Copyright (c) 2014 - 2022 Knut Sveidqvist | https://github.com/mermaid-js/mermaid |
 | KaTeX (including fonts) | 0.18.9 | MIT | Copyright (c) 2013-2020 Khan Academy and other contributors | https://github.com/KaTeX/KaTeX |
+| highlight.js (with the PowerShell and Dockerfile grammars) | 11.12.0 | BSD-3-Clause | Copyright (c) 2006, Ivan Sagalaev | https://highlightjs.org/ |
+| Viz.js (WebAssembly build of Graphviz) | 3.31.0 | MIT | Copyright (c) Michael Daines | https://github.com/mdaines/viz-js |
+| Graphviz (inside Viz.js, object code) | 16.1.0 | EPL-1.0 | Copyright (c) AT&T and the Graphviz contributors | https://gitlab.com/graphviz/graphviz |
+| Expat (inside Viz.js, object code) | — | MIT | Copyright (c) 1998-2000 Thai Open Source Software Center Ltd and Clark Cooper; Copyright (c) 2001-2025 Expat maintainers | https://libexpat.github.io |
 | CodeMirror 6 (view 6.43.12, state 6.7.6, commands 6.11.1) | 6 | MIT | Copyright (C) 2018-2021 by Marijn Haverbeke and others | https://codemirror.net/ |
 
 Microsoft Edge WebView2 Runtime is not distributed with mdEditor; it is provided by Windows or installed separately under Microsoft's terms. The .NET runtime's own third-party notices are at https://github.com/dotnet/runtime/blob/main/THIRD-PARTY-NOTICES.TXT.
@@ -86,7 +90,7 @@ Microsoft Edge WebView2 Runtime is not distributed with mdEditor; it is provided
 
 ## MIT License
 
-Applies to: .NET Runtime, HtmlSanitizer, AngleSharp, AngleSharp.Css, ReverseMarkdown, MimeKitLite, DocumentFormat.OpenXml, Mermaid, KaTeX, CodeMirror, and the MIT-licensed libraries above. Each component's copyright notice is listed in the tables above.
+Applies to: .NET Runtime, HtmlSanitizer, AngleSharp, AngleSharp.Css, ReverseMarkdown, MimeKitLite, Viz.js, Expat, DocumentFormat.OpenXml, Mermaid, KaTeX, CodeMirror, and the MIT-licensed libraries above. Each component's copyright notice is listed in the tables above.
 
 ```text
 Copyright (c) <year> <copyright holders>
@@ -169,6 +173,46 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
 DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
 THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+```
+
+## Viz.js, Graphviz, and Expat (wwwroot/lib/graphviz)
+
+`wwwroot/lib/graphviz/viz-global.js` is the unmodified browser build of Viz.js 3.31.0, which contains Graphviz 16.1.0 and Expat in object code form. Graphviz is distributed under the Eclipse Public License 1.0; its source code is available from https://gitlab.com/graphviz/graphviz. The full texts (MIT for Viz.js and Expat, EPL 1.0 for Graphviz) are in `wwwroot/lib/graphviz/LICENSE`, which is shipped with the app. / Graphviz の図を描く Viz.js 3.31.0（Graphviz 16.1.0 と Expat をオブジェクトコードで含む）を改変せずに同梱しています。Graphviz は Eclipse Public License 1.0 で、ソースコードは https://gitlab.com/graphviz/graphviz から入手できます。ライセンスの全文は、アプリと一緒に配る `wwwroot/lib/graphviz/LICENSE` にあります。
+
+## BSD 3-Clause License (highlight.js)
+
+`wwwroot/lib/highlight/` holds the unmodified browser build of highlight.js 11.12.0 (`@highlightjs/cdn-assets`) and its PowerShell and Dockerfile grammars. / コードの色分けに使う highlight.js 11.12.0 のブラウザー用ビルドと、PowerShell・Dockerfile の文法を改変せずに同梱しています。
+
+```text
+BSD 3-Clause License
+
+Copyright (c) 2006, Ivan Sagalaev.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of the copyright holder nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ```
 

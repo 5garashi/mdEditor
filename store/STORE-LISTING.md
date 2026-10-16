@@ -29,6 +29,8 @@ mdEditor is a Markdown editor for Windows that shows your writing as a finished 
 - Also a Markdown viewer. Set mdEditor as the app for .md files, or drop a file onto it, and expand the preview to fill the window for comfortable reading, with no editing in the way. Links to headings and to other Markdown files in the same folder work too.
 - Draw flowcharts, sequence diagrams, Gantt charts, and pie charts with a few lines of text (Mermaid). Write formulas the way you say them (KaTeX).
 - Save a PDF that looks exactly like the preview, diagrams and math included. A4 or Letter.
+- Open Word, HTML, web pages, e-mail (.eml), CSV, JSON, XML, Jupyter Notebooks, and images as Markdown, and save to PDF, HTML, PNG, Word, CSV, JSON, Jupyter Notebook, or plain text. The original file is never changed.
+- Drop or paste pictures into the editor; they are saved beside your document.
 - New to Markdown? Open a built-in sample, or press F1 for a quick syntax guide and insert examples with one click.
 
 **Your work stays safe**
@@ -39,6 +41,7 @@ mdEditor is a Markdown editor for Windows that shows your writing as a finished 
 **Private and quiet**
 - Your documents never leave your PC. No tracking, no accounts, no ads.
 - Diagrams and math work offline.
+- Internet images in a document load only when you allow them.
 
 **Made for everyone**
 - Everything works from the keyboard, with custom shortcuts.
@@ -46,18 +49,28 @@ mdEditor is a Markdown editor for Windows that shows your writing as a finished 
 
 Available in Japanese and English. Made by 5garashi.com Design Office. Open About in the app to find the company, support, and privacy policy links.
 
+**What's new in this version:**
+Colored code: code blocks with a language name, such as Python, JavaScript, C#, PowerShell, or SQL, are colored in the preview and in saved PDF, PNG, HTML, and Word files. Contents inserts a table of contents built from your headings and updates it with one press; its links work in PDF and Word too. Graphviz (DOT) diagrams are drawn offline. Open more formats: Word, HTML and web pages, e-mail, CSV and TSV, JSON, XML, Jupyter Notebooks, and images, all as Markdown. Save As now lists every format, including Word, PNG, CSV, JSON, Jupyter Notebook, and text without Markdown marks. Drop or paste pictures into the editor. Internet images load only after you allow them. Choose the read-aloud language and voice. mdEditor now appears in Open with for these file types.
+
 **Features (bullets):**
 - Live side-by-side preview that scrolls with you
 - Preview on a second display, still in sync with the editor
 - Works as a Markdown viewer too: full-window preview for reading
 - Diagrams and math with no internet connection
-- One-click PDF that matches the preview
+- PDF that looks exactly like the preview
 - Safe saving and automatic crash recovery
 - Opens Shift_JIS, EUC-JP, and UTF-8 files
 - Keyboard-first, screen reader friendly, dark mode
 - No ads, no tracking, no account
+- Open Word, HTML, web pages, e-mail, CSV, JSON, Jupyter Notebooks, and images
+- Save as Word, PNG, HTML, CSV, JSON, Jupyter Notebook, or plain text
+- Drop or paste pictures straight into your document
+- Internet images load only when you allow them
+- Colored code for about 40 languages, kept in PDF and Word
+- Table of contents from your headings, updated with one press
+- Graphviz (DOT) diagrams, drawn offline
 
-**Search terms (up to 7):** markdown editor, markdown, preview, mermaid, pdf, diagram, dual monitor
+**Search terms (up to 7):** markdown editor, preview, mermaid, diagram, PDF, second display, jupyter notebook
 
 **Privacy policy URL:** https://github.com/5garashi/mdEditor/blob/main/PRIVACY.md
 
@@ -103,6 +116,8 @@ mdEditor は、左で書くと右にすぐ仕上がりが表示される Windows
 - ビューアとしても使えます。`.md` ファイルの既定アプリにするか、ファイルをドロップして開き、プレビューをウィンドウいっぱいに広げれば、編集欄なしで読めます。見出しへのリンクや、同じフォルダーのほかの Markdown ファイルへのリンクも使えます。
 - 数行のテキストで、フローチャート・シーケンス図・ガントチャート・円グラフを描けます（Mermaid）。数式も書いたまま表示します（KaTeX）。
 - プレビューそのままの見た目で PDF に保存。図も数式も含みます。用紙は A4 と Letter。
+- Word・HTML・Web ページ・メール（.eml）・CSV・JSON・XML・Jupyter Notebook・画像を Markdown として開き、PDF・HTML・PNG・Word・CSV・JSON・Jupyter Notebook・テキストに保存できます。元のファイルは書き換えません。
+- 画像は編集画面にドロップするか貼り付けるだけで、文書の横に保存して入れます。
 - Markdown が初めてでも大丈夫。内蔵のサンプルを開くか、F1 の書き方一覧からワンクリックで例を入れられます。
 
 **書いたものを守る**
@@ -113,6 +128,7 @@ mdEditor は、左で書くと右にすぐ仕上がりが表示される Windows
 **静かで、安心**
 - 文書は PC の外に出ません。計測も、アカウントも、広告もありません。
 - 図と数式はオフラインで表示できます。
+- 文書の中のインターネット上の画像は、許可したときだけ読み込みます。
 
 **だれにでも使いやすく**
 - 全操作をキーボードで行え、ショートカットも変更できます。
@@ -120,16 +136,26 @@ mdEditor は、左で書くと右にすぐ仕上がりが表示される Windows
 
 日本語と英語に対応します。5garashi.com Design Office が作りました。アプリの「このアプリについて」から、会社紹介・サポート・プライバシーポリシーを開けます。
 
+**このバージョンの新機能:**
+コードの色分け：Python・JavaScript・C#・PowerShell・SQL など、言語名を書いたコードブロックを色分けして表示し、PDF・PNG・HTML・Word に保存しても色が残ります。「目次」ボタンで、見出しから目次を作って入れ、押し直すと新しくなります（目次のリンクは PDF・Word でも使えます）。Graphviz（DOT）の図をオフラインで描けるようになりました。Word・HTML・Web ページ・メール・CSV・TSV・JSON・XML・Jupyter Notebook・画像を、Markdown として開けるようになりました。「名前を付けて保存」で、Word・PNG・CSV・JSON・Jupyter Notebook・記号なしのテキストなど、すべての形式を選べます。画像は、編集画面にドロップするか貼り付けるだけで文書に入ります。インターネット上の画像は、許可したときだけ読み込みます。読み上げの言語と音声を選べるようになりました。これらの形式で、「プログラムから開く」に mdEditor が出ます。
+
 **製品の機能（箇条書き）:**
 - 書きながら横で仕上がりを確認。スクロールも連動
 - 2 台目のディスプレイにプレビューを表示。編集と連動
 - ビューアとしても。プレビューをウィンドウいっぱいに表示
 - 図と数式をオフラインで表示
-- プレビューそのままの PDF をワンクリックで
+- プレビューそのままの見た目で PDF に保存
 - 安全な保存と、異常終了からの自動復元
 - Shift_JIS・EUC-JP・UTF-8 のファイルを開ける
 - キーボードで全操作、画面読み上げ対応、ダークモード
 - 広告なし、計測なし、アカウント不要
+- Word・HTML・Web ページ・メール・CSV・JSON・Jupyter Notebook・画像を開ける
+- Word・PNG・HTML・CSV・JSON・Jupyter Notebook・テキストに保存
+- 画像はドロップや貼り付けで、そのまま文書に
+- ネット上の画像は、許可したときだけ読み込む
+- 約 40 の言語のコードを色分け。PDF・Word にも色が残る
+- 見出しから目次を作り、ボタン 1 つで新しくする
+- Graphviz（DOT）の図をオフラインで表示
 
 **検索用語（7つまで）:** Markdown, マークダウン, エディタ, プレビュー, PDF, 数式, デュアルモニター
 

@@ -15,6 +15,7 @@ using Markdig;
 using Markdig.Extensions.Mathematics;
 using Markdig.Extensions.Tables;
 using Markdig.Extensions.TaskLists;
+using Markdig.Renderers.Html;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 using A = DocumentFormat.OpenXml.Drawing;
@@ -30,6 +31,9 @@ namespace MdEditor;
 // A picture taken from the preview: a diagram or a formula, in document order.
 internal sealed record ExportFigure(byte[] Png, int PixelWidth, int PixelHeight, double Scale);
 
+// A colored piece of a code line, read from the preview (Color is RRGGBB).
+internal sealed record CodeRun(string Text, string Color, bool Bold, bool Italic);
+
 // Markdown to Word: headings, lists, quotes, code, and tables use Word's own
 // styles (so the navigation pane and a table of contents work); diagrams and
 // math are pictures taken from the preview, since Word cannot draw them.
@@ -40,16 +44,25 @@ internal sealed class DocxExport
     private readonly MarkdownPipeline _pipeline;
     private readonly IReadOnlyList<ExportFigure> _figures;
     private readonly Func<string, string?> _resolveImage;
+    // The colored lines of each code block in document order (from the preview).
+    private readonly IReadOnlyList<IReadOnlyList<IReadOnlyList<CodeRun>>> _codeColors;
+    private int _codeIndex;
+    // Heading ids (as links write them) and the Word bookmark each heading gets,
+    // so links such as a table of contents jump to the heading in Word too.
+    private readonly Dictionary<string, string> _bookmarks = new(StringComparer.Ordinal);
+    private int _bookmarkId;
     private MainDocumentPart _main = null!;
     private int _figureIndex;
     private uint _drawingId;
     private int _numberingId;
 
-    public DocxExport(MarkdownPipeline pipeline, IReadOnlyList<ExportFigure> figures, Func<string, string?> resolveImage)
+    public DocxExport(MarkdownPipeline pipeline, IReadOnlyList<ExportFigure> figures, Func<string, string?> resolveImage,
+        IReadOnlyList<IReadOnlyList<IReadOnlyList<CodeRun>>>? codeColors = null)
     {
         _pipeline = pipeline;
         _figures = figures;
         _resolveImage = resolveImage;
+        _codeColors = codeColors ?? [];
     }
 
     public void Write(string markdown, string path, string title)
@@ -63,7 +76,16 @@ internal sealed class DocxExport
         document.PackageProperties.Creator = "mdEditor";
 
         var body = _main.Document.Body!;
-        foreach (var block in Markdown.Parse(markdown, _pipeline))
+        var parsed = Markdown.Parse(markdown, _pipeline);
+        foreach (var heading in parsed.Descendants<HeadingBlock>())
+        {
+            if (heading.GetAttributes().Id is { Length: > 0 } id && !_bookmarks.ContainsKey(id))
+            {
+                _bookmarks[id] = $"h{_bookmarks.Count + 1}";
+            }
+        }
+
+        foreach (var block in parsed)
         {
             foreach (var element in Blocks(block, 0, null))
             {
@@ -83,7 +105,15 @@ internal sealed class DocxExport
         switch (block)
         {
             case HeadingBlock heading:
-                yield return Paragraph($"Heading{Math.Clamp(heading.Level, 1, 6)}", Inlines(heading.Inline));
+                var headingParagraph = Paragraph($"Heading{Math.Clamp(heading.Level, 1, 6)}", Inlines(heading.Inline));
+                if (heading.GetAttributes().Id is { } headingId && _bookmarks.TryGetValue(headingId, out var bookmark))
+                {
+                    var number = (++_bookmarkId).ToString(System.Globalization.CultureInfo.InvariantCulture);
+                    headingParagraph.InsertAfter(new BookmarkStart { Id = number, Name = bookmark }, headingParagraph.ParagraphProperties);
+                    headingParagraph.Append(new BookmarkEnd { Id = number });
+                }
+
+                yield return headingParagraph;
                 break;
             case ParagraphBlock paragraph:
                 yield return Paragraph(style, Inlines(paragraph.Inline));
@@ -91,13 +121,21 @@ internal sealed class DocxExport
             case MathBlock:
                 yield return FigureParagraph(style);
                 break;
-            case FencedCodeBlock fenced when string.Equals(fenced.Info, "mermaid", StringComparison.OrdinalIgnoreCase):
+            case FencedCodeBlock fenced when DiagramFences.IsDiagram(fenced.Info):
                 yield return FigureParagraph(style);
                 break;
             case CodeBlock code:
-                foreach (var line in code.Lines.Lines.Take(code.Lines.Count))
+                var lines = code.Lines.Lines.Take(code.Lines.Count).Select(line => line.Slice.ToString()).ToList();
+                // The preview's colors are used only when the block reads the same, line by line.
+                var colored = _codeIndex < _codeColors.Count ? _codeColors[_codeIndex] : null;
+                _codeIndex++;
+                var matches = colored is not null && colored.Count == lines.Count
+                    && colored.Select(runs => string.Concat(runs.Select(run => run.Text))).SequenceEqual(lines);
+                for (var i = 0; i < lines.Count; i++)
                 {
-                    yield return Paragraph("Code", [Run(line.Slice.ToString(), code: true)]);
+                    yield return Paragraph("Code", matches
+                        ? colored![i].Select(run => (OpenXmlElement)Run(run.Text, run.Bold, run.Italic, code: true, color: run.Color)).ToList()
+                        : [Run(lines[i], code: true)]);
                 }
                 break;
             case ThematicBreakBlock:
@@ -318,7 +356,7 @@ internal sealed class DocxExport
     private static string PlainText(ContainerInline container) =>
         string.Concat(container.Descendants<LiteralInline>().Select(literal => literal.Content.ToString()));
 
-    private static Run Run(string text, bool bold = false, bool italic = false, bool strike = false, bool code = false)
+    private static Run Run(string text, bool bold = false, bool italic = false, bool strike = false, bool code = false, string? color = null)
     {
         // Typed properties keep the order the Word schema requires.
         var properties = new RunProperties();
@@ -331,6 +369,7 @@ internal sealed class DocxExport
         if (bold) properties.Bold = new Bold();
         if (italic) properties.Italic = new Italic();
         if (strike) properties.Strike = new Strike();
+        if (color is not null) properties.Color = new Color { Val = color };
 
         var run = new Run();
         if (properties.HasChildren)
@@ -344,6 +383,20 @@ internal sealed class DocxExport
 
     private OpenXmlElement Hyperlink(string? url, IEnumerable<OpenXmlElement> content)
     {
+        // A link to a heading in this document goes to that heading's bookmark.
+        if (url is { Length: > 1 } && url[0] == (char)35 && _bookmarks.TryGetValue(Uri.UnescapeDataString(url[1..]), out var anchor))
+        {
+            var internalLink = new Hyperlink { Anchor = anchor, History = true };
+            foreach (var run in content.OfType<Run>())
+            {
+                run.RunProperties ??= new RunProperties();
+                run.RunProperties.RunStyle = new RunStyle { Val = "Hyperlink" };
+                internalLink.Append(run);
+            }
+
+            return internalLink;
+        }
+
         if (!Uri.TryCreate(url, UriKind.Absolute, out var uri) || uri.Scheme is not ("http" or "https" or "mailto"))
         {
             return new Run(content.SelectMany(element => element.Descendants<Text>()).Select(text => (OpenXmlElement)text.CloneNode(true)));

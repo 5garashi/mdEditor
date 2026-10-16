@@ -208,7 +208,7 @@ internal static class NotebookFormat
                 continue;
             }
 
-            if (block is not FencedCodeBlock fenced || info.Length == 0 || info is "mermaid" or "math" or "text" or "markdown"
+            if (block is not FencedCodeBlock fenced || info.Length == 0 || info is "math" or "text" or "markdown" || DiagramFences.IsDiagram(info)
                 || (language is not null && info != language))
             {
                 continue;

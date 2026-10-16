@@ -12,7 +12,7 @@ Windows で Markdown ファイルを開き、テキストと整形済み表示�
 
 *A Windows app that opens Markdown files and lets you edit the text side by side with a rendered preview.* [日本語](#特長) / [English](#english)
 
-バージョン / Version: 1.0.10（変更の記録 / Changes: [CHANGELOG.md](./CHANGELOG.md)）
+バージョン / Version: 1.0.11（変更の記録 / Changes: [CHANGELOG.md](./CHANGELOG.md)）
 
 ## 特長
 
@@ -117,6 +117,7 @@ Microsoft Edge WebView2 Runtime が必要です。Microsoft Edge がインスト
 - **用紙**: PDFの用紙を「自動」→「A4」→「Letter」の順に切り替えます。「自動」は Windows の地域の設定に従います（ヤード・ポンド法の地域は Letter、それ以外は A4）。選んだ用紙は次回の起動でも使います。
 - **文字コード**: ファイル名の横に文書の文字コードを表示します。押すと文字コードを選び、「この文字コードで開き直す」または「次の保存からこの文字コードにする」を選べます。
 - **Ctrl+Shift+P**: PDFに保存します。
+- **目次 / Ctrl+Shift+J**: 文書の見出しから目次（見出しへのリンクの一覧）を作り、カーソルの位置に入れます。目次は `<!-- toc -->` と `<!-- /toc -->` の間に入り（プレビューには出ません）、見出しを変えたあともう一度押すと、その場所の目次を新しくします。文書の題名（先頭のただ 1 つの `#` 見出し）は目次に入れず、3 段階の深さまで入れます。目次のリンクは、プレビュー・PDF・HTML・Word のどれでも見出しに移動します。
 - **Ctrl+H**: 編集画面の検索・置換バーを開きます。「置換」「すべて置換」が使えます（`Enter` で次を検索、`Esc` で閉じる）。
 - **書き方 / F1**: Markdown の書き方を「基本」「図（Mermaid）」「数式（KaTeX）」に分けて一覧で表示します。図はフローチャート・シーケンス図・ガントチャート・円グラフ・クラス図・状態遷移図・ER 図・マインドマップ、数式は分数・平方根・総和・行列・場合分けなど 10 種類で、図は一覧の中に描いて見せます。「挿入」で編集欄のカーソル位置に例を入れます（`Esc` で閉じる）。
 - **Ctrl+F**: ウィンドウ標準の検索です。プレビューの検索にも使えます。
@@ -148,6 +149,7 @@ Microsoft Edge WebView2 Runtime が必要です。Microsoft Edge がインスト
 | 操作 | キー | 操作 | キー |
 | :--- | :--- | :--- | :--- |
 | 開く | Ctrl+O | 検索・置換 | Ctrl+H |
+| 目次を入れる・新しくする | Ctrl+Shift+J | | |
 | 保存 | Ctrl+S | 次を検索 / 前を検索 | F3 / Shift+F3 |
 | 名前を付けて保存 | Ctrl+Shift+S | すべて置換 | Ctrl+Shift+H |
 | PDFに保存 | Ctrl+Shift+P | Markdown の書き方 | F1 |
@@ -184,7 +186,7 @@ The interface and dialogs support Japanese and English. On first launch the lang
 
 文書の文字コードは、UTF-8（BOMの有無）、UTF-16、Windowsの既定の文字コード（日本語環境ではShift_JIS）を自動で判別し、保存するときも元の文字コードのまま書き込みます。元の文字コードで保存できない文字がある場合は、UTF-8で保存するか確認します。UTF-8 ではないファイルを推定した文字コードで開いたときや、読めない文字（�）があるときは、ツールバーの下にお知らせを表示します。読めない文字があるまま上書き保存しようとすると、元のファイルのその部分が失われることを確認します。EUC-JP や ISO-2022-JP のファイルは、文字コードを選んで開き直してください。保存は一時ファイルに書いてから置き換えるので、途中で失敗しても元の文書は壊れません。
 
-` ```mermaid ` のコードブロックは [Mermaid](https://mermaid.js.org/) で図として表示します（フローチャート、シーケンス図、クラス図、状態遷移図、ER図、ガントチャート、円グラフなど）。`$...$` と `$$...$$` の数式は [KaTeX](https://katex.org/) で表示します。どちらもアプリに同梱しているため、オフラインでも表示でき、PDFにも出力されます。図の構文に誤りがある場合は、エラーメッセージと元のコードを表示します。表示の確認には [samples/diagram-test.md](./samples/diagram-test.md)（英語版: [samples/diagram-test.en.md](./samples/diagram-test.en.md)）を使えます。
+` ```mermaid ` のコードブロックは [Mermaid](https://mermaid.js.org/) で図として表示します（フローチャート、シーケンス図、クラス図、状態遷移図、ER図、ガントチャート、円グラフなど）。`$...$` と `$$...$$` の数式は [KaTeX](https://katex.org/) で表示します。どちらもアプリに同梱しているため、オフラインでも表示でき、PDFにも出力されます。` ```python ` のように言語名を書いたコードブロックは、[highlight.js](https://highlightjs.org/) で色分けして表示します（Python、JavaScript、TypeScript、C#、C/C++、Java、PowerShell、シェル、SQL、HTML、CSS、JSON、YAML、diff など約 40 の言語）。色はプレビューの昼と夜の配色に合わせ、PDF・PNG・HTML・Word に保存したときも付きます。言語名のないコードブロックは色を付けません。図の構文に誤りがある場合は、エラーメッセージと元のコードを表示します。表示の確認には [samples/diagram-test.md](./samples/diagram-test.md)（英語版: [samples/diagram-test.en.md](./samples/diagram-test.en.md)）を使えます。
 
 ### 対応している図・チャート
 
@@ -195,11 +197,12 @@ flowchart LR
     src["コードブロック・数式"] --> kind{"記法"}
     kind -- "mermaid" --> mermaid["図として表示<br/>Mermaid 11.17.2"]
     kind -- "数式 (TeX)" --> math["数式として表示<br/>KaTeX 0.18.9"]
-    kind -- "dot・plantuml・nomnoml など" --> code["コードブロックのまま表示"]
+    kind -- "dot・graphviz" --> graphviz["図として表示<br/>Graphviz 16.1.0"]
+    kind -- "plantuml・nomnoml など" --> code["コードブロックのまま表示"]
 
     classDef supported fill:#d4f7d4,stroke:#2a7a2a,color:#1a1a1a;
     classDef unsupported fill:#eeeeee,stroke:#777777,color:#1a1a1a;
-    class mermaid,math supported;
+    class mermaid,math,graphviz supported;
     class code unsupported;
 ```
 
@@ -220,8 +223,8 @@ flowchart LR
 | タイムライン | `timeline` | ✅ | |
 | サンキーダイアグラム | `sankey-beta` | ✅ | ノード名は英数字のみ（Mermaid の制限で、日本語は使えません） |
 | 数式 | `$...$`（インライン）、`$$...$$`（ブロック） | ✅ | KaTeX で表示 |
-| Graphviz | ` ```dot ` | ❌ | コードブロックとして表示 |
-| PlantUML | ` ```plantuml ` | ❌ | コードブロックとして表示 |
+| Graphviz | ` ```dot `、` ```graphviz `、` ```gv ` | ✅ | アプリに同梱した Graphviz（WebAssembly 版）で、オフラインで描きます。図の中のリンクと画像は使えません（安全のため取り除きます）。日本語のラベルが枠からはみ出すときは、文字を小さくして枠に収めます |
+| PlantUML | ` ```plantuml ` | ❌ | コードブロックとして表示。描くには Java と PlantUML を PC に入れるか、文書を外部の PlantUML サーバーに送る必要があり、文書を PC の外に出さない方針に合わないため対応していません |
 | nomnoml | ` ```nomnoml ` | ❌ | コードブロックとして表示 |
 
 上の表で ✅ の図は、テスト文書で表示を確認済みです。これ以外の Mermaid の図（`block-beta` など）も Mermaid 11.17.2 が対応していれば表示されますが、確認はしていません。
@@ -257,7 +260,7 @@ Identity 第7条 7-7 の出荷前チェックの記録です。
 
 ソースコードは [MIT License](./LICENSE) です（Identity 第12-1条）。`wwwroot/assets/` のロゴタイプとシンボルマークは MIT の対象外で、CC BY-ND 4.0 で提供されます。名称とロゴに関する権利は留保され、公式の提供物・承認・提携と誤認される使い方はできません（第12-2条）。
 
-`wwwroot/lib/` には、それぞれの MIT License のもとで Mermaid 11.17.2、KaTeX 0.18.9、CodeMirror 6（編集欄。`tools/codemirror` でビルド）を改変せずに同梱しています。同梱しているすべての第三者ソフトウェア（Markdig、HtmlSanitizer、WebView2 SDK、.NET ランタイム、Mermaid に含まれるライブラリなど）とライセンス本文は [THIRD-PARTY-NOTICES.md](./THIRD-PARTY-NOTICES.md) にあります。
+`wwwroot/lib/` には、それぞれの MIT License のもとで Mermaid 11.17.2、KaTeX 0.18.9、CodeMirror 6（編集欄。`tools/codemirror` でビルド）を、BSD 3-Clause License のもとで highlight.js 11.12.0（コードの色分け）を、MIT License のもとで Viz.js 3.31.0（Graphviz 16.1.0 の WebAssembly 版。Graphviz は Eclipse Public License 1.0）を、改変せずに同梱しています。同梱しているすべての第三者ソフトウェア（Markdig、HtmlSanitizer、WebView2 SDK、.NET ランタイム、Mermaid に含まれるライブラリなど）とライセンス本文は [THIRD-PARTY-NOTICES.md](./THIRD-PARTY-NOTICES.md) にあります。
 
 ## プライバシー
 
@@ -370,6 +373,7 @@ On pull requests, GitHub Actions checks that the three match. When merged into m
 - **Paper**: cycle the PDF paper through Auto, A4, and Letter. Auto follows the Windows region (Letter where US customary units are used, A4 elsewhere). The choice is remembered.
 - **Encoding**: the document's encoding is shown next to the file name. Press it to choose an encoding and either reopen the file in it or use it from the next save.
 - **Ctrl+Shift+P**: save as PDF.
+- **Contents / Ctrl+Shift+J**: build a table of contents (links to the headings) and insert it at the cursor. It goes between `<!-- toc -->` and `<!-- /toc -->` (not shown in the preview); after changing headings, press it again to update that table in place. The document title (a single `#` heading at the top) is left out, and three levels are kept. The links go to the headings in the preview, PDF, HTML, and Word.
 - **Ctrl+H**: open the editor's find/replace bar with Replace and Replace all (`Enter` finds next, `Esc` closes).
 - **Syntax / F1**: show a Markdown quick reference grouped into Basics, Diagrams (Mermaid), and Math (KaTeX): flowchart, sequence, Gantt, pie, class, state, ER, and mind map diagrams (drawn in the list), and ten math examples such as fractions, roots, sums, matrices, and cases. Insert puts an example at the cursor in the editor (`Esc` closes).
 - **Ctrl+F**: the standard window find, which also works in the preview.
@@ -401,6 +405,7 @@ On pull requests, GitHub Actions checks that the three match. When merged into m
 | Command | Key | Command | Key |
 | :--- | :--- | :--- | :--- |
 | Open | Ctrl+O | Find/Replace | Ctrl+H |
+| Insert or update the table of contents | Ctrl+Shift+J | | |
 | Save | Ctrl+S | Find next / previous | F3 / Shift+F3 |
 | Save As | Ctrl+Shift+S | Replace all | Ctrl+Shift+H |
 | Save as PDF | Ctrl+Shift+P | Markdown syntax | F1 |
@@ -424,7 +429,7 @@ Relative images such as `images/a.png` load from the document's folder and its s
 
 The text encoding is detected automatically: UTF-8 (with or without BOM), UTF-16, or the Windows default code page (Shift_JIS on Japanese Windows). Saving keeps the original encoding; if some characters cannot be saved in it, the app asks whether to save as UTF-8. A notice appears under the toolbar when a non-UTF-8 file was opened with a guessed encoding or when some bytes could not be read (shown as �); overwriting such a file asks for confirmation first, because those parts of the original would be lost. For EUC-JP or ISO-2022-JP files, choose the encoding and reopen the file. Saves are written to a temporary file and then swapped in, so a failure part-way never damages the original document.
 
-` ```mermaid ` code blocks are drawn as diagrams with [Mermaid](https://mermaid.js.org/) (flowcharts, sequence, class, state, ER, Gantt, pie charts, and more). Math in `$...$` and `$$...$$` is rendered with [KaTeX](https://katex.org/). Both are bundled with the app, so they work offline and are included in PDFs. A diagram with a syntax error shows the error message and its source. Use [samples/diagram-test.en.md](./samples/diagram-test.en.md) (Japanese: [samples/diagram-test.md](./samples/diagram-test.md)) to check the rendering.
+` ```mermaid ` code blocks are drawn as diagrams with [Mermaid](https://mermaid.js.org/) (flowcharts, sequence, class, state, ER, Gantt, pie charts, and more). Math in `$...$` and `$$...$$` is rendered with [KaTeX](https://katex.org/). Both are bundled with the app, so they work offline and are included in PDFs. Code blocks with a language name, such as ` ```python `, are colored with [highlight.js](https://highlightjs.org/) (about 40 languages, including Python, JavaScript, TypeScript, C#, C/C++, Java, PowerShell, shell, SQL, HTML, CSS, JSON, YAML, and diff). The colors follow the preview's day and night palettes and are kept when you save as PDF, PNG, HTML, or Word. Code blocks without a language stay plain. A diagram with a syntax error shows the error message and its source. Use [samples/diagram-test.en.md](./samples/diagram-test.en.md) (Japanese: [samples/diagram-test.md](./samples/diagram-test.md)) to check the rendering.
 
 #### Supported diagrams and charts
 
@@ -435,11 +440,12 @@ flowchart LR
     src["Code block or math"] --> kind{"Notation"}
     kind -- "mermaid" --> mermaid["Drawn as a diagram<br/>Mermaid 11.17.2"]
     kind -- "Math (TeX)" --> math["Rendered as math<br/>KaTeX 0.18.9"]
-    kind -- "dot, plantuml, nomnoml, etc." --> code["Shown as a code block"]
+    kind -- "dot, graphviz" --> graphviz["Drawn as a diagram<br/>Graphviz 16.1.0"]
+    kind -- "plantuml, nomnoml, etc." --> code["Shown as a code block"]
 
     classDef supported fill:#d4f7d4,stroke:#2a7a2a,color:#1a1a1a;
     classDef unsupported fill:#eeeeee,stroke:#777777,color:#1a1a1a;
-    class mermaid,math supported;
+    class mermaid,math,graphviz supported;
     class code unsupported;
 ```
 
@@ -460,8 +466,8 @@ flowchart LR
 | Timeline | `timeline` | ✅ | |
 | Sankey diagram | `sankey-beta` | ✅ | ASCII node names only (a Mermaid limitation) |
 | Math | `$...$` (inline), `$$...$$` (display) | ✅ | Rendered with KaTeX |
-| Graphviz | ` ```dot ` | ❌ | Shown as a code block |
-| PlantUML | ` ```plantuml ` | ❌ | Shown as a code block |
+| Graphviz | ` ```dot `, ` ```graphviz `, ` ```gv ` | ✅ | Drawn offline with the bundled Graphviz (WebAssembly). Links and images inside a diagram are removed for safety. Japanese labels that would overflow their box are made smaller to fit |
+| PlantUML | ` ```plantuml ` | ❌ | Shown as a code block. Drawing it needs Java and PlantUML on the PC, or sending the document to an outside PlantUML server, which goes against keeping documents on the PC |
 | nomnoml | ` ```nomnoml ` | ❌ | Shown as a code block |
 
 Everything marked ✅ is verified with the test documents. Other Mermaid diagrams (such as `block-beta`) render if Mermaid 11.17.2 supports them, but they have not been checked.
@@ -497,7 +503,7 @@ The screen design follows the 5garashi.com Design Office Identity v4.14.0 (2026-
 
 The source code is under the [MIT License](./LICENSE) (Identity Art. 12-1). The logotype and symbol mark in `wwwroot/assets/` are not covered by MIT and are provided under CC BY-ND 4.0. All rights in the name and logos are reserved, and they may not be used in a way that implies official origin, endorsement, or affiliation (Art. 12-2).
 
-`wwwroot/lib/` bundles Mermaid 11.17.2, KaTeX 0.18.9, and CodeMirror 6 (the editor, built with `tools/codemirror`) unmodified under their MIT Licenses. All bundled third-party software (Markdig, HtmlSanitizer, the WebView2 SDK, the .NET runtime, the libraries inside Mermaid, and more) and the full license texts are listed in [THIRD-PARTY-NOTICES.md](./THIRD-PARTY-NOTICES.md).
+`wwwroot/lib/` bundles Mermaid 11.17.2, KaTeX 0.18.9, and CodeMirror 6 (the editor, built with `tools/codemirror`) unmodified under their MIT Licenses, highlight.js 11.12.0 (code colors) under the BSD 3-Clause License, and Viz.js 3.31.0 (a WebAssembly build of Graphviz 16.1.0; Graphviz is under the Eclipse Public License 1.0) under the MIT License. All bundled third-party software (Markdig, HtmlSanitizer, the WebView2 SDK, the .NET runtime, the libraries inside Mermaid, and more) and the full license texts are listed in [THIRD-PARTY-NOTICES.md](./THIRD-PARTY-NOTICES.md).
 
 ### Privacy
 

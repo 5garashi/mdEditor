@@ -387,6 +387,9 @@ public partial class MainWindow : Window
             case "dropFile":
                 await HandleDropAsync(e);
                 break;
+            case "toc":
+                SendToPage(new { type = "tocText", text = TableOfContents.Build(_text, _markdownPipeline) });
+                break;
             case "openSample":
                 await OpenSampleAsync(root.GetProperty("text").GetString(),
                     root.TryGetProperty("name", out var sampleName) ? sampleName.GetString() : null);
@@ -2293,6 +2296,7 @@ public partial class MainWindow : Window
             }
 
             var figures = new List<ExportFigure>();
+            IReadOnlyList<IReadOnlyList<IReadOnlyList<CodeRun>>> codeColors = [];
             try
             {
                 if (!await RenderForCaptureAsync(title))
@@ -2309,6 +2313,8 @@ public partial class MainWindow : Window
                         System.Windows.Media.Imaging.BitmapCacheOption.OnLoad).Frames[0];
                     figures.Add(new ExportFigure(png, frame.PixelWidth, frame.PixelHeight, CaptureScale));
                 }
+
+                codeColors = ReadCodeColors(await PageValueAsync("window.mdeditorCodeColors()"));
             }
             finally
             {
@@ -2319,7 +2325,7 @@ public partial class MainWindow : Window
             try
             {
                 var titleText = _filePath is null ? Path.GetFileNameWithoutExtension(path) : Path.GetFileNameWithoutExtension(_filePath);
-                new DocxExport(_markdownPipeline, figures, ResolveImageForExport).Write(_text, tempPath, titleText);
+                new DocxExport(_markdownPipeline, figures, ResolveImageForExport, codeColors).Write(_text, tempPath, titleText);
                 File.Move(tempPath, path, overwrite: true);
             }
             finally
@@ -2417,6 +2423,35 @@ public partial class MainWindow : Window
         {
             ShowFileError("ファイルを保存できません。ほかのアプリで開いている場合は閉じるか、「名前を付けて保存」で別の場所に保存してください", ex);
         }
+    }
+
+    // The colored code lines from the preview (CSS colors such as "rgb(207, 34, 46)").
+    private static List<IReadOnlyList<IReadOnlyList<CodeRun>>> ReadCodeColors(JsonElement blocks)
+    {
+        static string Hex(string? css)
+        {
+            var match = System.Text.RegularExpressions.Regex.Match(css ?? string.Empty, @"rgba?\((\d+),\s*(\d+),\s*(\d+)");
+            return match.Success
+                ? string.Concat(match.Groups.Values.Skip(1).Select(group => int.Parse(group.Value).ToString("X2")))
+                : "1A1A1A";
+        }
+
+        var result = new List<IReadOnlyList<IReadOnlyList<CodeRun>>>();
+        if (blocks.ValueKind != JsonValueKind.Array)
+        {
+            return result;
+        }
+
+        foreach (var block in blocks.EnumerateArray())
+        {
+            result.Add(block.EnumerateArray().Select(line => (IReadOnlyList<CodeRun>)line.EnumerateArray().Select(run => new CodeRun(
+                run.GetProperty("text").GetString() ?? string.Empty,
+                Hex(run.GetProperty("color").GetString()),
+                run.GetProperty("bold").GetBoolean(),
+                run.GetProperty("italic").GetBoolean())).ToList()).ToList());
+        }
+
+        return result;
     }
 
     // A relative image in the document as a local file (internet images stay as text in Word).

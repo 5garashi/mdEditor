@@ -29,6 +29,18 @@
   --document-selection: #C7D0C1;
   --document-current-line: #F0F0F0;
   --document-reading: #B92613;
+  /* Code colors (highlight.js tokens), each at least 5.3:1 on the white document. */
+  --code-keyword: #CF222E;
+  --code-string: #0A3069;
+  --code-comment: #59636E;
+  --code-number: #0550AE;
+  --code-title: #6639BA;
+  --code-attr: #953800;
+  --code-tag: #116329;
+  --code-added: #116329;
+  --code-added-background: #DAFBE1;
+  --code-removed: #82071E;
+  --code-removed-background: #FFEBE9;
   /* Identity Art. 6: on Windows, Yu Gothic then Meiryo. */
   font-family: "Yu Gothic UI", "Meiryo", sans-serif;
   color: var(--ink);
@@ -63,6 +75,18 @@
     --document-selection: #494740;
     --document-current-line: #202122;
     --document-reading: #F07B5F;
+    /* Night code colors, each at least 6:1 on #121314. */
+    --code-keyword: #FF7B72;
+    --code-string: #A5D6FF;
+    --code-comment: #8B949E;
+    --code-number: #79C0FF;
+    --code-title: #D2A8FF;
+    --code-attr: #FFA657;
+    --code-tag: #7EE787;
+    --code-added: #AFF5B4;
+    --code-added-background: #033A16;
+    --code-removed: #FFA198;
+    --code-removed-background: #490202;
   }
 }
 
@@ -637,6 +661,17 @@ body.capture-export .preview-content {
   --document-background: #FFFFFF;
   --document-foreground: #1A1A1A;
   --document-rule: #D0D0D0;
+  --code-keyword: #CF222E;
+  --code-string: #0A3069;
+  --code-comment: #59636E;
+  --code-number: #0550AE;
+  --code-title: #6639BA;
+  --code-attr: #953800;
+  --code-tag: #116329;
+  --code-added: #116329;
+  --code-added-background: #DAFBE1;
+  --code-removed: #82071E;
+  --code-removed-background: #FFEBE9;
   width: 800px;
   height: auto;
   overflow: visible;
@@ -980,6 +1015,19 @@ body.capture-export .preview-content {
   background: var(--document-background);
 }
 
+/* Code colors; the same rules are in export.css for saved HTML. */
+.hljs-keyword, .hljs-built_in, .hljs-type, .hljs-literal, .hljs-selector-tag, .hljs-doctag { color: var(--code-keyword); }
+.hljs-string, .hljs-regexp, .hljs-char, .hljs-template-tag, .hljs-template-variable { color: var(--code-string); }
+.hljs-comment, .hljs-quote { color: var(--code-comment); font-style: italic; }
+.hljs-number, .hljs-symbol, .hljs-bullet, .hljs-link, .hljs-variable.constant_ { color: var(--code-number); }
+.hljs-title, .hljs-section, .hljs-selector-id, .hljs-selector-class { color: var(--code-title); }
+.hljs-attr, .hljs-attribute, .hljs-property, .hljs-params, .hljs-variable, .hljs-meta, .hljs-selector-attr, .hljs-selector-pseudo { color: var(--code-attr); }
+.hljs-tag, .hljs-name { color: var(--code-tag); }
+.hljs-section, .hljs-strong { font-weight: 700; }
+.hljs-emphasis { font-style: italic; }
+.hljs-addition { color: var(--code-added); background: var(--code-added-background); print-color-adjust: exact; }
+.hljs-deletion { color: var(--code-removed); background: var(--code-removed-background); print-color-adjust: exact; }
+
 .preview-content table {
   display: block;
   max-width: 100%;
@@ -1019,19 +1067,29 @@ body.capture-export .preview-content {
   vertical-align: middle;
 }
 
-.preview-content .mermaid {
+.preview-content :is(.mermaid, .graphviz) {
   margin: 1em 0;
   overflow-x: auto;
   overflow-wrap: normal;
   text-align: center;
 }
 
-.preview-content .mermaid svg {
+.preview-content :is(.mermaid, .graphviz) svg {
   height: auto;
 }
 
+/* Graphviz drawings keep their own size but never overflow the column. */
+.preview-content .graphviz svg {
+  max-width: 100%;
+}
+
+/* Graphviz labels in the document face (Graphviz names Times by default). */
+.preview-content .graphviz svg text {
+  font-family: "Segoe UI", "Yu Gothic UI", "Meiryo", sans-serif;
+}
+
 /* Mermaid source shown as code until its first drawing is ready. */
-.preview-content .mermaid.diagram-pending {
+.preview-content :is(.mermaid, .graphviz).diagram-pending {
   padding: 12px;
   border: 1px dashed var(--document-foreground);
   border-radius: 6px;
@@ -1041,7 +1099,7 @@ body.capture-export .preview-content {
   white-space: pre;
 }
 
-.preview-content .mermaid.diagram-error {
+.preview-content :is(.mermaid, .graphviz).diagram-error {
   text-align: left;
 }
 
@@ -1186,7 +1244,7 @@ body.capture-export .preview-content {
   margin-inline: auto;
 }
 
-:root:not(.preview-full-width) .preview-content > :is(pre, table, .mermaid, .math) {
+:root:not(.preview-full-width) .preview-content > :is(pre, table, .mermaid, .graphviz, .math) {
   max-width: min(100%, calc(80rem * var(--doc-scale, 1)));
 }
 
@@ -1221,8 +1279,21 @@ body.preview-focused .pane-heading {
   padding-inline: 18px;
 }
 
+/* Saved pages (PDF, PNG, Word) cannot scroll, so long code lines wrap instead. */
+body.capture-export .preview-content pre {
+  overflow: visible;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
 @media print {
   /* The page background (cream) would otherwise fill the whole PDF page. */
+  .preview-content pre {
+    overflow: visible;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
   :root {
     color-scheme: light;
     background: #FFFFFF;
@@ -1308,12 +1379,12 @@ body.preview-focused .pane-heading {
   body.printing-preview .preview-content blockquote,
   body.printing-preview .preview-content tr,
   body.printing-preview .preview-content img,
-  body.printing-preview .preview-content .mermaid,
+  body.printing-preview .preview-content :is(.mermaid, .graphviz),
   body.printing-preview .preview-content .katex-display {
     break-inside: avoid;
   }
 
-  body.printing-preview .preview-content .mermaid,
+  body.printing-preview .preview-content :is(.mermaid, .graphviz),
   body.printing-preview .preview-content .katex-display {
     overflow: visible;
   }
@@ -1448,7 +1519,7 @@ body.preview-focused .pane-heading {
     forced-color-adjust: none;
   }
 
-  .preview-content .mermaid svg {
+  .preview-content :is(.mermaid, .graphviz) svg {
     forced-color-adjust: none;
     background: #FFFFFF;
   }

@@ -12,6 +12,18 @@
   --document-foreground: #1A1A1A;
   --document-rule: #D0D0D0;
   --document-selection: #C7D0C1;
+  /* Code colors (highlight.js tokens), as in the app. */
+  --code-keyword: #CF222E;
+  --code-string: #0A3069;
+  --code-comment: #59636E;
+  --code-number: #0550AE;
+  --code-title: #6639BA;
+  --code-attr: #953800;
+  --code-tag: #116329;
+  --code-added: #116329;
+  --code-added-background: #DAFBE1;
+  --code-removed: #82071E;
+  --code-removed-background: #FFEBE9;
   color-scheme: light dark;
   /* Identity Art. 6: on Windows, Yu Gothic then Meiryo. */
   font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP", "Yu Gothic UI", "Yu Gothic", "Meiryo", sans-serif;
@@ -29,10 +41,21 @@
     --document-foreground: #BFBFBF;
     --document-rule: #2B2B2B;
     --document-selection: #494740;
+    --code-keyword: #FF7B72;
+    --code-string: #A5D6FF;
+    --code-comment: #8B949E;
+    --code-number: #79C0FF;
+    --code-title: #D2A8FF;
+    --code-attr: #FFA657;
+    --code-tag: #7EE787;
+    --code-added: #AFF5B4;
+    --code-added-background: #033A16;
+    --code-removed: #FFA198;
+    --code-removed-background: #490202;
   }
 
   /* Diagrams were drawn in the day palette, so they keep a white ground. */
-  .mermaid svg {
+  :is(.mermaid, .graphviz) svg {
     padding: 8px;
     border-radius: 6px;
     background: #FFFFFF;
@@ -63,7 +86,7 @@ main > * {
   margin-inline: auto;
 }
 
-main > :is(pre, table, .mermaid, .math, math) {
+main > :is(pre, table, :is(.mermaid, .graphviz), .math, math) {
   max-width: min(100%, 80rem);
 }
 
@@ -122,6 +145,18 @@ code {
   padding: 1px 4px;
 }
 
+.hljs-keyword, .hljs-built_in, .hljs-type, .hljs-literal, .hljs-selector-tag, .hljs-doctag { color: var(--code-keyword); }
+.hljs-string, .hljs-regexp, .hljs-char, .hljs-template-tag, .hljs-template-variable { color: var(--code-string); }
+.hljs-comment, .hljs-quote { color: var(--code-comment); font-style: italic; }
+.hljs-number, .hljs-symbol, .hljs-bullet, .hljs-link, .hljs-variable.constant_ { color: var(--code-number); }
+.hljs-title, .hljs-section, .hljs-selector-id, .hljs-selector-class { color: var(--code-title); }
+.hljs-attr, .hljs-attribute, .hljs-property, .hljs-params, .hljs-variable, .hljs-meta, .hljs-selector-attr, .hljs-selector-pseudo { color: var(--code-attr); }
+.hljs-tag, .hljs-name { color: var(--code-tag); }
+.hljs-section, .hljs-strong { font-weight: 700; }
+.hljs-emphasis { font-style: italic; }
+.hljs-addition { color: var(--code-added); background: var(--code-added-background); print-color-adjust: exact; }
+.hljs-deletion { color: var(--code-removed); background: var(--code-removed-background); print-color-adjust: exact; }
+
 table {
   display: block;
   max-width: 100%;
@@ -159,16 +194,20 @@ hr {
   vertical-align: middle;
 }
 
-.mermaid {
+:is(.mermaid, .graphviz) {
   margin: 1em 0;
   overflow-x: auto;
   overflow-wrap: normal;
   text-align: center;
 }
 
-.mermaid svg {
+:is(.mermaid, .graphviz) svg {
   max-width: 100%;
   height: auto;
+}
+
+.graphviz svg text {
+  font-family: "Segoe UI", "Yu Gothic UI", "Meiryo", sans-serif;
 }
 
 .diagram-error-message {
@@ -198,7 +237,14 @@ math[display="block"] {
     max-width: none;
   }
 
-  pre, blockquote, tr, img, .mermaid, math[display="block"] {
+  /* Printed pages cannot scroll, so long code lines wrap. */
+  pre {
+    overflow: visible;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  pre, blockquote, tr, img, :is(.mermaid, .graphviz), math[display="block"] {
     break-inside: avoid;
   }
 }
