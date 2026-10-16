@@ -14,7 +14,7 @@
   <meta name="referrer" content="no-referrer">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https:; style-src 'self' 'unsafe-inline'; script-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'wasm-unsafe-eval'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <meta name="theme-color" content="#FFE699" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#2B3A20" media="(prefers-color-scheme: dark)">
   <title>mdEditor</title>
@@ -24,6 +24,9 @@
   <script src="lib/katex/katex.min.js" defer></script>
   <script src="lib/mermaid/mermaid.min.js" defer></script>
   <script src="lib/codemirror/codemirror.min.js" defer></script>
+  <script src="lib/highlight/highlight.min.js" defer></script>
+  <script src="lib/highlight/languages/powershell.min.js" defer></script>
+  <script src="lib/highlight/languages/dockerfile.min.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
@@ -71,6 +74,7 @@
       <div class="pane-heading">
         <h2 id="editor-heading" data-i18n="editorHeading">Markdown を編集</h2>
         <button id="replace-button" type="button" data-i18n="findReplace">検索・置換</button>
+        <button id="toc-button" type="button" data-i18n="toc">目次</button>
         <button id="help-button" type="button" data-i18n="help" aria-haspopup="dialog">書き方</button>
         <button id="shortcuts-button" type="button" data-i18n="shortcuts" aria-haspopup="dialog">キー操作</button>
         <button class="pane-fullscreen-button" type="button" data-fullscreen-mode="editor" aria-pressed="false">編集画面をウィンドウ全体に表示</button>

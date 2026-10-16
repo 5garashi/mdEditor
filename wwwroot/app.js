@@ -69,6 +69,8 @@
       detachPreview: "別ウィンドウで表示", attachPreview: "本体に戻す", attachPreviewMain: "プレビューを本体に戻す",
       pdfStarting: "PDF出力を開始しています",
       findReplace: "検索・置換", findReplaceTitle: "検索・置換 (Ctrl+H)",
+      toc: "目次", tocNoHeadings: "目次にする見出しがありません。「## 見出し」のように見出しを書いてから、もう一度押してください。",
+      tocUpdated: "目次を新しくしました。", tocInserted: "カーソルの位置に目次を入れました。見出しを変えたら、もう一度「目次」を押すと新しくなります。",
       help: "書き方", helpTitle: "Markdown の書き方 (F1)", helpHeading: "Markdown の簡単な書き方",
       shortcuts: "キー操作", shortcutHeading: "キーボードショートカット",
       brandLogo: "assets/5garashi_logotype_outlined.svg", brandLogoDark: "assets/5garashi_logotype_reversed_outlined.svg",
@@ -112,7 +114,7 @@
       shortcutNames: {
         open: "開く", save: "保存", saveAs: "名前を付けて保存", pdf: "PDFに保存", paper: "用紙の切り替え",
         theme: "表示テーマの切り替え", language: "表示言語の切り替え", encoding: "文字コード",
-        findReplace: "検索・置換", findNext: "次を検索", findPrev: "前を検索", replaceAll: "すべて置換",
+        toc: "目次を入れる・新しくする", findReplace: "検索・置換", findNext: "次を検索", findPrev: "前を検索", replaceAll: "すべて置換",
         help: "Markdown の書き方", shortcuts: "キー操作の一覧", fullscreenEditor: "編集画面をウィンドウ全体に表示",
         fullscreenPreview: "プレビューをウィンドウ全体に表示", nextPane: "次の欄へ移動", previousPane: "前の欄へ移動",
         windowFullscreen: "ウィンドウの全画面表示", settings: "設定", readAloud: "読み上げ・一時停止", stopReading: "読み上げを停止", html: "HTMLに保存", png: "PNGに保存", docx: "Wordに保存", openUrl: "URLを開く",
@@ -187,6 +189,8 @@
       detachPreview: "Open in its own window", attachPreview: "Return to main window", attachPreviewMain: "Return preview here",
       pdfStarting: "Starting PDF export",
       findReplace: "Find/Replace", findReplaceTitle: "Find/Replace (Ctrl+H)",
+      toc: "Contents", tocNoHeadings: "There are no headings for a table of contents. Write headings such as \"## Heading\", then press it again.",
+      tocUpdated: "The table of contents was updated.", tocInserted: "A table of contents was inserted at the cursor. After changing headings, press Contents again to update it.",
       help: "Syntax", helpTitle: "Markdown syntax (F1)", helpHeading: "Markdown quick reference",
       shortcuts: "Keys", shortcutHeading: "Keyboard shortcuts",
       brandLogo: "assets/5garashi_logotype_en_outlined.svg", brandLogoDark: "assets/5garashi_logotype_en_reversed_outlined.svg",
@@ -230,7 +234,7 @@
       shortcutNames: {
         open: "Open", save: "Save", saveAs: "Save As", pdf: "Save as PDF", paper: "Switch paper size",
         theme: "Switch theme", language: "Switch language", encoding: "Text encoding",
-        findReplace: "Find/Replace", findNext: "Find next", findPrev: "Find previous", replaceAll: "Replace all",
+        toc: "Insert or update the table of contents", findReplace: "Find/Replace", findNext: "Find next", findPrev: "Find previous", replaceAll: "Replace all",
         help: "Markdown syntax", shortcuts: "Keyboard shortcuts", fullscreenEditor: "Fill window with editor",
         fullscreenPreview: "Fill window with preview", nextPane: "Next pane", previousPane: "Previous pane",
         windowFullscreen: "Window full screen", settings: "Settings", readAloud: "Read aloud / pause", stopReading: "Stop reading", html: "Save as HTML", png: "Save as PNG", docx: "Save as Word", openUrl: "Open URL",
@@ -465,10 +469,10 @@
   // Diagrams and formulas in document order, the order the Word output meets them.
   // Only the outer boxes count: shapes inside a drawing can carry the class
   // "mermaid" too (git graph commits do), and they are not figures of their own.
-  window.mdeditorFigureRects = () => Array.from(preview.querySelectorAll("div.mermaid, span.math, div.math"))
-    .filter((element) => !element.parentElement?.closest(".mermaid, .math")).map((element) => {
+  window.mdeditorFigureRects = () => Array.from(preview.querySelectorAll("div.mermaid, div.graphviz, span.math, div.math"))
+    .filter((element) => !element.parentElement?.closest(".mermaid, .graphviz, .math")).map((element) => {
     const rect = element.getBoundingClientRect();
-    const pad = element.classList.contains("mermaid") ? 4 : 1;
+    const pad = element.classList.contains("mermaid") || element.classList.contains("graphviz") ? 4 : 1;
     return {
       x: Math.max(0, rect.left + window.scrollX - pad),
       y: Math.max(0, rect.top + window.scrollY - pad),
@@ -1219,6 +1223,7 @@
     { id: "language", keys: "Ctrl+Shift+L", button: "language-button", run: () => languageButton.click() },
     { id: "encoding", keys: "Ctrl+Shift+E", button: "encoding-button", run: () => openEncodingDialog() },
     { id: "findReplace", keys: "Ctrl+H", button: "replace-button", run: () => openFindBar() },
+    { id: "toc", keys: "Ctrl+Shift+J", button: "toc-button", run: () => post({ type: "toc" }) },
     { id: "findNext", keys: "F3", button: "find-next", run: () => (findBar.hidden ? openFindBar() : findText(true)) },
     { id: "findPrev", keys: "Shift+F3", button: "find-prev", run: () => (findBar.hidden ? openFindBar() : findText(false)) },
     { id: "replaceAll", keys: "Ctrl+Shift+H", button: "replace-all", run: () => (findBar.hidden || !findInput.value ? openFindBar() : replaceAll()) },
@@ -1843,6 +1848,144 @@
     }
   };
 
+  // Graphviz (```dot, ```graphviz, ```gv) is drawn offline with the bundled Viz.js,
+  // loaded the first time a document has one. Links, pictures, and anything that
+  // could run are removed from the drawing, so a diagram can only be looked at.
+  const graphvizLanguages = ["dot", "graphviz", "gv"];
+  const graphvizCache = new Map();
+  let vizInstance = null;
+  const loadViz = () => vizInstance ??= new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = "lib/graphviz/viz-global.js";
+    script.onload = () => (window.Viz ? window.Viz.instance().then(resolve, reject) : reject(new Error("Viz.js")));
+    script.onerror = () => { vizInstance = null; reject(new Error("Viz.js")); };
+    document.head.appendChild(script);
+  });
+  const prepareGraphviz = () => Array.from(preview.querySelectorAll("pre > code"), (code) => {
+    const language = Array.from(code.classList).find((name) => name.startsWith("language-"))?.slice(9).toLowerCase();
+    if (!graphvizLanguages.includes(language)) return null;
+    const pre = code.parentElement;
+    const element = document.createElement("div");
+    element.className = "graphviz";
+    const line = pre.dataset.line ?? code.dataset.line;
+    if (line) element.dataset.line = line;
+    element.textContent = code.textContent;
+    pre.replaceWith(element);
+    return element;
+  }).filter(Boolean);
+  const safeSvg = (markup) => {
+    const svg = new DOMParser().parseFromString(markup, "image/svg+xml").documentElement;
+    if (svg.nodeName !== "svg") return null;
+    for (const element of svg.querySelectorAll("script, foreignObject, image, use, style")) element.remove();
+    for (const link of svg.querySelectorAll("a")) link.replaceWith(...link.childNodes);
+    for (const element of [svg, ...svg.querySelectorAll("*")]) {
+      for (const attribute of Array.from(element.attributes)) {
+        if (/^on/i.test(attribute.name) || /href$/i.test(attribute.name)) element.removeAttribute(attribute.name);
+      }
+    }
+    svg.setAttribute("role", "img");
+    return svg;
+  };
+  // Graphviz sizes boxes with Latin font measurements, so Japanese labels come out
+  // wider than their box; a label that does not fit is made smaller to fit.
+  const fitGraphvizText = (svg) => {
+    for (const group of svg.querySelectorAll("g.node, g.cluster")) {
+      const shape = group.querySelector("polygon, ellipse, path, polyline");
+      if (!shape) continue;
+      const room = shape.getBBox().width - 8;
+      for (const text of group.querySelectorAll("text")) {
+        const width = text.getBBox().width;
+        if (room > 0 && width > room) {
+          const size = parseFloat(text.getAttribute("font-size") || "14");
+          text.setAttribute("font-size", (size * room / width).toFixed(2));
+        }
+      }
+    }
+  };
+
+  const renderGraphviz = async (elements, generation) => {
+    for (const element of elements) {
+      const source = element.textContent;
+      let result = graphvizCache.get(source);
+      if (!result) {
+        element.classList.add("diagram-pending");
+        let viz;
+        try {
+          viz = await loadViz();
+        } catch {
+          showDiagramError(element, source, t("diagramUnavailable"));
+          continue;
+        }
+        if (generation !== renderGeneration) return;
+        const output = viz.render(source, { format: "svg" });
+        result = output.status === "success"
+          ? { svg: output.output }
+          : { error: output.errors.map((item) => item.message).join(" ") };
+        if (graphvizCache.size > 100) graphvizCache.clear();
+        graphvizCache.set(source, result);
+      }
+      const svg = result.svg ? safeSvg(result.svg) : null;
+      if (!svg) {
+        showDiagramError(element, source, result.error ?? "");
+        continue;
+      }
+      element.replaceChildren(document.importNode(svg, true));
+      fitGraphvizText(element.firstElementChild);
+      element.classList.remove("diagram-pending");
+      element.classList.add("diagram-rendered");
+    }
+  };
+
+  // Code blocks with a language (```python and so on) are colored with the bundled
+  // highlight.js; blocks without a known language stay plain. The colors come from
+  // CSS variables, so PDF, PNG, HTML, and Word get the day palette. Results are
+  // kept by language and text, since the preview is redrawn as you type.
+  const highlighted = new Map();
+  const highlightCode = () => {
+    if (!window.hljs) return;
+    for (const code of preview.querySelectorAll("pre > code")) {
+      const language = Array.from(code.classList).find((name) => name.startsWith("language-"))?.slice(9);
+      if (!language || !window.hljs.getLanguage(language)) continue;
+      const text = code.textContent;
+      const key = `${language}\n${text}`;
+      let html = highlighted.get(key);
+      if (html === undefined) {
+        html = window.hljs.highlight(text, { language, ignoreIllegals: true }).value;
+        if (highlighted.size > 300) highlighted.clear();
+        highlighted.set(key, html);
+      }
+      code.innerHTML = html;
+      code.classList.add("hljs");
+    }
+  };
+
+  // Save as Word: the colors of every code block (in document order), as runs per
+  // line, read from the preview while it shows the day palette.
+  window.mdeditorCodeColors = () => Array.from(preview.querySelectorAll("pre > code"))
+    .filter((code) => !code.closest(".mermaid, .graphviz")).map((code) => {
+    const lines = [[]];
+    let baseWeight = 400;
+    const walk = (node, style) => {
+      for (const child of node.childNodes) {
+        if (child.nodeType === Node.TEXT_NODE) {
+          const parts = child.textContent.split("\n");
+          parts.forEach((part, index) => {
+            if (index > 0) lines.push([]);
+            if (part) lines[lines.length - 1].push({ text: part, ...style });
+          });
+        } else if (child.nodeType === Node.ELEMENT_NODE) {
+          const computed = getComputedStyle(child);
+          walk(child, { color: computed.color, bold: Number(computed.fontWeight) > baseWeight, italic: computed.fontStyle === "italic" });
+        }
+      }
+    };
+    const base = getComputedStyle(code);
+    baseWeight = Number(base.fontWeight);
+    walk(code, { color: base.color, bold: false, italic: false });
+    if (lines.length > 1 && lines[lines.length - 1].length === 0) lines.pop();
+    return lines;
+  });
+
   const renderPreview = async (html, forPrint = false, lines = 0) => {
     const generation = ++renderGeneration;
     if (!forPrint && lines > 0) previewLines = lines;
@@ -1858,13 +2001,16 @@
     moveAnchorsOffIds();
     labelTaskCheckboxes();
     showUnsupportedDiagrams();
+    const graphs = prepareGraphviz();
     renderMath();
+    highlightCode();
     const keepPlace = () => {
       if (previewWindow) scrollPreviewToLine(lastSyncedLine.line, lastSyncedLine.edge);
       else if (view.hasFocus) syncFrom(editorScroller);
     };
     keepPlace();
     await renderDiagrams(generation, previousSvgs, diagramCache);
+    await renderGraphviz(graphs, generation);
     if (generation === renderGeneration) keepPlace();
   };
 
@@ -1958,9 +2104,52 @@
     reader.readAsDataURL(image);
   }, true);
 
+  document.getElementById("toc-button").addEventListener("click", () => post({ type: "toc" }));
+  // The table of contents sits between <!-- toc --> and <!-- /toc --> (not shown in
+  // the preview), so pressing Contents again replaces it with the current headings.
+  // Only marks on lines of their own count, and not inside a code block, so a
+  // sentence that mentions <!-- toc --> is never taken for a table of contents.
+  const tocPattern = /^<!-- toc -->[ \t]*$[\s\S]*?^<!-- \/toc -->[ \t]*$/gm;
+  const findToc = (doc) => {
+    for (const match of doc.matchAll(tocPattern)) {
+      const fences = doc.slice(0, match.index).match(/^[ \t]{0,3}(```|~~~)/gm)?.length ?? 0;
+      if (fences % 2 === 0) return match;
+    }
+    return null;
+  };
+  const placeToc = (text) => {
+    const doc = view.state.doc.toString();
+    const found = findToc(doc);
+    if (found) {
+      view.dispatch({
+        changes: { from: found.index, to: found.index + found[0].length, insert: text },
+        selection: { anchor: found.index },
+        scrollIntoView: true
+      });
+      showNoticeMessage(t("tocUpdated"));
+    } else {
+      let { from, to } = view.state.selection.main;
+      // With the cursor still at the very start, the table goes after the title.
+      const title = from === 0 && to === 0 ? /^# .*$/m.exec(doc) : null;
+      if (title) from = to = title.index + title[0].length;
+      // On its own lines, with exactly one blank line before and after.
+      const head = view.state.sliceDoc(0, from);
+      const tail = view.state.sliceDoc(to);
+      const before = head === "" || head.endsWith("\n\n") ? "" : head.endsWith("\n") ? "\n" : "\n\n";
+      const after = tail.startsWith("\n\n") ? "" : tail.startsWith("\n") ? "\n" : "\n\n";
+      const insert = `${before}${text}${after}`;
+      view.dispatch({ changes: { from, to, insert }, selection: { anchor: from + insert.length }, scrollIntoView: true });
+      showNoticeMessage(t("tocInserted"));
+    }
+    view.focus();
+  };
+
   window.chrome.webview.addEventListener("message", (event) => {
     const message = event.data;
-    if (message.type === "insertText") {
+    if (message.type === "tocText") {
+      if (message.text) placeToc(message.text);
+      else showNoticeMessage(t("tocNoHeadings"));
+    } else if (message.type === "insertText") {
       const { from, to } = view.state.selection.main;
       view.dispatch({ changes: { from, to, insert: message.text }, selection: { anchor: from + message.text.length } });
       view.focus();

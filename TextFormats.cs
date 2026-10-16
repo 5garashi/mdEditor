@@ -27,6 +27,51 @@ using MdTableCell = Markdig.Extensions.Tables.TableCell;
 
 namespace MdEditor;
 
+// A table of contents: the headings as a nested list of links to them, between
+// <!-- toc --> and <!-- /toc --> so pressing Contents again replaces it. A single
+// title (one level-1 heading at the top) is left out, and three levels are kept.
+internal static class TableOfContents
+{
+    public const string Start = "<!-- toc -->";
+    public const string End = "<!-- /toc -->";
+
+    public static string? Build(string markdown, MarkdownPipeline pipeline)
+    {
+        var headings = Markdown.Parse(markdown, pipeline).OfType<HeadingBlock>()
+            .Select(heading => (heading.Level, Text: Text(heading.Inline), Id: Markdig.Renderers.Html.HtmlAttributesExtensions.GetAttributes(heading).Id))
+            .Where(heading => heading.Text.Length > 0 && !string.IsNullOrEmpty(heading.Id))
+            .ToList();
+        if (headings.Count > 0 && headings[0].Level == 1 && headings.Count(heading => heading.Level == 1) == 1)
+        {
+            headings.RemoveAt(0);
+        }
+
+        if (headings.Count == 0)
+        {
+            return null;
+        }
+
+        var top = headings.Min(heading => heading.Level);
+        var lines = headings.Where(heading => heading.Level < top + 3).Select(heading =>
+            $"{new string(' ', (heading.Level - top) * 2)}- [{Regex.Replace(heading.Text, @"([\\\[\]])", @"\$1")}](#{heading.Id})");
+        return $"{Start}\n{string.Join("\n", lines)}\n{End}";
+    }
+
+    private static string Text(ContainerInline? container) => container is null ? string.Empty : string.Concat(container.Descendants<Inline>().Select(inline => inline switch
+    {
+        LiteralInline literal => literal.Content.ToString(),
+        CodeInline code => code.Content,
+        _ => string.Empty
+    })).Trim();
+}
+
+// Code fences the preview draws as diagrams: Mermaid, and Graphviz (DOT).
+internal static class DiagramFences
+{
+    public static bool IsDiagram(string? info) =>
+        (info ?? string.Empty).Trim().ToLowerInvariant() is "mermaid" or "dot" or "graphviz" or "gv";
+}
+
 // Text as the preview shows it: the words without Markdown's marks. Lines stay
 // where they were written, lists keep a bullet or number, tables become
 // tab-separated rows, and links keep their address in parentheses.
@@ -53,7 +98,7 @@ internal static class PlainTextExport
                 return Inlines(paragraph.Inline, context);
             case MathBlock math:
                 return Lines(math);
-            case FencedCodeBlock fenced when string.Equals(fenced.Info, "mermaid", StringComparison.OrdinalIgnoreCase):
+            case FencedCodeBlock fenced when DiagramFences.IsDiagram(fenced.Info):
                 return context.Japanese ? "［図］" : "[Figure]";
             case HtmlBlock html:
                 return StripHtml(Lines(html));

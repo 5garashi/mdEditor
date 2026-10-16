@@ -12,6 +12,20 @@
 
 The version number lives in [VERSION](./VERSION). Add each new version at the top, with a `## version — date` heading (used as the GitHub Release notes).
 
+## 1.0.11 — 2026-10-17
+
+- 「目次」（Ctrl+Shift+J）を加えた。見出しから目次を作ってカーソルの位置に入れる（`<!-- toc -->` と `<!-- /toc -->` の間）。もう一度押すと新しくなる。目次のリンクは、プレビュー・PDF・HTML・Word で見出しに移動する（Word では見出しにブックマークを付ける）。
+- Graphviz の図（```dot、```graphviz、```gv）を、同梱した Viz.js 3.31.0（Graphviz 16.1.0）でオフラインで描くようにした。図の中のリンクと画像は取り除く。PlantUML は Java か外部のサーバーが要るため、今までどおりコードとして表示する。
+- PDF・PNG・Word に保存するときと印刷するときは、長いコードの行を折り返すようにした（今までは横のスクロールバーが写ったり、はみ出した部分が切れたりした）。
+- 「図・チャート表示テスト」のサンプルに、mdEditor の流れを表した色付きの Graphviz の図（16-1）と、コードの色分けの例（19。Python・JavaScript・TypeScript・C#・PowerShell・シェル・SQL・JSON・YAML・HTML・CSS・diff）を加えた。
+- 言語名を書いたコードブロック（```python など）を、プレビューで色分けして表示するようにした（highlight.js 11.12.0 を同梱。約 40 の言語）。色は昼と夜の配色に合わせ、PDF・PNG・HTML・Word に保存したときも付く。言語名のないコードブロックは今までどおり色を付けない。
+
+- Contents (Ctrl+Shift+J) inserts a table of contents built from the headings at the cursor, between <!-- toc --> and <!-- /toc -->; pressing it again updates it. Its links go to the headings in the preview, PDF, HTML, and Word (headings become Word bookmarks).
+- Graphviz diagrams (```dot, ```graphviz, ```gv) are drawn offline with the bundled Viz.js 3.31.0 (Graphviz 16.1.0). Links and images inside a diagram are removed. PlantUML is still shown as code, since it needs Java or an outside server.
+- Long code lines wrap when saving as PDF, PNG, or Word and when printing (before, a scroll bar was captured or the rest of the line was cut off).
+- The Diagram and chart test sample has a colored Graphviz chart of how mdEditor works (16-1) and code color examples (19: Python, JavaScript, TypeScript, C#, PowerShell, shell, SQL, JSON, YAML, HTML, CSS, diff).
+- Code blocks with a language name (```python and so on) are colored in the preview, with highlight.js 11.12.0 bundled (about 40 languages). The colors follow the day and night palettes and are kept in PDF, PNG, HTML, and Word. Code blocks without a language stay plain.
+
 ## 1.0.10 — 2026-10-16
 
 - 配布物（setup.cmd で入れた版と Microsoft Store 版）に CHANGELOG.md を入れるようにした。LICENSE、THIRD-PARTY-NOTICES.md、PRIVACY.md と同じく、アプリの横に置く（Identity 12-6、品質確認規定 6-1）。

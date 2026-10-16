@@ -313,12 +313,46 @@ flowchart TD
 
 ### 16-1. Graphviz (dot)
 
+Expected: a colored chart flowing from Open, through mdEditor (Editor → Convert → Make safe → Preview), to Save As, with table-shaped boxes, rounded boxes, and a dashed two-way arrow.
+
 ```dot
-digraph G {
-    rankdir=LR;
-    node [shape=box];
-    Editor -> Markdig -> Sanitizer -> Preview;
-    Preview -> PDF [style=dashed];
+digraph mdEditor {
+    graph [rankdir=TB, pad=0.2, nodesep=0.3, ranksep=0.32, fontname="Helvetica", bgcolor="#FFFDF2"];
+    node  [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=12,
+           color="#385723", fillcolor="#FFFFFF", fontcolor="#1A1A1A", penwidth=1.4, margin="0.2,0.06"];
+    edge  [color="#385723", penwidth=1.4, arrowsize=0.8, fontname="Helvetica", fontsize=10, fontcolor="#7B4A21"];
+
+    open [shape=plain, label=<
+      <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" COLOR="#385723" BGCOLOR="#FFFFFF" STYLE="rounded">
+        <TR><TD COLSPAN="3" BGCOLOR="#FFE699"><B>Open</B></TD></TR>
+        <TR><TD>Markdown, text</TD><TD>HTML, web pages</TD><TD>Word, e-mail</TD></TR>
+        <TR><TD>CSV, TSV</TD><TD>JSON, XML</TD><TD>Jupyter, images</TD></TR>
+      </TABLE>>];
+
+    subgraph cluster_app {
+      label=<<B>mdEditor</B>>; labeljust=l; fontsize=13; fontcolor="#385723";
+      style="rounded,filled"; color="#385723"; fillcolor="#F9EFCB"; penwidth=1.6; margin=14;
+      editor  [label="Editor\nCodeMirror"];
+      convert [label="Convert\nMarkdig"];
+      guard   [label="Make safe\nHtmlSanitizer", color="#B92613", fillcolor="#FDECEA"];
+      preview [label="Preview\nMermaid · KaTeX · Graphviz · highlight.js", fillcolor="#FFE699", penwidth=2];
+      { rank=same; editor; convert; }
+      { rank=same; guard; preview; }
+      editor -> convert;
+      convert -> guard;
+      guard -> preview;
+      preview -> editor [label="scrolls together", style=dashed, dir=both, constraint=false, color="#7B4A21"];
+    }
+
+    save [shape=plain, label=<
+      <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" COLOR="#385723" BGCOLOR="#FFFFFF" STYLE="rounded">
+        <TR><TD COLSPAN="3" BGCOLOR="#385723"><FONT COLOR="#FFFFFF"><B>Save As</B></FONT></TD></TR>
+        <TR><TD>PDF, PNG</TD><TD>HTML</TD><TD>Word</TD></TR>
+        <TR><TD>CSV, TSV, JSON</TD><TD>Jupyter Notebook</TD><TD>Plain text</TD></TR>
+      </TABLE>>];
+
+    open -> editor;
+    preview -> save;
 }
 ```
 
@@ -400,6 +434,140 @@ graph TD
 
 ---
 
+## 19. Code colors (highlight.js)
+
+Expected: code blocks with a language name are colored: keywords (red), strings (navy), numbers (blue), function names (purple), attributes (brown), tags (green), and comments (gray italic). The night palette uses lighter colors. A block without a language stays plain. The colors are kept when saved as PDF, PNG, HTML, or Word.
+
+### 19-1. Python
+
+```python
+from pathlib import Path
+
+def count_headings(path: Path) -> int:
+    """Count the headings"""
+    lines = path.read_text(encoding="utf-8").splitlines()
+    return sum(1 for line in lines if line.startswith("#"))  # comment
+
+print(count_headings(Path("README.md")), 3.14, True, None)
+```
+
+### 19-2. JavaScript / TypeScript
+
+```javascript
+const formats = ["pdf", "png", "html", "docx"];
+export async function save(name, format = "pdf") {
+  if (!formats.includes(format)) throw new Error(`unknown: ${format}`);
+  return { name, format, size: 1024 * 2 };
+}
+```
+
+```ts
+interface Heading { level: number; text: string }
+const toc = (items: Heading[]): string[] =>
+  items.map((h) => "  ".repeat(h.level - 2) + "- " + h.text);
+```
+
+### 19-3. C#
+
+```csharp
+public sealed record Document(string Path, int Version);
+
+public static class Saver
+{
+    // The original file survives a failed save
+    public static async Task SaveAsync(Document doc, string text)
+    {
+        await File.WriteAllTextAsync(doc.Path + ".tmp", text);
+        File.Move(doc.Path + ".tmp", doc.Path, overwrite: true);
+    }
+}
+```
+
+### 19-4. PowerShell・shell
+
+```powershell
+Get-ChildItem -Path $env:USERPROFILE\Documents -Filter *.md |
+    Where-Object { $_.Length -gt 1KB } |
+    ForEach-Object { Write-Host "$($_.Name): $($_.Length) bytes" }
+```
+
+```bash
+for file in docs/*.md; do
+  echo "checking $file" && grep -c "^#" "$file"
+done
+```
+
+### 19-5. SQL・JSON・YAML
+
+```sql
+SELECT name, COUNT(*) AS pages
+FROM documents
+WHERE saved_at >= '2026-10-01' AND format IN ('pdf', 'docx')
+GROUP BY name
+ORDER BY pages DESC;
+```
+
+```json
+{
+  "app": "mdEditor",
+  "version": "1.0.11",
+  "formats": ["pdf", "html"],
+  "offline": true,
+  "zoom": 0.9
+}
+```
+
+```yaml
+app: mdEditor
+theme: auto   # auto, light, dark
+paper: A4
+backup:
+  enabled: true
+  interval: 15
+```
+
+### 19-6. HTML・CSS
+
+```html
+<!-- comment -->
+<button id="save" class="primary"
+        aria-keyshortcuts="Control+S">Save</button>
+```
+
+```css
+.preview-content pre {
+  padding: 12px;
+  border: 1px solid #1A1A1A;
+  border-radius: 6px;
+}
+```
+
+### 19-7. diff
+
+```diff
+- Save as PDF button
++ Choose PDF in Save As
+  unchanged line
+```
+
+### 19-8. Short names, and no language
+
+Short names such as `py`, `js`, `cs`, `sh`, and `ps1` are colored too. The last block has no language, so it stays plain.
+
+```py
+print("short name")
+```
+
+```ps1
+Write-Output "short name"
+```
+
+```
+no language: def print const SELECT
+```
+
+---
+
 ## Checklist
 
 - [ ] Every Mermaid diagram renders as a drawing, not as code
@@ -409,6 +577,9 @@ graph TD
 - [ ] Diagrams do not overflow a narrow preview (or can be scrolled)
 - [ ] "Save as PDF" includes the diagrams in the PDF
 - [ ] Diagrams render offline
+- [ ] The Graphviz chart (16-1) renders as a colored drawing
+- [ ] Code blocks with a language (19) are colored, and the one without stays plain
+- [ ] Saving as PDF, PNG, HTML, or Word keeps the diagrams and code colors
 
 ---
 

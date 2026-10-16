@@ -313,12 +313,46 @@ flowchart TD
 
 ### 16-1. Graphviz（dot）
 
+期待される表示：上の「開く」から、mdEditor の中の流れ（編集画面 → 変換 → 安全化 → プレビュー）を通って、「名前を付けて保存」へ進む色付きの図。表の形の箱、角の丸い箱、点線の双方向の矢印がある。
+
 ```dot
-digraph G {
-    rankdir=LR;
-    node [shape=box];
-    Editor -> Markdig -> Sanitizer -> Preview;
-    Preview -> PDF [style=dashed];
+digraph mdEditor {
+    graph [rankdir=TB, pad=0.2, nodesep=0.3, ranksep=0.32, fontname="Helvetica", bgcolor="#FFFDF2"];
+    node  [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=12,
+           color="#385723", fillcolor="#FFFFFF", fontcolor="#1A1A1A", penwidth=1.4, margin="0.2,0.06"];
+    edge  [color="#385723", penwidth=1.4, arrowsize=0.8, fontname="Helvetica", fontsize=10, fontcolor="#7B4A21"];
+
+    open [shape=plain, label=<
+      <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" COLOR="#385723" BGCOLOR="#FFFFFF" STYLE="rounded">
+        <TR><TD COLSPAN="3" BGCOLOR="#FFE699"><B>開く</B></TD></TR>
+        <TR><TD>Markdown・テキスト</TD><TD>HTML・Web ページ</TD><TD>Word・メール</TD></TR>
+        <TR><TD>CSV・TSV</TD><TD>JSON・XML</TD><TD>Jupyter・画像</TD></TR>
+      </TABLE>>];
+
+    subgraph cluster_app {
+      label=<<B>mdEditor</B>>; labeljust=l; fontsize=13; fontcolor="#385723";
+      style="rounded,filled"; color="#385723"; fillcolor="#F9EFCB"; penwidth=1.6; margin=14;
+      editor  [label="編集画面\nCodeMirror"];
+      convert [label="変換\nMarkdig"];
+      guard   [label="安全化\nHtmlSanitizer", color="#B92613", fillcolor="#FDECEA"];
+      preview [label="プレビュー\nMermaid · KaTeX · Graphviz · highlight.js", fillcolor="#FFE699", penwidth=2];
+      { rank=same; editor; convert; }
+      { rank=same; guard; preview; }
+      editor -> convert;
+      convert -> guard;
+      guard -> preview;
+      preview -> editor [label="スクロール連動", style=dashed, dir=both, constraint=false, color="#7B4A21"];
+    }
+
+    save [shape=plain, label=<
+      <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" COLOR="#385723" BGCOLOR="#FFFFFF" STYLE="rounded">
+        <TR><TD COLSPAN="3" BGCOLOR="#385723"><FONT COLOR="#FFFFFF"><B>名前を付けて保存</B></FONT></TD></TR>
+        <TR><TD>PDF・PNG</TD><TD>HTML</TD><TD>Word</TD></TR>
+        <TR><TD>CSV・TSV・JSON</TD><TD>Jupyter Notebook</TD><TD>テキスト</TD></TR>
+      </TABLE>>];
+
+    open -> editor;
+    preview -> save;
 }
 ```
 
@@ -400,6 +434,140 @@ graph TD
 
 ---
 
+## 19. コードの色分け（highlight.js）
+
+期待される表示：言語名を書いたコードブロックは、キーワード（赤）・文字列（紺）・数値（青）・関数名（紫）・属性（茶）・タグ（緑）・コメント（灰色の斜体）に色分けされる。夜の配色では明るい色になる。言語名のないブロックは色が付かない。PDF・PNG・HTML・Word に保存しても色が残る。
+
+### 19-1. Python
+
+```python
+from pathlib import Path
+
+def count_headings(path: Path) -> int:
+    """見出しの数を数える"""
+    lines = path.read_text(encoding="utf-8").splitlines()
+    return sum(1 for line in lines if line.startswith("#"))  # コメント
+
+print(count_headings(Path("README.md")), 3.14, True, None)
+```
+
+### 19-2. JavaScript / TypeScript
+
+```javascript
+const formats = ["pdf", "png", "html", "docx"];
+export async function save(name, format = "pdf") {
+  if (!formats.includes(format)) throw new Error(`unknown: ${format}`);
+  return { name, format, size: 1024 * 2 };
+}
+```
+
+```ts
+interface Heading { level: number; text: string }
+const toc = (items: Heading[]): string[] =>
+  items.map((h) => "  ".repeat(h.level - 2) + "- " + h.text);
+```
+
+### 19-3. C#
+
+```csharp
+public sealed record Document(string Path, int Version);
+
+public static class Saver
+{
+    // 保存に失敗しても元のファイルは残る
+    public static async Task SaveAsync(Document doc, string text)
+    {
+        await File.WriteAllTextAsync(doc.Path + ".tmp", text);
+        File.Move(doc.Path + ".tmp", doc.Path, overwrite: true);
+    }
+}
+```
+
+### 19-4. PowerShell・シェル
+
+```powershell
+Get-ChildItem -Path $env:USERPROFILE\Documents -Filter *.md |
+    Where-Object { $_.Length -gt 1KB } |
+    ForEach-Object { Write-Host "$($_.Name): $($_.Length) bytes" }
+```
+
+```bash
+for file in docs/*.md; do
+  echo "checking $file" && grep -c "^#" "$file"
+done
+```
+
+### 19-5. SQL・JSON・YAML
+
+```sql
+SELECT name, COUNT(*) AS pages
+FROM documents
+WHERE saved_at >= '2026-10-01' AND format IN ('pdf', 'docx')
+GROUP BY name
+ORDER BY pages DESC;
+```
+
+```json
+{
+  "app": "mdEditor",
+  "version": "1.0.11",
+  "formats": ["pdf", "html"],
+  "offline": true,
+  "zoom": 0.9
+}
+```
+
+```yaml
+app: mdEditor
+theme: auto   # auto, light, dark
+paper: A4
+backup:
+  enabled: true
+  interval: 15
+```
+
+### 19-6. HTML・CSS
+
+```html
+<!-- コメント -->
+<button id="save" class="primary"
+        aria-keyshortcuts="Control+S">保存</button>
+```
+
+```css
+.preview-content pre {
+  padding: 12px;
+  border: 1px solid #1A1A1A;
+  border-radius: 6px;
+}
+```
+
+### 19-7. diff
+
+```diff
+- PDFに保存ボタン
++ 名前を付けて保存で PDF を選ぶ
+  変わらない行
+```
+
+### 19-8. 短い言語名と、言語名なし
+
+`py`・`js`・`cs`・`sh`・`ps1` のような短い書き方でも色が付く。最後のブロックは言語名がないので色が付かない。
+
+```py
+print("short name")
+```
+
+```ps1
+Write-Output "short name"
+```
+
+```
+no language: def print const SELECT
+```
+
+---
+
 ## 確認チェックリスト
 
 - [ ] すべての Mermaid 図がコードではなく図として表示される
@@ -409,6 +577,9 @@ graph TD
 - [ ] 幅の狭いプレビューでも図が横にはみ出さない（またはスクロールできる）
 - [ ] 「PDFに保存」で図が PDF に含まれる
 - [ ] オフライン環境でも図が表示される
+- [ ] Graphviz の図（16-1）が色付きの図として表示される
+- [ ] 言語名を書いたコードブロック（19）が色分けされ、言語名のないものは色が付かない
+- [ ] 「名前を付けて保存」で PDF・PNG・HTML・Word にしても、図とコードの色が残る
 
 ---
 
