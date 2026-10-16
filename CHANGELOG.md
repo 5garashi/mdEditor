@@ -12,6 +12,12 @@
 
 The version number lives in [VERSION](./VERSION). Add each new version at the top, with a `## version — date` heading (used as the GitHub Release notes).
 
+## 1.0.10 — 2026-10-16
+
+- 配布物（setup.cmd で入れた版と Microsoft Store 版）に CHANGELOG.md を入れるようにした。LICENSE、THIRD-PARTY-NOTICES.md、PRIVACY.md と同じく、アプリの横に置く（Identity 12-6、品質確認規定 6-1）。
+
+- The distribution (the setup.cmd install and the Microsoft Store version) now includes CHANGELOG.md next to the app, with LICENSE, THIRD-PARTY-NOTICES.md, and PRIVACY.md (Identity 12-6, Quality Rules 6-1).
+
 ## 1.0.9 — 2026-10-16
 
 - 英語表示の「書き方」の一覧で、長い例に押されて「Insert」ボタンが右にはみ出していたのを直した（例の文を折り返す）。

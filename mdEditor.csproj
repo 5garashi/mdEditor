@@ -28,8 +28,9 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
-    <!-- Binary redistribution must carry the licenses (MIT, BSD, Apache) and the privacy policy (Identity 12-6). -->
-    <None Include="LICENSE;THIRD-PARTY-NOTICES.md;PRIVACY.md">
+    <!-- Binary redistribution must carry the licenses (MIT, BSD, Apache), the privacy policy, and the
+         changelog (Identity 12-6; Quality Rules 6-1 "distribution"). -->
+    <None Include="LICENSE;THIRD-PARTY-NOTICES.md;PRIVACY.md;CHANGELOG.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>

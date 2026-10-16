@@ -12,7 +12,7 @@ Windows で Markdown ファイルを開き、テキストと整形済み表示�
 
 *A Windows app that opens Markdown files and lets you edit the text side by side with a rendered preview.* [日本語](#特長) / [English](#english)
 
-バージョン / Version: 1.0.9（変更の記録 / Changes: [CHANGELOG.md](./CHANGELOG.md)）
+バージョン / Version: 1.0.10（変更の記録 / Changes: [CHANGELOG.md](./CHANGELOG.md)）
 
 ## 特長
 
