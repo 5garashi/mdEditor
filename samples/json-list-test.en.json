@@ -1,0 +1,6 @@
+[
+  { "id": "001", "name": "Alex Reader", "team": "Design", "extension": 101, "active": true },
+  { "id": "002", "name": "Sam Sender", "team": "Sales", "extension": 202, "active": false, "note": "A value with a | bar" },
+  { "id": "003", "name": "Kim Lee", "team": null, "extension": 303, "active": true, "licenses": ["Architect", "Surveyor"] },
+  { "id": "004", "name": "Pat Doe", "team": "Dev", "extension": 404, "active": true, "address": { "city": "Yokohama", "ward": "Nishi" } }
+]

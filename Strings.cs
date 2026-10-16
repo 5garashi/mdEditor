@@ -43,6 +43,101 @@ internal static class Strings
         ["変更を保存しますか？"] = "Save your changes?",
         ["未保存の変更"] = "Unsaved changes",
         ["プレビュー"] = "Preview",
+        ["図や数式の描画が15秒以内に終わりませんでした。このまま書き出しますか？"] =
+            "Drawing the diagrams and math did not finish within 15 seconds. Export anyway?",
+        ["PNGの書き出し"] = "PNG export",
+        ["PNGの保存先を選択してください"] = "Choose where to save the PNG",
+        ["PNG 画像 (*.png)|*.png"] = "PNG images (*.png)|*.png",
+        ["PNGを保存しました。"] = "The PNG was saved.",
+        ["PNGを書き込めません。同じ名前のファイルをほかのアプリで開いている場合は閉じるか、別の名前で保存してください"] =
+            "The PNG cannot be written. If another app has a file with this name open, close it there, or save under another name",
+        ["PNGを書き出せません。少し待ってから、もう一度お試しください"] = "The PNG cannot be exported. Wait a moment, then try again",
+        ["Wordの書き出し"] = "Word export",
+        ["Word 文書の保存先を選択してください"] = "Choose where to save the Word document",
+        ["Word 文書 (*.docx)|*.docx"] = "Word documents (*.docx)|*.docx",
+        ["Word 文書を保存しました。"] = "The Word document was saved.",
+        ["Word 文書を書き込めません。同じ名前の文書を Word で開いている場合は閉じるか、別の名前で保存してください"] =
+            "The Word document cannot be written. If Word has a document with this name open, close it there, or save under another name",
+        ["Word 文書を書き出せません。少し待ってから、もう一度お試しください"] = "The Word document cannot be exported. Wait a moment, then try again",
+        ["開けるファイル|*.md;*.markdown;*.txt;*.html;*.htm;*.docx;*.eml;*.csv;*.tsv;*.json;*.xml;*.ipynb;*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp|Markdown ファイル (*.md;*.markdown)|*.md;*.markdown|テキスト ファイル (*.txt)|*.txt|HTML ファイル (*.html;*.htm)|*.html;*.htm|Word 文書 (*.docx)|*.docx|メール (*.eml)|*.eml|CSV / TSV (*.csv;*.tsv)|*.csv;*.tsv|JSON / XML (*.json;*.xml)|*.json;*.xml|Jupyter Notebook (*.ipynb)|*.ipynb|画像 (*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp)|*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp|すべてのファイル (*.*)|*.*"] =
+            "Files mdEditor can open|*.md;*.markdown;*.txt;*.html;*.htm;*.docx;*.eml;*.csv;*.tsv;*.json;*.xml;*.ipynb;*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp|Markdown files (*.md;*.markdown)|*.md;*.markdown|Text files (*.txt)|*.txt|HTML files (*.html;*.htm)|*.html;*.htm|Word documents (*.docx)|*.docx|E-mail (*.eml)|*.eml|CSV / TSV (*.csv;*.tsv)|*.csv;*.tsv|JSON / XML (*.json;*.xml)|*.json;*.xml|Jupyter Notebook (*.ipynb)|*.ipynb|Images (*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp)|*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp|All files (*.*)|*.*",
+        ["Markdown ファイル (*.md)|*.md|テキスト ファイル (*.txt)|*.txt|すべてのファイル (*.*)|*.*"] =
+            "Markdown files (*.md)|*.md|Text files (*.txt)|*.txt|All files (*.*)|*.*",
+        ["Markdown ファイル (*.md)|*.md|テキスト（そのまま）(*.txt)|*.txt|テキスト（記号なし）(*.txt)|*.txt|PDF (*.pdf)|*.pdf|HTML (*.html)|*.html|PNG 画像 (*.png)|*.png|Word 文書 (*.docx)|*.docx|CSV（文書の中の表）(*.csv)|*.csv|TSV（文書の中の表）(*.tsv)|*.tsv|JSON（文書の中の表）(*.json)|*.json|Jupyter Notebook (*.ipynb)|*.ipynb"] =
+            "Markdown files (*.md)|*.md|Text, as written (*.txt)|*.txt|Text, without marks (*.txt)|*.txt|PDF (*.pdf)|*.pdf|HTML (*.html)|*.html|PNG images (*.png)|*.png|Word documents (*.docx)|*.docx|CSV, the tables in the document (*.csv)|*.csv|TSV, the tables in the document (*.tsv)|*.tsv|JSON, the tables in the document (*.json)|*.json|Jupyter Notebook (*.ipynb)|*.ipynb",
+        ["Word の文書を Markdown に変換して開きました。見出し・リスト・表・リンク・画像は戻り、色や配置は戻りません。保存すると Markdown ファイルになります（Word の文書は変わりません）。"] =
+            "Converted the Word document to Markdown. Headings, lists, tables, links, and images come back; colors and layout do not. Saving makes a Markdown file (the Word document stays as it is).",
+        ["Word の文書を読み込めません。Word で開けるか確かめて、.docx 形式で保存し直してから、もう一度開いてください"] =
+            "The Word document cannot be read. Check that it opens in Word, save it again as .docx, then try again",
+        ["https:// で始まるアドレスだけ開けます。アドレスを確かめて、もう一度入力してください。"] =
+            "Only addresses that start with https:// can be opened. Check the address, then enter it again.",
+        ["ページを読み込んでいます…"] = "Loading the page…",
+        ["この PC や社内ネットワークのアドレスは開けません。"] =
+            "Addresses on this PC or the local network cannot be opened.",
+        ["https ではないアドレスに転送されたため、開きませんでした。"] =
+            "The page forwarded to an address that is not https, so it was not opened.",
+        ["ページが大きすぎるため、開きませんでした（10 MB まで）。"] =
+            "The page is too large to open (up to 10 MB).",
+        ["{0} を開きました。スクリプトは実行しないため、後から読み込まれる内容は入りません。保存すると Markdown ファイルになります。"] =
+            "Opened {0}. Scripts do not run, so content a page loads later is not included. Saving makes a Markdown file.",
+        ["ページを開けませんでした。アドレスとインターネットの接続を確かめて、もう一度お試しください。"] =
+            "The page could not be opened. Check the address and your internet connection, then try again.",
+        ["Markdown・HTML ファイル (*.md;*.markdown;*.html;*.htm)|*.md;*.markdown;*.html;*.htm|Markdown ファイル (*.md;*.markdown)|*.md;*.markdown|HTML ファイル (*.html;*.htm)|*.html;*.htm|すべてのファイル (*.*)|*.*"] =
+            "Markdown and HTML files (*.md;*.markdown;*.html;*.htm)|*.md;*.markdown;*.html;*.htm|Markdown files (*.md;*.markdown)|*.md;*.markdown|HTML files (*.html;*.htm)|*.html;*.htm|All files (*.*)|*.*",
+        ["開けるファイル（.md、.txt、.html、.docx、.eml、.csv、.tsv、.json、.xml、.ipynb、画像）を1つだけドロップしてください。画像を編集画面にドロップすると、文書に入れます。"] =
+            "Drop exactly one file mdEditor can open (.md, .txt, .html, .docx, .eml, .csv, .tsv, .json, .xml, .ipynb, or an image). Images dropped on the editor are inserted into the document.",
+        ["Jupyter Notebook を読み込めません。Jupyter で開けるか確かめて、もう一度開いてください"] =
+            "The Jupyter Notebook cannot be read. Check that it opens in Jupyter, then open it again",
+        ["Jupyter Notebook を Markdown に変換して開きました。コードは言語付きのコードの枠、実行結果は「output」の枠・画像・表になります。保存すると Markdown ファイルになります（ノートブックは変わりません）。"] =
+            "The Jupyter Notebook was converted to Markdown. Code is in code blocks with its language, and outputs are \"output\" blocks, pictures, or tables. Saving creates a Markdown file (the notebook is unchanged).",
+        ["Jupyter Notebook を保存しました。コードの枠はコードのセル、それ以外は Markdown のセルになります（実行結果は入りません）。"] =
+            "The Jupyter Notebook was saved. Code blocks became code cells and everything else Markdown cells (outputs are not included).",
+        ["Jupyter Notebook の書き出し"] =
+            "Jupyter Notebook export",
+        ["画像を開きました。画像の下に説明を書き足して、Markdown ファイルとして保存できます。別のフォルダーに保存したときは、画像もそこに写します。"] =
+            "The image was opened. Write a description below it and save it as a Markdown file. If you save in another folder, the image is copied there too.",
+        ["JSON の一覧を Markdown の表にして開きました。項目の名前を見出しの行にしています。"] =
+            "The JSON list was opened as a Markdown table, with the field names as the header row. ",
+        ["JSON として読めない所があるので、中身をそのままコードの枠に入れて開きました。"] =
+            "Part of the file is not valid JSON, so its content was opened as it is in a code block. ",
+        ["XML として読めない所があるので、中身をそのままコードの枠に入れて開きました。"] =
+            "Part of the file is not valid XML, so its content was opened as it is in a code block. ",
+        ["JSON をコードの枠に入れて開きました（表にできる形ではないため）。前後に説明を書き足せます。"] =
+            "The JSON was opened in a code block (it is not a list that fits a table). You can add notes before and after it. ",
+        ["XML をコードの枠に入れて開きました。前後に説明を書き足せます。"] =
+            "The XML was opened in a code block. You can add notes before and after it. ",
+        ["保存すると Markdown ファイルになります（元のファイルは変わりません）。"] =
+            "Saving creates a Markdown file (the original file is unchanged).",
+        ["画像を入れるには、先に文書を保存します（画像は文書の横の「名前-images」フォルダーに置きます）。保存先を選びますか？"] =
+            "To insert images, save the document first (images go in a \"name-images\" folder beside it). Choose where to save?",
+        ["画像を写せません。文書のフォルダーに書き込めるか確かめて、もう一度お試しください"] =
+            "The image cannot be copied. Check that you can write to the document's folder, then try again",
+        ["JSONの書き出し"] =
+            "JSON export",
+        ["メールを読み込めません。メールアプリから .eml 形式で保存し直してから、もう一度開いてください"] =
+            "The e-mail cannot be read. Save it again as .eml from your mail app, then open it again",
+        ["メールを Markdown に変換して開きました。件名・差出人・宛先・日付と本文を読み込み、添付ファイルは名前だけを載せました。保存すると Markdown ファイルになります（メールのファイルは変わりません）。"] =
+            "The e-mail was converted to Markdown. The subject, sender, recipients, date, and body were read; attachments are listed by name only. Saving creates a Markdown file (the e-mail file is unchanged).",
+        ["表のファイルを Markdown の表にして開きました。1 行目を見出しの行にしています。保存すると Markdown ファイルになります（元のファイルは変わりません）。"] =
+            "The table file was opened as a Markdown table, with the first row as the header. Saving creates a Markdown file (the original file is unchanged).",
+        ["記号なしのテキストを保存しました。"] =
+            "The text without marks was saved.",
+        ["テキストの書き出し"] =
+            "Text export",
+        ["CSVの書き出し"] =
+            "CSV export",
+        ["TSVの書き出し"] =
+            "TSV export",
+        ["この文書には表がありません。表（| で区切った行）のある文書で保存してください。"] =
+            "This document has no tables. Save a document that has a table (rows separated by |).",
+        ["表を保存しました。"] =
+            "The table was saved.",
+        ["文書の中の表を、1 つずつ別のファイルに保存しました。"] =
+            "Each table in the document was saved as its own file.",
+        ["mdEditor で保存した HTML から、元の Markdown を開きました。保存すると Markdown ファイルになります（HTML ファイルは変わりません）。"] =
+            "Opened the original Markdown kept in this HTML file by mdEditor. Saving makes a Markdown file (the HTML file stays as it is).",
+        ["HTML を Markdown に変換して開きました。色や配置、図の絵は元に戻りません。保存すると Markdown ファイルになります（HTML ファイルは変わりません）。"] =
+            "Converted the HTML to Markdown. Colors, layout, and drawn diagrams do not come back. Saving makes a Markdown file (the HTML file stays as it is).",
         ["HTML ファイル (*.html)|*.html"] = "HTML files (*.html)|*.html",
         ["新しい文書.html"] = "Untitled.html",
         ["HTMLの保存先を選択してください"] = "Choose where to save the HTML file",

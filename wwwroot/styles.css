@@ -543,7 +543,119 @@ body.dragging {
   text-underline-offset: 3px;
 }
 
+/* Group headings in the syntax table (Basics, Diagrams, Math). */
+.help-group th {
+  padding-top: 14px;
+  border-bottom: 2px solid var(--line);
+  font-size: 15px;
+  font-weight: 800;
+  text-align: left;
+}
+
+/* Drawn diagram examples stay small in the table. */
+.help-diagram svg {
+  max-width: 240px;
+  max-height: 180px;
+  height: auto;
+}
+
+/* Narrow windows: the example code wraps and the drawings shrink, so the table
+   needs as little sideways scrolling as possible. */
+@media screen and (max-width: 760px) {
+  .help-table pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .help-diagram svg {
+    max-width: 140px;
+  }
+}
+
+/* An internet image that is not loaded: what it is, in place of the picture. */
+.external-image {
+  display: inline-block;
+  padding: 4px 8px;
+  border: 1px dashed var(--document-foreground);
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.url-row input {
+  flex: 1 1 18em;
+  min-width: 0;
+  min-height: 44px;
+  padding: 4px 8px;
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  color: var(--ink);
+  background: var(--card);
+  font: inherit;
+}
+
+.url-dialog form {
+  margin: 0;
+}
+
+/* PNG and Word output: only the preview, at a fixed width, in the day palette. */
+:root:has(body.capture-export) {
+  height: auto;
+  overflow: visible;
+  background: #FFFFFF;
+}
+
+body.capture-export {
+  display: block;
+  height: auto;
+  overflow: visible;
+  background: #FFFFFF;
+}
+
+body.capture-export .brand-bar,
+body.capture-export .toolbar,
+body.capture-export .notice,
+body.capture-export .editor-pane,
+body.capture-export .pane-divider,
+body.capture-export .pane-heading,
+body.capture-export dialog {
+  display: none !important;
+}
+
+body.capture-export .workspace {
+  display: block;
+  padding: 0;
+}
+
+body.capture-export .preview-pane {
+  display: block !important;
+  position: static;
+  width: auto;
+  height: auto;
+  border: 0;
+  border-radius: 0;
+  background: #FFFFFF;
+}
+
+body.capture-export .preview-content {
+  --document-background: #FFFFFF;
+  --document-foreground: #1A1A1A;
+  --document-rule: #D0D0D0;
+  width: 800px;
+  height: auto;
+  overflow: visible;
+  padding: 32px 40px;
+  color: #1A1A1A;
+  background: #FFFFFF;
+}
+
+.help-tasks {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
 .help-insert {
+  white-space: nowrap;
   min-width: 0;
   /* 44px targets throughout (Identity 7-3 (1)). */
   min-height: 44px;

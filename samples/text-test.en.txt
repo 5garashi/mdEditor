@@ -1,0 +1,39 @@
+Text file test
+
+This file is a .txt file. It opens in the editor as it is, and saving keeps it a .txt file.
+A single line break is joined in the preview (a Markdown rule).
+This line ends with two spaces, so the preview breaks the line here.  
+(This line is shown on the next line.)
+A backslash at the end of a line also breaks it.\
+(This line is on the next line too.)
+
+# A heading (a # and a space)
+
+#Not a heading (no space after #)
+
+- A list with hyphens
+- Second item
+  - Nested
+
+1. A numbered list
+2. Second item
+
+- [x] Done
+- [ ] Not yet
+
+**Bold**, *italic*, ~~strikethrough~~, `code`, [a link](https://example.com), <https://example.com>
+
+> A quote
+
+| Name | Value |
+| --- | ---: |
+| Apple | 120 |
+| Orange | 80 |
+
+    A line starting with four spaces (a code block)
+
+---
+
+Math $E = mc^2$ and a footnote[^1]
+
+[^1]: The footnote text.

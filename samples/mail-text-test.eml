@@ -1,0 +1,18 @@
+From: =?ISO-2022-JP?B?GyRCOjRGIxsoQiAbJEIyVjtSGyhC?= <sato@example.com>
+To: =?ISO-2022-JP?B?GyRCOzNFRBsoQiAbJEJCQE86GyhC?= <yamada@example.com>
+Subject: =?ISO-2022-JP?B?GyRCIVolRiU5JUghW0o4O3okQCQxJE4lYSE8JWsbKEI=?=
+Date: Fri, 16 Oct 2026 09:45:00 +0900
+MIME-Version: 1.0
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
+
+山田さん
+
+文字だけのメールのテストです。
+行は書いたとおりの位置で改行して表示されます。
+この 3 行は、それぞれ別の行に出ます。
+
+> 引用された前のメールの行
+> 2 行目
+
+佐藤

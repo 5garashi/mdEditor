@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!--
+  ファイル名 / File: html-test.html
+  概要 / Description: HTML の読み込みテスト（mdEditor で開いて Markdown に変換されるかを確かめる）
+  作成者 / Author: 5garashi.com設計事務所
+  作成日 / Created: 2026-10-16
+  ライセンス / License: MIT
+  SPDX-License-Identifier: MIT
+-->
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>HTML の読み込みテスト</title>
+<style>body { color: #333; } .red { color: red; }</style>
+<script>document.addEventListener("DOMContentLoaded", () => document.body.append("（スクリプトが動いたときだけ出る文。mdEditor では出ない）"));</script>
+</head>
+<body>
+<header><nav><a href="#s1">見出し 1 へ</a></nav></header>
+<main>
+<h1 id="s1">HTML の読み込みテスト</h1>
+<p>この段落には <strong>太字</strong>, <em>斜体</em>, <code>code</code>, <a href="https://example.com">リンク</a>、<span class="red">赤い文字（色は戻らない）</span>.</p>
+<h2>リスト</h2>
+<ul><li>項目 A<ul><li>入れ子</li></ul></li><li>項目 B</li></ul>
+<ol><li>一つ目</li><li>二つ目</li></ol>
+<h2>表</h2>
+<table><thead><tr><th>名前</th><th>値</th></tr></thead>
+<tbody><tr><td>りんご</td><td>120</td></tr><tr><td>みかん</td><td>80</td></tr></tbody></table>
+<h2>画像</h2>
+<p>同じフォルダーの画像（表示される）:</p>
+<p><img src="import-test-images/sample.png" alt="サンプル画像" width="240"></p>
+<p>インターネット上の画像（確認するまで読み込まない）:</p>
+<p><img src="https://github.githubassets.com/favicons/favicon.png" alt="GitHub"></p>
+<h2>数式</h2>
+<p>文中の式 <math><semantics><mrow><mi>E</mi><mo>=</mo><mi>m</mi><msup><mi>c</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">E = mc^2</annotation></semantics></math></p>
+<math display="block"><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">x_1 = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}</annotation></semantics></math>
+<h2>引用とコード</h2>
+<blockquote><p>引用の段落</p></blockquote>
+<pre><code class="language-js">console.log("hello");</code></pre>
+<h2>取り除かれるもの</h2>
+<p>次のボタン・埋め込み・スクリプトは変換で取り除かれ、ボタンの文字だけが残ります。</p>
+<button onclick="alert('onclick')">押しても何も起きないボタン</button>
+<iframe src="https://example.com"></iframe>
+<object data="movie.swf"></object>
+<embed src="movie.swf">
+</main>
+<footer><p>フッターの文</p></footer>
+</body>
+</html>
