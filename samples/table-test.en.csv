@@ -1,0 +1,6 @@
+Name,Team,Extension,Note
+Alex Reader,Design,101,"A cell with a comma, here"
+Sam Sender,Sales,202,"A cell with a
+line break"
+Kim Lee,"Admin",303,"A cell with ""quotes"""
+Pat Doe,Dev,404,A cell with a | bar

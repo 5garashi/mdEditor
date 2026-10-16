@@ -35,16 +35,18 @@
       toolbar: "文書操作",
       sample: "サンプル", sampleHeading: "サンプルを開く",
       sampleIntro: "図と数式を含む文書を、編集欄に入れて試せます。短い例のほかに、使えるすべての図・チャート・数式を確かめる長い文書（日本語・英語）もあります。選んだときだけ入ります。",
+      settingsExport: "書き出し",
+      settingsHtmlSource: "HTMLに保存するとき、元の Markdown も入れる（mdEditor で開くと元どおりに戻せる）",
+      settingsHtmlSourceNote: "HTML の中に、元の文章がそのまま入ります。画面に出ないコメント（<!-- -->）も含まれるので、人に渡す前に確かめてください。入れない場合も、mdEditor で開くと Markdown に変換して開けます（色や配置、図の絵は戻りません）。",
       sampleLoadFailed: "サンプルを読み込めませんでした。mdEditor を入れ直してから、もう一度お試しください。",
-      sampleOpen: "開く", sampleOpenLabel: (name) => `サンプル「${name}」を編集欄に入れる`,
-      sampleConfirm: "編集欄の内容をサンプルに置き換えます。よろしいですか？",
+      sampleOpen: "開く", sampleOpenLabel: (name) => `サンプル「${name}」を新しい文書として開く`,
       about: "このアプリについて", aboutHeading: "このアプリについて", aboutVersion: "バージョン",
       aboutIntro: "mdEditor は 5garashi.com Design Office が作った、Markdown の編集・プレビュー・PDF 書き出しのアプリです。",
       aboutCompany: "5garashi.com Design Office の紹介", aboutWorks: "作品・ほかのアプリ",
       aboutSupport: "サポート・お問い合わせ", aboutPrivacy: "プライバシーポリシー",
       aboutNote: "リンクは選んだときだけブラウザーで開きます。起動時の広告や、PDF への宣伝の挿入はありません。",
       open: "開く", openTitle: "開く (Ctrl+O)", save: "保存", saveTitle: "保存 (Ctrl+S)",
-      saveAs: "名前を付けて保存", pdf: "PDFに保存",
+      saveAs: "名前を付けて保存",
       languageToggle: "English", languageLabel: "表示言語を English に切り替える",
       editorHeading: "Markdown を編集", editorLabel: "Markdown テキスト",
       previewHeading: "プレビュー", previewLabel: "Markdown の表示結果",
@@ -52,7 +54,18 @@
       dividerTitle: "ドラッグまたは矢印キーで左右の幅を調整します",
       fullscreenEditor: "編集画面をウィンドウ全体に表示", fullscreenPreview: "プレビューをウィンドウ全体に表示",
       fullscreenExit: "元の表示に戻す", saved: "保存済み", unsaved: "未保存の変更",
-      html: "HTMLに保存",
+      settingsReaderLang: "言語", readerLangAuto: "自動（段落ごとに判定）", readerLangJa: "日本語", readerLangEn: "英語",
+      settingsReaderVoice: "音声", readerVoiceAuto: "自動（最初に見つかった音声）",
+      readerNoVoiceFor: (lang) => `${lang === "ja" ? "日本語" : "英語"}の読み上げに使える音声がこの PC にありません。Windows の「設定」→「時刻と言語」→「音声」で音声を追加してください。`,
+      openUrl: "URLを開く", urlHeading: "URLを開く",
+      urlIntro: "https:// で始まる Web ページを、Markdown に変換して開きます。スクリプトは実行せず、文書の内容をどこかへ送ることもありません。ページの画像は、そのページから読み込みます。",
+      urlLabel: "アドレス", urlOpen: "開く",
+      loadExternal: "画像を読み込む",
+      noticeExternal: (count) => `この文書には、インターネット上の画像が ${count} 件あります。読み込むと、その画像のサーバーに IP アドレスなどが伝わります。`,
+      externalImage: (alt, host) => `［外部の画像${alt ? `: ${alt}` : ""}（${host}）。読み込んでいません］`,
+      settingsInternet: "インターネット", settingsExternal: "ネット上の画像",
+      externalAsk: "確認してから読み込む（初期設定）", externalAlways: "いつも読み込む", externalNever: "読み込まない",
+      settingsExternalNote: "文書の中のネット上の画像（https のものだけ）を読み込むかどうかです。読み込むと、その画像のサーバーに IP アドレスや時刻が伝わります。スクリプトは実行せず、文書の内容を送ることもありません。",
       detachPreview: "別ウィンドウで表示", attachPreview: "本体に戻す", attachPreviewMain: "プレビューを本体に戻す",
       pdfStarting: "PDF出力を開始しています",
       findReplace: "検索・置換", findReplaceTitle: "検索・置換 (Ctrl+H)",
@@ -102,7 +115,7 @@
         findReplace: "検索・置換", findNext: "次を検索", findPrev: "前を検索", replaceAll: "すべて置換",
         help: "Markdown の書き方", shortcuts: "キー操作の一覧", fullscreenEditor: "編集画面をウィンドウ全体に表示",
         fullscreenPreview: "プレビューをウィンドウ全体に表示", nextPane: "次の欄へ移動", previousPane: "前の欄へ移動",
-        windowFullscreen: "ウィンドウの全画面表示", settings: "設定", readAloud: "読み上げ・一時停止", stopReading: "読み上げを停止", html: "HTMLに保存",
+        windowFullscreen: "ウィンドウの全画面表示", settings: "設定", readAloud: "読み上げ・一時停止", stopReading: "読み上げを停止", html: "HTMLに保存", png: "PNGに保存", docx: "Wordに保存", openUrl: "URLを開く",
         detachPreview: "プレビューを別ウィンドウで表示・本体に戻す"
       },
       helpIntro: "左の書き方で入力すると、右のように表示されます。「挿入」を押すと、編集欄のカーソル位置に例を入れます。",
@@ -140,16 +153,18 @@
       toolbar: "Document actions",
       sample: "Samples", sampleHeading: "Open a sample",
       sampleIntro: "Try a document with diagrams and math. Besides the short examples, there are long tests of every supported diagram, chart, and formula (Japanese and English). Nothing is inserted until you choose one.",
+      settingsExport: "Export",
+      settingsHtmlSource: "Keep the original Markdown in saved HTML (opens back exactly in mdEditor)",
+      settingsHtmlSourceNote: "The original text goes into the HTML file as it is, including comments (<!-- -->) that are never shown, so check it before you share the file. Without it, mdEditor still opens the HTML by converting it to Markdown (colors, layout, and drawn diagrams do not come back).",
       sampleLoadFailed: "The sample could not be loaded. Reinstall mdEditor, then try again.",
-      sampleOpen: "Open", sampleOpenLabel: (name) => `Put the sample "${name}" in the editor`,
-      sampleConfirm: "This replaces the editor content with the sample. Continue?",
+      sampleOpen: "Open", sampleOpenLabel: (name) => `Open the sample "${name}" as a new document`,
       about: "About", aboutHeading: "About this app", aboutVersion: "Version",
       aboutIntro: "mdEditor is a Markdown editor, previewer, and PDF exporter made by 5garashi.com Design Office.",
       aboutCompany: "About 5garashi.com Design Office", aboutWorks: "Works and other apps",
       aboutSupport: "Support and contact", aboutPrivacy: "Privacy policy",
       aboutNote: "Links open in your browser only when you choose them. The app shows no ads at startup and never inserts promotions into PDFs.",
       open: "Open", openTitle: "Open (Ctrl+O)", save: "Save", saveTitle: "Save (Ctrl+S)",
-      saveAs: "Save As", pdf: "Save as PDF",
+      saveAs: "Save As",
       languageToggle: "日本語", languageLabel: "Switch the display language to Japanese",
       editorHeading: "Edit Markdown", editorLabel: "Markdown text",
       previewHeading: "Preview", previewLabel: "Rendered Markdown",
@@ -157,7 +172,18 @@
       dividerTitle: "Drag or use the arrow keys to resize",
       fullscreenEditor: "Fill window with editor", fullscreenPreview: "Fill window with preview",
       fullscreenExit: "Restore layout", saved: "Saved", unsaved: "Unsaved changes",
-      html: "Save as HTML",
+      settingsReaderLang: "Language", readerLangAuto: "Automatic (per paragraph)", readerLangJa: "Japanese", readerLangEn: "English",
+      settingsReaderVoice: "Voice", readerVoiceAuto: "Automatic (first voice found)",
+      readerNoVoiceFor: (lang) => `No ${lang === "ja" ? "Japanese" : "English"} voice for read-aloud is installed on this PC. Add one in Windows Settings > Time & language > Speech.`,
+      openUrl: "Open URL", urlHeading: "Open a URL",
+      urlIntro: "Opens a web page that starts with https:// as Markdown. Scripts do not run, and nothing about the document is sent anywhere. Images on the page load from that page.",
+      urlLabel: "Address", urlOpen: "Open",
+      loadExternal: "Load images",
+      noticeExternal: (count) => `This document has ${count} image(s) on the internet. Loading them lets those servers see information such as your IP address.`,
+      externalImage: (alt, host) => `[Internet image${alt ? `: ${alt}` : ""} (${host}), not loaded]`,
+      settingsInternet: "Internet", settingsExternal: "Images on the internet",
+      externalAsk: "Ask before loading (default)", externalAlways: "Always load", externalNever: "Never load",
+      settingsExternalNote: "Whether images in a document that are on the internet (https only) load. Loading one lets its server see your IP address and the time. Scripts never run, and the document's content is never sent.",
       detachPreview: "Open in its own window", attachPreview: "Return to main window", attachPreviewMain: "Return preview here",
       pdfStarting: "Starting PDF export",
       findReplace: "Find/Replace", findReplaceTitle: "Find/Replace (Ctrl+H)",
@@ -207,7 +233,7 @@
         findReplace: "Find/Replace", findNext: "Find next", findPrev: "Find previous", replaceAll: "Replace all",
         help: "Markdown syntax", shortcuts: "Keyboard shortcuts", fullscreenEditor: "Fill window with editor",
         fullscreenPreview: "Fill window with preview", nextPane: "Next pane", previousPane: "Previous pane",
-        windowFullscreen: "Window full screen", settings: "Settings", readAloud: "Read aloud / pause", stopReading: "Stop reading", html: "Save as HTML",
+        windowFullscreen: "Window full screen", settings: "Settings", readAloud: "Read aloud / pause", stopReading: "Stop reading", html: "Save as HTML", png: "Save as PNG", docx: "Save as Word", openUrl: "Open URL",
         detachPreview: "Preview in its own window / return"
       },
       helpIntro: "Type the syntax on the left to get the result on the right. Insert puts the example at the cursor in the editor.",
@@ -298,8 +324,8 @@
   // textarea made Narrator stall for 20+ seconds on each selection change).
   const { Compartment, EditorSelection, EditorState, EditorView, defaultKeymap, drawSelection, highlightActiveLine, history, historyKeymap, keymap } = window.CodeMirror;
   const displayDefaults = {
-    font: "standard", size: "1", spacing: "1.7", fullWidth: false, activeLine: false, thickCaret: false,
-    reader: false, rate: "1", pause: "0.5"
+    font: "standard", size: "1", spacing: "1.7", fullWidth: false, htmlSource: false, activeLine: false, thickCaret: false,
+    reader: false, rate: "1", pause: "0.5", readerLang: "auto", readerVoice: ""
   };
   const displayStorageKey = "mdeditor-display";
   let displaySettings = (() => {
@@ -414,13 +440,42 @@
 
   document.getElementById("open-button").addEventListener("click", () => post({ type: "open" }));
   document.getElementById("save-button").addEventListener("click", () => post({ type: "save" }));
-  document.getElementById("save-as-button").addEventListener("click", () => post({ type: "saveAs" }));
-  document.getElementById("pdf-button").addEventListener("click", () => {
+  // Save As lists every format (Markdown, text, PDF, HTML, PNG, Word), like Open.
+  // Keeping the original Markdown in the HTML is a choice in Settings (off by default).
+  const saveAs = () => post({ type: "saveAs", embedSource: Boolean(displaySettings.htmlSource) });
+  document.getElementById("save-as-button").addEventListener("click", () => saveAs());
+  const exportPdf = () => {
     pdfStarting = true;
     saveState.textContent = t("pdfStarting");
     post({ type: "exportPdf" });
-  });
-  document.getElementById("html-button").addEventListener("click", () => post({ type: "exportHtml" }));
+  };
+  const exportHtml = () => post({ type: "exportHtml", embedSource: Boolean(displaySettings.htmlSource) });
+
+  // PNG and Word output: the preview alone at a fixed width in the day
+  // palette, so the host can capture it (and each diagram or formula) as pictures.
+  window.mdeditorCaptureLayout = (on) => {
+    document.body.classList.toggle("capture-export", on);
+    if (on) window.scrollTo(0, 0);
+    return true;
+  };
+  window.mdeditorCaptureSize = () => {
+    const rect = preview.getBoundingClientRect();
+    return { width: Math.ceil(rect.width), height: Math.ceil(preview.scrollHeight) };
+  };
+  // Diagrams and formulas in document order, the order the Word output meets them.
+  // Only the outer boxes count: shapes inside a drawing can carry the class
+  // "mermaid" too (git graph commits do), and they are not figures of their own.
+  window.mdeditorFigureRects = () => Array.from(preview.querySelectorAll("div.mermaid, span.math, div.math"))
+    .filter((element) => !element.parentElement?.closest(".mermaid, .math")).map((element) => {
+    const rect = element.getBoundingClientRect();
+    const pad = element.classList.contains("mermaid") ? 4 : 1;
+    return {
+      x: Math.max(0, rect.left + window.scrollX - pad),
+      y: Math.max(0, rect.top + window.scrollY - pad),
+      width: Math.max(1, rect.width + pad * 2),
+      height: Math.max(1, rect.height + pad * 2)
+    };
+    });
 
   // Encoding: shown beside the file name, chosen in a dialog, and announced in a
   // notice when it had to be guessed or some bytes could not be read.
@@ -451,8 +506,11 @@
     }
     noticeText.textContent = noticeState.kind === "message"
       ? noticeState.text
-      : t(noticeState.kind === "lossy" ? "noticeLossy" : "noticeGuessed")(encodingLabel(noticeState.encoding));
-    document.getElementById("notice-encoding").hidden = noticeState.kind === "message";
+      : noticeState.kind === "external"
+        ? [noticeState.prefix, t("noticeExternal")(noticeState.count)].filter(Boolean).join(" ")
+        : t(noticeState.kind === "lossy" ? "noticeLossy" : "noticeGuessed")(encodingLabel(noticeState.encoding));
+    document.getElementById("notice-encoding").hidden = noticeState.kind === "message" || noticeState.kind === "external";
+    document.getElementById("notice-action").hidden = noticeState.kind !== "external";
     notice.classList.toggle("notice-strong", noticeState.kind === "lossy");
     notice.hidden = false;
   };
@@ -489,6 +547,32 @@
 
   encodingButton.addEventListener("click", openEncodingDialog);
   document.getElementById("notice-encoding").addEventListener("click", openEncodingDialog);
+  document.getElementById("notice-action").addEventListener("click", () => {
+    noticeState = noticeState?.prefix ? { kind: "message", text: noticeState.prefix } : null;
+    updateNotice();
+    post({ type: "allowExternalImages" });
+  });
+
+  // Open URL: an https:// web page opens as Markdown (the host fetches it).
+  const urlDialog = document.getElementById("url-dialog");
+  const urlInput = document.getElementById("url-input");
+  const openUrlDialog = () => {
+    urlDialog.showModal();
+    urlInput.select();
+  };
+  document.getElementById("url-button").addEventListener("click", openUrlDialog);
+  document.getElementById("url-close").addEventListener("click", () => urlDialog.close());
+  document.getElementById("url-form").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const url = urlInput.value.trim();
+    if (!url) return;
+    urlDialog.close();
+    post({ type: "openUrl", url });
+  });
+
+  // Internet images (ask, always, never) belong to the host, which renders the preview.
+  const externalSelect = document.getElementById("setting-external");
+  externalSelect.addEventListener("change", () => post({ type: "setExternalImages", value: externalSelect.value }));
   document.getElementById("notice-close").addEventListener("click", () => {
     noticeState = null;
     updateNotice();
@@ -716,6 +800,7 @@
 
   // Markdown quick reference. Results are fixed markup written here, not user input.
   const helpItems = [
+    { group: { ja: "基本", en: "Basics" } },
     { block: true,
       ja: ["見出し", "# 見出し1\n## 見出し2\n### 見出し3", '<span class="help-h1">見出し1</span><span class="help-h2">見出し2</span><span class="help-h3">見出し3</span>'],
       en: ["Headings", "# Heading 1\n## Heading 2\n### Heading 3", '<span class="help-h1">Heading 1</span><span class="help-h2">Heading 2</span><span class="help-h3">Heading 3</span>'] },
@@ -750,9 +835,54 @@
       en: ["Table", "| Name | Qty |\n| --- | ---: |\n| Apple | 3 |", '<table><thead><tr><th>Name</th><th class="help-right">Qty</th></tr></thead><tbody><tr><td>Apple</td><td class="help-right">3</td></tr></tbody></table>'] },
     { block: true, ja: ["区切り線", "---", "<hr>"], en: ["Horizontal rule", "---", "<hr>"] },
     { block: true,
-      ja: ["図（Mermaid）", "```mermaid\nflowchart LR\n  A[開始] --> B[終了]\n```", "<small>フローチャートやシーケンス図などが描かれます</small>"],
-      en: ["Diagram (Mermaid)", "```mermaid\nflowchart LR\n  A[Start] --> B[End]\n```", "<small>Draws flowcharts, sequence diagrams, and more</small>"] },
-    { math: "E = mc^2", ja: ["数式", "$E = mc^2$", ""], en: ["Math", "$E = mc^2$", ""] }
+      ja: ["チェックリスト", "- [x] 済んだこと\n- [ ] これからのこと", '<ul class="help-tasks"><li>☑ 済んだこと</li><li>☐ これからのこと</li></ul>'],
+      en: ["Checklist", "- [x] Done\n- [ ] To do", '<ul class="help-tasks"><li>☑ Done</li><li>☐ To do</li></ul>'] },
+    // Diagrams: the result column draws each example with Mermaid.
+    { group: { ja: "図（Mermaid）", en: "Diagrams (Mermaid)" } },
+    { block: true, mermaid: true,
+      ja: ["フローチャート", "```mermaid\nflowchart TD\n  A[開始] --> B{条件}\n  B -->|はい| C[処理する]\n  B -->|いいえ| D[終了]\n```", ""],
+      en: ["Flowchart", "```mermaid\nflowchart TD\n  A[Start] --> B{Condition}\n  B -->|Yes| C[Process]\n  B -->|No| D[End]\n```", ""] },
+    { block: true, mermaid: true,
+      ja: ["シーケンス図", "```mermaid\nsequenceDiagram\n  participant U as 利用者\n  participant A as アプリ\n  U->>A: 保存する\n  A-->>U: 保存しました\n```", ""],
+      en: ["Sequence diagram", "```mermaid\nsequenceDiagram\n  participant U as User\n  participant A as App\n  U->>A: Save\n  A-->>U: Saved\n```", ""] },
+    { block: true, mermaid: true,
+      ja: ["ガントチャート", "```mermaid\ngantt\n  dateFormat YYYY-MM-DD\n  section 準備\n  設計 :a1, 2026-01-05, 5d\n  section 作業\n  開発 :after a1, 7d\n```", ""],
+      en: ["Gantt chart", "```mermaid\ngantt\n  dateFormat YYYY-MM-DD\n  section Plan\n  Design :a1, 2026-01-05, 5d\n  section Build\n  Develop :after a1, 7d\n```", ""] },
+    { block: true, mermaid: true,
+      ja: ["円グラフ", "```mermaid\npie title 時間の使い方\n  \"書く\" : 60\n  \"見直す\" : 40\n```", ""],
+      en: ["Pie chart", "```mermaid\npie title How time is spent\n  \"Writing\" : 60\n  \"Reviewing\" : 40\n```", ""] },
+    { block: true, mermaid: true,
+      ja: ["クラス図", "```mermaid\nclassDiagram\n  class Document {\n    +title\n    +save()\n  }\n  Document <|-- Report\n```", ""],
+      en: ["Class diagram", "```mermaid\nclassDiagram\n  class Document {\n    +title\n    +save()\n  }\n  Document <|-- Report\n```", ""] },
+    { block: true, mermaid: true,
+      ja: ["状態遷移図", "```mermaid\nstateDiagram-v2\n  state \"編集中\" as Editing\n  state \"保存済み\" as Saved\n  [*] --> Editing\n  Editing --> Saved: 保存\n  Saved --> Editing: 書き直す\n```", ""],
+      en: ["State diagram", "```mermaid\nstateDiagram-v2\n  [*] --> Editing\n  Editing --> Saved: save\n  Saved --> Editing: edit\n```", ""] },
+    { block: true, mermaid: true,
+      ja: ["ER図", "```mermaid\nerDiagram\n  CUSTOMER ||--o{ ORDER : places\n  ORDER ||--|{ ITEM : contains\n```", ""],
+      en: ["ER diagram", "```mermaid\nerDiagram\n  CUSTOMER ||--o{ ORDER : places\n  ORDER ||--|{ ITEM : contains\n```", ""] },
+    { block: true, mermaid: true,
+      ja: ["マインドマップ", "```mermaid\nmindmap\n  root((mdEditor))\n    書く\n    見る\n    渡す\n```", ""],
+      en: ["Mind map", "```mermaid\nmindmap\n  root((mdEditor))\n    Write\n    View\n    Share\n```", ""] },
+    // Math: the result column renders each example with KaTeX.
+    { group: { ja: "数式（KaTeX）", en: "Math (KaTeX)" } },
+    { math: "E = mc^2", ja: ["文中の数式", "$E = mc^2$", ""], en: ["Inline math", "$E = mc^2$", ""] },
+    { block: true, math: "\\int_0^1 x^2\\,dx = \\frac{1}{3}", display: true,
+      ja: ["別の行の数式", "$$\n\\int_0^1 x^2\\,dx = \\frac{1}{3}\n$$", ""],
+      en: ["Display math", "$$\n\\int_0^1 x^2\\,dx = \\frac{1}{3}\n$$", ""] },
+    { math: "\\frac{a}{b}", ja: ["分数", "$\\frac{a}{b}$", ""], en: ["Fraction", "$\\frac{a}{b}$", ""] },
+    { math: "\\sqrt{x^2 + 1}", ja: ["平方根", "$\\sqrt{x^2 + 1}$", ""], en: ["Square root", "$\\sqrt{x^2 + 1}$", ""] },
+    { math: "x_i^2", ja: ["上付き・下付き", "$x_i^2$", ""], en: ["Superscript and subscript", "$x_i^2$", ""] },
+    { math: "\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}", ja: ["総和", "$\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}$", ""], en: ["Sum", "$\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}$", ""] },
+    { math: "\\alpha,\\ \\beta,\\ \\pi,\\ \\theta", ja: ["ギリシャ文字", "$\\alpha,\\ \\beta,\\ \\pi,\\ \\theta$", ""], en: ["Greek letters", "$\\alpha,\\ \\beta,\\ \\pi,\\ \\theta$", ""] },
+    { block: true, math: "\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}", display: true,
+      ja: ["行列", "$$\n\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}\n$$", ""],
+      en: ["Matrix", "$$\n\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}\n$$", ""] },
+    { block: true, math: "f(x) = \\begin{cases} 1 & (x > 0) \\\\ 0 & (x \\le 0) \\end{cases}", display: true,
+      ja: ["場合分け", "$$\nf(x) = \\begin{cases} 1 & (x > 0) \\\\ 0 & (x \\le 0) \\end{cases}\n$$", ""],
+      en: ["Cases", "$$\nf(x) = \\begin{cases} 1 & (x > 0) \\\\ 0 & (x \\le 0) \\end{cases}\n$$", ""] },
+    { block: true, math: "\\begin{aligned} y &= (x + 1)^2 \\\\ &= x^2 + 2x + 1 \\end{aligned}", display: true,
+      ja: ["複数行の式", "$$\n\\begin{aligned} y &= (x + 1)^2 \\\\ &= x^2 + 2x + 1 \\end{aligned}\n$$", ""],
+      en: ["Aligned equations", "$$\n\\begin{aligned} y &= (x + 1)^2 \\\\ &= x^2 + 2x + 1 \\end{aligned}\n$$", ""] }
   ];
   const helpDialog = document.getElementById("help-dialog");
   const helpButton = document.getElementById("help-button");
@@ -766,9 +896,38 @@
     replaceSelection(prefix + syntax + (block ? "\n" : ""));
   };
 
+  // The diagram examples are drawn after the table is built (Mermaid renders asynchronously).
+  let helpDiagramCounter = 0;
+  const renderHelpDiagrams = async (pending) => {
+    if (!window.mermaid) return;
+    useMermaidTheme(false);
+    for (const { cell, source } of pending) {
+      try {
+        // A Gantt chart takes the whole page width; the small example is drawn narrower.
+        const drawn = source.startsWith("gantt") ? `%%{init: {"gantt": {"useWidth": 420}}}%%\n${source}` : source;
+        const { svg } = await window.mermaid.render(`help-diagram-${++helpDiagramCounter}`, drawn);
+        cell.innerHTML = svg;
+      } catch {
+        cell.textContent = t("diagramError");
+      }
+    }
+  };
+
   const renderHelp = () => {
     helpRows.replaceChildren();
+    const diagrams = [];
     for (const item of helpItems) {
+      if (item.group) {
+        const row = document.createElement("tr");
+        row.className = "help-group";
+        const heading = document.createElement("th");
+        heading.colSpan = 4;
+        heading.scope = "colgroup";
+        heading.textContent = item.group[language];
+        row.appendChild(heading);
+        helpRows.appendChild(row);
+        continue;
+      }
       const [name, syntax, result] = item[language];
       const row = document.createElement("tr");
       const nameCell = document.createElement("th");
@@ -783,7 +942,10 @@
       const resultCell = document.createElement("td");
       resultCell.className = "help-result";
       if (item.math && window.katex) {
-        window.katex.render(item.math, resultCell, { throwOnError: false });
+        window.katex.render(item.math, resultCell, { throwOnError: false, displayMode: Boolean(item.display) });
+      } else if (item.mermaid) {
+        resultCell.classList.add("help-diagram");
+        diagrams.push({ cell: resultCell, source: syntax.replace(/^```mermaid\n/, "").replace(/\n```$/, "") });
       } else {
         resultCell.innerHTML = result || syntax;
       }
@@ -798,6 +960,7 @@
       row.append(nameCell, syntaxCell, resultCell, insertCell);
       helpRows.appendChild(row);
     }
+    renderHelpDiagrams(diagrams);
   };
 
   const openHelp = () => {
@@ -838,11 +1001,14 @@
     size: document.getElementById("setting-size"),
     spacing: document.getElementById("setting-spacing"),
     fullWidth: document.getElementById("setting-full-width"),
+    htmlSource: document.getElementById("setting-html-source"),
     activeLine: document.getElementById("setting-active-line"),
     thickCaret: document.getElementById("setting-thick-caret"),
     reader: document.getElementById("setting-reader"),
     rate: document.getElementById("setting-reader-rate"),
-    pause: document.getElementById("setting-reader-pause")
+    pause: document.getElementById("setting-reader-pause"),
+    readerLang: document.getElementById("setting-reader-lang"),
+    readerVoice: document.getElementById("setting-reader-voice")
   };
   const backupCheckbox = document.getElementById("setting-backup");
   const zoomValue = document.getElementById("zoom-value");
@@ -894,6 +1060,7 @@
   });
 
   const openSettings = () => {
+    fillVoiceOptions();
     fillSettingControls();
     updateVoiceNote();
     settingsDialog.showModal();
@@ -910,9 +1077,41 @@
   const readableSelector = "h1, h2, h3, h4, h5, h6, p, li, blockquote, pre, th, td";
   let reader = null;
   const hasJapanese = (text) => /[぀-ヿ㐀-鿿]/.test(text);
-  const localVoice = (lang) => speechSynthesis.getVoices()
-    .filter((voice) => voice.localService)
-    .find((voice) => voice.lang.toLowerCase().startsWith(lang));
+  const localVoices = (lang) => speechSynthesis.getVoices()
+    .filter((voice) => voice.localService && voice.lang.toLowerCase().startsWith(lang));
+  const localVoice = (lang) => localVoices(lang)[0];
+  // The voice for a paragraph: the chosen language (or the paragraph's own in
+  // Automatic), and the chosen voice when it is installed for that language.
+  const voiceFor = (text) => {
+    const fixed = displaySettings.readerLang === "ja" || displaySettings.readerLang === "en";
+    const lang = fixed ? displaySettings.readerLang : hasJapanese(text) ? "ja" : "en";
+    const voices = localVoices(lang);
+    const voice = voices.find((item) => item.name === displaySettings.readerVoice) ?? voices[0];
+    return { lang, voice: voice ?? (fixed ? undefined : localVoice(language)) };
+  };
+  const readerVoiceSelect = document.getElementById("setting-reader-voice");
+  const fillVoiceOptions = () => {
+    const lang = displaySettings.readerLang;
+    const voices = lang === "ja" || lang === "en" ? localVoices(lang) : [...localVoices("ja"), ...localVoices("en")];
+    readerVoiceSelect.replaceChildren();
+    const automatic = document.createElement("option");
+    automatic.value = "";
+    automatic.textContent = t("readerVoiceAuto");
+    readerVoiceSelect.appendChild(automatic);
+    for (const voice of voices) {
+      const option = document.createElement("option");
+      option.value = voice.name;
+      option.textContent = `${voice.name}（${voice.lang}）`;
+      readerVoiceSelect.appendChild(option);
+    }
+    readerVoiceSelect.value = voices.some((voice) => voice.name === displaySettings.readerVoice) ? displaySettings.readerVoice : "";
+  };
+  speechSynthesis.addEventListener("voiceschanged", fillVoiceOptions);
+  document.getElementById("setting-reader-lang").addEventListener("change", () => {
+    displaySettings.readerVoice = "";
+    saveDisplaySettings();
+    fillVoiceOptions();
+  });
 
   const updateVoiceNote = () => {
     const ja = localVoice("ja");
@@ -962,10 +1161,10 @@
     block.classList.add("reading");
     block.scrollIntoView({ block: "nearest" });
     const text = readableText(block);
-    const voice = localVoice(hasJapanese(text) ? "ja" : "en") ?? localVoice(language);
+    const { lang, voice } = voiceFor(text);
     if (!voice) {
       stopReading();
-      showNoticeMessage(t("readerNoVoice"));
+      showNoticeMessage(t("readerNoVoiceFor")(lang));
       return;
     }
     const utterance = new SpeechSynthesisUtterance(text);
@@ -1007,10 +1206,14 @@
   // Only Ctrl + letter/digit and F keys are allowed so typing is never captured.
   const shortcutDefinitions = [
     { id: "open", keys: "Ctrl+O", button: "open-button", run: () => post({ type: "open" }) },
+    { id: "openUrl", keys: "Ctrl+Shift+K", button: "url-button", run: () => openUrlDialog() },
     { id: "save", keys: "Ctrl+S", button: "save-button", run: () => post({ type: "save" }) },
-    { id: "saveAs", keys: "Ctrl+Shift+S", button: "save-as-button", run: () => post({ type: "saveAs" }) },
-    { id: "pdf", keys: "Ctrl+Shift+P", button: "pdf-button", run: () => document.getElementById("pdf-button").click() },
-    { id: "html", keys: "Ctrl+Shift+M", button: "html-button", run: () => post({ type: "exportHtml" }) },
+    { id: "saveAs", keys: "Ctrl+Shift+S", button: "save-as-button", run: () => saveAs() },
+    // These save straight to one format (the same formats are in Save As).
+    { id: "pdf", keys: "Ctrl+Shift+P", run: () => exportPdf() },
+    { id: "html", keys: "Ctrl+Shift+M", run: () => exportHtml() },
+    { id: "png", keys: "Ctrl+Shift+G", run: () => post({ type: "exportPng" }) },
+    { id: "docx", keys: "Ctrl+Shift+D", run: () => post({ type: "exportDocx" }) },
     { id: "paper", keys: "Ctrl+Shift+A", button: "paper-button", run: () => paperButton.click() },
     { id: "theme", keys: "Ctrl+Shift+T", button: "theme-button", run: () => themeButton.click() },
     { id: "language", keys: "Ctrl+Shift+L", button: "language-button", run: () => languageButton.click() },
@@ -1213,7 +1416,6 @@
       button.textContent = t("sampleOpen");
       button.setAttribute("aria-label", t("sampleOpenLabel")(name));
       button.addEventListener("click", async () => {
-        if (view.state.doc.length > 0 && !window.confirm(t("sampleConfirm"))) return;
         sampleDialog.close();
         let text = sample.text?.[language];
         if (sample.file) {
@@ -1226,10 +1428,10 @@
             return;
           }
         }
-        view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: text } });
-        editorScroller.scrollTop = 0;
-        preview.scrollTop = 0;
-        view.focus();
+        // A sample opens as a new, unsaved document under its own name (the app
+        // asks to save changes to the open document first), never over the open file.
+        const fileName = sample.file ? sample.file.split("/").pop() : `${name}.md`;
+        post({ type: "openSample", text, name: fileName });
       });
       item.append(label, button);
       sampleList.appendChild(item);
@@ -1496,6 +1698,23 @@
     }
   };
 
+  // An internet image that is not loaded (consent, setting, or not https) shows
+  // what it is instead; its address stays on the element for Save as HTML.
+  const showHeldBackImages = () => {
+    for (const image of preview.querySelectorAll("img[data-external-src]")) {
+      const address = image.dataset.externalSrc;
+      let host = address;
+      try { host = new URL(address).host; } catch { /* keep the address */ }
+      const holder = document.createElement("span");
+      holder.className = "external-image";
+      holder.dataset.externalSrc = address;
+      holder.dataset.alt = image.alt;
+      holder.title = address;
+      holder.textContent = t("externalImage")(image.alt, host);
+      image.replaceWith(holder);
+    }
+  };
+
   // Heading ids from the document would share the page's id namespace and could
   // shadow the app's own elements (such as "help-dialog"), so keep them as data-anchor.
   const moveAnchorsOffIds = () => {
@@ -1635,6 +1854,7 @@
       (element) => (element.classList.contains("diagram-rendered") ? element.innerHTML : null)
     );
     preview.innerHTML = html;
+    showHeldBackImages();
     moveAnchorsOffIds();
     labelTaskCheckboxes();
     showUnsupportedDiagrams();
@@ -1653,6 +1873,12 @@
   // the KaTeX fonts; heading ids come back; app-only attributes are dropped.
   window.mdeditorExportHtml = () => {
     const copy = preview.cloneNode(true);
+    for (const holder of copy.querySelectorAll(".external-image[data-external-src]")) {
+      const image = document.createElement("img");
+      image.src = holder.dataset.externalSrc;
+      image.alt = holder.dataset.alt ?? "";
+      holder.replaceWith(image);
+    }
     for (const selector of [".katex-display", ".katex"]) {
       for (const element of copy.querySelectorAll(selector)) {
         const math = element.querySelector(".katex-mathml math");
@@ -1679,8 +1905,10 @@
 
   const hasFiles = (event) =>
     Array.from(event.dataTransfer?.types ?? []).includes("Files");
+  const hasLink = (event) =>
+    Array.from(event.dataTransfer?.types ?? []).includes("text/uri-list");
   window.addEventListener("dragover", (event) => {
-    if (!hasFiles(event)) return;
+    if (!hasFiles(event) && !hasLink(event)) return;
     event.preventDefault();
     event.dataTransfer.dropEffect = "copy";
     document.body.classList.add("dragging");
@@ -1689,20 +1917,54 @@
     if (event.relatedTarget === null) document.body.classList.remove("dragging");
   }, true);
   window.addEventListener("drop", (event) => {
+    const link = event.dataTransfer?.getData("text/uri-list")?.split("\n").find((line) => line && !line.startsWith("#"));
+    if (!hasFiles(event) && link?.trim().startsWith("https://")) {
+      event.preventDefault();
+      event.stopPropagation();
+      document.body.classList.remove("dragging");
+      post({ type: "openUrl", url: link.trim() });
+      return;
+    }
     if (!hasFiles(event)) return;
     event.preventDefault();
     event.stopPropagation();
     document.body.classList.remove("dragging");
     const files = Array.from(event.dataTransfer.files);
+    // Images dropped on the editor go into the document at the drop point;
+    // anywhere else a file (an image too) opens as a document.
+    const isImage = (file) => /\.(png|jpe?g|gif|bmp|webp)$/i.test(file.name);
+    if (editorHost.contains(event.target) && files.length > 0 && files.every(isImage)) {
+      const position = view.posAtCoords({ x: event.clientX, y: event.clientY });
+      if (position !== null) view.dispatch({ selection: { anchor: position } });
+      window.chrome.webview.postMessageWithAdditionalObjects({ type: "dropImages", count: files.length }, files);
+      return;
+    }
     window.chrome.webview.postMessageWithAdditionalObjects(
       { type: "dropFile", count: files.length },
       files
     );
   }, true);
 
+  // A pasted picture (such as a screen capture) is saved beside the document
+  // by the app, which then inserts it at the cursor.
+  editorHost.addEventListener("paste", (event) => {
+    const image = Array.from(event.clipboardData?.files ?? []).find((file) => file.type.startsWith("image/"));
+    if (!image) return;
+    event.preventDefault();
+    event.stopPropagation();
+    if (image.size > 20 * 1024 * 1024) return;
+    const reader = new FileReader();
+    reader.onload = () => post({ type: "pasteImage", mime: image.type, data: String(reader.result).replace(/^data:[^,]*,/, "") });
+    reader.readAsDataURL(image);
+  }, true);
+
   window.chrome.webview.addEventListener("message", (event) => {
     const message = event.data;
-    if (message.type === "documentInfo") {
+    if (message.type === "insertText") {
+      const { from, to } = view.state.selection.main;
+      view.dispatch({ changes: { from, to, insert: message.text }, selection: { anchor: from + message.text.length } });
+      view.focus();
+    } else if (message.type === "documentInfo") {
       documentName.textContent = message.name;
       documentName.title = message.name;
       documentDirty = message.isDirty;
@@ -1723,6 +1985,17 @@
       else scrollEditorToLine(message.line, message.edge);
     } else if (message.type === "runCommand") {
       shortcutDefinitions.find((item) => item.id === message.id)?.run();
+    } else if (message.type === "externalImages") {
+      externalSelect.value = message.value;
+    } else if (message.type === "externalNotice") {
+      if (message.count > 0) {
+        noticeState = { kind: "external", count: message.count, prefix: message.prefix };
+      } else if (noticeState?.kind === "external") {
+        noticeState = noticeState.prefix ? { kind: "message", text: noticeState.prefix } : null;
+      }
+      updateNotice();
+    } else if (message.type === "notice") {
+      showNoticeMessage(message.text);
     } else if (message.type === "appInfo") {
       document.getElementById("app-version").textContent = message.version;
     } else if (message.type === "scrollToAnchor") {

@@ -1,0 +1,18 @@
+From: Sam Sender <sato@example.com>
+To: Alex Reader <yamada@example.com>
+Subject: [Test] A text-only mail
+Date: Fri, 16 Oct 2026 09:45:00 +0900
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+Hello Alex,
+
+This is a text-only mail.
+Each line breaks where it was written.
+These three lines show on separate lines.
+
+> A quoted line from the earlier mail
+> Second line
+
+Sam

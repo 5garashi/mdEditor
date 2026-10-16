@@ -1,0 +1,6 @@
+{
+  // Comments and trailing commas are read too
+  "app": "mdEditor",
+  "settings": { "theme": "auto", "paper": "A4", "autoBackup": true },
+  "recentFiles": ["minutes.md", "estimate.md"],
+}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!--
+  File: html-test.en.html
+  Description: HTML import test (open in mdEditor to check the conversion to Markdown)
+  Author: 5garashi.com Design Office
+  Created: 2026-10-16
+  License: MIT
+  SPDX-License-Identifier: MIT
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>HTML import test</title>
+<style>body { color: #333; } .red { color: red; }</style>
+<script>document.addEventListener("DOMContentLoaded", () => document.body.append("(Shown only when scripts run. mdEditor never shows this.)"));</script>
+</head>
+<body>
+<header><nav><a href="#s1">To heading 1</a></nav></header>
+<main>
+<h1 id="s1">HTML import test</h1>
+<p>This paragraph has <strong>bold</strong>, <em>italic</em>, <code>code</code>, <a href="https://example.com">a link</a>, and <span class="red">red text (the color does not come back)</span>.</p>
+<h2>Lists</h2>
+<ul><li>Item A<ul><li>Nested</li></ul></li><li>Item B</li></ul>
+<ol><li>First</li><li>Second</li></ol>
+<h2>Table</h2>
+<table><thead><tr><th>Name</th><th>Value</th></tr></thead>
+<tbody><tr><td>Apple</td><td>120</td></tr><tr><td>Orange</td><td>80</td></tr></tbody></table>
+<h2>Images</h2>
+<p>An image beside this file (shown):</p>
+<p><img src="import-test-images/sample.png" alt="Sample image" width="240"></p>
+<p>An image on the internet (not loaded until allowed):</p>
+<p><img src="https://github.githubassets.com/favicons/favicon.png" alt="GitHub"></p>
+<h2>Math</h2>
+<p>Inline <math><semantics><mrow><mi>E</mi><mo>=</mo><mi>m</mi><msup><mi>c</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">E = mc^2</annotation></semantics></math></p>
+<math display="block"><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">x_1 = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}</annotation></semantics></math>
+<h2>Quote and code</h2>
+<blockquote><p>A quoted paragraph</p></blockquote>
+<pre><code class="language-js">console.log("hello");</code></pre>
+<h2>Removed</h2>
+<p>The button, embeds, and scripts below are removed; only the button's text remains.</p>
+<button onclick="alert('onclick')">A button that does nothing</button>
+<iframe src="https://example.com"></iframe>
+<object data="movie.swf"></object>
+<embed src="movie.swf">
+</main>
+<footer><p>Footer text</p></footer>
+</body>
+</html>

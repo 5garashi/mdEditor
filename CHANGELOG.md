@@ -12,6 +12,64 @@
 
 The version number lives in [VERSION](./VERSION). Add each new version at the top, with a `## version — date` heading (used as the GitHub Release notes).
 
+## 1.0.8 — 2026-10-16
+
+1.0.7 は公開せず、この版にまとめました。 / 1.0.7 was not released; its changes are part of this version.
+
+- 「PNGに保存」（Ctrl+Shift+G）を加えた。プレビューを昼の配色で画像にし、長い文書は「名前-1.png」「名前-2.png」…に分けて保存する。
+- 「Wordに保存」（Ctrl+Shift+D）を加えた。見出し・段落・リスト・引用・コード・表・リンク・画像を Word の標準のスタイルで書き出し（ナビゲーションや目次がそのまま使える）、図と数式はプレビューの画像として入れる。
+- Word 文書（.docx）を開けるようにした。Markdown に変換して開き、見出し・リスト・表・リンク・画像が戻る（色や配置は戻らない）。画像は最初に保存するとき、Markdown ファイルの横に「名前-images」フォルダーとして置く。Word の文書は書き換えない。
+- テキスト（.txt）を開いて、そのまま上書き保存できるようにした。
+- 「名前を付けて保存」で、「開く」と同じようにファイルの種類から Markdown・テキスト・PDF・HTML・PNG・Word を選べるようにした。Markdown とテキストは文書そのものの保存（中身はそのまま）、ほかは書き出し。これに合わせて「PDFに保存」「HTMLに保存」「PNGに保存」「Wordに保存」のボタンをなくした（ショートカットキーはそのまま使える）。
+- 「名前を付けて保存」に「テキスト（記号なし）」を加えた。プレビューに見えている文字だけを .txt にする（今までのテキストは「テキスト（そのまま）」）。
+- メール（.eml）を開けるようにした。件名・差出人・宛先・日付・添付ファイルの名前と本文を Markdown にする。メールの中のインターネット上の画像は、確認するまで読み込まない。
+- CSV・TSV を開くと Markdown の表になるようにした（Shift_JIS も可）。「名前を付けて保存」で、文書の中の表を CSV・TSV に書き出せる（UTF-8、BOM 付き）。
+- 画像（.png、.jpg、.gif、.bmp、.webp）を開けるようにした。画像を表示する新しい文書になり、下に説明を書き足して Markdown として保存できる。
+- 画像を編集画面にドラッグ＆ドロップするか貼り付ける（Ctrl+V）と、文書の横の「名前-images」フォルダーに置いて、カーソルの位置に入れるようにした。
+- JSON を開けるようにした（一覧は表、それ以外はコードの枠）。XML はコードの枠に入れて開く。「名前を付けて保存」で、文書の中の表を JSON に書き出せる。
+- Jupyter Notebook（.ipynb）を開けるようにした（Markdown のセル、言語付きのコード、実行結果の文字・画像・表）。「名前を付けて保存」で Jupyter Notebook に書き出せる（コードの枠がコードのセルになる。実行結果は入れない）。
+- Microsoft Store 版と setup.cmd 版の両方で、mdEditor が開けるすべての形式（.md、.txt、.html、.htm、.docx、.eml、.csv、.tsv、.json、.xml、.ipynb、画像）を「プログラムから開く」と「既定のアプリ」の候補に出るようにした。既定のアプリ（ブラウザーなど）は変わらない。setup.cmd 版は候補に出すだけで、ほかに開けるアプリがない形式（.ipynb など）でも既定として使われない（以前の版の登録は取り除く）。Microsoft Store 版は、ほかに開けるアプリがない形式に限り、Windows の仕組みで mdEditor が開く。
+- 「サンプル」は、編集欄を置き換えるのではなく、サンプルの名前の新しい文書として開くようにした。前の文書のファイル名やお知らせが残り、保存すると前のファイルに書き込まれてしまうことがあった。
+- Markdown の中の `<br>`（属性のないもの）は、文字ではなく改行として表示するようにした（表のセルの中の改行に使う）。ほかの HTML は今までどおり文字として表示する。
+- 読み上げの「言語」（自動・日本語・英語）と「音声」（PC に入っている音声から選ぶ）を「設定」に加えた。音声がないときは、追加のしかたを表示する。
+- 表示倍率が 100% 以外でも、PNG と Word の図や数式の切り出しがずれないようにした。
+
+- Save as PNG (Ctrl+Shift+G): the preview as pictures in the day palette; a long document is split into name-1.png, name-2.png, and so on.
+- Save as Word (Ctrl+Shift+D): headings, paragraphs, lists, quotes, code, tables, links, and images use Word's own styles (so the navigation pane and a table of contents work); diagrams and math go in as pictures from the preview.
+- Word documents (.docx) open as Markdown; headings, lists, tables, links, and images come back (colors and layout do not). Images are placed beside the Markdown file in a "name-images" folder on the first save. The Word document is never written.
+- Text files (.txt) open and save back as they are.
+- Save As now offers every format in its file type list, like Open: Markdown, text, PDF, HTML, PNG, and Word. Markdown and text save the document itself (the content unchanged); the others export it. The Save as PDF, HTML, PNG, and Word buttons are gone (their shortcut keys still work).
+- Save As: Text without marks writes only the words the preview shows (the previous text type is now Text, as written).
+- E-mail (.eml) files open as Markdown: subject, sender, recipients, date, attachment names, and the body. Internet images in a mail do not load until allowed.
+- CSV and TSV files open as a Markdown table (Shift_JIS too), and Save As writes the tables in a document as CSV or TSV (UTF-8 with a BOM).
+- Images (.png, .jpg, .gif, .bmp, .webp) open as a new document that shows the image, ready for a description and saving as Markdown.
+- Images dropped on the editor or pasted (Ctrl+V) go in a "name-images" folder beside the document and are inserted at the cursor.
+- JSON opens as a table (for a list) or a code block; XML opens in a code block. Save As writes the tables in a document as JSON.
+- Jupyter Notebooks (.ipynb) open as Markdown (Markdown cells, code with its language, and text, picture, and table outputs). Save As writes a Jupyter Notebook (code blocks become code cells; outputs are not included).
+- Both the Microsoft Store version and the setup.cmd install list every type mdEditor opens (.md, .txt, .html, .htm, .docx, .eml, .csv, .tsv, .json, .xml, .ipynb, and images) in "Open with" and Default apps. Default apps (such as the browser) do not change. The setup.cmd install only lists mdEditor as a choice, so it is never used as the default even for a type no other app opens (such as .ipynb); the earlier registration is removed. In the Microsoft Store version, Windows opens with mdEditor only the types no other app on the PC can open.
+- Samples now open as a new document under the sample's name instead of replacing the editor text. Before, the previous file name and notice stayed, and saving could write the sample over the previous file.
+- A bare `<br>` in Markdown now breaks the line instead of showing as text (useful inside table cells). Other HTML is still shown as text.
+- Settings: read-aloud Language (Automatic, Japanese, English) and Voice (from the voices on this PC). When no voice is installed, the app explains how to add one.
+- PNG and Word figures are cut out correctly at any zoom level.
+
+- 「URLを開く」（Ctrl+Shift+K）を加えた。`https://` の Web ページを Markdown に変換して開く（スクリプトは実行しない。10 MB・20 秒まで）。ブラウザーからリンクをドラッグしても開ける。
+- インターネット上の画像は、初期設定では読み込まず、お知らせ欄の「画像を読み込む」で読み込むようにした（その文書だけ）。「設定」→「インターネット」で「いつも読み込む」「読み込まない」も選べる。`http://` の画像は読み込まない。
+- インターネットからの読み込み（ページと画像）は、すべてアプリ自身が行い、Cookie・認証情報・参照元（Referer）を送らず、この PC や社内ネットワークのアドレスには接続しない（Identity 4.14.0 の 13-3）。HTML の変換では、イベント属性・iframe・埋め込みのオブジェクトも取り除く。
+- HTML の中の手元にない画像とリンクは、ページの元のアドレス（`<base>`、canonical、og:url）から探すようにした（ブラウザーの一時ファイルとして開いたページのロゴなど）。
+- HTML ファイル（.html、.htm）を開けるようにした（「開く」とドラッグ＆ドロップ）。Markdown に変換して開き、見出し・段落・リスト・表・リンク・画像・数式は戻る（色や配置、図の絵は戻らない）。保存すると Markdown ファイルになり、HTML ファイルは書き換えない。
+- ほかのページへ転送するだけの HTML（`<meta http-equiv="refresh">`。「最新のレポート」のページなど）は、ブラウザーと同じように転送先の HTML を開く（同じ PC のファイルだけ、3 段まで）。文書の中の .html へのリンクは、新しい mdEditor のウィンドウで開く。HTML から開いた文書は、保存する前でも、HTML と同じフォルダーの画像を表示し、リンクを開ける。Web コンポーネント（宣言的 Shadow DOM と slot）で作られたページ（保存した Microsoft Store のページなど）も、ブラウザーと同じように中身を組み立てて変換する。
+- 「書き方」（F1）を「基本」「図（Mermaid）」「数式（KaTeX）」に分け、フローチャート・シーケンス図・ガントチャート・円グラフ・クラス図・状態遷移図・ER 図・マインドマップと、分数・平方根・総和・行列・場合分けなど 10 種類の数式、チェックリストを加えた。図は一覧の中に描いて見せる。
+- 「設定」の「書き出し」に「HTMLに保存するとき、元の Markdown も入れる」を加えた（初期設定はオフ）。オンにして保存した HTML は、mdEditor で開くと書いたときのとおりに戻る。
+
+- Open URL (Ctrl+Shift+K): an `https://` web page opens as Markdown (scripts never run; up to 10 MB and 20 seconds). Links dragged in from a browser open too.
+- Images on the internet are not loaded by default; Load images in the notice bar loads them for that document. Settings > Internet can be Always load or Never load. Images over `http://` are never loaded.
+- Every read from the internet (pages and images) is made by the app itself, with no cookies, credentials, or Referer, and never to addresses on this PC or the local network (Identity 4.14.0, 13-3). HTML conversion also removes event attributes, iframes, and embedded objects.
+- Images and links in HTML that are not beside the file resolve from the page's own address (`<base>`, canonical, or og:url), such as the logo of a page opened from the browser cache.
+- HTML files (.html, .htm) can be opened (Open and drag and drop). They are converted to Markdown; headings, paragraphs, lists, tables, links, images, and math come back, while colors, layout, and drawn diagrams do not. Saving makes a Markdown file and never writes the HTML file.
+- An HTML page that only forwards to another (`<meta http-equiv="refresh">`, such as a "latest report" page) opens the target, as a browser would (local files only, up to three steps). Links to .html files in a document open in a new mdEditor window. A document opened from HTML shows images and opens links beside the HTML file even before it is saved. Pages built from web components (declarative shadow DOM and slots, such as a saved Microsoft Store page) are composed as a browser does before conversion.
+- The Markdown syntax list (F1) is grouped into Basics, Diagrams (Mermaid), and Math (KaTeX), and adds flowchart, sequence, Gantt, pie, class, state, ER, and mind map diagrams, ten math examples (fractions, roots, sums, matrices, cases, and more), and checklists. Diagrams are drawn in the list.
+- Settings > Export: "Keep the original Markdown in saved HTML" (off by default). HTML saved with it opens back in mdEditor exactly as written.
+
 ## 1.0.6 — 2026-10-14
 
 - 「HTMLに保存」（Ctrl+Shift+M）を加えた。プレビューの見た目のまま、1 つの HTML ファイルに書き出す。図は SVG、数式は MathML で入り、文書と同じフォルダーの画像はファイルの中に埋め込む。開く側がダークモードなら夜の配色で表示し、外部への通信は起きない（文書の中のネット上の画像を除く）。

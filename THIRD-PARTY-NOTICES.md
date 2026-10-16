@@ -23,6 +23,10 @@ The 5garashi.com logotype and symbol mark in `wwwroot/assets/` are not covered b
 | HtmlSanitizer | 9.2.1039 | MIT | Copyright (c) 2013-2016 Michael Ganss and HtmlSanitizer contributors | https://github.com/mganss/HtmlSanitizer |
 | AngleSharp | 1.7.2 | MIT | Copyright (c) 2013 - 2026 AngleSharp | https://github.com/AngleSharp/AngleSharp |
 | AngleSharp.Css | 1.0.2 | MIT | Copyright (c) 2013 - 2026 AngleSharp | https://github.com/AngleSharp/AngleSharp.Css |
+| ReverseMarkdown | 6.2.1 | MIT | Copyright (c) Babu Annamalai | https://github.com/mysticmind/reversemarkdown-net |
+| MimeKitLite | 4.18.1 | MIT | Copyright (c) .NET Foundation and Contributors | https://github.com/jstedfast/MimeKit |
+| Mammoth (.NET) | 1.13.0 | BSD-2-Clause | Copyright 2015 - 2016 Michael Williamson | https://github.com/mwilliamson/dotnet-mammoth |
+| DocumentFormat.OpenXml (Open XML SDK) | 3.5.1 | MIT | Copyright (c) Microsoft Corporation | https://github.com/dotnet/Open-XML-SDK |
 | Microsoft.Web.WebView2 (SDK) | 1.0.4258.31 | BSD-3-Clause (Microsoft) | Copyright (C) Microsoft Corporation | https://www.nuget.org/packages/Microsoft.Web.WebView2 |
 | Mermaid | 11.17.2 | MIT | Copyright (c) 2014 - 2022 Knut Sveidqvist | https://github.com/mermaid-js/mermaid |
 | KaTeX (including fonts) | 0.18.9 | MIT | Copyright (c) 2013-2020 Khan Academy and other contributors | https://github.com/KaTeX/KaTeX |
@@ -82,7 +86,7 @@ Microsoft Edge WebView2 Runtime is not distributed with mdEditor; it is provided
 
 ## MIT License
 
-Applies to: .NET Runtime, HtmlSanitizer, AngleSharp, AngleSharp.Css, Mermaid, KaTeX, CodeMirror, and the MIT-licensed libraries above. Each component's copyright notice is listed in the tables above.
+Applies to: .NET Runtime, HtmlSanitizer, AngleSharp, AngleSharp.Css, ReverseMarkdown, MimeKitLite, DocumentFormat.OpenXml, Mermaid, KaTeX, CodeMirror, and the MIT-licensed libraries above. Each component's copyright notice is listed in the tables above.
 
 ```text
 Copyright (c) <year> <copyright holders>
@@ -106,7 +110,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-## BSD 2-Clause License (Markdig)
+## BSD 2-Clause License (Markdig, Mammoth)
+
+The same license text applies to Mammoth (.NET), Copyright 2015 - 2016 Michael Williamson. / 同じライセンス本文が Mammoth（.NET、Copyright 2015 - 2016 Michael Williamson）にも適用されます。
 
 ```text
 Copyright (c) 2016-2026, Alexandre Mutel

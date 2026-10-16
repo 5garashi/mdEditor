@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- XML import test: opens in a code block, with room for notes before and after -->
+<staff>
+  <member id="001">
+    <name>Alex Reader</name>
+    <team>Design</team>
+    <note><![CDATA[A value with ``` does not close the block]]></note>
+  </member>
+  <member id="002">
+    <name>Sam Sender</name>
+    <team>Sales</team>
+  </member>
+</staff>
