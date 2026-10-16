@@ -66,7 +66,8 @@ try:
                         cdp.send('Page.navigate',{'url':origin+'/promotion/'+file})
                         deadline=time.monotonic()+15
                         while time.monotonic()<deadline:
-                            if cdp.evaluate("document.readyState==='complete' && document.querySelector('h1') && [...document.images].every(i=>i.complete)"):break
+                            # Wait for the requested navigation, not the previous page.
+                            if cdp.evaluate(f"location.pathname==='/promotion/{file}' && document.readyState==='complete' && document.querySelector('h1') && [...document.images].every(i=>i.complete && i.naturalWidth>0)"):break
                             time.sleep(.1)
                         time.sleep(.3)
                         metrics=cdp.evaluate("""(() => ({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,font:getComputedStyle(document.body).fontSize,logo:document.querySelector('.brand img').currentSrc,background:getComputedStyle(document.body).backgroundColor,brokenImages:[...document.images].filter(i=>!i.naturalWidth).map(i=>i.src),smallTargets:[...document.querySelectorAll('a,summary,button,input')].filter(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0&&(r.width<43.9||r.height<43.9)}).map(e=>({text:e.textContent,width:e.getBoundingClientRect().width,height:e.getBoundingClientRect().height})),overflow:[...document.querySelectorAll('body *')].filter(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.right>innerWidth+1}).map(e=>({tag:e.tagName,cls:e.className,right:e.getBoundingClientRect().right})).slice(0,8)}))()""")

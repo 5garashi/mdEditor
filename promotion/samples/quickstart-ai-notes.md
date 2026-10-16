@@ -3,9 +3,9 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.1.0
+版 / Version: 1.5.0
 ライセンス / License: MIT
-最終更新 / Last updated: 2026-10-13
+最終更新 / Last updated: 2026-10-17
 SPDX-License-Identifier: MIT
 -->
 # 回答を整理するメモ
@@ -31,4 +31,4 @@ AIなどから得た回答の要点・出典・次の行動を整理する記入
 
 ## 試してみる
 
-この文書のコピーをmdEditorで開き、「案A」を自分の提案名に変えてみてください。プレビューの表にも反映されます。「保存」で文書を保存し、「PDFに保存」で書き出します。PDFで表とチェックリストを確認してください。
+この文書のコピーをmdEditorで開き、「案A」を自分の提案名に変えてみてください。プレビューの表にも反映されます。「保存」で文書を保存し、「名前を付けて保存」でPDFを選択で書き出します。PDFで表とチェックリストを確認してください。

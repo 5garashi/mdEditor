@@ -3,9 +3,9 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.1.0
+版 / Version: 1.5.0
 ライセンス / License: MIT
-最終更新 / Last updated: 2026-10-13
+最終更新 / Last updated: 2026-10-17
 SPDX-License-Identifier: MIT
 -->
 # 図と数式のメモ
@@ -31,7 +31,7 @@ flowchart LR
 1. この文書のコピーをmdEditorで開く。
 2. 最初の見出しを「図と数式の記録」に変更し、プレビューを確認する。
 3. 図の「仕様を確認」を「測定で検証」に変更する。図にも同じ文字が表示される。
-4. 「保存」でMarkdownを保存し、「PDFに保存」でPDFを書き出す。
+4. 「保存」でMarkdownを保存し、「名前を付けて保存」でPDFを選択でPDFを書き出す。
 5. PDFを開き、見出し、図、数式、表が含まれることを確かめる。
 
 数式と表は計算結果の記載例です。値を変えたときは、自分で再計算して書き換えます。mdEditorは自動計算しません。実際の部品選定には温度とディレーティングの確認も必要です。

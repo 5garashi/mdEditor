@@ -1,18 +1,18 @@
 {
   "enabled": true,
   "operation": "sync",
-  "request_id": "2026-10-16-description-update-state-repaired",
+  "request_id": "2026-10-17-source-1.0.10-video-2.0.0-sync",
   "channel_id": "UCI_NiKGav2fQZu0IRMxQUeg",
   "videos": [
     {
       "key": "demo-en",
-      "revision": "1.1.0",
-      "media": "promotion/assets/mdEditor-demo-en.mp4",
+      "revision": "2.0.0",
+      "media": "promotion/assets/mdEditor-demo-1.0.10-en.mp4",
       "language": "en",
-      "title": "mdEditor Demo — Separate Preview, Dark Mode, Syntax & PDF on Windows",
+      "title": "mdEditor 1.0.10 — Import Word, CSV & Web; Export Word, PDF, HTML & PNG",
       "description_file": "promotion/integration/youtube/automation/description-en.txt",
-      "thumbnail": "promotion/multichannel/social/read-en-landscape.png",
-      "captions": "promotion/assets/demo-en.vtt",
+      "thumbnail": "promotion/assets/youtube-1.0.10-en.png",
+      "captions": "promotion/assets/demo-1.0.10-en.vtt",
       "category_id": "28",
       "tags": [
         "Markdown",
@@ -25,13 +25,13 @@
     },
     {
       "key": "demo-ja",
-      "revision": "1.1.0",
-      "media": "promotion/assets/mdEditor-demo-ja.mp4",
+      "revision": "2.0.0",
+      "media": "promotion/assets/mdEditor-demo-1.0.10-ja.mp4",
       "language": "ja",
-      "title": "mdEditor 操作デモ — 別ウィンドウ・ダークモード・書き方とPDF保存",
+      "title": "mdEditor 1.0.10 — Word・CSV・Webから取り込み、Word・PDF・HTML・PNGへ",
       "description_file": "promotion/integration/youtube/automation/description-ja.txt",
-      "thumbnail": "promotion/multichannel/social/read-ja-landscape.png",
-      "captions": "promotion/assets/demo-ja.vtt",
+      "thumbnail": "promotion/assets/youtube-1.0.10-ja.png",
+      "captions": "promotion/assets/demo-1.0.10-ja.vtt",
       "category_id": "28",
       "tags": [
         "Markdown",

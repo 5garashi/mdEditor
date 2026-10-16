@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-13 JST",
+  "date": "2026-10-17 JST",
   "browser": "Google Chrome",
   "cases": [
     {
@@ -8,7 +8,7 @@
         "width": 1280,
         "scrollWidth": 1265,
         "font": "16px",
-        "logo": "http://127.0.0.1:65144/promotion/assets/5garashi_logotype_outlined.svg",
+        "logo": "http://127.0.0.1:58803/promotion/assets/5garashi_logotype_outlined.svg",
         "background": "rgb(249, 239, 203)",
         "brokenImages": [],
         "smallTargets": [],
@@ -42,6 +42,16 @@
           {
             "tag": "BUTTON",
             "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "ミュート",
             "id": ""
           },
           {
@@ -121,12 +131,12 @@
           },
           {
             "tag": "A",
-            "text": "Design Office Identity v4.12.0",
+            "text": "Design Office Identity 4.15.0",
             "id": ""
           },
           {
             "tag": "BODY",
-            "text": "\n本文へ移動\nサンプルEnglish\nmdEditor · WINDOWS書く。確かめる。PDFに残す。図も数式も、Ma",
+            "text": "\n本文へ移動\nサンプルEnglish\nmdEditor · WINDOWS読み込む。整える。必要な形式で渡す。Word・",
             "id": ""
           },
           {
@@ -172,16 +182,6 @@
           {
             "tag": "BUTTON",
             "text": "停止して先頭へ",
-            "id": ""
-          },
-          {
-            "tag": "BUTTON",
-            "text": "全画面表示",
-            "id": ""
-          },
-          {
-            "tag": "INPUT",
-            "text": "",
             "id": ""
           }
         ],
@@ -198,7 +198,7 @@
         "width": 320,
         "scrollWidth": 305,
         "font": "16px",
-        "logo": "http://127.0.0.1:65144/promotion/assets/5garashi_logotype_outlined.svg",
+        "logo": "http://127.0.0.1:58803/promotion/assets/5garashi_logotype_outlined.svg",
         "background": "rgb(249, 239, 203)",
         "brokenImages": [],
         "smallTargets": [],
@@ -240,6 +240,16 @@
             "id": ""
           },
           {
+            "tag": "BUTTON",
+            "text": "ミュート",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
             "tag": "A",
             "text": "動画を保存（MP4）",
             "id": ""
@@ -311,7 +321,7 @@
           },
           {
             "tag": "A",
-            "text": "Design Office Identity v4.12.0",
+            "text": "Design Office Identity 4.15.0",
             "id": ""
           },
           {
@@ -362,16 +372,6 @@
           {
             "tag": "BUTTON",
             "text": "全画面表示",
-            "id": ""
-          },
-          {
-            "tag": "INPUT",
-            "text": "",
-            "id": ""
-          },
-          {
-            "tag": "A",
-            "text": "動画を保存（MP4）",
             "id": ""
           }
         ],
@@ -384,7 +384,7 @@
         "width": 1280,
         "scrollWidth": 1265,
         "font": "16px",
-        "logo": "http://127.0.0.1:65144/promotion/assets/5garashi_logotype_reversed_outlined.svg",
+        "logo": "http://127.0.0.1:58803/promotion/assets/5garashi_logotype_reversed_outlined.svg",
         "background": "rgb(26, 34, 18)",
         "brokenImages": [],
         "smallTargets": [],
@@ -418,6 +418,16 @@
           {
             "tag": "BUTTON",
             "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "ミュート",
             "id": ""
           },
           {
@@ -497,12 +507,12 @@
           },
           {
             "tag": "A",
-            "text": "Design Office Identity v4.12.0",
+            "text": "Design Office Identity 4.15.0",
             "id": ""
           },
           {
             "tag": "BODY",
-            "text": "\n本文へ移動\nサンプルEnglish\nmdEditor · WINDOWS書く。確かめる。PDFに残す。図も数式も、Ma",
+            "text": "\n本文へ移動\nサンプルEnglish\nmdEditor · WINDOWS読み込む。整える。必要な形式で渡す。Word・",
             "id": ""
           },
           {
@@ -548,16 +558,6 @@
           {
             "tag": "BUTTON",
             "text": "停止して先頭へ",
-            "id": ""
-          },
-          {
-            "tag": "BUTTON",
-            "text": "全画面表示",
-            "id": ""
-          },
-          {
-            "tag": "INPUT",
-            "text": "",
             "id": ""
           }
         ],
@@ -570,7 +570,7 @@
         "width": 320,
         "scrollWidth": 305,
         "font": "16px",
-        "logo": "http://127.0.0.1:65144/promotion/assets/5garashi_logotype_reversed_outlined.svg",
+        "logo": "http://127.0.0.1:58803/promotion/assets/5garashi_logotype_reversed_outlined.svg",
         "background": "rgb(26, 34, 18)",
         "brokenImages": [],
         "smallTargets": [],
@@ -604,6 +604,16 @@
           {
             "tag": "BUTTON",
             "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "ミュート",
             "id": ""
           },
           {
@@ -683,12 +693,12 @@
           },
           {
             "tag": "A",
-            "text": "Design Office Identity v4.12.0",
+            "text": "Design Office Identity 4.15.0",
             "id": ""
           },
           {
             "tag": "BODY",
-            "text": "\n本文へ移動\nサンプルEnglish\nmdEditor · WINDOWS書く。確かめる。PDFに残す。図も数式も、Ma",
+            "text": "\n本文へ移動\nサンプルEnglish\nmdEditor · WINDOWS読み込む。整える。必要な形式で渡す。Word・",
             "id": ""
           },
           {
@@ -735,16 +745,6 @@
             "tag": "BUTTON",
             "text": "停止して先頭へ",
             "id": ""
-          },
-          {
-            "tag": "BUTTON",
-            "text": "全画面表示",
-            "id": ""
-          },
-          {
-            "tag": "INPUT",
-            "text": "",
-            "id": ""
           }
         ],
         "focus_outline": "3px"
@@ -756,7 +756,7 @@
         "width": 1280,
         "scrollWidth": 1265,
         "font": "16px",
-        "logo": "http://127.0.0.1:65144/promotion/assets/5garashi_logotype_en_outlined.svg",
+        "logo": "http://127.0.0.1:58803/promotion/assets/5garashi_logotype_en_outlined.svg",
         "background": "rgb(249, 239, 203)",
         "brokenImages": [],
         "smallTargets": [],
@@ -790,6 +790,16 @@
           {
             "tag": "BUTTON",
             "text": "Full screen",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Mute",
             "id": ""
           },
           {
@@ -869,12 +879,12 @@
           },
           {
             "tag": "A",
-            "text": "Design Office Identity v4.12.0",
+            "text": "Design Office Identity 4.15.0",
             "id": ""
           },
           {
             "tag": "BODY",
-            "text": "\nSkip to content\nSamples日本語\nmdEditor · WINDOWSWrite. Preview",
+            "text": "\nSkip to content\nSamples日本語\nmdEditor · WINDOWSBring it in.Ma",
             "id": ""
           },
           {
@@ -920,16 +930,6 @@
           {
             "tag": "BUTTON",
             "text": "Stop and restart",
-            "id": ""
-          },
-          {
-            "tag": "BUTTON",
-            "text": "Full screen",
-            "id": ""
-          },
-          {
-            "tag": "INPUT",
-            "text": "",
             "id": ""
           }
         ],
@@ -946,7 +946,7 @@
         "width": 320,
         "scrollWidth": 305,
         "font": "16px",
-        "logo": "http://127.0.0.1:65144/promotion/assets/5garashi_logotype_en_outlined.svg",
+        "logo": "http://127.0.0.1:58803/promotion/assets/5garashi_logotype_en_outlined.svg",
         "background": "rgb(249, 239, 203)",
         "brokenImages": [],
         "smallTargets": [],
@@ -988,6 +988,16 @@
             "id": ""
           },
           {
+            "tag": "BUTTON",
+            "text": "Mute",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
             "tag": "A",
             "text": "Download video (MP4)",
             "id": ""
@@ -1059,12 +1069,12 @@
           },
           {
             "tag": "A",
-            "text": "Design Office Identity v4.12.0",
+            "text": "Design Office Identity 4.15.0",
             "id": ""
           },
           {
             "tag": "BODY",
-            "text": "\nSkip to content\nSamples日本語\nmdEditor · WINDOWSWrite. Preview",
+            "text": "\nSkip to content\nSamples日本語\nmdEditor · WINDOWSBring it in.Ma",
             "id": ""
           },
           {
@@ -1110,16 +1120,6 @@
           {
             "tag": "BUTTON",
             "text": "Stop and restart",
-            "id": ""
-          },
-          {
-            "tag": "BUTTON",
-            "text": "Full screen",
-            "id": ""
-          },
-          {
-            "tag": "INPUT",
-            "text": "",
             "id": ""
           }
         ],
@@ -1132,7 +1132,7 @@
         "width": 1280,
         "scrollWidth": 1265,
         "font": "16px",
-        "logo": "http://127.0.0.1:65144/promotion/assets/5garashi_logotype_en_reversed_outlined.svg",
+        "logo": "http://127.0.0.1:58803/promotion/assets/5garashi_logotype_en_reversed_outlined.svg",
         "background": "rgb(26, 34, 18)",
         "brokenImages": [],
         "smallTargets": [],
@@ -1166,6 +1166,16 @@
           {
             "tag": "BUTTON",
             "text": "Full screen",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Mute",
             "id": ""
           },
           {
@@ -1245,7 +1255,7 @@
           },
           {
             "tag": "A",
-            "text": "Design Office Identity v4.12.0",
+            "text": "Design Office Identity 4.15.0",
             "id": ""
           },
           {
@@ -1296,16 +1306,6 @@
           {
             "tag": "BUTTON",
             "text": "Full screen",
-            "id": ""
-          },
-          {
-            "tag": "INPUT",
-            "text": "",
-            "id": ""
-          },
-          {
-            "tag": "A",
-            "text": "Download video (MP4)",
             "id": ""
           }
         ],
@@ -1318,7 +1318,7 @@
         "width": 320,
         "scrollWidth": 305,
         "font": "16px",
-        "logo": "http://127.0.0.1:65144/promotion/assets/5garashi_logotype_en_reversed_outlined.svg",
+        "logo": "http://127.0.0.1:58803/promotion/assets/5garashi_logotype_en_reversed_outlined.svg",
         "background": "rgb(26, 34, 18)",
         "brokenImages": [],
         "smallTargets": [],
@@ -1352,6 +1352,16 @@
           {
             "tag": "BUTTON",
             "text": "Full screen",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Mute",
             "id": ""
           },
           {
@@ -1431,12 +1441,12 @@
           },
           {
             "tag": "A",
-            "text": "Design Office Identity v4.12.0",
+            "text": "Design Office Identity 4.15.0",
             "id": ""
           },
           {
             "tag": "BODY",
-            "text": "\nSkip to content\nSamples日本語\nmdEditor · WINDOWSWrite. Preview",
+            "text": "\nSkip to content\nSamples日本語\nmdEditor · WINDOWSBring it in.Ma",
             "id": ""
           },
           {
@@ -1482,16 +1492,6 @@
           {
             "tag": "BUTTON",
             "text": "Stop and restart",
-            "id": ""
-          },
-          {
-            "tag": "BUTTON",
-            "text": "Full screen",
-            "id": ""
-          },
-          {
-            "tag": "INPUT",
-            "text": "",
             "id": ""
           }
         ],
@@ -1530,7 +1530,7 @@
         "width": 640,
         "scrollWidth": 632,
         "font": "16px",
-        "logo": "http://127.0.0.1:65144/promotion/assets/5garashi_logotype_outlined.svg",
+        "logo": "http://127.0.0.1:58803/promotion/assets/5garashi_logotype_outlined.svg",
         "background": "rgb(249, 239, 203)",
         "brokenImages": [],
         "smallTargets": [],
@@ -1564,6 +1564,16 @@
           {
             "tag": "BUTTON",
             "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "ミュート",
             "id": ""
           },
           {
@@ -1643,12 +1653,12 @@
           },
           {
             "tag": "A",
-            "text": "Design Office Identity v4.12.0",
+            "text": "Design Office Identity 4.15.0",
             "id": ""
           },
           {
             "tag": "BODY",
-            "text": "\n本文へ移動\nサンプルEnglish\nmdEditor · WINDOWS書く。確かめる。PDFに残す。図も数式も、Ma",
+            "text": "\n本文へ移動\nサンプルEnglish\nmdEditor · WINDOWS読み込む。整える。必要な形式で渡す。Word・",
             "id": ""
           },
           {
@@ -1694,16 +1704,6 @@
           {
             "tag": "BUTTON",
             "text": "停止して先頭へ",
-            "id": ""
-          },
-          {
-            "tag": "BUTTON",
-            "text": "全画面表示",
-            "id": ""
-          },
-          {
-            "tag": "INPUT",
-            "text": "",
             "id": ""
           }
         ],
@@ -1716,7 +1716,7 @@
         "width": 640,
         "scrollWidth": 632,
         "font": "16px",
-        "logo": "http://127.0.0.1:65144/promotion/assets/5garashi_logotype_reversed_outlined.svg",
+        "logo": "http://127.0.0.1:58803/promotion/assets/5garashi_logotype_reversed_outlined.svg",
         "background": "rgb(26, 34, 18)",
         "brokenImages": [],
         "smallTargets": [],
@@ -1750,6 +1750,16 @@
           {
             "tag": "BUTTON",
             "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "ミュート",
             "id": ""
           },
           {
@@ -1829,7 +1839,7 @@
           },
           {
             "tag": "A",
-            "text": "Design Office Identity v4.12.0",
+            "text": "Design Office Identity 4.15.0",
             "id": ""
           },
           {
@@ -1880,16 +1890,6 @@
           {
             "tag": "BUTTON",
             "text": "全画面表示",
-            "id": ""
-          },
-          {
-            "tag": "INPUT",
-            "text": "",
-            "id": ""
-          },
-          {
-            "tag": "A",
-            "text": "動画を保存（MP4）",
             "id": ""
           }
         ],
@@ -1902,7 +1902,7 @@
         "width": 640,
         "scrollWidth": 632,
         "font": "16px",
-        "logo": "http://127.0.0.1:65144/promotion/assets/5garashi_logotype_en_outlined.svg",
+        "logo": "http://127.0.0.1:58803/promotion/assets/5garashi_logotype_en_outlined.svg",
         "background": "rgb(249, 239, 203)",
         "brokenImages": [],
         "smallTargets": [],
@@ -1936,6 +1936,16 @@
           {
             "tag": "BUTTON",
             "text": "Full screen",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Mute",
             "id": ""
           },
           {
@@ -2015,12 +2025,12 @@
           },
           {
             "tag": "A",
-            "text": "Design Office Identity v4.12.0",
+            "text": "Design Office Identity 4.15.0",
             "id": ""
           },
           {
             "tag": "BODY",
-            "text": "\nSkip to content\nSamples日本語\nmdEditor · WINDOWSWrite. Preview",
+            "text": "\nSkip to content\nSamples日本語\nmdEditor · WINDOWSBring it in.Ma",
             "id": ""
           },
           {
@@ -2066,16 +2076,6 @@
           {
             "tag": "BUTTON",
             "text": "Stop and restart",
-            "id": ""
-          },
-          {
-            "tag": "BUTTON",
-            "text": "Full screen",
-            "id": ""
-          },
-          {
-            "tag": "INPUT",
-            "text": "",
             "id": ""
           }
         ],
@@ -2088,7 +2088,7 @@
         "width": 640,
         "scrollWidth": 632,
         "font": "16px",
-        "logo": "http://127.0.0.1:65144/promotion/assets/5garashi_logotype_en_reversed_outlined.svg",
+        "logo": "http://127.0.0.1:58803/promotion/assets/5garashi_logotype_en_reversed_outlined.svg",
         "background": "rgb(26, 34, 18)",
         "brokenImages": [],
         "smallTargets": [],
@@ -2122,6 +2122,16 @@
           {
             "tag": "BUTTON",
             "text": "Full screen",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Mute",
             "id": ""
           },
           {
@@ -2201,12 +2211,12 @@
           },
           {
             "tag": "A",
-            "text": "Design Office Identity v4.12.0",
+            "text": "Design Office Identity 4.15.0",
             "id": ""
           },
           {
             "tag": "BODY",
-            "text": "\nSkip to content\nSamples日本語\nmdEditor · WINDOWSWrite. Preview",
+            "text": "\nSkip to content\nSamples日本語\nmdEditor · WINDOWSBring it in.Ma",
             "id": ""
           },
           {
@@ -2252,16 +2262,6 @@
           {
             "tag": "BUTTON",
             "text": "Stop and restart",
-            "id": ""
-          },
-          {
-            "tag": "BUTTON",
-            "text": "Full screen",
-            "id": ""
-          },
-          {
-            "tag": "INPUT",
-            "text": "",
             "id": ""
           }
         ],
@@ -2274,7 +2274,7 @@
         "width": 1280,
         "scrollWidth": 1265,
         "font": "32px",
-        "logo": "http://127.0.0.1:65144/promotion/assets/5garashi_logotype_outlined.svg",
+        "logo": "http://127.0.0.1:58803/promotion/assets/5garashi_logotype_outlined.svg",
         "background": "rgb(249, 239, 203)",
         "brokenImages": [],
         "smallTargets": [],
@@ -2308,6 +2308,16 @@
           {
             "tag": "BUTTON",
             "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "ミュート",
             "id": ""
           },
           {
@@ -2387,12 +2397,12 @@
           },
           {
             "tag": "A",
-            "text": "Design Office Identity v4.12.0",
+            "text": "Design Office Identity 4.15.0",
             "id": ""
           },
           {
             "tag": "BODY",
-            "text": "\n本文へ移動\nサンプルEnglish\nmdEditor · WINDOWS書く。確かめる。PDFに残す。図も数式も、Ma",
+            "text": "\n本文へ移動\nサンプルEnglish\nmdEditor · WINDOWS読み込む。整える。必要な形式で渡す。Word・",
             "id": ""
           },
           {
@@ -2438,16 +2448,6 @@
           {
             "tag": "BUTTON",
             "text": "停止して先頭へ",
-            "id": ""
-          },
-          {
-            "tag": "BUTTON",
-            "text": "全画面表示",
-            "id": ""
-          },
-          {
-            "tag": "INPUT",
-            "text": "",
             "id": ""
           }
         ],
@@ -2460,7 +2460,7 @@
         "width": 320,
         "scrollWidth": 305,
         "font": "32px",
-        "logo": "http://127.0.0.1:65144/promotion/assets/5garashi_logotype_outlined.svg",
+        "logo": "http://127.0.0.1:58803/promotion/assets/5garashi_logotype_outlined.svg",
         "background": "rgb(249, 239, 203)",
         "brokenImages": [],
         "smallTargets": [],
@@ -2494,6 +2494,16 @@
           {
             "tag": "BUTTON",
             "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "ミュート",
             "id": ""
           },
           {
@@ -2573,7 +2583,7 @@
           },
           {
             "tag": "A",
-            "text": "Design Office Identity v4.12.0",
+            "text": "Design Office Identity 4.15.0",
             "id": ""
           },
           {
@@ -2624,16 +2634,6 @@
           {
             "tag": "BUTTON",
             "text": "全画面表示",
-            "id": ""
-          },
-          {
-            "tag": "INPUT",
-            "text": "",
-            "id": ""
-          },
-          {
-            "tag": "A",
-            "text": "動画を保存（MP4）",
             "id": ""
           }
         ],
@@ -2646,7 +2646,7 @@
         "width": 1280,
         "scrollWidth": 1265,
         "font": "32px",
-        "logo": "http://127.0.0.1:65144/promotion/assets/5garashi_logotype_reversed_outlined.svg",
+        "logo": "http://127.0.0.1:58803/promotion/assets/5garashi_logotype_reversed_outlined.svg",
         "background": "rgb(26, 34, 18)",
         "brokenImages": [],
         "smallTargets": [],
@@ -2680,6 +2680,16 @@
           {
             "tag": "BUTTON",
             "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "ミュート",
             "id": ""
           },
           {
@@ -2759,12 +2769,12 @@
           },
           {
             "tag": "A",
-            "text": "Design Office Identity v4.12.0",
+            "text": "Design Office Identity 4.15.0",
             "id": ""
           },
           {
             "tag": "BODY",
-            "text": "\n本文へ移動\nサンプルEnglish\nmdEditor · WINDOWS書く。確かめる。PDFに残す。図も数式も、Ma",
+            "text": "\n本文へ移動\nサンプルEnglish\nmdEditor · WINDOWS読み込む。整える。必要な形式で渡す。Word・",
             "id": ""
           },
           {
@@ -2810,16 +2820,6 @@
           {
             "tag": "BUTTON",
             "text": "停止して先頭へ",
-            "id": ""
-          },
-          {
-            "tag": "BUTTON",
-            "text": "全画面表示",
-            "id": ""
-          },
-          {
-            "tag": "INPUT",
-            "text": "",
             "id": ""
           }
         ],
@@ -2832,7 +2832,7 @@
         "width": 320,
         "scrollWidth": 305,
         "font": "32px",
-        "logo": "http://127.0.0.1:65144/promotion/assets/5garashi_logotype_reversed_outlined.svg",
+        "logo": "http://127.0.0.1:58803/promotion/assets/5garashi_logotype_reversed_outlined.svg",
         "background": "rgb(26, 34, 18)",
         "brokenImages": [],
         "smallTargets": [],
@@ -2866,6 +2866,16 @@
           {
             "tag": "BUTTON",
             "text": "全画面表示",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "ミュート",
             "id": ""
           },
           {
@@ -2945,12 +2955,12 @@
           },
           {
             "tag": "A",
-            "text": "Design Office Identity v4.12.0",
+            "text": "Design Office Identity 4.15.0",
             "id": ""
           },
           {
             "tag": "BODY",
-            "text": "\n本文へ移動\nサンプルEnglish\nmdEditor · WINDOWS書く。確かめる。PDFに残す。図も数式も、Ma",
+            "text": "\n本文へ移動\nサンプルEnglish\nmdEditor · WINDOWS読み込む。整える。必要な形式で渡す。Word・",
             "id": ""
           },
           {
@@ -2997,16 +3007,6 @@
             "tag": "BUTTON",
             "text": "停止して先頭へ",
             "id": ""
-          },
-          {
-            "tag": "BUTTON",
-            "text": "全画面表示",
-            "id": ""
-          },
-          {
-            "tag": "INPUT",
-            "text": "",
-            "id": ""
           }
         ],
         "focus_outline": "3px"
@@ -3018,7 +3018,7 @@
         "width": 1280,
         "scrollWidth": 1265,
         "font": "32px",
-        "logo": "http://127.0.0.1:65144/promotion/assets/5garashi_logotype_en_outlined.svg",
+        "logo": "http://127.0.0.1:58803/promotion/assets/5garashi_logotype_en_outlined.svg",
         "background": "rgb(249, 239, 203)",
         "brokenImages": [],
         "smallTargets": [],
@@ -3052,6 +3052,16 @@
           {
             "tag": "BUTTON",
             "text": "Full screen",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Mute",
             "id": ""
           },
           {
@@ -3131,12 +3141,12 @@
           },
           {
             "tag": "A",
-            "text": "Design Office Identity v4.12.0",
+            "text": "Design Office Identity 4.15.0",
             "id": ""
           },
           {
             "tag": "BODY",
-            "text": "\nSkip to content\nSamples日本語\nmdEditor · WINDOWSWrite. Preview",
+            "text": "\nSkip to content\nSamples日本語\nmdEditor · WINDOWSBring it in.Ma",
             "id": ""
           },
           {
@@ -3182,16 +3192,6 @@
           {
             "tag": "BUTTON",
             "text": "Stop and restart",
-            "id": ""
-          },
-          {
-            "tag": "BUTTON",
-            "text": "Full screen",
-            "id": ""
-          },
-          {
-            "tag": "INPUT",
-            "text": "",
             "id": ""
           }
         ],
@@ -3204,7 +3204,7 @@
         "width": 320,
         "scrollWidth": 305,
         "font": "32px",
-        "logo": "http://127.0.0.1:65144/promotion/assets/5garashi_logotype_en_outlined.svg",
+        "logo": "http://127.0.0.1:58803/promotion/assets/5garashi_logotype_en_outlined.svg",
         "background": "rgb(249, 239, 203)",
         "brokenImages": [],
         "smallTargets": [],
@@ -3246,6 +3246,16 @@
             "id": ""
           },
           {
+            "tag": "BUTTON",
+            "text": "Mute",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
             "tag": "A",
             "text": "Download video (MP4)",
             "id": ""
@@ -3317,12 +3327,12 @@
           },
           {
             "tag": "A",
-            "text": "Design Office Identity v4.12.0",
+            "text": "Design Office Identity 4.15.0",
             "id": ""
           },
           {
             "tag": "BODY",
-            "text": "\nSkip to content\nSamples日本語\nmdEditor · WINDOWSWrite. Preview",
+            "text": "\nSkip to content\nSamples日本語\nmdEditor · WINDOWSBring it in.Ma",
             "id": ""
           },
           {
@@ -3368,16 +3378,6 @@
           {
             "tag": "BUTTON",
             "text": "Stop and restart",
-            "id": ""
-          },
-          {
-            "tag": "BUTTON",
-            "text": "Full screen",
-            "id": ""
-          },
-          {
-            "tag": "INPUT",
-            "text": "",
             "id": ""
           }
         ],
@@ -3390,7 +3390,7 @@
         "width": 1280,
         "scrollWidth": 1265,
         "font": "32px",
-        "logo": "http://127.0.0.1:65144/promotion/assets/5garashi_logotype_en_reversed_outlined.svg",
+        "logo": "http://127.0.0.1:58803/promotion/assets/5garashi_logotype_en_reversed_outlined.svg",
         "background": "rgb(26, 34, 18)",
         "brokenImages": [],
         "smallTargets": [],
@@ -3424,6 +3424,16 @@
           {
             "tag": "BUTTON",
             "text": "Full screen",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Mute",
             "id": ""
           },
           {
@@ -3503,7 +3513,7 @@
           },
           {
             "tag": "A",
-            "text": "Design Office Identity v4.12.0",
+            "text": "Design Office Identity 4.15.0",
             "id": ""
           },
           {
@@ -3554,16 +3564,6 @@
           {
             "tag": "BUTTON",
             "text": "Full screen",
-            "id": ""
-          },
-          {
-            "tag": "INPUT",
-            "text": "",
-            "id": ""
-          },
-          {
-            "tag": "A",
-            "text": "Download video (MP4)",
             "id": ""
           }
         ],
@@ -3576,7 +3576,7 @@
         "width": 320,
         "scrollWidth": 305,
         "font": "32px",
-        "logo": "http://127.0.0.1:65144/promotion/assets/5garashi_logotype_en_reversed_outlined.svg",
+        "logo": "http://127.0.0.1:58803/promotion/assets/5garashi_logotype_en_reversed_outlined.svg",
         "background": "rgb(26, 34, 18)",
         "brokenImages": [],
         "smallTargets": [],
@@ -3610,6 +3610,16 @@
           {
             "tag": "BUTTON",
             "text": "Full screen",
+            "id": ""
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "id": ""
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Mute",
             "id": ""
           },
           {
@@ -3689,12 +3699,12 @@
           },
           {
             "tag": "A",
-            "text": "Design Office Identity v4.12.0",
+            "text": "Design Office Identity 4.15.0",
             "id": ""
           },
           {
             "tag": "BODY",
-            "text": "\nSkip to content\nSamples日本語\nmdEditor · WINDOWSWrite. Preview",
+            "text": "\nSkip to content\nSamples日本語\nmdEditor · WINDOWSBring it in.Ma",
             "id": ""
           },
           {
@@ -3740,16 +3750,6 @@
           {
             "tag": "BUTTON",
             "text": "Stop and restart",
-            "id": ""
-          },
-          {
-            "tag": "BUTTON",
-            "text": "Full screen",
-            "id": ""
-          },
-          {
-            "tag": "INPUT",
-            "text": "",
             "id": ""
           }
         ],

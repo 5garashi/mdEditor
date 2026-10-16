@@ -3,9 +3,9 @@ File: promotion/samples/quickstart-engineering-note.en.md
 Description: mdEditor promotion material
 Author: 5garashi.com Design Office
 Created: 2026-10-12
-Version: 1.1.0
+Version: 1.5.0
 License: MIT
-Last updated: 2026-10-13
+Last updated: 2026-10-17
 SPDX-License-Identifier: MIT
 -->
 # Diagrams and math
@@ -31,7 +31,7 @@ flowchart LR
 1. Open a copy of this document in mdEditor.
 2. Change the first heading to “Diagrams and math: reviewed”. Check the preview.
 3. Change “Check specifications” in the diagram to “Verify by measurement”. The diagram shows the new label.
-4. Select “Save” to save the Markdown, then “Save as PDF” to export a PDF.
+4. Select “Save” to save the Markdown, then “Save As” and choose PDF to export a PDF.
 5. Open the PDF and check the heading, diagram, equation and table.
 
 Recalculate and update the equation and table yourself when changing the values; mdEditor does not calculate them. Actual component selection also requires checking temperature and derating.
