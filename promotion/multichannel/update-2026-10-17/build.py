@@ -27,7 +27,7 @@ copy = {
 'ja': dict(title='読み込む。整える。渡す。', sub='Word・Web・CSVから、Markdownへ。', lines=['Word・HTML・メール・CSV・Notebookを開く','図と数式を見ながら、文章を整える','Word・PDF・HTML・PNGへ書き出す'],note='Wordの色や配置は引き継ぎません。図・数式は画像としてWordへ。',url='https://5garashi.github.io/mdEditor/',alt='クリーム色のmdEditor更新案内。Word・Web・CSVからMarkdownへ取り込み、Word・PDF・HTML・PNGへ書き出す用途を紹介。実画面は1.0.10で編集欄と図・数式のプレビューを並べた場面。'),
 'en': dict(title='Bring it in. Make it clear.',sub='From Word, web pages and CSV to Markdown.',lines=['Open Word, HTML, email, CSV and notebooks','Edit with diagrams and equations in view','Export to Word, PDF, HTML and PNG'],note='Word layout is not preserved. Diagrams and math export to Word as pictures.',url='https://5garashi.github.io/mdEditor/en.html',alt='Cream mdEditor update card showing import from Word, web pages and CSV, and export to Word, PDF, HTML and PNG. The actual 1.0.10 screenshot shows Markdown editing beside a preview with diagrams and math.')}
 for lang,c in copy.items():
-    
+
     shot=(PROMO/'assets')/f'app-{lang}.png'
     shutil.copy2(shot,OUT/f'app-{lang}.png')
     im=Image.new('RGB',(1600,1200),PAPER); d=ImageDraw.Draw(im)
@@ -54,7 +54,7 @@ for lang,c in copy.items():
     writer.append((28,801),'5garashi.com Design Office | 2026-10-17 JST',font=font,fontsize=10)
     writer.write_text(p,color=(56/255,87/255,35/255))
     p.insert_link({'kind':fitz.LINK_URI,'from':fitz.Rect(25,727,570,753),'uri':c['url']})
-    doc.save(OUT/f'one-page-{lang}.pdf')
+    doc.subset_fonts(); doc.save(OUT/f'one-page-{lang}.pdf', garbage=4, deflate=True)
 
 ja='mdEditorを更新しました。Word・Webページ・CSVなどをMarkdownで開き、図や数式を見ながら編集。Word・PDF・HTML・PNGで渡せます。\n\n使い方とサンプル\nhttps://5garashi.github.io/mdEditor/\n\n#mdEditor #Markdown #Windows'
 en='I updated mdEditor for Windows. Open Word, web pages and CSV as Markdown, then export to Word, PDF, HTML or PNG.\n\nGuide and samples:\nhttps://5garashi.github.io/mdEditor/en.html\n\n#Markdown #Windows'
