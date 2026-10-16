@@ -9,6 +9,11 @@ SPDX-License-Identifier: MIT
 -->
 # GitHub一元管理と5garashi.comからの導線 / Single-source publication
 
+バージョン / Version: 1.1.1 · [CHANGELOG.md](CHANGELOG.md)
+
+2026-10-17: 資料ページ・埋め込みカードを1.0.10の実演と新しい日英PDFへ更新。[媒体別の記録](../multichannel/update-2026-10-17/PUBLICATION.md)。Resources and office-site cards now reference source 1.0.10.
+
+
 2026-10-13更新: ユーザーのGitHub・Google Sites実装依頼により、原本ブランチ promotion/site-integration と公開生成物 gh-pages を使用する方式へ進めます。運用と媒体順は [CHANNELS.md](CHANNELS.md) を参照してください。以下のActions手動公開案はmain統合後の選択肢で、現在の公開方式とは異なります。公開履歴は DEPLOYMENT.md に記録します。
 
 現在の公開手順: 原本をコミット・pushした後、`python promotion/integration/publish.py --push` を実行。GitHub Pagesはgh-pagesのルートから公開済みです。公開生成物は原本から作り、mainの変更やマージを伴いません。Google Sitesには日本語・英語の紹介ページへ進むネイティブボタンを追加しました。iframeはスマートフォンで内部スクロールが必要になったため、公開確認後に外しました。

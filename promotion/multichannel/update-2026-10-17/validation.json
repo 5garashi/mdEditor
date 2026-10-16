@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-17",
+  "contrast": {
+    "#385723/#F9EFCB": 7.1357822315499435,
+    "#7B4A21/#F9EFCB": 6.4131733678126785,
+    "#385723/#FFE699": 6.663817210110946
+  },
+  "files": {
+    "ja": {
+      "pdf_pages": 1,
+      "pdf_text_characters": 350,
+      "pdf_links": 1
+    },
+    "en": {
+      "pdf_pages": 1,
+      "pdf_text_characters": 513,
+      "pdf_links": 1
+    }
+  }
+}

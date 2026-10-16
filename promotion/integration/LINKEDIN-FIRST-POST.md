@@ -71,3 +71,5 @@ https://apps.microsoft.com/detail/9nww2qrclmhc?hl=ja-JP&gl=JP
 
 **作成者 / Author**: 5garashi.com設計事務所 / 5garashi.com Design Office
 **最終更新 / Last updated**: 2026-10-13 JST
+
+2026-10-17更新 / Update: [1.0.10の新実演動画案内](https://www.linkedin.com/feed/update/urn:li:activity:7516922147580055552/)を一般公開しました。New source-build 1.0.10 demo announcement published.

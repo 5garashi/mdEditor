@@ -3,22 +3,22 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.5.0
+版 / Version: 1.5.1
 ライセンス / License: MIT
-最終更新 / Last updated: 2026-10-16
+最終更新 / Last updated: 2026-10-17
 SPDX-License-Identifier: MIT
 -->
 # mdEditor 宣伝キット / Promotion kit
 
 2026-10-17: 紹介ページと実操作動画をソース版1.0.10対応へ更新。[制作記録](video-update-1.0.10/README.md)。
 
-バージョン / Version: 1.5.0 · [CHANGELOG.md](CHANGELOG.md)
+バージョン / Version: 1.5.1 · [CHANGELOG.md](CHANGELOG.md)
 
-Windows版の実操作を使った日英紹介ページ、操作デモ、初めて試すための日英6サンプルです。日英動画の更新版1.1.0は75秒で、別ウィンドウ、ダークモード、Syntax（日本語では「書き方」）とLight StepsのBGMを含みます。
+Windows版の実操作を使った日英紹介ページ、1.0.10の操作デモ、初めて試すための日英6サンプルです。Word・CSV・Webの取り込みとWord・PDF・HTML・PNGの書き出しを実演します。
 
 ## 2026-10-16 更新案内 / Update materials
 
-[日英の更新資料](multichannel/update-2026-10-16/README.md)に、Word・Web・CSVの取り込みとWord・PNG・HTMLへの書き出しを紹介する投稿画像・A4 PDF・SNS原稿を追加しました。主な追加は1.0.8、最新ソースは1.0.10です。既存の動画は1.0.5の実演です。
+[日英の更新資料](multichannel/update-2026-10-16/README.md)に、Word・Web・CSVの取り込みとWord・PNG・HTMLへの書き出しを紹介する投稿画像・A4 PDF・SNS原稿を追加しました。主な追加は1.0.8、最新ソースは1.0.10です。新しい1.0.10の実演は[公開記録](video-update-1.0.10/PUBLICATION-2026-10-17.md)を参照。
 
 ## 追加した媒体素材 / Added media materials
 

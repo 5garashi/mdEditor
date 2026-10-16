@@ -1,0 +1,5 @@
+New mdEditor 1.0.10 demos: open Word, CSV and web pages as Markdown, edit diagrams and math, then export Word, PDF, HTML or PNG.
+
+English demo: https://youtu.be/FxBILEFQMQk
+日本語: https://youtu.be/pXQqzLLf8FM
+#Markdown #Windows

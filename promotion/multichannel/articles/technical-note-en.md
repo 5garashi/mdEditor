@@ -2,8 +2,8 @@
 File: promotion/multichannel/articles/technical-note-en.md
 Description: mdEditor use-case article
 Author: 5garashi.com Design Office
-Created: 2026-10-13
-Version: 1.2.0
+Created: 2026-10-17
+Version: 1.5.1
 License: MIT
 SPDX-License-Identifier: MIT
 -->
@@ -58,7 +58,7 @@ You change the text that describes the diagram, rather than manipulating shapes 
 
 ![The actual mdEditor Windows app showing an editor beside a preview with an equation, flowchart and table.](../../assets/app-en.png)
 
-This screenshot uses source build mdEditor 1.0.5. The [English demonstration](../../assets/mdEditor-demo-en.mp4) shows real Windows operations.
+This screenshot uses source build mdEditor 1.0.10. The [English demonstration](../../assets/mdEditor-demo-1.0.10-en.mp4) shows real Windows operations.
 
 ## 4. Put the preview in another window
 
@@ -73,13 +73,13 @@ The following screens show the main editor and its detached preview, captured wi
 ## 5. Save the Markdown and check the PDF
 
 1. Select Save to preserve the edited Markdown.
-2. Select Save as PDF and choose a destination.
+2. Select Save As, choose PDF as the file type and select a destination.
 3. Open the saved PDF.
 4. Check the heading, diagram, equation and table, along with page breaks and unwanted pages.
 
-In the tested source build, a short technical note could produce a trailing blank PDF page. The document content was exported, but check the page count before sharing. PDF files do not update automatically, and numerical results are not calculated by mdEditor.
+In old source build 1.0.5, a short technical note could produce a trailing blank PDF page (fixed in 1.0.6 according to the changelog). The document content was exported, but check the page count before sharing. PDF files do not update automatically, and numerical results are not calculated by mdEditor.
 
-External images in a document connect to their image servers. This sample has no external images; its diagrams and equations use components bundled with the app. See the [app privacy policy](https://github.com/5garashi/mdEditor/blob/main/PRIVACY.md).
+External images load after consent by default, connecting to their image servers. This sample has no external images; its diagrams and equations use components bundled with the app. See the [app privacy policy](https://github.com/5garashi/mdEditor/blob/main/PRIVACY.md).
 
 ## References and author
 
@@ -87,13 +87,13 @@ External images in a document connect to their image servers. This sample has no
 - [KaTeX documentation](https://katex.org/docs/supported.html): supported math notation.
 - [mdEditor source and usage](https://github.com/5garashi/mdEditor).
 
-The steps and screenshots were checked with unmodified source build 1.0.5. The currently available Store build and certification status are unverified. The free price follows the owner's confirmation and Store listing data.
+The main screenshot and import/edit/export demonstration use unmodified source build 1.0.10. Detached-window screenshots retain their source 1.0.5 labels. The currently available Store build and certification status are unverified. The free price follows the owner's confirmation and Store listing data.
 
 mdEditor is a development project by [5garashi.com Design Office](https://www.5garashi.com/). This is an unpublished use-case article. The developer should review it and adapt it to the destination's rules before publishing.
 
-Design reference: [Design Office Identity v4.12.0](https://5garashi.github.io/5garashi-identity/), 5garashi.com Design Office. Official logos are CC BY-ND 4.0; this article and its notation examples are MIT.
+Design reference: [Design Office Identity 4.15.0](https://5garashi.github.io/5garashi-identity/), 5garashi.com Design Office. Official logos are CC BY-ND 4.0; this article and its notation examples are MIT.
 
 ---
 
 **Author**: 5garashi.com Design Office
-**Last updated**: 2026-10-13 JST
+**Last updated**: 2026-10-17 JST

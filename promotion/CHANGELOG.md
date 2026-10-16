@@ -10,6 +10,10 @@ SPDX-License-Identifier: MIT
 -->
 # 変更履歴 / Changelog
 
+## 1.5.1 — 2026-10-17
+
+- X・LinkedIn・Zennと資料ページを1.0.10の実演へ更新。 / Update remaining channels and resource links for source 1.0.10.
+
 ## 1.5.0 — 2026-10-17
 
 - 日英の紹介ページとMP4・字幕・実画面をソース版1.0.10対応へ更新。Word・CSV・Web取り込みと4形式の書き出しを案内。

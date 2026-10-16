@@ -11,6 +11,8 @@ SPDX-License-Identifier: MIT
 
 公開記事: https://zenn.dev/5garashi_com/articles/mdeditor-diagrams-math-pdf
 
+2026-10-17: 既存記事を1.0.10の主画面・実演動画・「名前を付けて保存」の手順へ更新し、公開HTMLで反映を確認しました。連携元コミット91fb19d。Updated and verified the existing article for source build 1.0.10.
+
 タイトル: Markdownを読むためにVS Codeを開くのが面倒で、Windowsアプリを作った
 
 公開日時: 2026-10-13 14:35 JST。アカウント: `5garashi_com`。

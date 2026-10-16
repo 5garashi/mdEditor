@@ -1,0 +1,14 @@
+I recorded new Japanese and English demonstrations of mdEditor source build 1.0.10 for Windows.
+
+The videos show real operations: open Word documents, CSV and web pages as Markdown, edit diagrams and equations, then export to Word, PDF, HTML and PNG using Save As.
+
+English demo: https://www.youtube.com/watch?v=FxBILEFQMQk
+日本語の実演: https://www.youtube.com/watch?v=pXQqzLLf8FM
+
+Guide and samples: https://5garashi.github.io/mdEditor/en.html
+日本語の使い方: https://5garashi.github.io/mdEditor/
+
+These recordings use the unmodified source build, rather than the Microsoft Store binary. The current Store build number has not been verified. Word import does not preserve colors or layout; exported diagrams and equations become images in Word. mdEditor does not calculate numerical results.
+
+Developed by 5garashi.com Design Office: https://www.5garashi.com/
+#Markdown #Windows #TechnicalWriting
