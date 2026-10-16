@@ -11,6 +11,8 @@ SPDX-License-Identifier: MIT
 
 ## 1.0.2 — 2026-10-16
 
+- Windowsで状態ファイル名末尾にCRが入る問題を、GitツリーのNUL終端で修正。既存状態の動画IDと内容を保ってファイル名を修復。
+
 - 日英の動画説明にWord・Web・CSV取り込みとWord・PNG・HTML書き出しの案内を追加。動画の1.0.5と最新ソース1.0.10を区別。
 - Existing video descriptions updated; no new recording or video upload.
 

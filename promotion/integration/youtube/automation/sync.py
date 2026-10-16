@@ -92,7 +92,8 @@ class GitState:
 
     def save(self):
         blob = self.git('hash-object', '-w', '--stdin', input=json.dumps(self.data, ensure_ascii=False))
-        tree = self.git('mktree', input='100644 blob ' + blob + '\tstate.json\n')
+        # NUL termination avoids Windows text-mode CRLF becoming part of the name.
+        tree = self.git('mktree', '-z', input='100644 blob ' + blob + '\tstate.json\0')
         args = ['commit-tree', tree, '-m', 'Record YouTube release state']
         if self.parent:
             args.extend(['-p', self.parent])
