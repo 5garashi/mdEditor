@@ -12,6 +12,14 @@
 
 The version number lives in [VERSION](./VERSION). Add each new version at the top, with a `## version — date` heading (used as the GitHub Release notes).
 
+## 1.0.9 — 2026-10-16
+
+- 英語表示の「書き方」の一覧で、長い例に押されて「Insert」ボタンが右にはみ出していたのを直した（例の文を折り返す）。
+- README と Microsoft Store の掲載用に、1.0.8 の画面の写真（日本語・英語）と説明文を加えた（docs/images/）。
+
+- In the English Markdown quick reference, long examples no longer push the Insert buttons out of view (the examples wrap).
+- Added 1.0.8 screenshots (Japanese and English) with captions for the README and the Microsoft Store listing (docs/images/).
+
 ## 1.0.8 — 2026-10-16
 
 1.0.7 は公開せず、この版にまとめました。 / 1.0.7 was not released; its changes are part of this version.
