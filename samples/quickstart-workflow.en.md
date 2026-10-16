@@ -3,9 +3,9 @@ File: promotion/samples/quickstart-workflow.en.md
 Description: mdEditor promotion material
 Author: 5garashi.com Design Office
 Created: 2026-10-12
-Version: 1.1.0
+Version: 1.5.0
 License: MIT
-Last updated: 2026-10-13
+Last updated: 2026-10-17
 SPDX-License-Identifier: MIT
 -->
 # Document review procedure
@@ -40,4 +40,4 @@ flowchart TD
 
 ## Try it
 
-Open a copy in mdEditor and change one `[ ]` above to `[x]`. A checked box appears in the preview. Select “Save”, then “Save as PDF”. Open the PDF and check that it includes the diagram, table and checkmarks.
+Open a copy in mdEditor and change one `[ ]` above to `[x]`. A checked box appears in the preview. Select “Save”, then “Save As” and choose PDF. Open the PDF and check that it includes the diagram, table and checkmarks.

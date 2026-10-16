@@ -3,9 +3,9 @@ File: promotion/samples/quickstart-ai-notes.en.md
 Description: mdEditor promotion material
 Author: 5garashi.com Design Office
 Created: 2026-10-12
-Version: 1.1.0
+Version: 1.5.0
 License: MIT
-Last updated: 2026-10-13
+Last updated: 2026-10-17
 SPDX-License-Identifier: MIT
 -->
 # Notes for organizing an answer
@@ -31,4 +31,4 @@ Write what you want to find out here.
 
 ## Try it
 
-Open a copy in mdEditor. Replace “Option A” with your own proposal's name; the preview table updates. Select “Save”, then “Save as PDF”. Open the PDF and check the table and checklist.
+Open a copy in mdEditor. Replace “Option A” with your own proposal's name; the preview table updates. Select “Save”, then “Save As” and choose PDF. Open the PDF and check the table and checklist.

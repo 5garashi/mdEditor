@@ -3,9 +3,9 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.1.0
+版 / Version: 1.5.0
 ライセンス / License: MIT
-最終更新 / Last updated: 2026-10-13
+最終更新 / Last updated: 2026-10-17
 SPDX-License-Identifier: MIT
 -->
 # 文書レビューの手順
@@ -40,4 +40,4 @@ flowchart TD
 
 ## 試してみる
 
-この文書のコピーをmdEditorで開き、上の `[ ]` を `[x]` に変えてみてください。プレビューでチェックが付きます。「保存」で文書を保存し、「PDFに保存」で書き出します。PDFにも図・表・チェック結果が含まれることを確認してください。
+この文書のコピーをmdEditorで開き、上の `[ ]` を `[x]` に変えてみてください。プレビューでチェックが付きます。「保存」で文書を保存し、「名前を付けて保存」でPDFを選択で書き出します。PDFにも図・表・チェック結果が含まれることを確認してください。
