@@ -2,8 +2,8 @@
 ファイル名 / File: promotion/multichannel/articles/technical-note-ja.md
 概要 / Description: mdEditor用途記事 / mdEditor use-case article
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
-作成日 / Created: 2026-10-13
-版 / Version: 1.2.0
+作成日 / Created: 2026-10-17
+版 / Version: 1.5.1
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
@@ -58,7 +58,7 @@ flowchart LR
 
 ![mdEditorで編集欄とプレビューを並べた実画面。数式・フローチャート・表が表示されている。](../../assets/app-ja.png)
 
-画面はソース版mdEditor 1.0.5の実機表示です。実演動画も[日本語MP4](../../assets/mdEditor-demo-ja.mp4)で確認できます。
+主画面はソース版mdEditor 1.0.10の実機表示です。実演動画も[日本語MP4](../../assets/mdEditor-demo-1.0.10-ja.mp4)で確認できます。
 
 ## 4. 別ウィンドウで見比べる
 
@@ -73,13 +73,13 @@ flowchart LR
 ## 5. Markdownを保存し、PDFを確認する
 
 1. 「保存」で編集したMarkdownを保存する。
-2. 「PDFに保存」を選び、PDFの保存先を指定する。
+2. 「名前を付けて保存」でPDF形式を選び、保存先を指定する。
 3. 保存したPDFを開く。
 4. 見出し・図・数式・表が含まれること、文章の切れや不要なページがないかを確認する。
 
-検証したソース版では、短い技術メモのPDFに末尾空白ページが付く場合がありました。本文・図・数式・表は出力されていますが、配布前にページ数を確認してください。PDFの自動更新や、数値の自動計算は行われません。
+旧ソース1.0.5にはPDFの末尾に空白ページが付く場合がありました（変更履歴では1.0.6で修正）。本文・図・数式・表は出力されていますが、配布前にページ数を確認してください。PDFの自動更新や、数値の自動計算は行われません。
 
-文書内に外部画像を置くと、その画像サーバーへの通信が発生します。本稿のサンプルには外部画像がなく、図・数式はアプリに同梱された部品で描画します。[アプリのプライバシーポリシー](https://github.com/5garashi/mdEditor/blob/main/PRIVACY.md)も参照してください。
+文書内の外部画像は初期設定で同意後に読み込み、その画像サーバーへの通信が発生します。本稿のサンプルには外部画像がなく、図・数式はアプリに同梱された部品で描画します。[アプリのプライバシーポリシー](https://github.com/5garashi/mdEditor/blob/main/PRIVACY.md)も参照してください。
 
 ## 参考資料と作成者
 
@@ -87,13 +87,13 @@ flowchart LR
 - [KaTeX公式資料](https://katex.org/docs/supported.html): 表示できる数式の記法。
 - [mdEditorのソースと使い方](https://github.com/5garashi/mdEditor)。
 
-本稿の手順と画像は、変更していないソース版1.0.5で確認しています。Storeの提供版番号・認定状況は未確認です。価格は所有者の確認と掲載情報に基づき無料と記載しています。
+主画面と取り込み・編集・書き出し動画は、変更していないソース版1.0.10です。別ウィンドウの画像は1.0.5の記録です。Storeの提供版番号・認定状況は未確認です。価格は所有者の確認と掲載情報に基づき無料と記載しています。
 
 mdEditorは[5garashi.com設計事務所](https://www.5garashi.com/)の開発作品です。本文は用途を試すための手順記事で、未投稿の原稿です。掲載先のルールに合わせ、開発者本人が内容を確認してから公開してください。
 
-デザイン基準出典: [Design Office Identity v4.12.0](https://5garashi.github.io/5garashi-identity/)、5garashi.com設計事務所 / 5garashi.com Design Office。公式ロゴはCC BY-ND 4.0、本文と記法例はMIT。
+デザイン基準出典: [Design Office Identity 4.15.0](https://5garashi.github.io/5garashi-identity/)、5garashi.com設計事務所 / 5garashi.com Design Office。公式ロゴはCC BY-ND 4.0、本文と記法例はMIT。
 
 ---
 
 **作成者 / Author**: 5garashi.com設計事務所 / 5garashi.com Design Office
-**最終更新 / Last updated**: 2026-10-13 JST
+**最終更新 / Last updated**: 2026-10-17 JST
