@@ -3,10 +3,13 @@
 概要 / Description: 日本語のYouTube説明文。管理ヘッダーは投稿時に除去 / Japanese YouTube demo description
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-13
-版 / Version: 1.1.0
+版 / Version: 1.0.2
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
+
+2026-10-16 更新: Word・Webページ・CSVなどをMarkdownで開き、Word・PDF・HTML・PNGへ書き出せるようになりました。主な機能追加は1.0.8、最新ソースは1.0.10。Wordの色と配置は引き継ぎません。インターネット上の画像は初期設定では確認後に読み込みます。この動画は旧ソース1.0.5の操作実演で、追加機能は映っていません。Store配信版番号は今回未確認です。
+
 mdEditorは、5garashi.com設計事務所が開発した無料のWindows用Markdownエディターです。
 
 文書を開く、Markdownを編集する、図・数式をプレビューする、別ウィンドウへ表示する、両ウィンドウをダークモードへ切り替える、「書き方」（Syntax）の一覧を見る、PDFに保存する操作を紹介します。

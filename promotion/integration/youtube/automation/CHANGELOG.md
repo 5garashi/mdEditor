@@ -3,11 +3,16 @@
 概要 / Description: YouTube自動更新の変更履歴 / YouTube automation changes
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-13
-版 / Version: 1.0.1
+版 / Version: 1.0.2
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
 # 変更履歴 / Changelog
+
+## 1.0.2 — 2026-10-16
+
+- 日英の動画説明にWord・Web・CSV取り込みとWord・PNG・HTML書き出しの案内を追加。動画の1.0.5と最新ソース1.0.10を区別。
+- Existing video descriptions updated; no new recording or video upload.
 
 ## 1.0.1 — 2026-10-13
 
@@ -29,4 +34,4 @@ SPDX-License-Identifier: MIT
 ---
 
 **作成者 / Author**: 5garashi.com設計事務所 / 5garashi.com Design Office
-**最終更新 / Last updated**: 2026-10-13 JST
+**最終更新 / Last updated**: 2026-10-16 JST

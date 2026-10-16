@@ -3,12 +3,18 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.3.0
+版 / Version: 1.4.0
 ライセンス / License: MIT
-最終更新 / Last updated: 2026-10-13
+最終更新 / Last updated: 2026-10-16
 SPDX-License-Identifier: MIT
 -->
 # 変更履歴 / Changelog
+
+## 1.4.0 — 2026-10-16
+
+- ソース1.0.10までの更新を案内する日英の投稿画像・紹介PDF・媒体別原稿を追加。主な機能追加1.0.8と掲載画面の版を区別。
+- Word・Web・CSVの取り込み、Word・PNG・HTMLの書き出しを紹介。旧動画は1.0.5の実演として保持。
+- Add bilingual update cards, one-page PDFs and channel copy; distinguish source, screenshot and video versions.
 
 ## 1.3.0 — 2026-10-14
 
@@ -37,4 +43,4 @@ SPDX-License-Identifier: MIT
 ---
 
 **作成者 / Author**: 5garashi.com設計事務所 / 5garashi.com Design Office
-**最終更新 / Last updated**: 2026-10-13 JST
+**最終更新 / Last updated**: 2026-10-16 JST

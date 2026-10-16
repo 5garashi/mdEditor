@@ -1,7 +1,7 @@
 {
   "enabled": true,
-  "operation": "publish",
-  "request_id": "2026-10-14-extended-demo-1.1.0-public",
+  "operation": "sync",
+  "request_id": "2026-10-16-description-update",
   "channel_id": "UCI_NiKGav2fQZu0IRMxQUeg",
   "videos": [
     {
@@ -14,7 +14,13 @@
       "thumbnail": "promotion/multichannel/social/read-en-landscape.png",
       "captions": "promotion/assets/demo-en.vtt",
       "category_id": "28",
-      "tags": ["Markdown", "Windows", "Mermaid", "KaTeX", "mdEditor"],
+      "tags": [
+        "Markdown",
+        "Windows",
+        "Mermaid",
+        "KaTeX",
+        "mdEditor"
+      ],
       "target_privacy": "public"
     },
     {
@@ -27,7 +33,13 @@
       "thumbnail": "promotion/multichannel/social/read-ja-landscape.png",
       "captions": "promotion/assets/demo-ja.vtt",
       "category_id": "28",
-      "tags": ["Markdown", "Windows", "Mermaid", "KaTeX", "mdEditor"],
+      "tags": [
+        "Markdown",
+        "Windows",
+        "Mermaid",
+        "KaTeX",
+        "mdEditor"
+      ],
       "target_privacy": "public"
     }
   ]

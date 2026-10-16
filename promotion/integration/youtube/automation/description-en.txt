@@ -7,6 +7,9 @@ Version: 1.1.0
 License: MIT
 SPDX-License-Identifier: MIT
 -->
+
+2026-10-16 update: Open Word, web pages and CSV as Markdown; export to Word, PDF, HTML and PNG. Main additions: 1.0.8; latest source: 1.0.10. Word colors and layout are not preserved. Internet images require consent by default. This video demonstrates source 1.0.5 and does not show the additions. The current Store build number is unverified.
+
 mdEditor is a free Markdown editor for Windows, developed by 5garashi.com Design Office.
 
 This demo shows opening and editing Markdown, previewing diagrams and equations, opening the preview in a separate window, switching both windows to dark mode, using the Syntax reference, and saving a PDF.
