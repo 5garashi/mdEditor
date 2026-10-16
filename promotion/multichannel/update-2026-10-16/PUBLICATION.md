@@ -16,9 +16,9 @@ SPDX-License-Identifier: MIT
 | 日英の投稿画像・A4 PDF・投稿文 | 作成・検証済み。promotion/site-integrationへ保存 |
 | YouTube English | [既存動画の説明を更新済み](https://www.youtube.com/watch?v=KPgQHi1yYlA) |
 | YouTube 日本語 | [既存動画の説明を更新済み](https://www.youtube.com/watch?v=0cZfUyZr01M) |
-| X | 原稿・画像を作成。Chromeの投稿画面がログイン待ちで、未投稿 |
+| X | [英語の更新案内と画像を公開済み](https://x.com/5garashi_com/status/2111000186541719996)。画像説明を設定 |
 | LinkedIn | [英語の更新案内と画像を公開済み](https://www.linkedin.com/feed/update/urn:li:activity:7516763044513886208/)。画像の代替テキストを設定 |
-| TikTok | [英語の更新写真投稿](https://www.tiktok.com/@5garashi_com/photo/7697165960637091090)を送信済み。管理画面は「コンテンツ審査中」「自分のみ」。一般公開完了は未確認 |
+| TikTok | [英語の更新写真投稿](https://www.tiktok.com/@5garashi_com/photo/7697165960637091090)を公開済み。管理画面の審査表示が消え、10月16日 午後4:35・「誰でも」を確認 |
 | Zenn | [既存記事を更新・公開確認済み](https://zenn.dev/5garashi_com/articles/mdeditor-diagrams-math-pdf)。新機能の追記を反映 |
 | GitHub Pages | 今回は再公開していない。新しい資料はGitHubの資料ブランチから取得可能 |
 
@@ -32,9 +32,11 @@ Zennの正本は、既存連携により `5garashi/galois-theory-introduction` �
 
 LinkedInは MOTOMASA IGARASHI の既存プロフィールで英語原稿と `update-en-landscape.png` を一般公開し、「Your post was successful」を確認。画像の代替テキストは、取り込み・書き出しの用途と、実画面のフローチャート・表を説明しています。
 
-TikTokは @5garashi_com / 5garashi Design Office で写真1枚の投稿を作成。タイトルは「mdEditor Update — Word, Web & CSV to Markdown」。英語原稿にスクリーンショットによる案内であることを追記し、公開範囲「誰でも」、宣伝表示「あなたのブランド」、即時投稿で送信しました。楽曲・場所は追加せず、AI生成コンテンツの設定はオフのままです。画像はPillowで組んだ文字と公式スクリーンショットで、AI生成の人物・音声・映像を含みません。送信後に管理一覧と投稿IDを確認しました。審査中のため、一般公開・匿名閲覧の完了とは区別します。
+TikTokは @5garashi_com / 5garashi Design Office で写真1枚の投稿を作成。タイトルは「mdEditor Update — Word, Web & CSV to Markdown」。英語原稿にスクリーンショットによる案内であることを追記し、公開範囲「誰でも」、宣伝表示「あなたのブランド」、即時投稿で送信しました。楽曲・場所は追加せず、AI生成コンテンツの設定はオフのままです。画像はPillowで組んだ文字と公式スクリーンショットで、AI生成の人物・音声・映像を含みません。送信後に管理一覧と投稿IDを確認しました。その後、管理画面で審査表示が消え、10月16日 午後4:35・公開範囲「誰でも」を確認しました。匿名閲覧の動作は未確認です。
 
-English: Both existing YouTube descriptions were updated. The LinkedIn image post and the Zenn article update are published. The TikTok photo post was submitted with public visibility and an own-brand disclosure, and remains under review. X still requires login. No new operation video was recorded.
+Xはユーザーのログイン完了後、@5garashi_com / 5garashi Design Office のアカウントで英語の短文原稿と更新画像を公開しました。投稿前に本文の一致と画像説明の保存を確認し、送信後のタイムラインで本文と投稿URLを確認。公開URLは https://x.com/5garashi_com/status/2111000186541719996 。
+
+English: Both existing YouTube descriptions were updated. The LinkedIn image post and the Zenn article update are published. The TikTok photo post is public according to Studio. The X image post is published with alt text. No new operation video was recorded.
 
 デザイン参照 / Design reference: [Design Office Identity 4.15.0](https://5garashi.github.io/5garashi-identity/)。
 
