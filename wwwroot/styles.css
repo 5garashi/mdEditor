@@ -464,7 +464,9 @@ body.dragging {
   background: var(--document-background);
   font-family: Consolas, "Cascadia Mono", monospace;
   font-size: 13px;
-  white-space: pre;
+  /* Long examples (longer in English) wrap, so the Insert buttons stay in view. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .help-result {
@@ -559,14 +561,9 @@ body.dragging {
   height: auto;
 }
 
-/* Narrow windows: the example code wraps and the drawings shrink, so the table
-   needs as little sideways scrolling as possible. */
+/* Narrow windows: the drawings shrink, so the table needs as little sideways
+   scrolling as possible. */
 @media screen and (max-width: 760px) {
-  .help-table pre {
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-  }
-
   .help-diagram svg {
     max-width: 140px;
   }

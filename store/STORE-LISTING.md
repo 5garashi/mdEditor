@@ -63,11 +63,12 @@ Available in Japanese and English. Made by 5garashi.com Design Office. Open Abou
 
 **Support contact:** https://github.com/5garashi/mdEditor/issues
 
-**Screenshots (capture at 1920x1080, English UI, light mode):**
-1. Edit: the "Basic writing" sample with the editor and preview side by side. Caption: "Write on the left, see the result on the right."
-2. Diagrams and math: the "Diagrams and math" sample. Caption: "Diagrams and formulas appear as you type."
-3. PDF: the Save as PDF button in the toolbar, with the resulting PDF open beside it. Caption: "Save the preview as a PDF."
-4. Viewer: a longer document with the preview expanded to fill the window. Caption: "Also a clean Markdown viewer."
+**Screenshots (1366 x 768, the Store minimum; English UI) with captions:**
+1. `docs/images/1-main.en.png` — Write Markdown on the left and the preview on the right updates as you type, with diagrams, tables, and math.
+2. `docs/images/2-dark.en.png` — Follows the Windows setting, or choose day or night with the Theme button. Printing and PDF always use a white page.
+3. `docs/images/3-preview-window.en.png` — Put the preview on a second display to keep writing and reading apart. It scrolls along with your editing.
+4. `docs/images/4-syntax.en.png` — The Markdown quick reference (F1). Insert puts the example at the cursor.
+5. `docs/images/5-save-as.en.png` — Save As writes Markdown, text, PDF, HTML, PNG, Word, CSV, TSV, JSON, or Jupyter Notebook. Word, HTML, CSV, e-mail, Jupyter Notebook, and more open too.
 
 ## Store art / ストア用の画像
 
@@ -132,9 +133,16 @@ mdEditor は、左で書くと右にすぐ仕上がりが表示される Windows
 
 **検索用語（7つまで）:** Markdown, マークダウン, エディタ, プレビュー, PDF, 数式, デュアルモニター
 
+**スクリーンショット（1366 x 768。Store の最小の大きさ。日本語の画面）と説明文:**
+1. `docs/images/1-main.ja.png` — 左で Markdown を書くと、右のプレビューにすぐ反映されます。図・表・数式も、そのまま表示します。
+2. `docs/images/2-dark.ja.png` — Windows の設定に合わせて、昼と夜の配色を自動で切り替えます。「表示」ボタンで選ぶこともできます。印刷と PDF は常に白地です。
+3. `docs/images/3-preview-window.ja.png` — 2 台目のディスプレイに置いて、書く画面と見る画面を分けられます。スクロールは編集と連動します。
+4. `docs/images/4-syntax.ja.png` — Markdown の書き方の一覧（F1）。「挿入」を押すと、カーソルの位置に例が入ります。
+5. `docs/images/5-save-as.ja.png` — 「名前を付けて保存」で、Markdown・テキスト・PDF・HTML・PNG・Word・CSV・TSV・JSON・Jupyter Notebook を選べます。Word・HTML・CSV・メール・Jupyter Notebook などのファイルも開けます。
+
 ## Before you submit / 提出前の確認
 
 - Reserve the name in Partner Center and confirm it is available. Use the same spelling ("5garashi.com Design Office") in the Store, the app, and the website.
 - Replace the privacy or support links if the final URLs differ. The company URL in the app is `https://www.5garashi.com/`.
 - "Worldwide" distribution and "all languages" are different settings. The app supports Japanese and English only.
-- Capture the screenshots on a real PC; they have not been taken yet.
+- The screenshots are in `docs/images/` (taken with 1.0.8 on a 1366 x 768 display). Retake them when the screen changes.

@@ -12,7 +12,7 @@ Windows で Markdown ファイルを開き、テキストと整形済み表示�
 
 *A Windows app that opens Markdown files and lets you edit the text side by side with a rendered preview.* [日本語](#特長) / [English](#english)
 
-バージョン / Version: 1.0.8（変更の記録 / Changes: [CHANGELOG.md](./CHANGELOG.md)）
+バージョン / Version: 1.0.9（変更の記録 / Changes: [CHANGELOG.md](./CHANGELOG.md)）
 
 ## 特長
 
@@ -24,6 +24,7 @@ Markdown を書きながら、整形された仕上がりをすぐ横で確か�
 - **2 台のディスプレイで、書く画面と見る画面を分けられる**: プレビューだけを別のウィンドウに出し、2 台目のディスプレイで最大化や全画面表示にできます。ウィンドウが分かれても、編集欄とプレビューのスクロールは文書の同じ行でそろいます。広い画面でも本文は読みやすい幅に収まり、表や図は広く表示します。ウィンドウの場所は次回の起動でも使います。
 - **図・グラフ・数式・表がそのまま見える**: フローチャート、シーケンス図、ガントチャート、円グラフなどの Mermaid の図、KaTeX の数式、表、チェックリスト、文書内の画像をプレビューに表示します。
 - **PDF と HTML に書き出し**: プレビューの見た目のまま、図や数式も含めて PDF に保存します。用紙は A4 と Letter から選べます（初期設定は地域に合わせて自動）。1 つのファイルで完結する HTML にも保存でき、メールで送ったり Web に載せたりできます。
+- **いろいろな形式を開いて、保存できる**: Word・HTML・Web ページ・メール・CSV・JSON・Jupyter Notebook・画像を開いて Markdown として編集でき、「名前を付けて保存」で PNG・Word・CSV・JSON・Jupyter Notebook などにも保存できます。
 - **書き方をその場で確認**: F1 で Markdown の書き方の一覧を表示し、例を編集欄に挿入できます。
 - **文字コードで困らない**: UTF-8 だけでなく Shift_JIS や EUC-JP などの古いファイルも判定して開き、推定したときや読めない文字があるときは知らせます。保存する文字コードも選べます。
 - **書いたものを守る**: 保存は書き込みが途中で失敗しても元のファイルが壊れない方法で行います。保存していない変更は自動でバックアップし、アプリが異常終了しても次の起動で復元できます。
@@ -36,6 +37,28 @@ Markdown を書きながら、整形された仕上がりをすぐ横で確か�
 - **キーボードだけで全操作**: すべてのボタンにショートカットキーがあり、好きなキーに変えたり、外したりできます。Tab と F6 で全部の欄を移動でき、押しやすい大きさ（44px 以上）のボタンにしています。
 - **画面読み上げソフトに配慮**: Windows ナレーターで実際に確認し、長い文書でも止まらないように編集欄を作り直しました。ボタンには名前とショートカットキーを読み上げ用に付けています。
 - **文章の読み上げ**: プレビューを段落ごとに読み上げ、読んでいる場所を画面にも示します。速さと段落の間を選べます。PC に入っている音声だけを使うので、文章が外に出ません。
+
+## 画面
+
+**書きながら、すぐ横で仕上がりを確認** — 左で Markdown を書くと、右のプレビューにすぐ反映されます。図・表・数式も、そのまま表示します。
+
+![左で Markdown を書くと、右のプレビューにすぐ反映されます。図・表・数式も、そのまま表示します。](docs/images/1-main.ja.png)
+
+**ダークモード** — Windows の設定に合わせて、昼と夜の配色を自動で切り替えます。「表示」ボタンで選ぶこともできます。印刷と PDF は常に白地です。
+
+![Windows の設定に合わせて、昼と夜の配色を自動で切り替えます。「表示」ボタンで選ぶこともできます。印刷と PDF は常に白地です。](docs/images/2-dark.ja.png)
+
+**プレビューを別のウィンドウに** — 2 台目のディスプレイに置いて、書く画面と見る画面を分けられます。スクロールは編集と連動します。
+
+![2 台目のディスプレイに置いて、書く画面と見る画面を分けられます。スクロールは編集と連動します。](docs/images/3-preview-window.ja.png)
+
+**書き方をその場で確認** — Markdown の書き方の一覧（F1）。「挿入」を押すと、カーソルの位置に例が入ります。
+
+![Markdown の書き方の一覧（F1）。「挿入」を押すと、カーソルの位置に例が入ります。](docs/images/4-syntax.ja.png)
+
+**いろいろな形式で保存** — 「名前を付けて保存」で、Markdown・テキスト・PDF・HTML・PNG・Word・CSV・TSV・JSON・Jupyter Notebook を選べます。Word・HTML・CSV・メール・Jupyter Notebook などのファイルも開けます。
+
+![「名前を付けて保存」で、Markdown・テキスト・PDF・HTML・PNG・Word・CSV・TSV・JSON・Jupyter Notebook を選べます。Word・HTML・CSV・メール・Jupyter Notebook などのファイルも開けます。](docs/images/5-save-as.ja.png)
 
 ## セットアップ
 
@@ -254,6 +277,7 @@ An editor that shows the formatted result right beside the Markdown you are writ
 - **Write on one display, read on another**: open the preview in its own window and maximize it, or make it full screen, on a second display. The editor and the preview still scroll together, matched line by line. On a wide screen the text keeps a readable width while tables and diagrams spread out. The window's place is remembered for next time.
 - **Diagrams, charts, math, and tables as they look**: Mermaid diagrams such as flowcharts, sequence diagrams, Gantt charts, and pie charts, KaTeX math, tables, task lists, and images in the document appear in the preview.
 - **Export to PDF and HTML**: save the preview as a PDF exactly as it looks, diagrams and math included, on A4 or Letter paper (chosen automatically by region at first). Or save it as one self-contained HTML file to email or put on the web.
+- **Open and save many formats**: Word, HTML, web pages, e-mail, CSV, JSON, Jupyter Notebooks, and images open as Markdown, and Save As also writes PNG, Word, CSV, JSON, Jupyter Notebook, and more.
 - **Syntax help at hand**: F1 lists the Markdown syntax and inserts examples into the editor.
 - **No trouble with text encodings**: besides UTF-8, older files in Shift_JIS, EUC-JP, and more are detected and opened, with a notice when the encoding was guessed or some characters could not be read. You can also choose the encoding to save in.
 - **Your work is protected**: saving never leaves the original file broken, even if writing fails midway. Unsaved changes are backed up automatically and can be restored at the next launch after a crash.
@@ -266,6 +290,28 @@ An editor that shows the formatted result right beside the Markdown you are writ
 - **Everything from the keyboard**: every button has a shortcut you can change or remove. Tab and F6 reach every pane, and buttons are large enough to hit easily (at least 44 px).
 - **Works with screen readers**: tested with Windows Narrator; the editor was rebuilt so long documents never freeze. Buttons expose their names and shortcuts to assistive technology.
 - **Read aloud**: the preview is read paragraph by paragraph, with the current paragraph shown on screen. Choose the speed and the pause between paragraphs. Only voices on your PC are used, so your text stays with you.
+
+### Screenshots
+
+**See the result as you write** — Write Markdown on the left and the preview on the right updates as you type, with diagrams, tables, and math.
+
+![Write Markdown on the left and the preview on the right updates as you type, with diagrams, tables, and math.](docs/images/1-main.en.png)
+
+**Dark mode** — Follows the Windows setting, or choose day or night with the Theme button. Printing and PDF always use a white page.
+
+![Follows the Windows setting, or choose day or night with the Theme button. Printing and PDF always use a white page.](docs/images/2-dark.en.png)
+
+**The preview in its own window** — Put the preview on a second display to keep writing and reading apart. It scrolls along with your editing.
+
+![Put the preview on a second display to keep writing and reading apart. It scrolls along with your editing.](docs/images/3-preview-window.en.png)
+
+**Markdown at a glance** — The Markdown quick reference (F1). Insert puts the example at the cursor.
+
+![The Markdown quick reference (F1). Insert puts the example at the cursor.](docs/images/4-syntax.en.png)
+
+**Save in many formats** — Save As writes Markdown, text, PDF, HTML, PNG, Word, CSV, TSV, JSON, or Jupyter Notebook. Word, HTML, CSV, e-mail, Jupyter Notebook, and more open too.
+
+![Save As writes Markdown, text, PDF, HTML, PNG, Word, CSV, TSV, JSON, or Jupyter Notebook. Word, HTML, CSV, e-mail, Jupyter Notebook, and more open too.](docs/images/5-save-as.en.png)
 
 ### Setup
 
