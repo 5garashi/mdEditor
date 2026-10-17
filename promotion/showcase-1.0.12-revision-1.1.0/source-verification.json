@@ -1,0 +1,11 @@
+{
+  "source_commit": "8ab7cef",
+  "source_version": "1.0.12",
+  "build": "fresh workspace copy, Release",
+  "dll_sha256": "2780782e4ba099abad3907e1e5548d7c6bd28c482fd17a94470ac583b4b6e931",
+  "original_source_modified": false,
+  "build_warnings": [
+    "existing CS8602 at DocxExport.cs:686"
+  ],
+  "identity": "4.20.0"
+}

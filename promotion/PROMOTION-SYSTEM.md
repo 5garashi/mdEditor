@@ -3,7 +3,7 @@
 概要 / Description: GitHubを核にしたプロモーションの全体図・更新手順・公開台帳 / GitHub-centered promotion guide and publication register
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-17
-版 / Version: 1.6.0
+版 / Version: 1.7.0
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
@@ -13,7 +13,7 @@ SPDX-License-Identifier: MIT
 
 対象アプリはソース版 **1.0.10**、動画revisionは **2.0.0**。確認日は2026-10-17 JSTです。Store配信版の番号は今回未確認です。文書の版は上のヘッダー、資料キットの版は[VERSION](VERSION)、改版内容は[CHANGELOG](CHANGELOG.md)で管理します。
 
-進行中の新版：ソース **1.0.12** の[日英動画・関連資料](showcase-1.0.12/README.md)を制作済みです。「まずdiagram-testを上から下へ見せ、3Dを拡大・回転し、そのあと新機能と操作を説明する」構成に変更しました。現在は提示・内容確認段階で、以下の公開URLは引き続き1.0.10の公開記録です。新作のSNS投稿・Pages差し替え・公開URL記録は次の工程です。
+進行中の新版：ソース **1.0.12**・動画 **revision 1.1.0** の[日英動画と関連資料](showcase-1.0.12-revision-1.1.0/README.md)を2026-10-18に改訂しました。編集画面と回転する3Dモデルで紹介し、diagram-testの連続表示から主な20機能の紹介へつなぎます。肌色の部分マスクを廃止し、ファイルダイアログの区間をカットしました。[機能別の時刻・確認範囲](showcase-1.0.12-revision-1.1.0/FEATURE-COVERAGE.md)を記録しています。現在は提示・内容確認段階で、以下の公開URLは引き続き1.0.10の公開記録です。新作のSNS投稿・Pages差し替え・公開URL記録は次の工程です。
 
 English: This is the single entry point for the GitHub-centered promotion process, channel inventory, verified publication links and next-release checklist. It describes the existing mix of automation and browser work; it does not implement a new automatic publisher.
 
@@ -260,4 +260,4 @@ flowchart TD
 ---
 
 **作成者 / Author**: 5garashi.com設計事務所 / 5garashi.com Design Office
-**最終更新 / Last updated**: 2026-10-17 JST
+**最終更新 / Last updated**: 2026-10-18 JST

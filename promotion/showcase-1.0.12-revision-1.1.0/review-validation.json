@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-18 JST",
+  "videos": [
+    {
+      "file": "mdEditor-showcase-ja.mp4",
+      "duration": 185.8,
+      "full_decode": "passed",
+      "colored_masks": false
+    },
+    {
+      "file": "mdEditor-showcase-vertical-ja.mp4",
+      "duration": 185.8,
+      "full_decode": "passed",
+      "colored_masks": false
+    },
+    {
+      "file": "mdEditor-showcase-en.mp4",
+      "duration": 189.1,
+      "full_decode": "passed",
+      "colored_masks": false
+    },
+    {
+      "file": "mdEditor-showcase-vertical-en.mp4",
+      "duration": 189.1,
+      "full_decode": "passed",
+      "colored_masks": false
+    }
+  ],
+  "features": 20,
+  "main_feature_events_present_in_both_languages": true,
+  "visual_review": "selected opening, 3D, editing, detached preview, contents, settings and dialog-cut boundary frames; not a claim of exhaustive visual inspection of every frame",
+  "ja_audio_lufs": -15.0,
+  "ja_audio_true_peak_dbfs": -2.1,
+  "materials": "eight responsive/theme/language page cases and two PDFs passed",
+  "unverified": [
+    "second physical display",
+    "all keyboard operations",
+    "screen-reader operation",
+    "crash recovery experiment",
+    "all export formats",
+    "SNS recompression"
+  ]
+}

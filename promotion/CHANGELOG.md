@@ -3,12 +3,17 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.6.0
+版 / Version: 1.7.0
 ライセンス / License: MIT
-最終更新 / Last updated: 2026-10-17
+最終更新 / Last updated: 2026-10-18
 SPDX-License-Identifier: MIT
 -->
 # 変更履歴 / Changelog
+
+## 1.7.0 — 2026-10-18
+
+- ソース1.0.12の更新をワークスペースで新規ビルドし、日英の動画を再収録。指定の3D編集画面で回転させる冒頭、主な20機能の紹介へ改訂。肌色の部分マスクを廃止し、ファイルダイアログ区間をカット。日英・横縦動画と画像・PDF・Web/SNS原稿、機能別の開始時刻と確認範囲を保存。公開前の確認用。
+- Re-record against updated source 1.0.12, replace colored masks with scene cuts, and add a rotating-3D opening and twenty-feature coverage.
 
 ## 1.6.0 — 2026-10-17
 
@@ -78,4 +83,4 @@ SPDX-License-Identifier: MIT
 ---
 
 **作成者 / Author**: 5garashi.com設計事務所 / 5garashi.com Design Office
-**最終更新 / Last updated**: 2026-10-17 JST
+**最終更新 / Last updated**: 2026-10-18 JST
