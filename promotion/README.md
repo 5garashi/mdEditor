@@ -3,12 +3,14 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.5.5
+版 / Version: 1.6.0
 ライセンス / License: MIT
 最終更新 / Last updated: 2026-10-17
 SPDX-License-Identifier: MIT
 -->
 # mdEditor 宣伝キット / Promotion kit
+
+2026-10-17 新作：[1.0.12の動画・関連資料](showcase-1.0.12/README.md)を制作しました。冒頭でdiagram-testを連続表示し、3D拡大・回転、地図・動画から、新機能と操作説明へつなぎます。現在は提示・内容確認用で、新作のSNS投稿と公開ページ差し替えは次の工程です。New visual-first bilingual showcase package, ready for review.
 
 **更新作業の入口：[プロモーションの全体図と更新台帳](PROMOTION-SYSTEM.md)**。GitHubを核にした各媒体の関係、公開先、今回の実施結果、次回の一括更新手順を5つのMermaidチャートと表にまとめています。Start here for the promotion workflow, publication links and next-release checklist.
 
@@ -16,7 +18,7 @@ SPDX-License-Identifier: MIT
 
 作成・修正時はIdentity管理の[共通チェックリスト（4.17.0）](https://github.com/5garashi/5garashi-identity/blob/v4.17.0/docs/MARKDOWN-CHECKLIST.md)と[mdEditor固有の補足](MARKDOWN-CHECKLIST.md)を使い、構文・表示・内容を分けて確認します。図はGitHubとmdEditorで共通に描画できるMermaidを選び、両環境の実表示を別々に確認します。
 
-バージョン / Version: 1.5.5 · [CHANGELOG.md](CHANGELOG.md)
+バージョン / Version: 1.6.0 · [CHANGELOG.md](CHANGELOG.md)
 
 Windows版の実操作を使った日英紹介ページ、1.0.10の操作デモ、初めて試すための日英6サンプルです。Word・CSV・Webの取り込みとWord・PDF・HTML・PNGの書き出しを実演します。
 

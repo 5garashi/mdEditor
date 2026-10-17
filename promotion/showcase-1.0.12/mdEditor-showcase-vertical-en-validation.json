@@ -1,0 +1,249 @@
+{
+  "sha256": "a999d527e68ab5642311e0942db963d57d8a1cd8821dc20d6932cf720dfe8ab4",
+  "probe": {
+    "streams": [
+      {
+        "index": 0,
+        "codec_name": "h264",
+        "codec_long_name": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "profile": "High",
+        "codec_type": "video",
+        "codec_tag_string": "avc1",
+        "codec_tag": "0x31637661",
+        "width": 1080,
+        "height": 1920,
+        "coded_width": 1080,
+        "coded_height": 1920,
+        "closed_captions": 0,
+        "film_grain": 0,
+        "has_b_frames": 2,
+        "pix_fmt": "yuv420p",
+        "level": 40,
+        "chroma_location": "left",
+        "field_order": "progressive",
+        "refs": 1,
+        "is_avc": "true",
+        "nal_length_size": "4",
+        "id": "0x1",
+        "r_frame_rate": "20/1",
+        "avg_frame_rate": "20/1",
+        "time_base": "1/10240",
+        "start_pts": 0,
+        "start_time": "0.000000",
+        "duration_ts": 1338880,
+        "duration": "130.750000",
+        "bit_rate": "914244",
+        "bits_per_raw_sample": "8",
+        "nb_frames": "2615",
+        "disposition": {
+          "default": 1,
+          "dub": 0,
+          "original": 0,
+          "comment": 0,
+          "lyrics": 0,
+          "karaoke": 0,
+          "forced": 0,
+          "hearing_impaired": 0,
+          "visual_impaired": 0,
+          "clean_effects": 0,
+          "attached_pic": 0,
+          "timed_thumbnails": 0,
+          "captions": 0,
+          "descriptions": 0,
+          "metadata": 0,
+          "dependent": 0,
+          "still_image": 0
+        },
+        "tags": {
+          "language": "und",
+          "handler_name": "VideoHandler",
+          "vendor_id": "[0][0][0][0]"
+        }
+      },
+      {
+        "index": 1,
+        "codec_name": "aac",
+        "codec_long_name": "AAC (Advanced Audio Coding)",
+        "profile": "LC",
+        "codec_type": "audio",
+        "codec_tag_string": "mp4a",
+        "codec_tag": "0x6134706d",
+        "sample_fmt": "fltp",
+        "sample_rate": "44100",
+        "channels": 2,
+        "channel_layout": "stereo",
+        "bits_per_sample": 0,
+        "id": "0x2",
+        "r_frame_rate": "0/0",
+        "avg_frame_rate": "0/0",
+        "time_base": "1/44100",
+        "start_pts": 0,
+        "start_time": "0.000000",
+        "duration_ts": 5766075,
+        "duration": "130.750000",
+        "bit_rate": "198381",
+        "nb_frames": "5632",
+        "disposition": {
+          "default": 1,
+          "dub": 0,
+          "original": 0,
+          "comment": 0,
+          "lyrics": 0,
+          "karaoke": 0,
+          "forced": 0,
+          "hearing_impaired": 0,
+          "visual_impaired": 0,
+          "clean_effects": 0,
+          "attached_pic": 0,
+          "timed_thumbnails": 0,
+          "captions": 0,
+          "descriptions": 0,
+          "metadata": 0,
+          "dependent": 0,
+          "still_image": 0
+        },
+        "tags": {
+          "language": "und",
+          "handler_name": "SoundHandler",
+          "vendor_id": "[0][0][0][0]"
+        }
+      }
+    ],
+    "format": {
+      "filename": "C:\\miFfplay\\mdEditorPromotion\\deliverables\\mdEditor-showcase-1.0.12\\mdEditor-showcase-vertical-en.mp4",
+      "nb_streams": 2,
+      "nb_programs": 0,
+      "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+      "format_long_name": "QuickTime / MOV",
+      "start_time": "0.000000",
+      "duration": "130.750000",
+      "size": "18262762",
+      "bit_rate": "1117415",
+      "probe_score": 100,
+      "tags": {
+        "major_brand": "isom",
+        "minor_version": "512",
+        "compatible_brands": "isomiso2avc1mp41",
+        "title": "mdEditor 1.0.12 — Visualize. Explore. Edit and share.",
+        "artist": "5garashi.com Design Office",
+        "encoder": "Lavf59.5.101",
+        "comment": "Actual unmodified Windows source build; sample tour, 3D zoom and rotation, maps and video; music Light Steps CC BY 4.0 excerpt repeated and faded; external sample video Big Buck Bunny (c) 2008 Blender Foundation CC BY 3.0; map data OpenStreetMap contributors"
+      }
+    }
+  },
+  "recording": {
+    "version": "1.0.12",
+    "language": "en",
+    "events": [
+      {
+        "seconds": 0.0,
+        "key": "intro",
+        "ja": "このMarkdownが、図・3D・地図・動画に。",
+        "en": "One Markdown document. Diagrams, 3D, maps and video."
+      },
+      {
+        "seconds": 2.0,
+        "key": "consent",
+        "ja": "画像・動画と詳細地図を、許可して読み込む",
+        "en": "Allow internet media and detailed maps to load"
+      },
+      {
+        "seconds": 9.45,
+        "key": "tour",
+        "ja": "diagram-test.mdを上から下へ。描ける表現を一望する",
+        "en": "A top-to-bottom tour of diagram-test.en.md"
+      },
+      {
+        "seconds": 72.71,
+        "key": "3d",
+        "ja": "3Dモデルを拡大し、ドラッグで回転",
+        "en": "Zoom the 3D model, then drag to rotate it"
+      },
+      {
+        "seconds": 77.98,
+        "key": "maps",
+        "ja": "詳細地図を読み込み、地点・ルート・円を表示",
+        "en": "Detailed maps show locations, routes and an area"
+      },
+      {
+        "seconds": 83.77,
+        "key": "video",
+        "ja": "文書の中で動画を再生。音はミュート",
+        "en": "Video plays inside the document, with sound muted"
+      },
+      {
+        "seconds": 93.75,
+        "key": "github",
+        "ja": "新機能：GitHub形式の注意書き・数式・HTML",
+        "en": "New: GitHub-style alerts, math and HTML"
+      },
+      {
+        "seconds": 101.12,
+        "key": "metadata",
+        "ja": "先頭のYAMLも、読みやすいカードとして表示",
+        "en": "YAML front matter becomes a readable information card"
+      },
+      {
+        "seconds": 107.07,
+        "key": "word",
+        "ja": "Word文書を取り込み、Markdownとして編集",
+        "en": "Import a Word document and edit it as Markdown"
+      },
+      {
+        "seconds": 113.85,
+        "key": "saveas",
+        "ja": "名前を付けて保存：Word・PDF・HTML・PNG",
+        "en": "Save As: Word, PDF, HTML and PNG"
+      },
+      {
+        "seconds": 118.12,
+        "key": "export",
+        "ja": "図や文章を、相手に合う形式で渡す",
+        "en": "Share the result in the format your reader needs"
+      },
+      {
+        "seconds": 126.58,
+        "key": "outro",
+        "ja": "mdEditor 1.0.12 · 描く。動かす。整えて渡す。",
+        "en": "mdEditor 1.0.12 · Visualize. Explore. Edit and share."
+      }
+    ],
+    "privacy_intervals": [
+      [
+        107.07892360000551,
+        109.74291460000677
+      ],
+      [
+        114.36802760000137,
+        118.1168101000003
+      ],
+      [
+        118.121810800003,
+        120.5699741999997
+      ]
+    ],
+    "checks": {
+      "sample_scroll_height": 20069,
+      "3d_zoom_and_rotation_changed_canvas": true,
+      "videos": [
+        {
+          "ready": 4,
+          "time": 2.090481,
+          "paused": false,
+          "muted": true
+        },
+        {
+          "ready": 4,
+          "time": 4.794217,
+          "paused": false,
+          "muted": true
+        }
+      ],
+      "pdf_export": true,
+      "sample_unchanged": true
+    },
+    "sample": "C:\\miFfplay\\mdEditorPromotion\\work\\video-showcase\\samples\\diagram-test.en.md",
+    "sample_sha256": "3d511645dc1bab8e768e4987f33c672e17c3e18145ab94d23306d4d87d9b4459",
+    "duration": 130.79
+  }
+}

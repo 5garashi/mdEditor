@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-17 JST",
+  "visual_review": [
+    "landscape Japanese 3D frame",
+    "Japanese encoded contact sheet",
+    "Japanese portrait 3D frame",
+    "English 3D social card",
+    "map screenshot with OpenStreetMap attribution",
+    "embedded local and remote video screenshot"
+  ],
+  "audio_ja": {
+    "integrated_lufs": -15.0,
+    "true_peak_dbfs": -2.1
+  },
+  "scope": "Selected encoded frames and samples; full-frame decode of all four MP4s; not a claim of full accessibility compliance"
+}

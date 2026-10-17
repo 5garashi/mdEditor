@@ -1,0 +1,10 @@
+{
+  "version": "1.0.12",
+  "exe_sha256": "ba612d4847e288dbb39470e3001e696e09f0d088a0e01477275ec551be3fd05e",
+  "dll_sha256": "e01098333b8b82fe8f642889089c2f39a0ace7835b3750b44be082d22439b053",
+  "source": "C:/miFfplay/mdEditor/bin/Release/net10.0-windows",
+  "modified": false,
+  "source_commit": "62c1046",
+  "git_state": "tracked source files clean; pre-existing untracked sample screenshots and exports were not altered",
+  "identity": "4.19.0"
+}

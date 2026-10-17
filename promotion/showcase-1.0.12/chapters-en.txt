@@ -1,0 +1,12 @@
+00:00 One Markdown document. Diagrams, 3D, maps and video.
+00:02 Allow internet media and detailed maps to load
+00:09 A top-to-bottom tour of diagram-test.en.md
+01:12 Zoom the 3D model, then drag to rotate it
+01:17 Detailed maps show locations, routes and an area
+01:23 Video plays inside the document, with sound muted
+01:33 New: GitHub-style alerts, math and HTML
+01:41 YAML front matter becomes a readable information card
+01:47 Import a Word document and edit it as Markdown
+01:53 Save As: Word, PDF, HTML and PNG
+01:58 Share the result in the format your reader needs
+02:06 mdEditor 1.0.12 · Visualize. Explore. Edit and share.
