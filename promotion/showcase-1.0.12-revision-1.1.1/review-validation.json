@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-18 JST",
+  "videos": [
+    {
+      "file": "mdEditor-showcase-ja.mp4",
+      "full_decode": "passed",
+      "background_removed": true,
+      "duration": 185.8,
+      "original_audio_identical": true,
+      "sha256": "4fab119d5c6194a0d22688d2f8dc7930ae0b1724210e444266fbee8c1b17504d"
+    },
+    {
+      "file": "mdEditor-showcase-vertical-ja.mp4",
+      "full_decode": "passed",
+      "background_removed": true,
+      "duration": 185.8,
+      "original_audio_identical": true,
+      "sha256": "e9b41e8ba3ed415308374b4eb9e78a2ff79134a694bc94af2ed9511355ab9c53"
+    },
+    {
+      "file": "mdEditor-showcase-en.mp4",
+      "full_decode": "passed",
+      "background_removed": true,
+      "duration": 189.1,
+      "original_audio_identical": true,
+      "sha256": "3cd6f2375fea12dd71163d428475f1c9570181fd2929e85a01e0876916a5247e"
+    },
+    {
+      "file": "mdEditor-showcase-vertical-en.mp4",
+      "full_decode": "passed",
+      "background_removed": true,
+      "duration": 189.1,
+      "original_audio_identical": true,
+      "sha256": "34235b9643063b8cd5060b5695227316c2cb7d44627298a43b16ccd5ccf2423a"
+    }
+  ],
+  "features": 20,
+  "main_feature_events_present_in_both_languages": true,
+  "visual_review": "selected opening, 3D, editing, detached preview, contents, settings and dialog-cut boundary frames; not a claim of exhaustive visual inspection of every frame",
+  "ja_audio_lufs": -15.0,
+  "ja_audio_true_peak_dbfs": -2.1,
+  "materials": "eight responsive/theme/language page cases and two PDFs passed",
+  "unverified": [
+    "second physical display",
+    "all keyboard operations",
+    "screen-reader operation",
+    "crash recovery experiment",
+    "all export formats",
+    "SNS recompression"
+  ],
+  "revision": "1.1.1",
+  "background_review": "Selected frames before, during and after the full replacement interval in each language; portrait frames also inspected",
+  "background_method": "Only actual mdEditor windows retained; stable one-second recording repeated for detached-preview segment, removing all gap pixels and exposed desktop transitions"
+}

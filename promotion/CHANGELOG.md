@@ -3,12 +3,17 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.7.0
+版 / Version: 1.7.1
 ライセンス / License: MIT
 最終更新 / Last updated: 2026-10-18
 SPDX-License-Identifier: MIT
 -->
 # 変更履歴 / Changelog
+
+## 1.7.1 — 2026-10-18
+
+- 動画revision 1.1.1：日英の別窓プレビュー紹介で、隙間と開閉途中の背景を除去。横縦の4本と確認記録を更新。
+- Remove background exposure during detached-preview opening, viewing and closing in all four videos.
 
 ## 1.7.0 — 2026-10-18
 
