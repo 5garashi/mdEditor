@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-17 JST",
+  "engine": "mdEditor bundled wwwroot/lib/mermaid/mermaid.min.js",
+  "diagrams": [
+    {
+      "index": 0,
+      "ok": true,
+      "svg": 37416
+    },
+    {
+      "index": 1,
+      "ok": true,
+      "svg": 21811
+    },
+    {
+      "index": 2,
+      "ok": true,
+      "svg": 36086
+    },
+    {
+      "index": 3,
+      "ok": true,
+      "svg": 37778
+    },
+    {
+      "index": 4,
+      "ok": true,
+      "svg": 23205
+    }
+  ],
+  "relativeLinks": "pass",
+  "scope": "Chrome rendering with bundled engine; native app and PDF pagination unverified",
+  "visualReview": {
+    "diagram": 4,
+    "width": 900,
+    "result": "labels inside nodes; no label overlap in inspected screenshot",
+    "evidence": "promotion-system-flow-1.5.3.png",
+    "unverified": [
+      "native mdEditor document preview",
+      "PDF pagination",
+      "screen reader"
+    ]
+  }
+}

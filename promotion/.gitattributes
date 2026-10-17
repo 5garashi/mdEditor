@@ -1,0 +1,7 @@
+# File: promotion/.gitattributes
+# Description: Preserve the exact official SVG master bytes
+# Author: 5garashi.com Design Office
+# Created: 2026-10-13
+# License: MIT
+# SPDX-License-Identifier: MIT
+assets/*.svg -text

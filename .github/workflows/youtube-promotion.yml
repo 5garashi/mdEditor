@@ -1,0 +1,77 @@
+# File: youtube-promotion.yml
+# Description: Synchronize explicit YouTube releases, retaining upload state in Git.
+# Author: 5garashi.com Design Office
+# Created: 2026-10-13
+# License: MIT
+# SPDX-License-Identifier: MIT
+name: YouTube promotion
+on:
+  push:
+    branches: [promotion/site-integration]
+    paths:
+      - promotion/integration/youtube/automation/release.json
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: Plan, sync non-public upload, or publish reviewed assets
+        type: choice
+        options: [plan, sync, publish]
+        default: plan
+permissions:
+  contents: write
+concurrency:
+  group: youtube-promotion
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PROMOTION_REPO_TOKEN || github.token }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate and test without credentials
+        run: |
+          python -m unittest discover -s promotion/integration/youtube/automation -p 'test_*.py'
+          python promotion/integration/youtube/automation/sync.py plan
+      - name: Select explicit operation
+        id: release
+        env:
+          REQUESTED_OPERATION: ${{ inputs.operation }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          c=json.loads(Path('promotion/integration/youtube/automation/release.json').read_text())
+          action=os.environ.get('REQUESTED_OPERATION') or c.get('operation', 'sync')
+          if action not in ('plan','sync','publish'): raise ValueError('Unknown operation')
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:
+              f.write('enabled='+str(c['enabled'] and action!='plan').lower()+'\n')
+              f.write('operation='+action+'\n')
+          PY
+      - name: Install API client
+        if: steps.release.outputs.enabled == 'true'
+        run: pip install -r promotion/integration/youtube/automation/requirements.txt
+      - name: Synchronize or publish
+        if: steps.release.outputs.enabled == 'true'
+        env:
+          YOUTUBE_CREDENTIALS_JSON: ${{ secrets.YOUTUBE_CREDENTIALS_JSON }}
+          OPERATION: ${{ steps.release.outputs.operation }}
+        run: |
+          git config user.name '5garashi.com Design Office'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          python promotion/integration/youtube/automation/sync.py "$OPERATION"
+      - name: Publish latest-demo links to existing Pages branch
+        if: steps.release.outputs.enabled == 'true' && steps.release.outputs.operation == 'publish'
+        env:
+          HAS_PAGES_TOKEN: ${{ secrets.PROMOTION_REPO_TOKEN != '' }}
+        run: |
+          if [ "$HAS_PAGES_TOKEN" = "true" ]; then
+            python promotion/integration/publish.py --push
+          else
+            echo 'YouTube state saved. Pages update skipped: configure PROMOTION_REPO_TOKEN or publish locally.'
+          fi

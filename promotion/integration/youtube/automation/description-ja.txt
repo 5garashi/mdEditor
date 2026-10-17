@@ -1,0 +1,32 @@
+<!--
+ファイル名 / File: description-ja.txt
+概要 / Description: 日本語のYouTube説明文。管理ヘッダーは投稿時に除去 / Japanese YouTube demo description
+作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
+作成日 / Created: 2026-10-13
+版 / Version: 1.0.3
+ライセンス / License: MIT
+SPDX-License-Identifier: MIT
+-->
+mdEditor 1.0.10の実操作デモです。Word・CSV・WebページをMarkdownで開き、図と数式を見ながら編集し、Word・PDF・HTML・PNGへ書き出します。
+
+00:00 紹介
+00:03 Word文書を開く
+00:12 追記してMarkdownで保存
+00:17 CSVを表として開く
+00:29 URLを開く
+00:39 図と数式の技術メモを編集
+00:47 名前を付けて保存の形式一覧
+00:52 Wordに書き出す
+01:02 PDFに書き出す
+01:11 HTMLに書き出す
+01:18 PNGに書き出す
+
+使い方・サンプル: https://5garashi.github.io/mdEditor/
+Microsoft Store: https://apps.microsoft.com/detail/9nww2qrclmhc?hl=ja-JP&gl=JP
+開発: https://www.5garashi.com/
+
+録画は改変していないソース版1.0.10を使用しています。Storeからインストールしたバイナリの録画ではなく、Store配信版の番号は未確認です。Wordの色や配置は取り込み時に引き継ぎません。Wordへの書き出しでは図・数式が画像になります。数値の自動計算はしません。
+画面・字幕・編集: OpenAI Codex、依頼: 5garashi.com設計事務所。保存先ダイアログのPC名・共有先は伏せています。
+音楽: Light Steps — 5garashi.com設計事務所（作曲・音源生成: Codex）— CC BY 4.0。48秒の抜粋を反復し、フェードを追加。
+音源・デザイン出典: https://5garashi.github.io/5garashi-identity/
+音楽ライセンス: https://creativecommons.org/licenses/by/4.0/

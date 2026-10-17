@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-14 JST",
+  "source_url": "https://raw.githubusercontent.com/5garashi/5garashi-identity/c53f255c75b258c5ad320f56e2310cefd6a71b10/assets/5garashi_theme.wav",
+  "source_sha256": "2cb1ed95fab38404aa4c592185ab5c8cd26462d6f9b1e08323bec6d5952fb2de",
+  "identity_version": "4.12.0",
+  "meter": "5/4",
+  "tempo_bpm": 96,
+  "processing": "49-second excerpt; -6 dB; 0.15-second fade-in; 1.5-second fade-out",
+  "video_decoded_frames_unchanged": true,
+  "video_framemd5_sha256": "2c4b7164485de68dee5c98cf1a513b1ad178862380cb4d99e98d09c24b18bd98",
+  "encoding": {
+    "programs": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 1080,
+        "height": 1920
+      },
+      {
+        "codec_name": "aac",
+        "codec_type": "audio",
+        "sample_rate": "44100",
+        "channels": 2
+      }
+    ],
+    "format": {
+      "duration": "49.000000"
+    }
+  },
+  "audio_integrated_lufs": -20.61,
+  "audio_true_peak_dbtp": -7.2,
+  "published": false
+}

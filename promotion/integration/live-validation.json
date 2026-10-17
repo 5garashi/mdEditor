@@ -1,0 +1,141 @@
+{
+  "date": "2026-10-13 JST",
+  "urls": [
+    {
+      "url": "https://5garashi.github.io/mdEditor/",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8"
+    },
+    {
+      "url": "https://5garashi.github.io/mdEditor/en.html",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8"
+    },
+    {
+      "url": "https://5garashi.github.io/mdEditor/resources.html",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8"
+    },
+    {
+      "url": "https://5garashi.github.io/mdEditor/resources-en.html",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8"
+    },
+    {
+      "url": "https://5garashi.github.io/mdEditor/case-study.html",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8"
+    },
+    {
+      "url": "https://5garashi.github.io/mdEditor/case-study-en.html",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8"
+    },
+    {
+      "url": "https://5garashi.github.io/mdEditor/office-card-ja.html",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8"
+    },
+    {
+      "url": "https://5garashi.github.io/mdEditor/office-card-en.html",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8"
+    },
+    {
+      "url": "https://5garashi.github.io/mdEditor/multichannel/print/one-page-ja.pdf",
+      "status": 200,
+      "content_type": "application/pdf"
+    },
+    {
+      "url": "https://5garashi.github.io/mdEditor/multichannel/print/one-page-en.pdf",
+      "status": 200,
+      "content_type": "application/pdf"
+    },
+    {
+      "url": "https://5garashi.github.io/mdEditor/samples/quickstart-engineering-note.md",
+      "status": 200,
+      "content_type": "text/markdown; charset=utf-8"
+    },
+    {
+      "url": "https://5garashi.github.io/mdEditor/assets/mdEditor-demo-ja.mp4",
+      "status": 200,
+      "content_type": "video/mp4"
+    },
+    {
+      "url": "https://5garashi.github.io/mdEditor/assets/mdEditor-demo-en.mp4",
+      "status": 200,
+      "content_type": "video/mp4"
+    }
+  ],
+  "google_sites": [
+    {
+      "language": "ja",
+      "width": 1280,
+      "native_link": true,
+      "nested_iframe_removed": true,
+      "rect": {
+        "x": 63.6875,
+        "y": 747.15625,
+        "width": 1143.625,
+        "height": 54,
+        "top": 747.15625,
+        "right": 1207.3125,
+        "bottom": 801.15625,
+        "left": 63.6875
+      },
+      "scrollWidth": 1271
+    },
+    {
+      "language": "en",
+      "width": 1280,
+      "native_link": true,
+      "nested_iframe_removed": true,
+      "rect": {
+        "x": 63.6875,
+        "y": 831.15625,
+        "width": 1143.625,
+        "height": 54,
+        "top": 831.15625,
+        "right": 1207.3125,
+        "bottom": 885.15625,
+        "left": 63.6875
+      },
+      "scrollWidth": 1271
+    },
+    {
+      "language": "ja",
+      "width": 390,
+      "native_link": true,
+      "nested_iframe_removed": true,
+      "rect": {
+        "x": 19.90625,
+        "y": 747.15625,
+        "width": 341.1875,
+        "height": 54,
+        "top": 747.15625,
+        "right": 361.09375,
+        "bottom": 801.15625,
+        "left": 19.90625
+      },
+      "scrollWidth": 381
+    },
+    {
+      "language": "en",
+      "width": 390,
+      "native_link": true,
+      "nested_iframe_removed": true,
+      "rect": {
+        "x": 19.90625,
+        "y": 831.15625,
+        "width": 341.1875,
+        "height": 54,
+        "top": 831.15625,
+        "right": 361.09375,
+        "bottom": 885.15625,
+        "left": 19.90625
+      },
+      "scrollWidth": 381
+    }
+  ],
+  "browser": "Chrome/155.0.8059.39"
+}

@@ -1,0 +1,40 @@
+WEBVTT
+
+NOTE
+File: demo-en.vtt
+Author: 5garashi.com Design Office
+Created: 2026-10-14
+License: MIT
+SPDX-License-Identifier: MIT
+
+00:00:00.000 --> 00:00:03.000
+Markdown on Windows
+
+00:00:03.000 --> 00:00:09.000
+Open a Markdown document
+
+00:00:09.000 --> 00:00:14.000
+Edit the heading
+
+00:00:14.000 --> 00:00:20.000
+Preview the updated text
+and equation
+
+00:00:20.000 --> 00:00:25.000
+Preview the Mermaid diagram
+
+00:00:25.000 --> 00:00:31.000
+Open the preview
+in a separate window
+
+00:00:31.000 --> 00:00:34.000
+Save the Markdown
+
+00:00:34.000 --> 00:00:43.000
+Export the diagram and math
+as a PDF
+
+00:00:43.000 --> 00:00:49.000
+Try mdEditor — free
+on Microsoft Store
+

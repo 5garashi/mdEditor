@@ -1,0 +1,22 @@
+{
+  "VERSION": {
+    "source_sha256": "439810c5d60b1654e41bb2e9a341a12fbf4725eeb3c1c356ec7ee2b899a3e5cb",
+    "original_matches": true
+  },
+  "MainWindow.xaml.cs": {
+    "source_sha256": "e34b7c3320556c3ce37e3add5d6b8c410bff415d084678da4a8f1407dfcb55e3",
+    "original_matches": true
+  },
+  "App.xaml.cs": {
+    "source_sha256": "025188bda3fdbdd55eeef8f6d52308c9dafa08b345bfb97f22af86c9ebdded27",
+    "original_matches": true
+  },
+  "wwwroot/app.js": {
+    "source_sha256": "3190f36e8a870fd3f6760607b28324b2fde964af434dc3ed19402951f7f87485",
+    "original_matches": true
+  },
+  "wwwroot/index.html": {
+    "source_sha256": "13812fff742dc113377bad7f9ae21b550f0f8d680bca71783f5fc1797699fbc0",
+    "original_matches": true
+  }
+}

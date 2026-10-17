@@ -1,0 +1,115 @@
+{
+  "exe": "C:\\miFfplay\\mdEditorPromotion\\audit-source\\bin\\Release\\net10.0-windows\\mdEditor.exe",
+  "source_commit": "6440a2edbe0c570de9fffe8636e7e0233711d978",
+  "date": "2026-10-13T00:11:36+09:00",
+  "results": [
+    {
+      "sample": "quickstart-ai-notes.en.md",
+      "render": {
+        "svg": 0,
+        "math": 0,
+        "tables": 1,
+        "checkboxes": 3,
+        "errors": []
+      },
+      "native_confirmation": "The PDF was saved.\n\nC:\\miFfplay\\mdEditorPromotion\\audit-source\\promotion\\validation\\quickstart-ai-notes.en.pdf",
+      "pages": 2,
+      "pdf": "quickstart-ai-notes.en.pdf",
+      "page_images": [
+        "quickstart-ai-notes.en-pdf-1.png",
+        "quickstart-ai-notes.en-pdf-2.png"
+      ],
+      "text": "Notes for organizing an answer\nA template for an answer's key points, sources and next actions. You can paste an answer from AI or\nanother source. mdEditor has no AI generation feature. This sample sends nothing to an external service.\nQuestion\nWrite what you want to find out here.\nOrganize the answer\nProposal\nBenefit\nChecks and sources\nOption A\nFill in here\nVerify numbers and sources\nOption B\nFill in here\nCheck conditions\nNext actions\n Verify numbers and sources\n Adapt the answer to your situation\n Check what you will share\nTry it\nOpen a copy in mdEditor. Replace “Option A” with your own proposal's name; the preview table updates.\nSelect “Save”, then “Save as PDF”. Open the PDF and check the table and checklist.\n\n"
+    },
+    {
+      "sample": "quickstart-ai-notes.md",
+      "render": {
+        "svg": 0,
+        "math": 0,
+        "tables": 1,
+        "checkboxes": 3,
+        "errors": []
+      },
+      "native_confirmation": "PDFを保存しました。\n\nC:\\miFfplay\\mdEditorPromotion\\audit-source\\promotion\\validation\\quickstart-ai-notes.pdf",
+      "pages": 2,
+      "pdf": "quickstart-ai-notes.pdf",
+      "page_images": [
+        "quickstart-ai-notes-pdf-1.png",
+        "quickstart-ai-notes-pdf-2.png"
+      ],
+      "text": "回答を整理するメモ\nAIなどから得た回答の要点・出典・次の行動を整理する記入用テンプレートです。mdEditor自体にAI生成機能はありま\nせん。このサンプルから外部への送信は行いません。\n質問\nここに、自分が確認したいことを書く。\n回答の整理\n提案\n利点\n確認事項・出典\n案A\nここに記入\n数値や出典を確認\n案B\nここに記入\n実行条件を確認\n次の行動\n 数値と出典を確認する\n 自分の条件に合わせて修正する\n 共有する内容を確認する\n試してみる\nこの文書のコピーをmdEditorで開き、「案A」を自分の提案名に変えてみてください。プレビューの表にも反映されます。「保\n存」で文書を保存し、「PDFに保存」で書き出します。PDFで表とチェックリストを確認してください。\n\n"
+    },
+    {
+      "sample": "quickstart-engineering-note.en.md",
+      "render": {
+        "svg": 1,
+        "math": 3,
+        "tables": 1,
+        "checkboxes": 0,
+        "errors": []
+      },
+      "native_confirmation": "The PDF was saved.\n\nC:\\miFfplay\\mdEditorPromotion\\audit-source\\promotion\\validation\\quickstart-engineering-note.en.pdf",
+      "pages": 2,
+      "pdf": "quickstart-engineering-note.en.pdf",
+      "page_images": [
+        "quickstart-engineering-note.en-pdf-1.png",
+        "quickstart-engineering-note.en-pdf-2.png"
+      ],
+      "text": "Diagrams and math\nExample: resistance \n and voltage \n.\nSet conditions\nCalculate\nCheck specifications\nVoltage\nResistance\nPower\n5 V\n100 Ω\n0.25 W\n10 V\n100 Ω\n1.00 W\nTry it\n1. Open a copy of this document in mdEditor.\n2. Change the first heading to “Diagrams and math: reviewed”. Check the preview.\n3. Change “Check specifications” in the diagram to “Verify by measurement”. The diagram shows the\nnew label.\n4. Select “Save” to save the Markdown, then “Save as PDF” to export a PDF.\n5. Open the PDF and check the heading, diagram, equation and table.\nRecalculate and update the equation and table yourself when changing the values; mdEditor does not\ncalculate them. Actual component selection also requires checking temperature and derating.\nR = 100 Ω\nV = 10 V\nP =\n​ =\nR\nV 2\n​ =\n100\n102\n1 W\n\n"
+    },
+    {
+      "sample": "quickstart-engineering-note.md",
+      "render": {
+        "svg": 1,
+        "math": 3,
+        "tables": 1,
+        "checkboxes": 0,
+        "errors": []
+      },
+      "native_confirmation": "PDFを保存しました。\n\nC:\\miFfplay\\mdEditorPromotion\\audit-source\\promotion\\validation\\quickstart-engineering-note.pdf",
+      "pages": 2,
+      "pdf": "quickstart-engineering-note.pdf",
+      "page_images": [
+        "quickstart-engineering-note-pdf-1.png",
+        "quickstart-engineering-note-pdf-2.png"
+      ],
+      "text": "図と数式のメモ\n抵抗 \n、電圧 \n の計算例です。\n条件を整理\n計算\n仕様を確認\n電圧\n抵抗\n消費電力\n5 V\n100 Ω\n0.25 W\n10 V\n100 Ω\n1.00 W\n試してみる\n1. この文書のコピーをmdEditorで開く。\n2. 最初の見出しを「図と数式の記録」に変更し、プレビューを確認する。\n3. 図の「仕様を確認」を「測定で検証」に変更する。図にも同じ文字が表示される。\n4. 「保存」でMarkdownを保存し、「PDFに保存」でPDFを書き出す。\n5. PDFを開き、見出し、図、数式、表が含まれることを確かめる。\n数式と表は計算結果の記載例です。値を変えたときは、自分で再計算して書き換えます。mdEditorは自動計算しませ\nん。実際の部品選定には温度とディレーティングの確認も必要です。\nR = 100 Ω\nV = 10 V\nP =\n​ =\nR\nV 2\n​ =\n100\n102\n1 W\n\n"
+    },
+    {
+      "sample": "quickstart-workflow.en.md",
+      "render": {
+        "svg": 1,
+        "math": 0,
+        "tables": 1,
+        "checkboxes": 3,
+        "errors": []
+      },
+      "native_confirmation": "The PDF was saved.\n\nC:\\miFfplay\\mdEditorPromotion\\audit-source\\promotion\\validation\\quickstart-workflow.en.pdf",
+      "pages": 2,
+      "pdf": "quickstart-workflow.en.pdf",
+      "page_images": [
+        "quickstart-workflow.en-pdf-1.png",
+        "quickstart-workflow.en-pdf-2.png"
+      ],
+      "text": "Document review procedure\nPurpose: compare model numbers, ratings and revisions.\n1. Collect the documents.\n2. Compare model numbers, ratings and revisions.\n3. Record differences and ask the owner to check them.\n4. Review the corrected documents.\nYes\nNo\nCollect documents\nCompare\nDifferences?\nCheck and correct\nReview complete\nItem\nWhat to check\nModel number\nSame across documents?\nRating\nMatching numbers and units?\nRevision\nThe intended revision?\n Documents collected\n Differences checked\n Corrections reviewed\n\nTry it\nOpen a copy in mdEditor and change one [ ] above to [x] . A checked box appears in the preview.\nSelect “Save”, then “Save as PDF”. Open the PDF and check that it includes the diagram, table and\ncheckmarks.\n"
+    },
+    {
+      "sample": "quickstart-workflow.md",
+      "render": {
+        "svg": 1,
+        "math": 0,
+        "tables": 1,
+        "checkboxes": 3,
+        "errors": []
+      },
+      "native_confirmation": "PDFを保存しました。\n\nC:\\miFfplay\\mdEditorPromotion\\audit-source\\promotion\\validation\\quickstart-workflow.pdf",
+      "pages": 2,
+      "pdf": "quickstart-workflow.pdf",
+      "page_images": [
+        "quickstart-workflow-pdf-1.png",
+        "quickstart-workflow-pdf-2.png"
+      ],
+      "text": "文書レビューの手順\n目的: 文書間の型式・定格・版番号を照合する。\n1. 対象文書を集める。\n2. 型式・定格・版番号を照合する。\n3. 不一致を記録し、担当者に確認する。\n4. 修正版を確認する。\nはい\nいいえ\n文書を集める\n照合する\n不一致あり?\n確認して修正\n確認完了\n項目\n確認内容\n型式\n文書間で同じか\n定格\n数値と単位が一致するか\n版番号\n対象の版か\n 対象文書を準備した\n 不一致を確認した\n 修正版を確認した\n\n試してみる\nこの文書のコピーをmdEditorで開き、上の [ ] を [x] に変えてみてください。プレビューでチェックが付きます。「保存」で\n文書を保存し、「PDFに保存」で書き出します。PDFにも図・表・チェック結果が含まれることを確認してください。\n"
+    }
+  ]
+}

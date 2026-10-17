@@ -1,0 +1,98 @@
+{
+  "date": "2026-10-13 JST",
+  "version": "1.2.0",
+  "new_contrasts": [
+    {
+      "foreground": "#385723",
+      "background": "#FFFFFF",
+      "ratio": 8.2169,
+      "method": "WCAG sRGB relative luminance"
+    },
+    {
+      "foreground": "#7B4A21",
+      "background": "#FFFFFF",
+      "ratio": 7.3848,
+      "method": "WCAG sRGB relative luminance"
+    },
+    {
+      "foreground": "#8C1B0D",
+      "background": "#FFFFFF",
+      "ratio": 9.2199,
+      "method": "WCAG sRGB relative luminance"
+    }
+  ],
+  "article_links": [
+    {
+      "article": "technical-note-en.md",
+      "relative_target": "../../samples/quickstart-engineering-note.en.md"
+    },
+    {
+      "article": "technical-note-en.md",
+      "relative_target": "../../assets/app-en.png"
+    },
+    {
+      "article": "technical-note-en.md",
+      "relative_target": "../../assets/mdEditor-demo-en.mp4"
+    },
+    {
+      "article": "technical-note-en.md",
+      "relative_target": "../illustrations/window-editor-en.png"
+    },
+    {
+      "article": "technical-note-en.md",
+      "relative_target": "../illustrations/window-preview-en.png"
+    },
+    {
+      "article": "technical-note-ja.md",
+      "relative_target": "../../samples/quickstart-engineering-note.md"
+    },
+    {
+      "article": "technical-note-ja.md",
+      "relative_target": "../../assets/app-ja.png"
+    },
+    {
+      "article": "technical-note-ja.md",
+      "relative_target": "../../assets/mdEditor-demo-ja.mp4"
+    },
+    {
+      "article": "technical-note-ja.md",
+      "relative_target": "../illustrations/window-editor-ja.png"
+    },
+    {
+      "article": "technical-note-ja.md",
+      "relative_target": "../illustrations/window-preview-ja.png"
+    }
+  ],
+  "post_lengths": [
+    {
+      "file": "posts-en.md",
+      "short_body_characters": [
+        122,
+        140,
+        157
+      ]
+    },
+    {
+      "file": "posts-ja.md",
+      "short_body_characters": [
+        79,
+        95,
+        117
+      ]
+    }
+  ],
+  "packages": [
+    {
+      "file": "mdEditor-multichannel-1.2.0.zip",
+      "bytes": 5712507,
+      "sha256": "2275a6c1e62543e472d9430d58b09bd148fe309f54404f36acbd3d19374457d4",
+      "ZIP_integrity": "OK"
+    },
+    {
+      "file": "mdEditor-promotion-1.2.0.zip",
+      "bytes": 6248921,
+      "sha256": "b776468bdd813d73684b3a25f4783acf4c84e83d84b87f9bfa173171575a0913",
+      "ZIP_integrity": "OK"
+    }
+  ]
+}

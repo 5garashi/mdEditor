@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-16 JST",
+  "audio": [
+    {
+      "file": "mdEditor-update-en.mp4",
+      "input_lufs": -15.03,
+      "input_true_peak_dbtp": -2.37,
+      "sha256": "434075276f110be6e0eb88876d1705a29cd9e1b552b4aae4d0eebe4ff159a0c4"
+    },
+    {
+      "file": "mdEditor-update-ja.mp4",
+      "input_lufs": -15.08,
+      "input_true_peak_dbtp": -2.37,
+      "sha256": "e6b4eb84f9e78660b23adeadf0ea0aa4e013cf7335681420b1577784e7b58fd5"
+    },
+    {
+      "file": "mdEditor-update-vertical-en.mp4",
+      "input_lufs": -15.03,
+      "input_true_peak_dbtp": -2.37,
+      "sha256": "0ab51aca7e2ac23eea753963eb7bdc721751cd27003ec71e1eaac3c01838f9fb"
+    },
+    {
+      "file": "mdEditor-update-vertical-ja.mp4",
+      "input_lufs": -15.08,
+      "input_true_peak_dbtp": -2.37,
+      "sha256": "a32e1ecd2ddbf188dc7e73b09559586f84eb7e787b4fe2b00633aeab77354759"
+    }
+  ],
+  "contrast": {
+    "#385723/paper": 7.1357822315499435,
+    "#7B4A21/paper": 6.4131733678126785
+  },
+  "method": "ffmpeg loudnorm input measurements; WCAG relative luminance formula"
+}

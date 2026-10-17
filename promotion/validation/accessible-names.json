@@ -1,0 +1,106 @@
+[
+  {
+    "role": "link",
+    "name": "Skip to content"
+  },
+  {
+    "role": "link",
+    "name": "5garashi.com Design Office website"
+  },
+  {
+    "role": "link",
+    "name": "Samples"
+  },
+  {
+    "role": "link",
+    "name": "View in Microsoft Store"
+  },
+  {
+    "role": "link",
+    "name": "Try a sample"
+  },
+  {
+    "role": "Video",
+    "name": "Windows mdEditor demonstration. With BGM and English captions."
+  },
+  {
+    "role": "button",
+    "name": "Play"
+  },
+  {
+    "role": "button",
+    "name": "Stop and restart"
+  },
+  {
+    "role": "button",
+    "name": "Full screen"
+  },
+  {
+    "role": "button",
+    "name": "Mute"
+  },
+  {
+    "role": "link",
+    "name": "Download video (MP4)"
+  },
+  {
+    "role": "link",
+    "name": "Download captions (VTT)"
+  },
+  {
+    "role": "link",
+    "name": "Existing sample with more diagram types"
+  },
+  {
+    "role": "link",
+    "name": "Read the privacy policy"
+  },
+  {
+    "role": "link",
+    "name": "Meet the office / discuss a project"
+  },
+  {
+    "role": "link",
+    "name": "Feedback and support"
+  },
+  {
+    "role": "link",
+    "name": "mdEditor · GitHub"
+  },
+  {
+    "role": "link",
+    "name": "License"
+  },
+  {
+    "role": "link",
+    "name": "Asset credits"
+  },
+  {
+    "role": "link",
+    "name": "Page privacy"
+  },
+  {
+    "role": "link",
+    "name": "Design Office Identity 4.15.0"
+  },
+  {
+    "role": "link",
+    "name": "View the full-size mdEditor screenshot"
+  },
+  {
+    "role": "DisclosureTriangle",
+    "name": "Read the video steps"
+  },
+  {
+    "role": "link",
+    "name": "Download Markdown — Diagrams and math"
+  },
+  {
+    "role": "link",
+    "name": "Download Markdown — Document review"
+  },
+  {
+    "role": "link",
+    "name": "Download Markdown — Organize an answer"
+  }
+]

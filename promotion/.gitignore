@@ -1,0 +1,8 @@
+﻿# File: promotion/.gitignore
+# Description: Ignore Python bytecode for development tools
+# Author: 5garashi.com Design Office
+# Created: 2026-10-13
+# License: MIT
+# SPDX-License-Identifier: MIT
+__pycache__/
+*.pyc

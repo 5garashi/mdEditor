@@ -1,0 +1,37 @@
+<!--
+ファイル名 / File: samples/quickstart-workflow.md
+概要 / Description: mdEditor 紹介資料 / mdEditor promotion material
+作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
+作成日 / Created: 2026-10-12
+版 / Version: 1.0.5
+ライセンス / License: MIT
+SPDX-License-Identifier: MIT
+-->
+# 業務手順書
+
+mdEditorで開き、編集して、Ctrl+Shift+PでPDFに保存してください。
+
+## 文書レビューの手順
+
+1. 最新版を集める
+2. 型式・定格・版番号を照合する
+3. 不一致を記録する
+4. 担当者が確認し、修正する
+
+- [x] 対象文書を準備
+- [ ] 不一致を確認
+- [ ] 修正版を承認
+
+| 項目 | 確認内容 |
+| --- | --- |
+| 型式 | すべての文書で同じか |
+| 定格 | 単位と数値が一致するか |
+
+```mermaid
+flowchart TD
+ A[文書を集める] --> B[照合する]
+ B --> C{不一致あり?}
+ C -->|はい| D[確認して修正]
+ C -->|いいえ| E[承認]
+ D --> B
+```

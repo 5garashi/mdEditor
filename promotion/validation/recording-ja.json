@@ -1,0 +1,46 @@
+{
+  "date": "2026-10-13T00:00:52+09:00",
+  "language": "ja",
+  "raw": "raw-ja.mp4",
+  "events": [
+    {
+      "seconds": 3.01,
+      "action": "Open dialog"
+    },
+    {
+      "seconds": 6.04,
+      "action": "Sample rendered"
+    },
+    {
+      "seconds": 9.02,
+      "action": "Heading edited using input event"
+    },
+    {
+      "seconds": 13.0,
+      "action": "Equation preview"
+    },
+    {
+      "seconds": 17.25,
+      "action": "Diagram edited and rendered"
+    },
+    {
+      "seconds": 23.11,
+      "action": "Markdown saved"
+    },
+    {
+      "seconds": 25.66,
+      "action": "PDF destination dialog"
+    },
+    {
+      "seconds": 30.03,
+      "action": "Native PDF saved confirmation"
+    },
+    {
+      "seconds": 35.07,
+      "action": "Final app view"
+    }
+  ],
+  "pdf_confirmation": "PDFを保存しました。\n\nC:\\miFfplay\\mdEditorPromotion\\work\\demo-ja.pdf",
+  "pdf_contains_edited_heading_and_diagram": true,
+  "pdf_pages": 2
+}

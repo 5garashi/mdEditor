@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-13 JST",
+  "browser": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/155.0.8059.39",
+    "revision": "@3ff7ac5a9224be9156d7f8703a06e22890aafd34",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+    "jsVersion": "15.5.35.20"
+  },
+  "packaged_files": 78,
+  "results": [
+    {
+      "page": "index.html",
+      "local_links": 20,
+      "HTTP": "200",
+      "MP4_ranges": "206"
+    },
+    {
+      "page": "en.html",
+      "local_links": 20,
+      "HTTP": "200",
+      "MP4_ranges": "206"
+    },
+    {
+      "portable": "ja",
+      "keyboard": "play, stop, seek, full screen and exit OK",
+      "embedded_samples": "all three match source bytes"
+    },
+    {
+      "portable": "en",
+      "keyboard": "play, stop, seek, full screen and exit OK",
+      "embedded_samples": "all three match source bytes"
+    }
+  ]
+}
