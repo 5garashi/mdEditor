@@ -3,7 +3,7 @@
 概要 / Description: GitHubを核にしたプロモーションの全体図・更新手順・公開台帳 / GitHub-centered promotion guide and publication register
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-17
-版 / Version: 1.5.3
+版 / Version: 1.5.4
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
@@ -249,7 +249,7 @@ flowchart TD
 
 この `.md` ファイルをmdEditorの「開く」で選ぶと、Mermaidの全体図、ブランチの関係図、シーケンス図、状態遷移図、日付順のフローチャートを文章と一緒に読めます。図の修正はコードブロック内の文字を編集します。共有する場合は「名前を付けて保存」でPDF・HTMLなどを選び、図や表の改ページを確認してください。
 
-作成・修正のたびに[Markdown・Mermaidの書き方チェックリスト](MARKDOWN-CHECKLIST.md)を使います。「描画できた」と「文字が重ならず読める」は別の確認項目です。
+作成・修正のたびに、Identity管理の[共通チェックリスト](https://github.com/5garashi/5garashi-identity/blob/main/docs/MARKDOWN-CHECKLIST.md)と[mdEditor固有の補足](MARKDOWN-CHECKLIST.md)を使います。「描画できた」と「文字が重ならず読める」は別の確認項目です。共通原則はIdentity 4.16.0第8条8-9へ移管済みです。
 
 図と同じ判断材料を本文・表にも記載し、色だけで進捗を表しません。日本語を主に、英語の概要と媒体名を併記しています。配色はIdentityの文書用パレットを参照。2026-10-17にmdEditor同梱のMermaidを使ったChrome検証で、5図すべてのSVG描画と文書内の相対リンクを確認しました。[検証記録](validation/promotion-system.json)。mdEditor本体でこの文書を開く操作、読み上げ、実OSのコントラストテーマ、全図のPDF改ページは今回未確認です。完全準拠は宣言しません。
 

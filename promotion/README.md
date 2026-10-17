@@ -3,7 +3,7 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.5.3
+版 / Version: 1.5.4
 ライセンス / License: MIT
 最終更新 / Last updated: 2026-10-17
 SPDX-License-Identifier: MIT
@@ -14,9 +14,9 @@ SPDX-License-Identifier: MIT
 
 2026-10-17: 紹介ページと実操作動画をソース版1.0.10対応へ更新。[制作記録](video-update-1.0.10/README.md)。
 
-作成・修正時は[Markdown・Mermaidの書き方チェックリスト](MARKDOWN-CHECKLIST.md)で、構文と見た目を分けて確認します。
+作成・修正時はIdentity管理の[共通チェックリスト](https://github.com/5garashi/5garashi-identity/blob/main/docs/MARKDOWN-CHECKLIST.md)と[mdEditor固有の補足](MARKDOWN-CHECKLIST.md)を使い、構文・表示・内容を分けて確認します。
 
-バージョン / Version: 1.5.3 · [CHANGELOG.md](CHANGELOG.md)
+バージョン / Version: 1.5.4 · [CHANGELOG.md](CHANGELOG.md)
 
 Windows版の実操作を使った日英紹介ページ、1.0.10の操作デモ、初めて試すための日英6サンプルです。Word・CSV・Webの取り込みとWord・PDF・HTML・PNGの書き出しを実演します。
 
