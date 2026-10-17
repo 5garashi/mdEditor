@@ -604,6 +604,8 @@ flowchart LR
 
 上の表で「対応」の図は、テスト文書で表示を確認済みです。これ以外の Mermaid の図（`block-beta` など）も Mermaid 11.17.2 が対応していれば表示されますが、確認はしていません。
 
+samples/ のサンプルは、mdEditor が描ける図と描けない図をそのまま示すためのものなので、GitHub では表示されない書き方（Graphviz、PlantUML など）も含みます（Identity 8-9 (7) の対象外。Identity 1-4 (1)）。この README のそれ以外の説明、CHANGELOG.md、PRIVACY.md は、GitHub で表示できる書き方だけを使います。
+
 ## アクセシビリティの確認記録
 
 Identity 第7条 7-7 の出荷前チェックの記録です。
@@ -848,6 +850,8 @@ flowchart LR
 | nomnoml | ` ```nomnoml ` | No | Shown as a code block |
 
 Everything marked Yes is verified with the test documents. Other Mermaid diagrams (such as `block-beta`) render if Mermaid 11.17.2 supports them, but they have not been checked.
+
+The samples in samples/ show as they are which diagrams mdEditor can and cannot draw, so they include syntax that GitHub does not render (Graphviz, PlantUML, and so on). They are outside Identity 8-9 (7), as Identity 1-4 (1) allows. The rest of this README, CHANGELOG.md, and PRIVACY.md keep to what GitHub can show.
 
 
 ### Written as on GitHub
