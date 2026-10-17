@@ -12,6 +12,30 @@
 
 The version number lives in [VERSION](./VERSION). Add each new version at the top, with a `## version — date` heading (used as the GitHub Release notes).
 
+## 1.0.12 — 2026-10-17
+
+- GitHub と同じ書き方に対応した: 注意書き（`> [!NOTE]` など。色付きの枠）、フロントマター（YamlDotNet 18.1.0 で読み、「項目名と値」を縦に並べたカードとして表示。一覧はタグのような札、入れ子の項目はカードの中に並べ、Web のアドレスはリンクにする。左の線と項目名は灰色（Identity 4-3 の --document-muted））、` ```math ` のコードブロック、`` $`x`$ `` の文中の数式、絵文字の短縮名（`:smile:` など）。
+- Markdown の中の HTML を、文字としてではなく、GitHub が許しているものだけ表示するようにした（`<details>`、`<summary>`、`<kbd>`、`<sup>`、`<sub>`、`<picture>`、画像の幅、中央寄せなど）。スクリプト・`<style>`・`<iframe>`・フォーム・イベント属性・`javascript:` のリンクは取り除く。HTML で書いたインターネット上の画像も、許可するまで読み込まない。昼と夜で切り替わる画像（`<picture>`、`#gh-dark-mode-only`）にも対応した。
+- PDF・PNG・Word に保存するときは、折りたたみ（`<details>`）を開いた状態で入れる。Word には、注意書きの題名、フロントマターのカード（項目名と値の表。入れ子も同じ形）、HTML の部分の文字も入る。
+- 動画（.mp4・.webm・.mov など）を再生できるようにした。画像の書き方（`![](clip.mp4)`）、動画へのリンクだけの行、`<video>` のどれでもよい。文書と同じフォルダーの動画はそのまま再生し、インターネット上の動画は画像と同じ設定（「設定」→「インターネット」）で、許可するまで読み込まない（お知らせ欄のボタンは「画像・動画を読み込む」）。動画は音を消して自動で再生し、繰り返す（音を出す・止めるは動画のボタンで）。Windows の「アニメーション効果」がオフのときは、初期設定では自動で再生せず、最初の画面と再生ボタンを表示する。「設定」→「動画」→「自動再生」で「いつも自動で再生する」「自動で再生しない」も選べる（Identity 7-5）。PDF・PNG・Word には動画の名前が、保存した HTML には動画へのリンクが入る。
+- 確認用のサンプル samples/github-test.md（英語版あり。入れ子のフロントマターと動画の例を含む）を加えた。
+- 3D モデル（```stl。文字の STL）を、同梱した three.js 0.186.1 でオフラインで表示するようにした。ドラッグで回転、ホイールで拡大・縮小。色は 5garashi の配色で、1 つ目の solid をクリーム（#FFF3D6）、2 つ目以降を volt（#B92613）で塗る（solid の名前に `#RRGGBB` を書くとその色）。クリームが見分けられるよう、地は濃い緑（#2B3A20。クリームとの比 11.0:1）にした（Identity 4-4）。PDF・PNG・HTML・Word には、その時点の見た目が画像として入る。
+- 地図（```geojson・```topojson）を、同梱した d3-geo と簡単な世界地図（Natural Earth）でオフラインで描くようにした。初期設定では、お知らせ欄で「詳細な地図を読み込む」かを確認し、押すとその文書だけ、道路や地名の入った OpenStreetMap の地図を読み込む。「設定」→「インターネット」→「詳細な地図（OpenStreetMap）」で「いつも読み込む」「読み込まない」も選べる。保存した HTML には地図の画像を入れない。
+- 「図・チャート表示テスト」のサンプルに、先頭のフロントマター（入れ子あり）、「20. GitHub と同じ書き方」、「21. 3D モデル・地図・動画」（各面に「5」の入った立方体、富士山を囲む円の地図、動画）を加えた。動画はアプリに同梱し、「サンプル」から開いたときも再生できる。
+- README の先頭にフロントマターを置き、3D モデル・地図・動画の例を加えた（GitHub でも表示される。動画は GitHub ではリンクになる）。
+- 保存してあるファイルを開いたとき、インターネット上の画像のお知らせ（「画像を読み込む」）が、文字コードのお知らせに消されて出なかったのを直した（1.0.8 から）。
+
+- GitHub-style syntax: alerts (`> [!NOTE]` and so on, as colored boxes), front matter (read with YamlDotNet 18.1.0 and shown as a card of key and value rows: lists as small labels, nested items inside the card, and web addresses as links; the left line and keys use the muted gray of Identity 4-3), ` ```math ` code blocks, `` $`x`$ `` inline math, and emoji short names (`:smile:` and so on).
+- HTML written in Markdown now shows what GitHub allows (`<details>`, `<summary>`, `<kbd>`, `<sup>`, `<sub>`, `<picture>`, image widths, centering, and so on) instead of showing as text. Scripts, `<style>`, `<iframe>`, forms, event attributes, and `javascript:` links are removed. Internet images written in HTML also wait for permission. Day and night pictures (`<picture>`, `#gh-dark-mode-only`) work.
+- PDF, PNG, and Word include collapsed `<details>` sections opened. Word also gets alert titles, the front matter card (a key and value table, nested the same way), and the text of HTML parts.
+- Videos (.mp4, .webm, .mov, and so on) play, written as an image (`![](clip.mp4)`), as a lone link, or as `<video>`. A video in the document's folder plays as it is; an internet video follows the image setting (Settings > Internet) and waits for permission (the notice bar button is now Load images and videos). Videos start by themselves without sound and loop (the video's controls turn the sound on or pause it). When Windows animation effects are off, by default they do not start and show the first frame with a play button; Settings > Videos > Autoplay also offers Always play automatically and Never play automatically (Identity 7-5). PDF, PNG, and Word get the video's name, and saved HTML a link to it.
+- A test sample, samples/github-test.md (with an English version, including nested front matter and videos).
+- 3D models (```stl, ASCII STL) are shown offline with the bundled three.js 0.186.1: drag to turn, wheel to zoom. Colors follow the 5garashi palette: the first solid is cream (#FFF3D6) and the others volt (#B92613); a `#RRGGBB` in a solid's name sets its color. The stage is dark green (#2B3A20, 11.0:1 against cream) so the cream stands out (Identity 4-4). PDF, PNG, HTML, and Word get a picture of the current view.
+- Maps (```geojson, ```topojson) are drawn offline with the bundled d3-geo on a simple world map (Natural Earth). By default the notice bar asks whether to load detailed maps; Load detailed maps loads an OpenStreetMap map with roads and place names for that document only. Settings > Internet > Detailed maps (OpenStreetMap) also offers Always load and Never load. Saved HTML never includes the map images.
+- The Diagram and chart test sample has front matter at the top (with nesting), "20. Written as on GitHub", and "21. 3D models, maps, and videos" (a cube with a "5" on each face, a map with a circle around Mt. Fuji, and videos). The video is bundled, so it plays when the sample is opened from Samples.
+- The README starts with front matter and has examples of a 3D model, a map, and a video (they show on GitHub too; there the video is a link).
+- Opening a saved file no longer loses the internet image notice (Load images): the encoding notice cleared it (since 1.0.8).
+
 ## 1.0.11 — 2026-10-17
 
 - 「目次」（Ctrl+Shift+J）を加えた。見出しから目次を作ってカーソルの位置に入れる（`<!-- toc -->` と `<!-- /toc -->` の間）。もう一度押すと新しくなる。目次のリンクは、プレビュー・PDF・HTML・Word で見出しに移動する（Word では見出しにブックマークを付ける）。

@@ -41,6 +41,10 @@ public partial class MainWindow : Window
         new MarkdownPipelineBuilder()
             .UseAutoIdentifiers(AutoIdentifierOptions.GitHub)
             .UseAdvancedExtensions()
+            // As on GitHub: front matter becomes a table and :smile: an emoji
+            // (smileys such as :) stay text).
+            .UseYamlFrontMatter()
+            .UseEmojiAndSmiley(enableSmileys: false)
             .Build();
     private readonly HtmlSanitizer _htmlSanitizer = new();
     private readonly DispatcherTimer _previewTimer = new()
@@ -62,6 +66,8 @@ public partial class MainWindow : Window
     // An image opened as a document: copied beside the Markdown file when it is
     // first saved in another folder, so the picture still shows.
     private string? _importImageFile;
+    // "Load detailed maps" was chosen for the open document (map background: ask).
+    private bool _mapsAllowedHere;
     // Internet images: the setting (ask, always, never), consent for this
     // document, how many the last render held back, and the notice state.
     private string _externalImages = NormalizeExternal(LoadSetting("ExternalImages"));
@@ -217,17 +223,24 @@ public partial class MainWindow : Window
         };
 
         _htmlSanitizer.AllowedTags.Clear();
+        // HTML written in Markdown shows the way GitHub shows it: the tags and
+        // attributes GitHub allows are kept, and everything that could run or load
+        // something by itself (script, style, iframe, object, embed, forms, event
+        // attributes, javascript: links) is removed.
         _htmlSanitizer.AllowedTags.UnionWith(
         [
-            "a", "blockquote", "br", "code", "del", "div", "em", "h1", "h2", "h3", "h4", "h5",
-            "h6", "hr", "img", "input", "li", "ol", "p", "pre", "span", "strong", "table", "tbody",
-            "td", "th", "thead", "tr", "ul"
+            "a", "abbr", "b", "bdo", "blockquote", "br", "caption", "cite", "code", "dd", "del", "details", "dfn", "div",
+            "dl", "dt", "em", "figcaption", "figure", "h1", "h2", "h3", "h4", "h5", "h6", "hr", "i", "img", "input", "ins",
+            "kbd", "li", "mark", "ol", "p", "picture", "pre", "q", "rp", "rt", "ruby", "s", "samp", "small", "source",
+            "span", "strike", "strong", "sub", "summary", "sup", "table", "tbody", "td", "tfoot", "th", "thead", "time",
+            "tr", "tt", "u", "ul", "var", "video", "wbr"
         ]);
         _htmlSanitizer.AllowedAttributes.Clear();
         _htmlSanitizer.AllowedAttributes.UnionWith(
         [
-            "alt", "checked", "class", "colspan", "data-external-src", "data-line", "disabled", "href", "id", "rowspan",
-            "src", "style", "title", "type"
+            "align", "alt", "checked", "cite", "class", "colspan", "controls", "data-external-src", "data-line", "datetime", "dir",
+            "disabled", "height", "href", "id", "lang", "loop", "media", "muted", "name", "open", "playsinline", "poster", "reversed",
+            "rowspan", "src", "srcset", "start", "style", "title", "type", "valign", "width"
         ]);
         // Markdig writes table alignment as style="text-align: ..."; nothing else is kept.
         _htmlSanitizer.AllowedCssProperties.Clear();
@@ -237,7 +250,11 @@ public partial class MainWindow : Window
         // Task-list items are the only inputs Markdig emits; keep them read-only checkboxes.
         _htmlSanitizer.PostProcessNode += (_, e) =>
         {
-            if (e.Node is AngleSharp.Dom.IElement { TagName: "INPUT" } input)
+            if (e.Node is AngleSharp.Dom.IElement { TagName: "IMG" or "SOURCE" or "VIDEO" } picture)
+            {
+                ResolveHtmlImage(picture);
+            }
+            else if (e.Node is AngleSharp.Dom.IElement { TagName: "INPUT" } input)
             {
                 if (!string.Equals(input.GetAttribute("type"), "checkbox", StringComparison.OrdinalIgnoreCase))
                 {
@@ -291,6 +308,7 @@ public partial class MainWindow : Window
         // Every image request passes through the app: document images and, with
         // consent, internet images (fetched by the app's own client, Identity 13-3).
         EditorWebView.CoreWebView2.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.Image);
+        EditorWebView.CoreWebView2.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.Media);
         EditorWebView.CoreWebView2.WebResourceRequested += DocumentResourceRequested;
         EditorWebView.Source = new Uri("https://mdeditor.local/index.html");
     }
@@ -444,6 +462,11 @@ public partial class MainWindow : Window
                 _lastSyncLine = root.GetProperty("line").GetDouble();
                 _lastSyncEdge = root.TryGetProperty("edge", out var edge) ? edge.GetString() : null;
                 SendToPreviewWindow(new { type = "syncLine", line = _lastSyncLine, edge = _lastSyncEdge });
+                break;
+            case "allowMaps":
+                // "Load detailed maps" in the notice: for this document only.
+                _mapsAllowedHere = true;
+                SendPreview();
                 break;
             case "allowExternalImages":
                 // "Load images" in the notice: for this document only.
@@ -1239,8 +1262,8 @@ public partial class MainWindow : Window
             _isDirty = true;
             SendDocumentInfo();
             SendToPage(new { type = "setText", text = _text });
-            SendPreview();
             SendEncodingNotice();
+            SendPreview();
             WriteRecoveryCopy();
             return true;
         }
@@ -1529,7 +1552,11 @@ public partial class MainWindow : Window
         }
 
         var fileName = string.IsNullOrWhiteSpace(name) ? Strings.Tr("新しい文書.md") : Path.GetFileName(name);
-        ApplyImported(text.Replace("\r\n", "\n"), null, fileName, false, null);
+        // The bundled samples folder is where their images and video come from,
+        // but never where Save As suggests (it is inside the app).
+        var samples = Path.Combine(AppContext.BaseDirectory, "wwwroot", "samples");
+        ApplyImported(text.Replace("\r\n", "\n"), Directory.Exists(samples) ? samples : null, fileName, false, null);
+        _suggestFolder = null;
     }
 
     private void ApplyImported(string markdown, string? folder, string name, bool allowExternal, string? notice)
@@ -1664,8 +1691,8 @@ public partial class MainWindow : Window
         _isDirty = false;
         SendDocumentInfo();
         SendToPage(new { type = "setText", text = _text });
-        SendPreview();
         SendEncodingNotice();
+        SendPreview();
     }
 
     // A guessed or lossy encoding is announced under the toolbar so the user can
@@ -1809,6 +1836,22 @@ public partial class MainWindow : Window
         var strict = (Encoding)encoding.Clone();
         strict.EncoderFallback = EncoderFallback.ExceptionFallback;
         return [.. encoding.GetPreamble(), .. strict.GetBytes(text)];
+    }
+
+    private static readonly Dictionary<string, string> VideoContentTypes =
+        new(StringComparer.OrdinalIgnoreCase)
+        {
+            [".mp4"] = "video/mp4",
+            [".m4v"] = "video/mp4",
+            [".webm"] = "video/webm",
+            [".ogv"] = "video/ogg",
+            [".mov"] = "video/quicktime"
+        };
+
+    private static bool IsVideoAddress(string url)
+    {
+        var path = url.Split('#', '?')[0];
+        return VideoContentTypes.ContainsKey(Path.GetExtension(path));
     }
 
     private static readonly Dictionary<string, string> ImageContentTypes =
@@ -2034,6 +2077,15 @@ public partial class MainWindow : Window
         }
 
         using var deferral = e.GetDeferral();
+        if (e.ResourceContext == CoreWebView2WebResourceContext.Media)
+        {
+            var range = e.Request.Headers.Contains("Range") ? e.Request.Headers.GetHeader("Range") : null;
+            e.Response = uri.Host.Equals(DocumentHost, StringComparison.OrdinalIgnoreCase)
+                ? ServeDocumentVideo(environment, uri, range)
+                : await FetchInternetVideoAsync(environment, uri, range);
+            return;
+        }
+
         if (!uri.Host.Equals(DocumentHost, StringComparison.OrdinalIgnoreCase))
         {
             // An internet image the document may load (consent was given, so it
@@ -2063,6 +2115,127 @@ public partial class MainWindow : Window
         }
     }
 
+    private const long VideoChunkBytes = 4L * 1024 * 1024;
+
+    // "bytes=start-end" (end optional); null when there is no usable range.
+    private static (long Start, long? End)? ParseRange(string? header)
+    {
+        var match = System.Text.RegularExpressions.Regex.Match(header ?? string.Empty, @"^bytes=(\d+)-(\d*)$");
+        if (!match.Success || !long.TryParse(match.Groups[1].Value, out var start))
+        {
+            return null;
+        }
+
+        return (start, long.TryParse(match.Groups[2].Value, out var end) ? end : null);
+    }
+
+    private CoreWebView2WebResourceResponse ServeDocumentVideo(CoreWebView2Environment environment, Uri uri, string? rangeHeader)
+    {
+        var notFound = environment.CreateWebResourceResponse(null, 404, "Not Found", "");
+        var folder = _filePath is null ? _importFolder : Path.GetDirectoryName(_filePath);
+        if (folder is null)
+        {
+            return notFound;
+        }
+
+        try
+        {
+            var root = Path.GetFullPath(folder).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+            var path = Path.GetFullPath(Path.Combine(root, Uri.UnescapeDataString(uri.AbsolutePath).TrimStart('/')));
+            if (!path.StartsWith(root, StringComparison.OrdinalIgnoreCase)
+                || !VideoContentTypes.TryGetValue(Path.GetExtension(path), out var type) || !File.Exists(path))
+            {
+                return notFound;
+            }
+
+            var file = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            var length = file.Length;
+            if (ParseRange(rangeHeader) is not { } range)
+            {
+                return environment.CreateWebResourceResponse(file, 200, "OK",
+                    $"Content-Type: {type}\nContent-Length: {length}\nAccept-Ranges: bytes");
+            }
+
+            using (file)
+            {
+                var start = Math.Min(range.Start, Math.Max(0, length - 1));
+                var end = Math.Min(range.End ?? long.MaxValue, Math.Min(length - 1, start + VideoChunkBytes - 1));
+                var buffer = new byte[Math.Max(0, end - start + 1)];
+                file.Position = start;
+                file.ReadExactly(buffer);
+                return environment.CreateWebResourceResponse(new MemoryStream(buffer), 206, "Partial Content",
+                    $"Content-Type: {type}\nContent-Range: bytes {start}-{end}/{length}\nContent-Length: {buffer.Length}\nAccept-Ranges: bytes");
+            }
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException
+                                       or NotSupportedException or SecurityException or UriFormatException)
+        {
+            return notFound;
+        }
+    }
+
+    // An internet video the document may play (consent was given, so it has an
+    // address): read by the app's own client a piece at a time, with the same
+    // rules as images (https only, no cookies or Referer, never this PC or the
+    // local network).
+    private static async Task<CoreWebView2WebResourceResponse> FetchInternetVideoAsync(
+        CoreWebView2Environment environment, Uri uri, string? rangeHeader)
+    {
+        var notFound = environment.CreateWebResourceResponse(null, 404, "Not Found", "");
+        if (uri.Scheme != "https" || IsLocalName(uri.IdnHost)
+            || (System.Net.IPAddress.TryParse(uri.IdnHost.Trim('[', ']'), out var literal) && !IsPublicAddress(literal)))
+        {
+            return notFound;
+        }
+
+        try
+        {
+            var range = ParseRange(rangeHeader) ?? (0, null);
+            var last = range.Start + VideoChunkBytes - 1;
+            if (range.End is { } end && end < last)
+            {
+                last = end;
+            }
+
+            using var request = new HttpRequestMessage(HttpMethod.Get, uri);
+            request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(range.Start, last);
+            using var response = await Http.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+            var type = response.Content.Headers.ContentType?.MediaType ?? string.Empty;
+            if (!response.IsSuccessStatusCode || !(type.StartsWith("video/", StringComparison.OrdinalIgnoreCase)
+                                                   || type.StartsWith("audio/", StringComparison.OrdinalIgnoreCase)
+                                                   || type == "application/octet-stream"))
+            {
+                return notFound;
+            }
+
+            await using var stream = await response.Content.ReadAsStreamAsync();
+            var buffer = new MemoryStream();
+            var chunk = new byte[81920];
+            int read;
+            while (buffer.Length < VideoChunkBytes && (read = await stream.ReadAsync(chunk)) > 0)
+            {
+                buffer.Write(chunk, 0, read);
+            }
+
+            if (buffer.Length > VideoChunkBytes)
+            {
+                buffer.SetLength(VideoChunkBytes);
+            }
+
+            buffer.Position = 0;
+            var total = response.Content.Headers.ContentRange?.Length
+                        ?? (response.StatusCode == System.Net.HttpStatusCode.OK ? response.Content.Headers.ContentLength : null);
+            var first = response.StatusCode == System.Net.HttpStatusCode.PartialContent ? response.Content.Headers.ContentRange?.From ?? range.Start : 0;
+            var lastByte = first + buffer.Length - 1;
+            return environment.CreateWebResourceResponse(buffer, 206, "Partial Content",
+                $"Content-Type: {type}\nContent-Range: bytes {first}-{lastByte}/{(total is { } length ? length.ToString(System.Globalization.CultureInfo.InvariantCulture) : "*")}\nContent-Length: {buffer.Length}\nAccept-Ranges: bytes");
+        }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or IOException or InvalidOperationException)
+        {
+            return notFound;
+        }
+    }
+
     private static async Task<CoreWebView2WebResourceResponse> FetchInternetImageAsync(
         CoreWebView2Environment environment, Uri uri)
     {
@@ -2075,7 +2248,14 @@ public partial class MainWindow : Window
 
         try
         {
-            using var response = await Http.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead);
+            using var request = new HttpRequestMessage(HttpMethod.Get, uri);
+            // OpenStreetMap asks every app that uses its map tiles to name itself.
+            if (uri.Host.Equals("tile.openstreetmap.org", StringComparison.OrdinalIgnoreCase))
+            {
+                request.Headers.UserAgent.ParseAdd($"mdEditor/{AppVersion} (+https://github.com/5garashi/mdEditor)");
+            }
+
+            using var response = await Http.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
             var type = response.Content.Headers.ContentType?.MediaType ?? string.Empty;
             if (!response.IsSuccessStatusCode || !type.StartsWith("image/", StringComparison.OrdinalIgnoreCase)
                 || response.Content.Headers.ContentLength > MaxPageBytes)
@@ -2802,6 +2982,7 @@ public partial class MainWindow : Window
                 type = "preview",
                 html,
                 lines,
+                mapsAllowed = _mapsAllowedHere,
                 notifyRendered,
                 forPrint,
                 requestId = notifyRendered ? ++_previewRequestId : 0
@@ -2810,7 +2991,7 @@ public partial class MainWindow : Window
 
         if (toPreviewWindow)
         {
-            SendToPreviewWindow(new { type = "preview", html, lines, notifyRendered = false, forPrint = false, requestId = 0 });
+            SendToPreviewWindow(new { type = "preview", html, lines, mapsAllowed = _mapsAllowedHere, notifyRendered = false, forPrint = false, requestId = 0 });
         }
 
         if (toPage && !forPrint)
@@ -2819,16 +3000,17 @@ public partial class MainWindow : Window
         }
     }
 
-    // Raw HTML is parsed only so comments can be recognized: comments are notes in
-    // the source (such as file headers) and are dropped, and all other HTML is
-    // escaped and shown as text, as before.
+    // HTML written in Markdown is kept (the sanitizer then keeps only what GitHub
+    // allows); comments are notes in the source (such as file headers) and are
+    // dropped. Front matter shows as a table, as on GitHub.
     private string RenderMarkdown(string text)
     {
         using var writer = new StringWriter();
         var renderer = new HtmlRenderer(writer);
         _markdownPipeline.Setup(renderer);
-        renderer.ObjectRenderers.ReplaceOrAdd<HtmlBlockRenderer>(new EscapedHtmlBlockRenderer());
-        renderer.ObjectRenderers.ReplaceOrAdd<HtmlInlineRenderer>(new EscapedHtmlInlineRenderer());
+        renderer.ObjectRenderers.ReplaceOrAdd<HtmlBlockRenderer>(new RawHtmlBlockRenderer());
+        renderer.ObjectRenderers.ReplaceOrAdd<HtmlInlineRenderer>(new RawHtmlInlineRenderer());
+        renderer.ObjectRenderers.ReplaceOrAdd<Markdig.Extensions.Yaml.YamlFrontMatterHtmlRenderer>(new FrontMatterTableRenderer());
         var document = Markdown.Parse(text, _markdownPipeline);
         ResolveRelativeImages(document);
         // Source line of each block, used by the page to keep the editor and preview
@@ -2854,37 +3036,156 @@ public partial class MainWindow : Window
         var blocked = 0;
         // Relative images need a folder: the open file's, or the HTML file's
         // folder for a document just opened from HTML and not saved yet.
-        var hasFolder = _filePath is not null || _importFolder is not null;
-        var baseUri = new Uri($"https://{DocumentHost}/");
+        foreach (var paragraph in document.Descendants<ParagraphBlock>())
+        {
+            var only = paragraph.Inline?.FirstChild;
+            if (only is null || only.NextSibling is not null)
+            {
+                continue;
+            }
+
+            switch (only)
+            {
+                case AutolinkInline { IsEmail: false } autolink when IsVideoAddress(autolink.Url):
+                    only.ReplaceBy(new LinkInline(autolink.Url, string.Empty) { IsImage = true });
+                    break;
+                case LinkInline { IsImage: false, Url: { } url } link when IsVideoAddress(url):
+                    // The link's text stays as the video's name.
+                    link.IsImage = true;
+                    break;
+            }
+        }
+
         foreach (var image in document.Descendants<LinkInline>().Where(link => link.IsImage))
         {
-            var url = image.Url;
-            if (string.IsNullOrWhiteSpace(url) || url.StartsWith('#'))
+            switch (ResolveImageAddress(image.Url, allowExternal))
             {
-                continue;
-            }
-
-            if (Uri.TryCreate(url, UriKind.Absolute, out var absolute))
-            {
-                var local = IsLocalName(absolute.IdnHost)
-                    || (System.Net.IPAddress.TryParse(absolute.IdnHost.Trim('[', ']'), out var literal) && !IsPublicAddress(literal));
-                if (absolute.Scheme is "http" or "https" && (absolute.Scheme != "https" || !allowExternal || local))
-                {
-                    image.GetAttributes().AddProperty("data-external-src", absolute.AbsoluteUri);
+                case (null, { } held):
+                    image.GetAttributes().AddProperty("data-external-src", held);
                     image.Url = string.Empty;
                     blocked++;
-                }
-
-                continue;
-            }
-
-            if (hasFolder && !url.StartsWith('/') && Uri.TryCreate(baseUri, url.Replace('\\', '/'), out var resolved))
-            {
-                image.Url = resolved.AbsoluteUri;
+                    break;
+                case ({ } address, null):
+                    image.Url = address;
+                    break;
             }
         }
 
         _blockedImages = blocked;
+    }
+
+    // The address to load (or null to leave it), and the address held back for
+    // consent (or null). Anything that is not http, https, or a relative path is
+    // dropped (Address and Held both empty).
+    private (string? Address, string? Held) ResolveImageAddress(string? url, bool allowExternal)
+    {
+        if (string.IsNullOrWhiteSpace(url) || url.StartsWith('#'))
+        {
+            return (null, null);
+        }
+
+        url = url.Trim();
+        if (Uri.TryCreate(url, UriKind.Absolute, out var absolute))
+        {
+            if (absolute.Host == DocumentHost || absolute.Host == "mdeditor.local")
+            {
+                return (null, null);
+            }
+
+            if (absolute.Scheme is not ("http" or "https"))
+            {
+                return (string.Empty, null);
+            }
+
+            var local = IsLocalName(absolute.IdnHost)
+                || (System.Net.IPAddress.TryParse(absolute.IdnHost.Trim('[', ']'), out var literal) && !IsPublicAddress(literal));
+            return absolute.Scheme != "https" || !allowExternal || local
+                ? (null, absolute.AbsoluteUri)
+                : (null, null);
+        }
+
+        var hasFolder = _filePath is not null || _importFolder is not null;
+        return hasFolder && !url.StartsWith('/') && Uri.TryCreate(new Uri($"https://{DocumentHost}/"), url.Replace('\\', '/'), out var resolved)
+            ? (resolved.AbsoluteUri, null)
+            : (null, null);
+    }
+
+    // An image written as HTML (<img>, or <source> in <picture>, as GitHub READMEs
+    // use for light and dark pictures) gets the same treatment as a Markdown image.
+    private void ResolveHtmlImage(AngleSharp.Dom.IElement element)
+    {
+        var allowExternal = _externalImages == "always" || (_externalImages == "ask" && _externalAllowedHere);
+        if (element.TagName == "VIDEO" && element.GetAttribute("poster") is { } poster)
+        {
+            // A poster loads like an image, or not at all.
+            switch (ResolveImageAddress(poster, allowExternal))
+            {
+                case ({ Length: > 0 } address, null):
+                    element.SetAttribute("poster", address);
+                    break;
+                case (null, null) when Uri.TryCreate(poster, UriKind.Absolute, out var posterUri) && posterUri.Host == DocumentHost:
+                    break;
+                default:
+                    element.RemoveAttribute("poster");
+                    break;
+            }
+        }
+
+        if (element.TagName is "IMG" or "VIDEO" || (element.TagName == "SOURCE" && element.HasAttribute("src")))
+        {
+            element.RemoveAttribute("srcset");
+            if (element.HasAttribute("data-external-src") && string.IsNullOrEmpty(element.GetAttribute("src")))
+            {
+                return;
+            }
+
+            switch (ResolveImageAddress(element.GetAttribute("src"), allowExternal))
+            {
+                case (null, { } held):
+                    element.SetAttribute("data-external-src", held);
+                    element.SetAttribute("src", string.Empty);
+                    _blockedImages++;
+                    break;
+                case ({ Length: 0 }, null):
+                    element.Remove();
+                    break;
+                case ({ } address, null):
+                    element.SetAttribute("src", address);
+                    break;
+            }
+
+            return;
+        }
+
+        // <source srcset="a.png 1x, b.png 2x">: every address must be allowed to
+        // load, or the source is dropped and the <img> inside <picture> is used.
+        var candidates = (element.GetAttribute("srcset") ?? string.Empty)
+            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        var rewritten = new List<string>();
+        foreach (var candidate in candidates)
+        {
+            var parts = candidate.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
+            switch (ResolveImageAddress(parts[0], allowExternal))
+            {
+                case ({ Length: > 0 } address, null):
+                    rewritten.Add(parts.Length > 1 ? $"{address} {parts[1]}" : address);
+                    break;
+                case (null, null) when Uri.TryCreate(parts[0], UriKind.Absolute, out _):
+                    rewritten.Add(candidate);
+                    break;
+                default:
+                    element.Remove();
+                    return;
+            }
+        }
+
+        if (rewritten.Count == 0)
+        {
+            element.Remove();
+            return;
+        }
+
+        element.SetAttribute("srcset", string.Join(", ", rewritten));
     }
 
     // The notice for held-back images (setting "ask" only), shown again when
@@ -2908,38 +3209,50 @@ public partial class MainWindow : Window
     private void ResetExternalConsent(bool allowed, string? notice)
     {
         _externalAllowedHere = allowed;
+        _mapsAllowedHere = false;
         _importNotice = notice;
         _noticedBlocked = -1;
     }
 
-    private sealed class EscapedHtmlBlockRenderer : HtmlObjectRenderer<HtmlBlock>
+    private sealed class RawHtmlBlockRenderer : HtmlObjectRenderer<HtmlBlock>
     {
         protected override void Write(HtmlRenderer renderer, HtmlBlock obj)
         {
-            if (obj.Type == HtmlBlockType.Comment)
+            if (obj.Type != HtmlBlockType.Comment)
             {
-                return;
+                renderer.WriteLeafRawLines(obj, true, false);
             }
-
-            renderer.Write("<p").WriteAttributes(obj).Write(">");
-            renderer.WriteLeafRawLines(obj, true, true);
-            renderer.WriteLine("</p>");
         }
     }
 
-    private sealed class EscapedHtmlInlineRenderer : HtmlObjectRenderer<HtmlInline>
+    private sealed class RawHtmlInlineRenderer : HtmlObjectRenderer<HtmlInline>
     {
         protected override void Write(HtmlRenderer renderer, HtmlInline obj)
         {
-            // A bare <br> (no attributes) is the one tag that works: it is how a
-            // table cell breaks a line, and it cannot carry anything harmful.
-            if (System.Text.RegularExpressions.Regex.IsMatch(obj.Tag, @"^<br\s*/?>$", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+            if (!obj.Tag.StartsWith("<!--", StringComparison.Ordinal))
             {
-                renderer.Write("<br>");
+                renderer.Write(obj.Tag);
             }
-            else if (!obj.Tag.StartsWith("<!--", StringComparison.Ordinal))
+        }
+    }
+
+    // Front matter (the --- block at the top) as tables, as GitHub shows it.
+    private sealed class FrontMatterTableRenderer : HtmlObjectRenderer<Markdig.Extensions.Yaml.YamlFrontMatterBlock>
+    {
+        protected override void Write(HtmlRenderer renderer, Markdig.Extensions.Yaml.YamlFrontMatterBlock obj)
+        {
+            var lines = obj.Lines.Lines.Take(obj.Lines.Count).Select(line => line.Slice.ToString()).ToList();
+            if (FrontMatter.Read(lines) is { } matter)
             {
-                renderer.WriteEscape(obj.Tag);
+                renderer.Write("<div class=\"front-matter-block\"").WriteAttributes(obj).Write(">")
+                    .Write(FrontMatter.ToHtml(matter)).WriteLine("</div>");
+            }
+            else
+            {
+                // Not valid YAML: shown as written, as a code block.
+                renderer.Write("<pre").WriteAttributes(obj).Write("><code>");
+                renderer.WriteEscape(string.Join("\n", lines.Where(line => line.Trim() != "---")));
+                renderer.WriteLine("</code></pre>");
             }
         }
     }
@@ -3049,6 +3362,7 @@ public partial class MainWindow : Window
         core.WebMessageReceived += PreviewMessageReceived;
         core.NavigationStarting += NavigationStarting;
         core.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.Image);
+        core.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.Media);
         core.WebResourceRequested += DocumentResourceRequested;
         window.WebView.Source = new Uri("https://mdeditor.local/index.html?view=preview");
         SaveSetting("PreviewDetached", "on");

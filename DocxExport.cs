@@ -121,8 +121,39 @@ internal sealed class DocxExport
             case MathBlock:
                 yield return FigureParagraph(style);
                 break;
-            case FencedCodeBlock fenced when DiagramFences.IsDiagram(fenced.Info):
+            case FencedCodeBlock fenced when DiagramFences.IsDiagram(fenced.Info) || DiagramFences.IsMath(fenced.Info):
                 yield return FigureParagraph(style);
+                break;
+            case Markdig.Extensions.Yaml.YamlFrontMatterBlock yaml:
+                // Front matter as a table of its keys, as the preview shows it.
+                var matterLines = yaml.Lines.Lines.Take(yaml.Lines.Count).Select(line => line.Slice.ToString()).ToList();
+                if (FrontMatter.Read(matterLines) is { } matter)
+                {
+                    yield return YamlTable(matter);
+                    yield return new Paragraph();
+                }
+                else
+                {
+                    foreach (var line in matterLines.Where(line => line.Trim() != "---"))
+                    {
+                        yield return Paragraph("Code", [Run(line, code: true)]);
+                    }
+                }
+                break;
+            case HtmlBlock html when html.Lines.ToString().Contains("<video", StringComparison.OrdinalIgnoreCase):
+                // A video cannot play in Word: its name stands in its place.
+                var videoSource = System.Text.RegularExpressions.Regex.Match(html.Lines.ToString(), @"srcs*=s*[""']([^""']+)").Groups[1].Value;
+                yield return Paragraph(style, [Run($"▶ {VideoName(videoSource)}", bold: true)]);
+                break;
+            case HtmlBlock html:
+                // HTML written in Markdown keeps its text (Word cannot show the HTML itself).
+                if (PlainTextExport.StripHtml(string.Join("\n", html.Lines.Lines.Take(html.Lines.Count).Select(line => line.Slice.ToString()))) is { } htmlText)
+                {
+                    foreach (var line in htmlText.Split('\n').Where(line => line.Trim().Length > 0))
+                    {
+                        yield return Paragraph(style, [Run(line.Trim())]);
+                    }
+                }
                 break;
             case CodeBlock code:
                 var lines = code.Lines.Lines.Take(code.Lines.Count).Select(line => line.Slice.ToString()).ToList();
@@ -141,6 +172,16 @@ internal sealed class DocxExport
             case ThematicBreakBlock:
                 yield return new Paragraph(new ParagraphProperties(new ParagraphBorders(
                     new BottomBorder { Val = BorderValues.Single, Size = 8, Space = 1, Color = "D0D0D0" })));
+                break;
+            case Markdig.Extensions.Alerts.AlertBlock alert:
+                yield return Paragraph("Quote", [Run(DiagramFences.AlertTitle(alert), bold: true)]);
+                foreach (var child in alert)
+                {
+                    foreach (var element in Blocks(child, level, "Quote"))
+                    {
+                        yield return element;
+                    }
+                }
                 break;
             case QuoteBlock quote:
                 foreach (var child in quote)
@@ -202,6 +243,91 @@ internal sealed class DocxExport
                 }
                 break;
         }
+    }
+
+    // Front matter as the preview shows it: a card of "key  value" rows (keys
+    // in bold gray #59636E, 6.11:1 on white; a gray line on the left of the outer card,
+    // since volt marks errors (Identity 4-3, 4-4 (3))), a list of words
+    // joined with " · ", and nested maps and lists as cards inside the value
+    // cell (each cell ends with a paragraph, as Word requires).
+    private static WTable YamlTable(YamlValue value, bool nested = false)
+    {
+        DocumentFormat.OpenXml.Wordprocessing.TableCell Cell(YamlValue content, bool key = false)
+        {
+            var properties = new TableCellProperties(new TableCellWidth { Type = TableWidthUnitValues.Auto, Width = "0" });
+            return content switch
+            {
+                YamlText text => new DocumentFormat.OpenXml.Wordprocessing.TableCell(properties,
+                    Paragraph(null, [key ? Run(text.Text, bold: true, color: "59636E") : Run(text.Text.Replace('\n', ' '))])),
+                YamlList list when list.Items.All(item => item is YamlText) => new DocumentFormat.OpenXml.Wordprocessing.TableCell(properties,
+                    Paragraph(null, [Run(string.Join(" · ", list.Items.Cast<YamlText>().Select(item => item.Text.Replace('\n', ' '))))])),
+                _ => new DocumentFormat.OpenXml.Wordprocessing.TableCell(properties, YamlTable(content, nested: true), new Paragraph())
+            };
+        }
+
+        var rows = value switch
+        {
+            YamlMap map => map.Entries.Select(entry => new List<DocumentFormat.OpenXml.Wordprocessing.TableCell> { Cell(new YamlText(entry.Key), key: true), Cell(entry.Value) }).ToList(),
+            YamlList list => list.Items.Select(item => new List<DocumentFormat.OpenXml.Wordprocessing.TableCell> { Cell(item) }).ToList(),
+            _ => [[Cell(value)]]
+        };
+        var none = new Func<BorderType, BorderType>(border => { border.Val = BorderValues.None; return border; });
+        var line = new Func<BorderType, BorderType>(border => { border.Val = BorderValues.Single; border.Size = 4; border.Color = "D0D0D0"; return border; });
+        var table = new WTable(new TableProperties(
+            new TableWidth { Type = TableWidthUnitValues.Auto, Width = "0" },
+            new TableBorders(
+                nested ? none(new TopBorder()) : line(new TopBorder()),
+                nested ? none(new LeftBorder()) : new LeftBorder { Val = BorderValues.Single, Size = 24, Color = "59636E" },
+                nested ? none(new BottomBorder()) : line(new BottomBorder()),
+                nested ? none(new RightBorder()) : line(new RightBorder()),
+                nested ? none(new InsideHorizontalBorder()) : line(new InsideHorizontalBorder()),
+                none(new InsideVerticalBorder())),
+            new TableCellMarginDefault(
+                new TopMargin { Width = "40", Type = TableWidthUnitValues.Dxa },
+                new TableCellLeftMargin { Width = (short)(nested ? 0 : 140), Type = TableWidthValues.Dxa },
+                new BottomMargin { Width = "40", Type = TableWidthUnitValues.Dxa },
+                new TableCellRightMargin { Width = 140, Type = TableWidthValues.Dxa })));
+        var columns = Math.Max(1, rows.Max(row => row.Count));
+        table.Append(new TableGrid(columns == 2
+            ? [new GridColumn { Width = "2000" }, new GridColumn { Width = "7638" }]
+            : [new GridColumn { Width = "9638" }]));
+        foreach (var row in rows.Where(row => row.Count > 0))
+        {
+            table.Append(new DocumentFormat.OpenXml.Wordprocessing.TableRow(row));
+        }
+
+        return table;
+    }
+
+    private static string VideoName(string address) =>
+        Uri.UnescapeDataString(address.Split('#', '?')[0].Split('/').Last());
+
+    // A plain table of text, the first row bold.
+    private static WTable TextTable(List<List<string>> rows)
+    {
+        var columns = Math.Max(1, rows.Max(row => row.Count));
+        var result = new WTable(new TableProperties(
+            new TableWidth { Type = TableWidthUnitValues.Auto, Width = "0" },
+            new TableBorders(
+                new TopBorder { Val = BorderValues.Single, Size = 4, Color = "1A1A1A" },
+                new LeftBorder { Val = BorderValues.Single, Size = 4, Color = "1A1A1A" },
+                new BottomBorder { Val = BorderValues.Single, Size = 4, Color = "1A1A1A" },
+                new RightBorder { Val = BorderValues.Single, Size = 4, Color = "1A1A1A" },
+                new InsideHorizontalBorder { Val = BorderValues.Single, Size = 4, Color = "1A1A1A" },
+                new InsideVerticalBorder { Val = BorderValues.Single, Size = 4, Color = "1A1A1A" })));
+        result.Append(new TableGrid(Enumerable.Range(0, columns).Select(_ => new GridColumn { Width = (9638 / columns).ToString() })));
+        for (var r = 0; r < rows.Count; r++)
+        {
+            var tableRow = new DocumentFormat.OpenXml.Wordprocessing.TableRow();
+            foreach (var text in rows[r])
+            {
+                tableRow.Append(new DocumentFormat.OpenXml.Wordprocessing.TableCell(Paragraph(null, [Run(text, bold: r == 0)])));
+            }
+
+            result.Append(tableRow);
+        }
+
+        return result;
     }
 
     private WTable Table(MdTable table)
@@ -333,13 +459,19 @@ internal sealed class DocxExport
                     result.Add(Figure(display: false) ?? Run("［式］"));
                     break;
                 case LinkInline { IsImage: true } image:
-                    result.Add(Image(image) ?? Run($"［{PlainText(image)}］", bold, italic, strike));
+                    result.Add(Image(image) ?? Run(System.Text.RegularExpressions.Regex.IsMatch(image.Url ?? string.Empty, @"\.(mp4|m4v|webm|ogv|mov)([?#].*)?$", System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+                        ? $"▶ {VideoName(image.Url!)}"
+                        : $"［{PlainText(image)}］", bold, italic, strike));
                     break;
                 case LinkInline link:
                     result.Add(Hyperlink(link.Url, Inlines(link, bold, italic, strike)));
                     break;
                 case AutolinkInline autolink:
                     result.Add(Hyperlink(autolink.IsEmail ? "mailto:" + autolink.Url : autolink.Url, [Run(autolink.Url, bold, italic, strike)]));
+                    break;
+                case HtmlInline html when html.Tag.StartsWith("<video", StringComparison.OrdinalIgnoreCase):
+                    // A video cannot play in Word: its name stands in its place.
+                    result.Add(Run($"▶ {VideoName(System.Text.RegularExpressions.Regex.Match(html.Tag, @"srcs*=s*[""']([^""']+)").Groups[1].Value)}", bold: true));
                     break;
                 case HtmlEntityInline entity:
                     result.Add(Run(entity.Transcoded.ToString(), bold, italic, strike));

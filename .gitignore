@@ -10,3 +10,4 @@ artifacts/
 
 # CodeMirror build tooling
 tools/codemirror/node_modules/
+tools/graphics/node_modules/

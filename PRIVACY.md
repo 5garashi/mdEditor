@@ -8,7 +8,7 @@
 -->
 # mdEditor プライバシーポリシー / Privacy Policy
 
-最終更新 / Last updated: 2026-10-16
+最終更新 / Last updated: 2026-10-17
 
 [日本語](#日本語) / [English](#english)
 
@@ -36,7 +36,8 @@ mdEditor（以下「本アプリ」）は、5garashi.com設計事務所が提供
 
 本アプリ自体は、利用状況の計測（テレメトリ）や広告のための通信を行いません。ただし、次の場合には通信が発生します。
 
-- 文書にインターネット上の画像（`https://` で始まるもの）が含まれている場合、本アプリは初期設定では読み込まず、お知らせ欄で確認します。「画像を読み込む」を選んだとき（または「設定」で「いつも読み込む」にしたとき）だけ、その画像のサーバーへ直接接続します。接続先のサーバーには、通常の Web の閲覧と同じように、利用者の IP アドレスや時刻などが伝わります。`http://`（暗号化されていない通信）の画像は読み込みません。
+- 文書にインターネット上の画像や動画（`https://` で始まるもの）が含まれている場合、本アプリは初期設定では読み込まず、お知らせ欄で確認します。「画像・動画を読み込む」を選んだとき（または「設定」で「いつも読み込む」にしたとき）だけ、そのサーバーへ直接接続します。動画は、再生する部分ずつ（一度に最大 4 MB）アプリが読み込みます。接続先のサーバーには、通常の Web の閲覧と同じように、利用者の IP アドレスや時刻などが伝わります。`http://`（暗号化されていない通信）の画像は読み込みません。
+- 地図（```geojson・```topojson）は、まず PC の中だけで、簡単な世界地図の上に描きます。お知らせ欄の「詳細な地図を読み込む」を押したとき（その文書だけ）、または「設定」→「インターネット」→「詳細な地図（OpenStreetMap）」で「いつも読み込む」を選んだときだけ、OpenStreetMap の地図のサーバー（tile.openstreetmap.org）から地図の画像を読み込みます。そのサーバーには、表示している場所（地図の範囲）、IP アドレス、時刻と、アプリの名前と版（mdEditor/版。OpenStreetMap の利用規約で求められています）が伝わります。保存した HTML には地図の画像を入れないので、開いても OpenStreetMap には接続しません。
 - 「URLを開く」で Web ページ（`https://` だけ）を開いたときは、そのページと、ページの中の画像を読み込みます。ページのスクリプトは実行せず、文書の内容をどこかへ送ることもありません。
 - インターネットから読み込むときは、Cookie・認証情報・参照元（Referer）を送りません。この PC や社内ネットワークのアドレス（localhost や 192.168.x.x など）からは読み込みません。
 - 文書内のリンクと、「このアプリについて」の会社紹介・サポートなどのリンクは、利用者が選んだときだけ、既定のブラウザーやメールアプリで開きます。その後の通信は、それぞれのアプリの扱いによります。
@@ -75,7 +76,8 @@ The app stores the following settings on your PC. They are never sent anywhere.
 
 The app itself makes no connections for usage tracking (telemetry) or advertising. Connections do happen in these cases:
 
-- If a document contains images on the internet (addresses starting with `https://`), the app does not load them by default and asks in the notice bar. Only when you choose Load images (or set Settings to Always load) does it connect directly to those servers. As with ordinary web browsing, those servers receive information such as your IP address and the time. Images over `http://` (unencrypted) are never loaded.
+- If a document contains images or videos on the internet (addresses starting with `https://`), the app does not load them by default and asks in the notice bar. Only when you choose Load images and videos (or set Settings to Always load) does it connect directly to those servers. Videos are read by the app a piece at a time (up to 4 MB at once) as they play. As with ordinary web browsing, those servers receive information such as your IP address and the time. Images over `http://` (unencrypted) are never loaded.
+- Maps (```geojson, ```topojson) are first drawn on your PC on a simple world map. Only when you press Load detailed maps in the notice bar (for that document) or choose Always load under Settings > Internet > Detailed maps (OpenStreetMap) does the app load map images from OpenStreetMap's map server (tile.openstreetmap.org). That server receives the area shown, your IP address, the time, and the app's name and version (mdEditor/version, as OpenStreetMap's usage policy requires). Saved HTML does not include the map images, so opening it makes no connection to OpenStreetMap.
 - When you open a web page (`https://` only) with Open URL, the app reads that page and the images on it. The page's scripts never run, and nothing about your documents is sent anywhere.
 - When reading from the internet, the app sends no cookies, credentials, or Referer, and never reads from addresses on this PC or the local network (such as localhost or 192.168.x.x).
 - Links in a document, and the company, support, and other links in About, open in your default browser or mail app only when you choose them. What happens after that depends on those apps.

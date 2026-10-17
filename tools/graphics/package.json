@@ -1,0 +1,18 @@
+{
+  "name": "mdeditor-graphics-bundle",
+  "private": true,
+  "description": "Builds wwwroot/lib/three/stl-viewer.min.js and wwwroot/lib/geo/geo.min.js for mdEditor",
+  "license": "MIT",
+  "scripts": {
+    "build": "esbuild three-entry.js --bundle --minify --format=iife --legal-comments=eof --outfile=../../wwwroot/lib/three/stl-viewer.min.js && esbuild geo-entry.js --bundle --minify --format=iife --legal-comments=eof --outfile=../../wwwroot/lib/geo/geo.min.js && node copy-data.js"
+  },
+  "dependencies": {
+    "d3-geo": "3.1.1",
+    "three": "0.186.1",
+    "topojson-client": "3.1.0",
+    "world-atlas": "2.0.2"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}

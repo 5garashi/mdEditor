@@ -25,6 +25,8 @@
   --document-foreground: #1A1A1A;
   /* Neutral gray for heading underlines and horizontal rules in documents and PDFs. */
   --document-rule: #D0D0D0;
+  /* Labels and supporting text in documents (Identity 4-3): 6.11:1 on white. */
+  --document-muted: #59636E;
   /* Selection, current-line highlight, and read-aloud frame (Identity 4-3, 7-1 補2). */
   --document-selection: #C7D0C1;
   --document-current-line: #F0F0F0;
@@ -72,6 +74,7 @@
     --document-background: #121314;
     --document-foreground: #BFBFBF;
     --document-rule: #2B2B2B;
+    --document-muted: #8B949E;
     --document-selection: #494740;
     --document-current-line: #202122;
     --document-reading: #F07B5F;
@@ -659,6 +662,7 @@ body.capture-export .preview-pane {
 
 body.capture-export .preview-content {
   --document-background: #FFFFFF;
+  --document-muted: #59636E;
   --document-foreground: #1A1A1A;
   --document-rule: #D0D0D0;
   --code-keyword: #CF222E;
@@ -1015,6 +1019,147 @@ body.capture-export .preview-content {
   background: var(--document-background);
 }
 
+/* GitHub alerts (> [!NOTE] and so on): a colored bar, symbol, and title, in
+   GitHub's colors (each at least 4.8:1 on white and 5.5:1 on the night ground). */
+.preview-content .markdown-alert {
+  margin: 1em 0;
+  padding: 4px 14px;
+  border-left: 4px solid var(--alert-color);
+  color: inherit;
+}
+
+.preview-content .markdown-alert > :last-child {
+  margin-bottom: 0.4em;
+}
+
+.preview-content .markdown-alert-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0.4em 0 0.3em;
+  color: var(--alert-color);
+  font-weight: 700;
+}
+
+.preview-content .markdown-alert-title::before {
+  content: var(--alert-symbol);
+  font-family: "Segoe UI Symbol", "Segoe UI", sans-serif;
+}
+
+.preview-content .markdown-alert-note { --alert-color: #0969DA; --alert-symbol: "ⓘ"; }
+.preview-content .markdown-alert-tip { --alert-color: #1A7F37; --alert-symbol: "✓"; }
+.preview-content .markdown-alert-important { --alert-color: #8250DF; --alert-symbol: "◆"; }
+.preview-content .markdown-alert-warning { --alert-color: #9A6700; --alert-symbol: "⚠"; }
+.preview-content .markdown-alert-caution { --alert-color: #D1242F; --alert-symbol: "⊘"; }
+
+/* Front matter as a card of "key  value" rows, with a gray line on the left (volt
+   is kept for error rules and the read-aloud frame; Identity 4-4 (3)). Keys use
+   --document-muted (Identity 4-3, 7-1 補2). */
+.preview-content .front-matter-block {
+  margin: 0 0 1.4em;
+  padding: 10px 16px;
+  border: 1px solid var(--document-rule);
+  border-left: 4px solid var(--document-muted);
+  border-radius: 6px;
+  font-size: 0.92em;
+  line-height: 1.55;
+}
+
+.preview-content dl.front-matter {
+  display: grid;
+  grid-template-columns: minmax(5em, max-content) 1fr;
+  gap: 6px 18px;
+  margin: 0;
+}
+
+.preview-content dl.front-matter > div {
+  display: contents;
+}
+
+.preview-content dl.front-matter dt {
+  color: var(--document-muted);
+  font-weight: 700;
+  font-size: 0.9em;
+  letter-spacing: 0.02em;
+  overflow-wrap: normal;
+}
+
+.preview-content dl.front-matter dd {
+  min-width: 0;
+  margin: 0;
+}
+
+.preview-content dl.front-matter dl.front-matter {
+  gap: 2px 14px;
+}
+
+.preview-content ul.front-matter-labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.preview-content ul.front-matter-labels > li {
+  margin: 0;
+  padding: 0 9px;
+  border: 1px solid var(--document-rule);
+  border-radius: 999px;
+  font-size: 0.92em;
+}
+
+.preview-content ul.front-matter-items {
+  margin: 0;
+  padding-left: 1.2em;
+}
+
+/* Keyboard keys and collapsible sections written as HTML. */
+.preview-content kbd {
+  display: inline-block;
+  padding: 0 5px;
+  border: 1px solid var(--document-rule);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  font-family: Consolas, "Cascadia Mono", monospace;
+  font-size: 0.85em;
+  line-height: 1.6;
+}
+
+.preview-content details {
+  margin: 1em 0;
+}
+
+.preview-content summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+/* GitHub's light and dark picture switch: #gh-dark-mode-only and #gh-light-mode-only. */
+.preview-content img[src*="#gh-dark-mode-only"],
+.preview-content img[data-external-src*="#gh-dark-mode-only"] {
+  display: none;
+}
+
+@media screen and (prefers-color-scheme: dark) {
+  :root:not(:has(body.capture-export)) .preview-content .markdown-alert-note { --alert-color: #4493F8; }
+  :root:not(:has(body.capture-export)) .preview-content .markdown-alert-tip { --alert-color: #3FB950; }
+  :root:not(:has(body.capture-export)) .preview-content .markdown-alert-important { --alert-color: #AB7DF8; }
+  :root:not(:has(body.capture-export)) .preview-content .markdown-alert-warning { --alert-color: #D29922; }
+  :root:not(:has(body.capture-export)) .preview-content .markdown-alert-caution { --alert-color: #F85149; }
+
+  :root:not(:has(body.capture-export)) .preview-content img[src*="#gh-dark-mode-only"],
+  :root:not(:has(body.capture-export)) .preview-content img[data-external-src*="#gh-dark-mode-only"] {
+    display: revert;
+  }
+
+  :root:not(:has(body.capture-export)) .preview-content img[src*="#gh-light-mode-only"],
+  :root:not(:has(body.capture-export)) .preview-content img[data-external-src*="#gh-light-mode-only"] {
+    display: none;
+  }
+}
+
 /* Code colors; the same rules are in export.css for saved HTML. */
 .hljs-keyword, .hljs-built_in, .hljs-type, .hljs-literal, .hljs-selector-tag, .hljs-doctag { color: var(--code-keyword); }
 .hljs-string, .hljs-regexp, .hljs-char, .hljs-template-tag, .hljs-template-variable { color: var(--code-string); }
@@ -1076,6 +1221,48 @@ body.capture-export .preview-content {
 
 .preview-content :is(.mermaid, .graphviz) svg {
   height: auto;
+}
+
+/* Videos play in the column; saved pages show the video's name in their place. */
+.preview-content video {
+  display: block;
+  max-width: 100%;
+  margin: 1em 0;
+  border-radius: 6px;
+  background: #000000;
+}
+
+.preview-content .video-still {
+  display: block;
+  margin: 1em 0;
+  padding: 12px 16px;
+  border: 1px solid var(--document-rule);
+  border-radius: 6px;
+  font-weight: 700;
+}
+
+/* 3D models (STL) and maps (GeoJSON, TopoJSON): a framed picture that fits the column. */
+.preview-content :is(.stl, .geo-map) {
+  margin: 1em 0;
+  text-align: center;
+}
+
+.preview-content :is(.stl canvas, .stl img, .geo-map svg) {
+  display: inline-block;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--document-rule);
+  border-radius: 6px;
+  background: #FFFFFF;
+}
+
+.preview-content .stl canvas {
+  width: 640px;
+  cursor: grab;
+}
+
+.preview-content :is(.stl, .geo-map).diagram-error {
+  text-align: left;
 }
 
 /* Graphviz drawings keep their own size but never overflow the column. */

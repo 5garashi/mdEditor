@@ -14,7 +14,7 @@
   <meta name="referrer" content="no-referrer">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'wasm-unsafe-eval'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https:; media-src 'self' https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'wasm-unsafe-eval'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <meta name="theme-color" content="#FFE699" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#2B3A20" media="(prefers-color-scheme: dark)">
   <title>mdEditor</title>
@@ -67,6 +67,7 @@
     <span id="notice-text" class="notice-text"></span>
     <button id="notice-encoding" type="button" data-i18n="noticeChoose">文字コードを選ぶ</button>
     <button id="notice-action" type="button" data-i18n="loadExternal" hidden>画像を読み込む</button>
+    <button id="notice-maps" type="button" data-i18n="loadMaps" hidden>詳細な地図を読み込む</button>
     <button id="notice-close" type="button" data-i18n="close">閉じる</button>
   </div>
   <main class="workspace">
@@ -219,6 +220,16 @@
       <p id="reader-voice-note" class="settings-note"></p>
     </fieldset>
     <fieldset class="settings-group">
+      <legend data-i18n="settingsVideo">動画</legend>
+      <label class="settings-row"><span data-i18n="settingsVideoAutoplay">自動再生</span>
+        <select id="setting-video-autoplay">
+          <option value="auto" data-i18n="videoAutoplayAuto">Windows の動きの設定に合わせる（初期設定）</option>
+          <option value="always" data-i18n="videoAutoplayAlways">いつも自動で再生する</option>
+          <option value="never" data-i18n="videoAutoplayNever">自動で再生しない</option>
+        </select></label>
+      <p class="settings-note" data-i18n="settingsVideoNote"></p>
+    </fieldset>
+    <fieldset class="settings-group">
       <legend data-i18n="settingsInternet">インターネット</legend>
       <label class="settings-row"><span data-i18n="settingsExternal">ネット上の画像</span>
         <select id="setting-external">
@@ -227,6 +238,13 @@
           <option value="never" data-i18n="externalNever">読み込まない</option>
         </select></label>
       <p class="settings-note" data-i18n="settingsExternalNote"></p>
+      <label class="settings-row"><span data-i18n="settingsMapTiles">詳細な地図（OpenStreetMap）</span>
+        <select id="setting-map-tiles">
+          <option value="ask" data-i18n="mapTilesAsk">確認してから読み込む（初期設定）</option>
+          <option value="always" data-i18n="mapTilesAlways">いつも読み込む</option>
+          <option value="never" data-i18n="mapTilesNever">読み込まない（簡単な世界地図だけ）</option>
+        </select></label>
+      <p class="settings-note" data-i18n="settingsMapTilesNote"></p>
     </fieldset>
     <fieldset class="settings-group">
       <legend data-i18n="settingsExport">書き出し</legend>

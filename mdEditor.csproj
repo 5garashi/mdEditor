@@ -42,6 +42,13 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
+    <!-- The video that diagram-test plays (21-3), beside it as in samples/. -->
+    <Content Include="samples\import-test-images\cube5.mp4">
+      <Link>wwwroot\samples\import-test-images\cube5.mp4</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
     <Content Remove="wwwroot\assets\5garashi_mark_simple.ico" />
     <Resource Include="wwwroot\assets\5garashi_mark_simple.ico" />
   </ItemGroup>
@@ -53,5 +60,6 @@
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4258.31" />
     <PackageReference Include="MimeKitLite" Version="4.18.1" />
     <PackageReference Include="ReverseMarkdown" Version="6.2.1" />
+    <PackageReference Include="YamlDotNet" Version="18.1.0" />
   </ItemGroup>
 </Project>
