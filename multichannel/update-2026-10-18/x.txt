@@ -1,0 +1,7 @@
+mdEditor 1.0.12を更新。図・3D・地図・動画から、編集と共有まで。日英の実演と資料を公開しました。
+
+JA: https://www.youtube.com/watch?v=CAi5q1c0cuo
+EN: https://www.youtube.com/watch?v=valiuj76iG4
+
+Samples / PDF: https://5garashi.github.io/mdEditor/
+#mdEditor #Markdown

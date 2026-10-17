@@ -1,0 +1,10 @@
+{
+  "youtube.html": {
+    "http": 200,
+    "new_id": true
+  },
+  "youtube-en.html": {
+    "http": 200,
+    "new_id": true
+  }
+}
