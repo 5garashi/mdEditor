@@ -10,13 +10,13 @@ SPDX-License-Identifier: MIT
 -->
 # mdEditor 宣伝キット / Promotion kit
 
-2026-10-18：[日英の紹介画像・PDF・20機能ガイド・投稿原稿](multichannel/update-2026-10-18/README.md)と紹介・資料ページを、ソース1.0.12の3Dから始まる構成へ更新。動画は背景の映り込みを除いたrevision 1.1.1です。[公開記録](multichannel/update-2026-10-18/PUBLICATION.md)に各媒体の確認結果をまとめます。
+2026-10-18：[日英の紹介画像・PDF・20機能ガイド・投稿原稿](multichannel/update-2026-10-18/README.md)と紹介・資料ページを、ソース1.0.12の3Dから始まる構成へ更新。動画は背景の映り込みを除いたrevision 1.1.1です。[公開記録](multichannel/update-2026-10-18/PUBLICATION.md)に各媒体の公開URL・確認結果を記録しました。
 
 **更新作業の入口：[プロモーションの全体図と更新台帳](PROMOTION-SYSTEM.md)**。GitHubを核にした各媒体の関係、公開先、今回の実施結果、次回の一括更新手順を5つのMermaidチャートと表にまとめています。Start here for the promotion workflow, publication links and next-release checklist.
 
 2026-10-17: 紹介ページと実操作動画をソース版1.0.10対応へ更新。[制作記録](video-update-1.0.10/README.md)。
 
-作成・修正時はIdentity管理の[共通チェックリスト（4.17.0）](https://github.com/5garashi/5garashi-identity/blob/v4.17.0/docs/MARKDOWN-CHECKLIST.md)と[mdEditor固有の補足](MARKDOWN-CHECKLIST.md)を使い、構文・表示・内容を分けて確認します。図はGitHubとmdEditorで共通に描画できるMermaidを選び、両環境の実表示を別々に確認します。
+作成・修正時はIdentity管理の[共通チェックリスト（参照タグ4.20.0）](https://github.com/5garashi/5garashi-identity/blob/v4.20.0/docs/MARKDOWN-CHECKLIST.md)と[mdEditor固有の補足](MARKDOWN-CHECKLIST.md)を使い、構文・表示・内容を分けて確認します。図はGitHubとmdEditorで共通に描画できるMermaidを選び、両環境の実表示を別々に確認します。
 
 バージョン / Version: 1.8.0 · [CHANGELOG.md](CHANGELOG.md)
 

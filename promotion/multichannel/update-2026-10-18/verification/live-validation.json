@@ -1,0 +1,88 @@
+{
+  "index.html": {
+    "http": 200,
+    "source_1_0_12": true
+  },
+  "en.html": {
+    "http": 200,
+    "source_1_0_12": true
+  },
+  "resources.html": {
+    "http": 200,
+    "source_1_0_12": true
+  },
+  "resources-en.html": {
+    "http": 200,
+    "source_1_0_12": true
+  },
+  "case-study.html": {
+    "http": 200,
+    "source_1_0_12": false
+  },
+  "case-study-en.html": {
+    "http": 200,
+    "source_1_0_12": false
+  },
+  "office-card-ja.html": {
+    "http": 200,
+    "source_1_0_12": true
+  },
+  "office-card-en.html": {
+    "http": 200,
+    "source_1_0_12": true
+  },
+  "assets/mdEditor-demo-1.0.12-ja.mp4": {
+    "http": 200,
+    "sha256": "4fab119d5c6194a0d22688d2f8dc7930ae0b1724210e444266fbee8c1b17504d",
+    "matches_source": true
+  },
+  "multichannel/update-2026-10-18/one-page-ja.pdf": {
+    "http": 200,
+    "sha256": "97f4250411b1a9296a74fe5a030c8e29031f49fee88f377771e545b0dc6240b6",
+    "matches_source": true
+  },
+  "multichannel/update-2026-10-18/features-ja.pdf": {
+    "http": 200,
+    "sha256": "1c114753c5a4037d84e9a22f6cb3c8fa4bc109ac13ca80c2093827870b4275b4",
+    "matches_source": true
+  },
+  "multichannel/update-2026-10-18/social-ja.png": {
+    "http": 200,
+    "sha256": "1f9fe2c99d69893839e46ff5a9b470d4e946da8303c6126f68eb453c97e9885f",
+    "matches_source": true
+  },
+  "assets/mdEditor-demo-1.0.12-en.mp4": {
+    "http": 200,
+    "sha256": "3cd6f2375fea12dd71163d428475f1c9570181fd2929e85a01e0876916a5247e",
+    "matches_source": true
+  },
+  "multichannel/update-2026-10-18/one-page-en.pdf": {
+    "http": 200,
+    "sha256": "ac4a5532fcfc0599786258aeb882685cad20a79c3a8b5c7f62e8d11e40d8e618",
+    "matches_source": true
+  },
+  "multichannel/update-2026-10-18/features-en.pdf": {
+    "http": 200,
+    "sha256": "b32876307dbcd62d0585e740bfb06cd756967b2066180321a78450853927cb86",
+    "matches_source": true
+  },
+  "multichannel/update-2026-10-18/social-en.png": {
+    "http": 200,
+    "sha256": "638f1036a48b3c612763ea36c6279d271da6df66a5effb4fb97a2ca7ed29b48c",
+    "matches_source": true
+  },
+  "youtube-ja": {
+    "public_oembed": true,
+    "id": "CAi5q1c0cuo",
+    "title": "mdEditor 1.0.12 — 図・3D・地図・動画から、編集と共有まで"
+  },
+  "youtube-en": {
+    "public_oembed": true,
+    "id": "valiuj76iG4",
+    "title": "mdEditor 1.0.12 — Diagrams, 3D, Maps & Video — Edit and Share"
+  },
+  "office_site": {
+    "http": 200,
+    "links_to_mdEditor": true
+  }
+}

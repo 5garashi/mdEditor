@@ -3,11 +3,13 @@
 概要 / Description: Xの初期設定と初回投稿案 / X setup and first-post draft
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-13
-版 / Version: 1.0.0
+版 / Version: 1.8.0
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
 # X初期設定 / X setup
+
+2026-10-18：[新版の案内](https://x.com/5garashi_com/status/2111568105919131719)を@5garashi_comで公開。日英実演リンク、日本語画像と代替テキストを確認。 [詳細記録](https://github.com/5garashi/mdEditor/blob/promotion/site-integration/promotion/multichannel/update-2026-10-18/PUBLICATION.md)。
 
 状態: 本人が別メールアドレスで新規アカウント @5garashi_com を作成。本人提供の画面でプロフィール設定、事務所紹介、mdEditor紹介、Store入手リンクの3投稿を確認。以下の初回投稿原稿は準備時の案であり、実際の初回投稿は事務所紹介です。各投稿のURLは未取得です。
 
@@ -65,4 +67,4 @@ English: The X account has not been created. This file provides profile and firs
 ---
 
 **作成者 / Author**: 5garashi.com設計事務所 / 5garashi.com Design Office
-**最終更新 / Last updated**: 2026-10-13 JST
+**最終更新 / Last updated**: 2026-10-18 JST

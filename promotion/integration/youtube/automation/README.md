@@ -3,13 +3,15 @@
 概要 / Description: GitHubからYouTubeへ更新する仕組みと初期設定 / YouTube release automation and setup
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-13
-版 / Version: 1.0.3
+版 / Version: 1.0.4
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
 # GitHubからYouTubeを更新する / YouTube release automation
 
-バージョン / Version: 1.0.3 · [CHANGELOG.md](CHANGELOG.md)
+バージョン / Version: 1.0.4 · [CHANGELOG.md](CHANGELOG.md)
+
+2026-10-18：ソース1.0.12・公開管理revision 3.0.0の[日本語動画](https://www.youtube.com/watch?v=CAi5q1c0cuo)と[英語動画](https://www.youtube.com/watch?v=valiuj76iG4)を一般公開済み。字幕・サムネイル・旧動画からの最新版リンク、公開oEmbedを確認しました。
 
 2026-10-17: ソース1.0.10で収録した新しい動画revision 2.0.0を日英で公開します。旧動画は保持します。 / Publish new bilingual recordings of source build 1.0.10, retaining earlier videos.
 
@@ -167,4 +169,4 @@ English: GitHub is the source for videos and metadata. Explicit release.json cha
 ---
 
 **作成者 / Author**: 5garashi.com設計事務所 / 5garashi.com Design Office
-**最終更新 / Last updated**: 2026-10-16 JST
+**最終更新 / Last updated**: 2026-10-18 JST

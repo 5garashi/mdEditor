@@ -3,11 +3,13 @@
 概要 / Description: LinkedIn初回投稿の確認用原稿 / First LinkedIn post draft
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-13
-版 / Version: 1.1.0
+版 / Version: 1.8.0
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
 # LinkedIn初回投稿 / First LinkedIn post
+
+2026-10-18：[新版の案内](https://www.linkedin.com/feed/update/urn:li:activity:7517332938926256128/)をMOTOMASA IGARASHI / Anyoneで公開。日英実演リンク、画像と代替テキスト、公開本文を確認。 [詳細記録](https://github.com/5garashi/mdEditor/blob/promotion/site-integration/promotion/multichannel/update-2026-10-18/PUBLICATION.md)。
 
 投稿先 / Profile: https://www.linkedin.com/in/motomasa-igarashi-83b575355/
 
@@ -70,6 +72,6 @@ https://apps.microsoft.com/detail/9nww2qrclmhc?hl=ja-JP&gl=JP
 ---
 
 **作成者 / Author**: 5garashi.com設計事務所 / 5garashi.com Design Office
-**最終更新 / Last updated**: 2026-10-13 JST
+**最終更新 / Last updated**: 2026-10-18 JST
 
 2026-10-17更新 / Update: [1.0.10の新実演動画案内](https://www.linkedin.com/feed/update/urn:li:activity:7516922147580055552/)を一般公開しました。New source-build 1.0.10 demo announcement published.

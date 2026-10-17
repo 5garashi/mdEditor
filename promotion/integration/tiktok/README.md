@@ -3,15 +3,17 @@
 概要 / Description: TikTokプロフィールの設定記録 / TikTok profile setup record
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-13
-版 / Version: 1.3.0
+版 / Version: 1.8.0
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
 # TikTokプロフィール / TikTok profile
 
+2026-10-18：[日本語動画](https://www.tiktok.com/@5garashi_com/video/7697746476302175504)と[英語動画](https://www.tiktok.com/@5garashi_com/video/7697747556910042375)を@5garashi_comから公開。ソース1.0.12、背景除去済みrevision 1.1.1。誰でも、自社宣伝・AIラベルを確認。 [詳細記録](https://github.com/5garashi/mdEditor/blob/promotion/site-integration/promotion/multichannel/update-2026-10-18/PUBLICATION.md)。
+
 プロフィール: https://www.tiktok.com/@5garashi_com
 
-**現在の公開状態 / Current publication:** 2026-10-17にソース版1.0.10の[日本語動画](https://www.tiktok.com/@5garashi_com/video/7697326216935640372)と[英語動画](https://www.tiktok.com/@5garashi_com/video/7697324847185136912)を「誰でも」で公開しました。自社宣伝とAI生成のラベルを設定済みです。制作・公開確認は[公開記録](../../video-update-1.0.10/PUBLICATION-2026-10-17.md)を参照してください。Japanese and English source-build 1.0.10 videos are public.
+**以前の公開状態 / Previous publication:** 2026-10-17にソース版1.0.10の[日本語動画](https://www.tiktok.com/@5garashi_com/video/7697326216935640372)と[英語動画](https://www.tiktok.com/@5garashi_com/video/7697324847185136912)を「誰でも」で公開しました。自社宣伝とAI生成のラベルを設定済みです。制作・公開確認は[公開記録](../../video-update-1.0.10/PUBLICATION-2026-10-17.md)を参照してください。Japanese and English source-build 1.0.10 videos are public.
 
 2026-10-14の[以前の動画](https://www.tiktok.com/@5garashi_com/video/7696190069094272263)は保持しています。当時の確認範囲は[PUBLICATION.md](PUBLICATION.md)を参照してください。以下の制作記録の「未投稿」は、公開前の工程時点の記述です。
 
@@ -89,4 +91,4 @@ English: The new TikTok profile was configured as @5garashi_com, with the office
 ---
 
 **作成者 / Author**: 5garashi.com設計事務所 / 5garashi.com Design Office
-**最終更新 / Last updated**: 2026-10-14 JST
+**最終更新 / Last updated**: 2026-10-18 JST

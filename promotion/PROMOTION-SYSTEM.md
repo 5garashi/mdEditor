@@ -11,9 +11,9 @@ SPDX-License-Identifier: MIT
 
 このファイルを、**「次の版で何を更新するか」「どこから公開するか」「公開できたか」**を確認する入口にします。アプリのソース・紹介原稿・画像・動画・検証結果をGitHubに置き、各媒体へ展開し、公開URLと確認結果をここへ戻します。次回は媒体を個別に依頼する代わりに、末尾の依頼文を使えます。
 
-対象アプリはソース版 **1.0.10**、動画revisionは **2.0.0**。確認日は2026-10-17 JSTです。Store配信版の番号は今回未確認です。文書の版は上のヘッダー、資料キットの版は[VERSION](VERSION)、改版内容は[CHANGELOG](CHANGELOG.md)で管理します。
+今回の対象はソース版 **1.0.12**、動画パッケージ **revision 1.1.1**、YouTube公開管理 **revision 3.0.0**。2026-10-18 JSTに日英動画と各媒体を公開・確認しました。Store配信版番号は未確認です。文書の版はヘッダー、資料キットは[VERSION](VERSION)、改版内容は[CHANGELOG](CHANGELOG.md)で管理します。
 
-進行中の新版：ソース **1.0.12**・動画 **revision 1.1.1** の[日英動画と関連資料](showcase-1.0.12-revision-1.1.1/README.md)を2026-10-18に改訂しました。編集画面と回転する3Dモデルで紹介し、diagram-testの連続表示から主な20機能の紹介へつなぎます。肌色の部分マスクを廃止し、ファイルダイアログの区間をカットしました。 別窓の開閉と隙間に映った背景も、アプリの2ウィンドウだけを切り出した映像へ差し替えました。[機能別の時刻・確認範囲](showcase-1.0.12-revision-1.1.1/FEATURE-COVERAGE.md)を記録しています。現在は提示・内容確認段階で、以下の公開URLは引き続き1.0.10の公開記録です。新作のSNS投稿・Pages差し替え・公開URL記録は次の工程です。
+最新版：[日英の公開資料と媒体別記録](multichannel/update-2026-10-18/README.md)。3Dから始め、主な20機能へつなぐ日英の紹介・資料ページ、PDF・画像・サンプル、YouTube・TikTok・X・LinkedIn・Zennを更新しました。[動画原本と編集記録](showcase-1.0.12-revision-1.1.1/README.md)には背景映り込みの除去方法も保存しています。
 
 English: This is the single entry point for the GitHub-centered promotion process, channel inventory, verified publication links and next-release checklist. It describes the existing mix of automation and browser work; it does not implement a new automatic publisher.
 
@@ -152,7 +152,24 @@ stateDiagram-v2
 
 各媒体の状態を個別に記録します。「送信済み」で止まった媒体を「公開確認済み」とは扱いません。応答不明時は先に管理画面・既存IDを調べ、重複投稿を避けます。
 
-## 6. 今回の公開結果 — ソース1.0.10
+## 6. 今回の公開結果 — ソース1.0.12
+
+2026-10-18 JSTに確認。日英Web・動画・PDF・画像・20機能ガイド・記事・SNSの公開結果と範囲は [詳細記録](multichannel/update-2026-10-18/PUBLICATION.md)へまとめました。
+
+| 媒体 | 公開URL | 状態 |
+| --- | --- | --- |
+| YouTube JA | [開く](https://www.youtube.com/watch?v=CAi5q1c0cuo) | 公開確認済み |
+| YouTube EN | [開く](https://www.youtube.com/watch?v=valiuj76iG4) | 公開確認済み |
+| TikTok JA | [開く](https://www.tiktok.com/@5garashi_com/video/7697746476302175504) | 公開確認済み |
+| TikTok EN | [開く](https://www.tiktok.com/@5garashi_com/video/7697747556910042375) | 公開確認済み |
+| X | [開く](https://x.com/5garashi_com/status/2111568105919131719) | 公開確認済み |
+| LinkedIn | [開く](https://www.linkedin.com/feed/update/urn:li:activity:7517332938926256128/) | 公開確認済み |
+| Zenn | [開く](https://zenn.dev/5garashi_com/articles/mdeditor-diagrams-math-pdf) | 公開確認済み |
+| 日英紹介・資料・PDF・画像 | [日本語](https://5garashi.github.io/mdEditor/) / [English](https://5garashi.github.io/mdEditor/en.html) / [資料](https://5garashi.github.io/mdEditor/resources.html) | 原本と配信一致 |
+| 制作事例・事務所カード | [制作事例](https://5garashi.github.io/mdEditor/case-study.html) / [カード](https://5garashi.github.io/mdEditor/office-card-ja.html) | 日英更新済み |
+| 事務所サイト | [5garashi.com](https://www.5garashi.com/) | 既存導線を確認。案内先を更新 |
+
+### 6.1 前回の公開記録 — ソース1.0.10
 
 以下は2026-10-17 JSTの作業時に確認した記録です。将来のURL到達性や配信状況を継続監視しているわけではありません。
 
@@ -251,11 +268,11 @@ flowchart TD
 
 この `.md` ファイルをmdEditorの「開く」で選ぶと、Mermaidの全体図、ブランチの関係図、シーケンス図、状態遷移図、日付順のフローチャートを文章と一緒に読めます。図の修正はコードブロック内の文字を編集します。共有する場合は「名前を付けて保存」でPDF・HTMLなどを選び、図や表の改ページを確認してください。
 
-作成・修正のたびに、Identity管理の[共通チェックリスト（4.17.0）](https://github.com/5garashi/5garashi-identity/blob/v4.17.0/docs/MARKDOWN-CHECKLIST.md)と[mdEditor固有の補足](MARKDOWN-CHECKLIST.md)を使います。「描画できた」と「文字が重ならず読める」は別の確認項目です。GitHubとmdEditorの両方で共通に描画できるMermaidを選び、両環境の確認結果を分けて記録します。共通原則はIdentity第8条8-9で管理しています。
+作成・修正のたびに、Identity管理の[共通チェックリスト（参照タグ4.20.0）](https://github.com/5garashi/5garashi-identity/blob/v4.20.0/docs/MARKDOWN-CHECKLIST.md)と[mdEditor固有の補足](MARKDOWN-CHECKLIST.md)を使います。「描画できた」と「文字が重ならず読める」は別の確認項目です。GitHubとmdEditorの両方で共通に描画できるMermaidを選び、両環境の確認結果を分けて記録します。共通原則はIdentity第8条8-9で管理しています。
 
 図と同じ判断材料を本文・表にも記載し、色だけで進捗を表しません。日本語を主に、英語の概要と媒体名を併記しています。配色はIdentityの文書用パレットを参照。2026-10-17にmdEditor同梱のMermaidを使ったChrome検証で、5図すべてのSVG描画と文書内の相対リンクを確認しました。[検証記録](validation/promotion-system.json)。mdEditor本体でこの文書を開く操作、読み上げ、実OSのコントラストテーマ、全図のPDF改ページは今回未確認です。完全準拠は宣言しません。
 
-デザイン基準出典 / Design reference: [Design Office Identity 4.15.0](https://5garashi.github.io/5garashi-identity/)、5garashi.com設計事務所 / 5garashi.com Design Office。原本はCC BY-ND 4.0。この文書の文章と図のコードは既存資料と同じMITです。
+デザイン基準出典 / Design reference: [Design Office Identity 4.20.0](https://5garashi.github.io/5garashi-identity/)、5garashi.com設計事務所 / 5garashi.com Design Office。原本はCC BY-ND 4.0。この文書の文章と図のコードは既存資料と同じMITです。
 
 ---
 
