@@ -11,6 +11,7 @@
   --document-background: #FFFFFF;
   --document-foreground: #1A1A1A;
   --document-rule: #D0D0D0;
+  --document-muted: #59636E;
   --document-selection: #C7D0C1;
   /* Code colors (highlight.js tokens), as in the app. */
   --code-keyword: #CF222E;
@@ -41,6 +42,7 @@
     --document-foreground: #BFBFBF;
     --document-rule: #2B2B2B;
     --document-selection: #494740;
+    --document-muted: #8B949E;
     --code-keyword: #FF7B72;
     --code-string: #A5D6FF;
     --code-comment: #8B949E;
@@ -145,6 +147,146 @@ code {
   padding: 1px 4px;
 }
 
+/* GitHub alerts (> [!NOTE] and so on): a colored bar, symbol, and title, in
+   GitHub's colors (each at least 4.8:1 on white and 5.5:1 on the night ground). */
+.markdown-alert {
+  margin: 1em 0;
+  padding: 4px 14px;
+  border-left: 4px solid var(--alert-color);
+  color: inherit;
+}
+
+.markdown-alert > :last-child {
+  margin-bottom: 0.4em;
+}
+
+.markdown-alert-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0.4em 0 0.3em;
+  color: var(--alert-color);
+  font-weight: 700;
+}
+
+.markdown-alert-title::before {
+  content: var(--alert-symbol);
+  font-family: "Segoe UI Symbol", "Segoe UI", sans-serif;
+}
+
+.markdown-alert-note { --alert-color: #0969DA; --alert-symbol: "ⓘ"; }
+.markdown-alert-tip { --alert-color: #1A7F37; --alert-symbol: "✓"; }
+.markdown-alert-important { --alert-color: #8250DF; --alert-symbol: "◆"; }
+.markdown-alert-warning { --alert-color: #9A6700; --alert-symbol: "⚠"; }
+.markdown-alert-caution { --alert-color: #D1242F; --alert-symbol: "⊘"; }
+
+/* Front matter as a card of "key  value" rows, with a gray line on the left (volt
+   is kept for error rules; Identity 4-4 (3)). Keys use --document-muted (Identity 4-3). */
+.front-matter-block {
+  margin: 0 0 1.4em;
+  padding: 10px 16px;
+  border: 1px solid var(--document-rule);
+  border-left: 4px solid var(--document-muted);
+  border-radius: 6px;
+  font-size: 0.92em;
+  line-height: 1.55;
+}
+
+dl.front-matter {
+  display: grid;
+  grid-template-columns: minmax(5em, max-content) 1fr;
+  gap: 6px 18px;
+  margin: 0;
+}
+
+dl.front-matter > div {
+  display: contents;
+}
+
+dl.front-matter dt {
+  color: var(--document-muted);
+  font-weight: 700;
+  font-size: 0.9em;
+  letter-spacing: 0.02em;
+  overflow-wrap: normal;
+}
+
+dl.front-matter dd {
+  min-width: 0;
+  margin: 0;
+}
+
+dl.front-matter dl.front-matter {
+  gap: 2px 14px;
+}
+
+ul.front-matter-labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+ul.front-matter-labels > li {
+  margin: 0;
+  padding: 0 9px;
+  border: 1px solid var(--document-rule);
+  border-radius: 999px;
+  font-size: 0.92em;
+}
+
+ul.front-matter-items {
+  margin: 0;
+  padding-left: 1.2em;
+}
+
+/* Keyboard keys and collapsible sections written as HTML. */
+kbd {
+  display: inline-block;
+  padding: 0 5px;
+  border: 1px solid var(--document-rule);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  font-family: Consolas, "Cascadia Mono", monospace;
+  font-size: 0.85em;
+  line-height: 1.6;
+}
+
+details {
+  margin: 1em 0;
+}
+
+summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+/* GitHub's light and dark picture switch: #gh-dark-mode-only and #gh-light-mode-only. */
+img[src*="#gh-dark-mode-only"],
+img[data-external-src*="#gh-dark-mode-only"] {
+  display: none;
+}
+
+@media screen and (prefers-color-scheme: dark) {
+  .markdown-alert-note { --alert-color: #4493F8; }
+  .markdown-alert-tip { --alert-color: #3FB950; }
+  .markdown-alert-important { --alert-color: #AB7DF8; }
+  .markdown-alert-warning { --alert-color: #D29922; }
+  .markdown-alert-caution { --alert-color: #F85149; }
+
+  img[src*="#gh-dark-mode-only"],
+  img[data-external-src*="#gh-dark-mode-only"] {
+    display: revert;
+  }
+
+  img[src*="#gh-light-mode-only"],
+  img[data-external-src*="#gh-light-mode-only"] {
+    display: none;
+  }
+}
+
 .hljs-keyword, .hljs-built_in, .hljs-type, .hljs-literal, .hljs-selector-tag, .hljs-doctag { color: var(--code-keyword); }
 .hljs-string, .hljs-regexp, .hljs-char, .hljs-template-tag, .hljs-template-variable { color: var(--code-string); }
 .hljs-comment, .hljs-quote { color: var(--code-comment); font-style: italic; }
@@ -204,6 +346,30 @@ hr {
 :is(.mermaid, .graphviz) svg {
   max-width: 100%;
   height: auto;
+}
+
+/* 3D models (STL) and maps (GeoJSON, TopoJSON): a framed picture that fits the column. */
+:is(.stl, .geo-map) {
+  margin: 1em 0;
+  text-align: center;
+}
+
+:is(.stl canvas, .stl img, .geo-map svg) {
+  display: inline-block;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--document-rule);
+  border-radius: 6px;
+  background: #FFFFFF;
+}
+
+.stl canvas {
+  width: 640px;
+  cursor: grab;
+}
+
+:is(.stl, .geo-map).diagram-error {
+  text-align: left;
 }
 
 .graphviz svg text {

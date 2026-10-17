@@ -65,11 +65,100 @@ internal static class TableOfContents
     })).Trim();
 }
 
-// Code fences the preview draws as diagrams: Mermaid, and Graphviz (DOT).
+// Front matter (the YAML block between --- lines at the top), read as YAML and
+// shown the way GitHub shows it: a map is a table with its keys as headers and
+// its values in one row, a list is a one-row table, and nested maps and lists
+// become tables inside the cells.
+internal abstract record YamlValue;
+internal sealed record YamlText(string Text) : YamlValue;
+internal sealed record YamlMap(List<(string Key, YamlValue Value)> Entries) : YamlValue;
+internal sealed record YamlList(List<YamlValue> Items) : YamlValue;
+
+internal static class FrontMatter
+{
+    // Null when the block is not valid YAML (it is then shown as written).
+    public static YamlValue? Read(IEnumerable<string> lines)
+    {
+        var text = string.Join("\n", lines.Where(line => line.Trim() is not ("---" or "...")));
+        try
+        {
+            var stream = new YamlDotNet.RepresentationModel.YamlStream();
+            stream.Load(new StringReader(text));
+            return stream.Documents.Count == 0 ? null : Convert(stream.Documents[0].RootNode);
+        }
+        catch (YamlDotNet.Core.YamlException)
+        {
+            return null;
+        }
+    }
+
+    private static YamlValue Convert(YamlDotNet.RepresentationModel.YamlNode node) => node switch
+    {
+        YamlDotNet.RepresentationModel.YamlMappingNode map => new YamlMap(map.Children
+            .Select(pair => (Key: pair.Key is YamlDotNet.RepresentationModel.YamlScalarNode key ? key.Value ?? string.Empty : pair.Key.ToString(), Value: Convert(pair.Value)))
+            .ToList()),
+        YamlDotNet.RepresentationModel.YamlSequenceNode list => new YamlList(list.Children.Select(Convert).ToList()),
+        YamlDotNet.RepresentationModel.YamlScalarNode scalar => new YamlText(scalar.Value ?? string.Empty),
+        _ => new YamlText(string.Empty)
+    };
+
+    // In the preview, a card of "key  value" rows: a list of words (tags and so
+    // on) as small labels, nested maps as rows inside the value, and web
+    // addresses as links.
+    public static string ToHtml(YamlValue value) => value switch
+    {
+        YamlMap map => "<dl class=\"front-matter\">"
+            + string.Concat(map.Entries.Select(entry => $"<div><dt>{WebUtility.HtmlEncode(entry.Key)}</dt><dd>{ToHtml(entry.Value)}</dd></div>"))
+            + "</dl>",
+        YamlList list when list.Items.All(item => item is YamlText) => "<ul class=\"front-matter-labels\">"
+            + string.Concat(list.Items.Select(item => $"<li>{ToHtml(item)}</li>"))
+            + "</ul>",
+        YamlList list => "<ul class=\"front-matter-items\">"
+            + string.Concat(list.Items.Select(item => $"<li>{ToHtml(item)}</li>"))
+            + "</ul>",
+        YamlText { Text: var text } when IsWebAddress(text) => $"<a href=\"{WebUtility.HtmlEncode(text)}\">{WebUtility.HtmlEncode(text)}</a>",
+        YamlText text => WebUtility.HtmlEncode(text.Text).Replace("\n", "<br>"),
+        _ => string.Empty
+    };
+
+    private static bool IsWebAddress(string text) =>
+        Uri.TryCreate(text.Trim(), UriKind.Absolute, out var uri) && uri.Scheme is "https" or "http" && !text.Trim().Contains(' ');
+
+    // For text output: "key: value", nested values indented below their key.
+    public static string ToText(YamlValue value, string indent = "") => value switch
+    {
+        YamlMap map => string.Join("\n", map.Entries.Select(entry => entry.Value is YamlText text
+            ? $"{indent}{entry.Key}: {text.Text.Replace('\n', ' ')}"
+            : $"{indent}{entry.Key}:\n{ToText(entry.Value, indent + "  ")}")),
+        YamlList list => string.Join("\n", list.Items.Select(item => item is YamlText text
+            ? $"{indent}- {text.Text.Replace('\n', ' ')}"
+            : $"{indent}-\n{ToText(item, indent + "  ")}")),
+        YamlText text => indent + text.Text,
+        _ => string.Empty
+    };
+}
+
+// Code fences the preview draws as pictures: Mermaid, Graphviz (DOT), 3D models
+// (STL), and maps (GeoJSON, TopoJSON).
 internal static class DiagramFences
 {
     public static bool IsDiagram(string? info) =>
-        (info ?? string.Empty).Trim().ToLowerInvariant() is "mermaid" or "dot" or "graphviz" or "gv";
+        (info ?? string.Empty).Trim().ToLowerInvariant() is "mermaid" or "dot" or "graphviz" or "gv" or "stl" or "geojson" or "topojson";
+
+    // ```math blocks are drawn as display math, as on GitHub.
+    public static bool IsMath(string? info) =>
+        string.Equals((info ?? string.Empty).Trim(), "math", StringComparison.OrdinalIgnoreCase);
+
+    // The title GitHub shows for an alert (> [!NOTE] and so on).
+    public static string AlertTitle(Markdig.Extensions.Alerts.AlertBlock alert)
+    {
+        var kind = alert.Kind.ToString().ToLowerInvariant();
+        return kind.Length == 0 ? string.Empty : char.ToUpperInvariant(kind[0]) + kind[1..];
+    }
+
+    // GitHub also writes inline math as $`x`$; the backticks are not part of it.
+    public static string InlineMath(string tex) =>
+        tex.Length >= 2 && tex[0] == '`' && tex[^1] == '`' ? tex[1..^1] : tex;
 }
 
 // Text as the preview shows it: the words without Markdown's marks. Lines stay
@@ -100,12 +189,19 @@ internal static class PlainTextExport
                 return Lines(math);
             case FencedCodeBlock fenced when DiagramFences.IsDiagram(fenced.Info):
                 return context.Japanese ? "［図］" : "[Figure]";
+            case Markdig.Extensions.Yaml.YamlFrontMatterBlock yaml:
+                var yamlLines = yaml.Lines.Lines.Take(yaml.Lines.Count).Select(line => line.Slice.ToString()).ToList();
+                return FrontMatter.Read(yamlLines) is { } matter
+                    ? FrontMatter.ToText(matter)
+                    : string.Join("\n", yamlLines.Where(line => line.Trim() != "---"));
             case HtmlBlock html:
                 return StripHtml(Lines(html));
             case CodeBlock code:
                 return Lines(code);
             case ThematicBreakBlock:
                 return new string('─', 20);
+            case Markdig.Extensions.Alerts.AlertBlock alert:
+                return Indent(DiagramFences.AlertTitle(alert) + "\n" + Children(alert, context, "\n\n"), "    ", "    ");
             case QuoteBlock quote:
                 return Indent(Children(quote, context, "\n\n"), "    ", "    ");
             case ListBlock list:
@@ -172,7 +268,7 @@ internal static class PlainTextExport
                     text.Append(task.Checked ? "☑" : "☐");
                     break;
                 case MathInline math:
-                    text.Append(math.Content.ToString());
+                    text.Append(DiagramFences.InlineMath(math.Content.ToString()));
                     break;
                 case LinkInline { IsImage: true } image:
                     var alt = Inlines(image, context);
@@ -221,7 +317,7 @@ internal static class PlainTextExport
     private static string Lines(LeafBlock block) =>
         string.Join("\n", block.Lines.Lines.Take(block.Lines.Count).Select(line => line.Slice.ToString()));
 
-    private static string? StripHtml(string html)
+    public static string? StripHtml(string html)
     {
         var text = Regex.Replace(html, "<!--.*?-->", string.Empty, RegexOptions.Singleline);
         text = Regex.Replace(text, @"<br\s*/?>", "\n", RegexOptions.IgnoreCase);

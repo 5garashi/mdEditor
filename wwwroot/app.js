@@ -60,8 +60,10 @@
       openUrl: "URLを開く", urlHeading: "URLを開く",
       urlIntro: "https:// で始まる Web ページを、Markdown に変換して開きます。スクリプトは実行せず、文書の内容をどこかへ送ることもありません。ページの画像は、そのページから読み込みます。",
       urlLabel: "アドレス", urlOpen: "開く",
-      loadExternal: "画像を読み込む",
-      noticeExternal: (count) => `この文書には、インターネット上の画像が ${count} 件あります。読み込むと、その画像のサーバーに IP アドレスなどが伝わります。`,
+      loadExternal: "画像・動画を読み込む",
+      noticeExternal: (count) => `この文書には、インターネット上の画像・動画が ${count} 件あります。読み込むと、そのサーバーに IP アドレスなどが伝わります。`,
+      externalVideo: (name, host) => `［外部の動画${name ? `: ${name}` : ""}（${host}）。読み込んでいません］`,
+      videoLabel: (name) => `動画: ${name}`, videoStill: (name) => `▶ 動画: ${name}`,
       externalImage: (alt, host) => `［外部の画像${alt ? `: ${alt}` : ""}（${host}）。読み込んでいません］`,
       settingsInternet: "インターネット", settingsExternal: "ネット上の画像",
       externalAsk: "確認してから読み込む（初期設定）", externalAlways: "いつも読み込む", externalNever: "読み込まない",
@@ -69,6 +71,16 @@
       detachPreview: "別ウィンドウで表示", attachPreview: "本体に戻す", attachPreviewMain: "プレビューを本体に戻す",
       pdfStarting: "PDF出力を開始しています",
       findReplace: "検索・置換", findReplaceTitle: "検索・置換 (Ctrl+H)",
+      settingsVideo: "動画", settingsVideoAutoplay: "自動再生",
+      videoAutoplayAuto: "Windows の動きの設定に合わせる（初期設定）", videoAutoplayAlways: "いつも自動で再生する", videoAutoplayNever: "自動で再生しない",
+      settingsVideoNote: "文書の中の動画は、音を消して自動で再生し、繰り返します（音を出す・止めるは動画のボタンで）。初期設定では、Windows の「アニメーション効果」がオフのとき、自動で再生せずに最初の画面と再生ボタンを表示します。",
+      settingsMapTiles: "詳細な地図（OpenStreetMap）",
+      mapTilesAsk: "確認してから読み込む（初期設定）", mapTilesAlways: "いつも読み込む", mapTilesNever: "読み込まない（簡単な世界地図だけ）",
+      settingsMapTilesNote: "```geojson と ```topojson の地図は、まず PC の中の簡単な世界地図の上に描きます。道路や地名の入った詳細な地図は OpenStreetMap からインターネットで読み込み、そのとき地図のサーバーに、表示している場所と IP アドレスが伝わります。保存した HTML には入れません。",
+      noticeMaps: (count) => `この文書には地図が ${count} 件あります。詳細な地図（OpenStreetMap）を読み込むと、地図のサーバーに表示している場所と IP アドレスなどが伝わります。`,
+      loadMaps: "詳細な地図を読み込む",
+      modelLabel: "3D モデル（STL）。ドラッグで回転、ホイールで拡大・縮小", modelEmpty: "三角形がありません",
+      mapLabel: "地図（GeoJSON）", mapEmpty: "地図に描く図形がありません",
       toc: "目次", tocNoHeadings: "目次にする見出しがありません。「## 見出し」のように見出しを書いてから、もう一度押してください。",
       tocUpdated: "目次を新しくしました。", tocInserted: "カーソルの位置に目次を入れました。見出しを変えたら、もう一度「目次」を押すと新しくなります。",
       help: "書き方", helpTitle: "Markdown の書き方 (F1)", helpHeading: "Markdown の簡単な書き方",
@@ -180,8 +192,10 @@
       openUrl: "Open URL", urlHeading: "Open a URL",
       urlIntro: "Opens a web page that starts with https:// as Markdown. Scripts do not run, and nothing about the document is sent anywhere. Images on the page load from that page.",
       urlLabel: "Address", urlOpen: "Open",
-      loadExternal: "Load images",
-      noticeExternal: (count) => `This document has ${count} image(s) on the internet. Loading them lets those servers see information such as your IP address.`,
+      loadExternal: "Load images and videos",
+      noticeExternal: (count) => `This document has ${count} image(s) or video(s) on the internet. Loading them lets those servers see information such as your IP address.`,
+      externalVideo: (name, host) => `[Internet video${name ? `: ${name}` : ""} (${host}), not loaded]`,
+      videoLabel: (name) => `Video: ${name}`, videoStill: (name) => `▶ Video: ${name}`,
       externalImage: (alt, host) => `[Internet image${alt ? `: ${alt}` : ""} (${host}), not loaded]`,
       settingsInternet: "Internet", settingsExternal: "Images on the internet",
       externalAsk: "Ask before loading (default)", externalAlways: "Always load", externalNever: "Never load",
@@ -189,6 +203,16 @@
       detachPreview: "Open in its own window", attachPreview: "Return to main window", attachPreviewMain: "Return preview here",
       pdfStarting: "Starting PDF export",
       findReplace: "Find/Replace", findReplaceTitle: "Find/Replace (Ctrl+H)",
+      settingsVideo: "Videos", settingsVideoAutoplay: "Autoplay",
+      videoAutoplayAuto: "Follow the Windows animation setting (default)", videoAutoplayAlways: "Always play automatically", videoAutoplayNever: "Never play automatically",
+      settingsVideoNote: "Videos in a document start by themselves without sound and loop (the video's controls turn the sound on or pause it). By default, when Windows animation effects are off, they do not start and show the first frame with a play button instead.",
+      settingsMapTiles: "Detailed maps (OpenStreetMap)",
+      mapTilesAsk: "Ask before loading (default)", mapTilesAlways: "Always load", mapTilesNever: "Never load (simple world map only)",
+      settingsMapTilesNote: "```geojson and ```topojson maps are first drawn on a simple world map on your PC. A detailed map with roads and place names comes from OpenStreetMap over the internet, which lets the map server see the area shown and your IP address. It is not kept in saved HTML.",
+      noticeMaps: (count) => `This document has ${count} map(s). Loading detailed maps (OpenStreetMap) lets the map server see the area shown and information such as your IP address.`,
+      loadMaps: "Load detailed maps",
+      modelLabel: "3D model (STL). Drag to turn, use the wheel to zoom", modelEmpty: "There are no triangles",
+      mapLabel: "Map (GeoJSON)", mapEmpty: "There are no shapes to draw on the map",
       toc: "Contents", tocNoHeadings: "There are no headings for a table of contents. Write headings such as \"## Heading\", then press it again.",
       tocUpdated: "The table of contents was updated.", tocInserted: "A table of contents was inserted at the cursor. After changing headings, press Contents again to update it.",
       help: "Syntax", helpTitle: "Markdown syntax (F1)", helpHeading: "Markdown quick reference",
@@ -329,7 +353,7 @@
   const { Compartment, EditorSelection, EditorState, EditorView, defaultKeymap, drawSelection, highlightActiveLine, history, historyKeymap, keymap } = window.CodeMirror;
   const displayDefaults = {
     font: "standard", size: "1", spacing: "1.7", fullWidth: false, htmlSource: false, activeLine: false, thickCaret: false,
-    reader: false, rate: "1", pause: "0.5", readerLang: "auto", readerVoice: ""
+    reader: false, rate: "1", pause: "0.5", readerLang: "auto", readerVoice: "", mapBackground: "ask", videoAutoplay: "auto"
   };
   const displayStorageKey = "mdeditor-display";
   let displaySettings = (() => {
@@ -457,8 +481,15 @@
 
   // PNG and Word output: the preview alone at a fixed width in the day
   // palette, so the host can capture it (and each diagram or formula) as pictures.
+  const openAllDetails = () => {
+    for (const details of preview.querySelectorAll("details")) details.open = true;
+  };
   window.mdeditorCaptureLayout = (on) => {
     document.body.classList.toggle("capture-export", on);
+    if (on) {
+      openAllDetails();
+      stillVideos();
+    }
     if (on) window.scrollTo(0, 0);
     return true;
   };
@@ -469,10 +500,10 @@
   // Diagrams and formulas in document order, the order the Word output meets them.
   // Only the outer boxes count: shapes inside a drawing can carry the class
   // "mermaid" too (git graph commits do), and they are not figures of their own.
-  window.mdeditorFigureRects = () => Array.from(preview.querySelectorAll("div.mermaid, div.graphviz, span.math, div.math"))
-    .filter((element) => !element.parentElement?.closest(".mermaid, .graphviz, .math")).map((element) => {
+  window.mdeditorFigureRects = () => Array.from(preview.querySelectorAll("div.mermaid, div.graphviz, div.stl, div.geo-map, span.math, div.math"))
+    .filter((element) => !element.parentElement?.closest(".mermaid, .graphviz, .stl, .geo-map, .math")).map((element) => {
     const rect = element.getBoundingClientRect();
-    const pad = element.classList.contains("mermaid") || element.classList.contains("graphviz") ? 4 : 1;
+    const pad = element.classList.contains("math") ? 1 : 4;
     return {
       x: Math.max(0, rect.left + window.scrollX - pad),
       y: Math.max(0, rect.top + window.scrollY - pad),
@@ -504,18 +535,22 @@
   };
 
   const updateNotice = () => {
-    if (!noticeState) {
+    const askMaps = mapsWaiting > 0 && !mapNoticeClosed;
+    document.getElementById("notice-maps").hidden = !askMaps;
+    if (!noticeState && !askMaps) {
       notice.hidden = true;
       return;
     }
-    noticeText.textContent = noticeState.kind === "message"
-      ? noticeState.text
-      : noticeState.kind === "external"
-        ? [noticeState.prefix, t("noticeExternal")(noticeState.count)].filter(Boolean).join(" ")
-        : t(noticeState.kind === "lossy" ? "noticeLossy" : "noticeGuessed")(encodingLabel(noticeState.encoding));
-    document.getElementById("notice-encoding").hidden = noticeState.kind === "message" || noticeState.kind === "external";
-    document.getElementById("notice-action").hidden = noticeState.kind !== "external";
-    notice.classList.toggle("notice-strong", noticeState.kind === "lossy");
+    const main = !noticeState ? ""
+      : noticeState.kind === "message"
+        ? noticeState.text
+        : noticeState.kind === "external"
+          ? [noticeState.prefix, t("noticeExternal")(noticeState.count)].filter(Boolean).join(" ")
+          : t(noticeState.kind === "lossy" ? "noticeLossy" : "noticeGuessed")(encodingLabel(noticeState.encoding));
+    noticeText.textContent = [main, askMaps ? t("noticeMaps")(mapsWaiting) : ""].filter(Boolean).join(" ");
+    document.getElementById("notice-encoding").hidden = !noticeState || noticeState.kind === "message" || noticeState.kind === "external";
+    document.getElementById("notice-action").hidden = noticeState?.kind !== "external";
+    notice.classList.toggle("notice-strong", noticeState?.kind === "lossy");
     notice.hidden = false;
   };
 
@@ -577,8 +612,14 @@
   // Internet images (ask, always, never) belong to the host, which renders the preview.
   const externalSelect = document.getElementById("setting-external");
   externalSelect.addEventListener("change", () => post({ type: "setExternalImages", value: externalSelect.value }));
+  document.getElementById("notice-maps").addEventListener("click", () => {
+    mapsWaiting = 0;
+    updateNotice();
+    post({ type: "allowMaps" });
+  });
   document.getElementById("notice-close").addEventListener("click", () => {
     noticeState = null;
+    mapNoticeClosed = true;
     updateNotice();
     view.focus();
   });
@@ -1012,7 +1053,9 @@
     rate: document.getElementById("setting-reader-rate"),
     pause: document.getElementById("setting-reader-pause"),
     readerLang: document.getElementById("setting-reader-lang"),
-    readerVoice: document.getElementById("setting-reader-voice")
+    readerVoice: document.getElementById("setting-reader-voice"),
+    mapBackground: document.getElementById("setting-map-tiles"),
+    videoAutoplay: document.getElementById("setting-video-autoplay")
   };
   const backupCheckbox = document.getElementById("setting-backup");
   const zoomValue = document.getElementById("zoom-value");
@@ -1022,6 +1065,13 @@
   const readerVoiceNote = document.getElementById("reader-voice-note");
 
   // Applies the font, size, line spacing, editor aids, and read-aloud visibility.
+  let drawnMapTiles = displaySettings.mapBackground;
+  let drawnAutoplay = displaySettings.videoAutoplay;
+  // Maps waiting for "Load detailed maps", the consent the host keeps for this
+  // document, and whether the notice was closed for this document.
+  let mapsWaiting = 0;
+  let mapsAllowed = false;
+  let mapNoticeClosed = false;
   const applyDisplaySettings = (rerender = true) => {
     const root = document.documentElement;
     const fontChanged = root.classList.contains("font-ud") !== (displaySettings.font === "ud");
@@ -1033,8 +1083,13 @@
     readerControls.hidden = !displaySettings.reader;
     if (!displaySettings.reader) stopReading();
     updateVoiceNote();
-    // Diagram labels use the UI font, so a font change redraws them.
-    if (rerender && fontChanged && lastPreviewHtml !== null) renderPreview(lastPreviewHtml);
+    // Diagram labels use the UI font, so a font change redraws them; so does
+    // a change of map background.
+    const tilesChanged = drawnMapTiles !== displaySettings.mapBackground;
+    drawnMapTiles = displaySettings.mapBackground;
+    const autoplayChanged = drawnAutoplay !== displaySettings.videoAutoplay;
+    drawnAutoplay = displaySettings.videoAutoplay;
+    if (rerender && (fontChanged || tilesChanged || autoplayChanged) && lastPreviewHtml !== null) renderPreview(lastPreviewHtml);
   };
 
   const fillSettingControls = () => {
@@ -1685,13 +1740,27 @@
     return diagramCaches[theme];
   };
 
+  // GitHub draws ```math blocks as display math.
+  const convertMathFences = () => {
+    for (const code of preview.querySelectorAll("pre > code.language-math")) {
+      const pre = code.parentElement;
+      const element = document.createElement("div");
+      element.className = "math";
+      if (pre.dataset.line) element.dataset.line = pre.dataset.line;
+      element.textContent = code.textContent;
+      pre.replaceWith(element);
+    }
+  };
+
   const renderMath = () => {
     if (!window.katex) return;
     for (const element of preview.querySelectorAll(".math")) {
       const source = element.textContent.trim()
         .replace(/^\\[([]/, "")
         .replace(/\\[)\]]$/, "")
-        .trim();
+        .trim()
+        // GitHub also writes inline math as $`x`$; the backticks are not part of it.
+        .replace(/^`([\s\S]*)`$/, "$1");
       try {
         window.katex.render(source, element, {
           displayMode: element.tagName === "DIV",
@@ -1705,6 +1774,77 @@
 
   // An internet image that is not loaded (consent, setting, or not https) shows
   // what it is instead; its address stays on the element for Save as HTML.
+  // Videos (an image or a lone link to .mp4, .webm, .mov and so on, or <video>)
+  // play in the preview. An internet video waits for consent like an image.
+  const videoPattern = /\.(mp4|m4v|webm|ogv|mov)(?:[?#].*)?$/i;
+  const videoName = (address) => {
+    try {
+      return decodeURIComponent(new URL(address, "https://document.mdeditor.local/").pathname.split("/").pop() ?? address);
+    } catch {
+      return address;
+    }
+  };
+  const heldVideo = (address, name) => {
+    let host = address;
+    try { host = new URL(address).host; } catch { /* keep the address */ }
+    const holder = document.createElement("span");
+    holder.className = "external-image external-video";
+    holder.dataset.externalSrc = address;
+    holder.title = address;
+    holder.textContent = t("externalVideo")(name, host);
+    return holder;
+  };
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const showVideos = () => {
+    for (const image of preview.querySelectorAll("img")) {
+      const address = image.getAttribute("src") || image.dataset.externalSrc || "";
+      if (!videoPattern.test(address)) continue;
+      const name = image.alt || videoName(address);
+      if (image.dataset.externalSrc && !image.getAttribute("src")) {
+        image.replaceWith(heldVideo(image.dataset.externalSrc, name));
+        continue;
+      }
+      const video = document.createElement("video");
+      video.src = address;
+      video.setAttribute("aria-label", t("videoLabel")(name));
+      image.replaceWith(video);
+    }
+    for (const video of preview.querySelectorAll("video")) {
+      const held = video.dataset.externalSrc && !video.getAttribute("src")
+        ? video.dataset.externalSrc
+        : !video.getAttribute("src") ? video.querySelector("source[data-external-src]")?.dataset.externalSrc : null;
+      if (held) {
+        video.replaceWith(heldVideo(held, videoName(held)));
+        continue;
+      }
+      video.controls = true;
+      video.preload = "metadata";
+      video.playsInline = true;
+      // Videos start by themselves, without sound and over and over, like a
+      // moving picture (sound needs a press, as browsers require); the controls
+      // pause them or turn the sound on. With "reduce motion" set in Windows they
+      // wait for a press, unless autoplay is chosen in Settings (Identity 7-5).
+      if (displaySettings.videoAutoplay === "always" || (displaySettings.videoAutoplay === "auto" && !reduceMotion.matches)) {
+        video.muted = true;
+        video.loop = true;
+        video.autoplay = true;
+      }
+      if (!video.getAttribute("aria-label")) video.setAttribute("aria-label", t("videoLabel")(videoName(video.currentSrc || video.getAttribute("src") || video.querySelector("source")?.getAttribute("src") || "")));
+    }
+  };
+
+  // Saved pages cannot play: PDF, PNG, and Word show the video's name instead.
+  const stillVideos = () => {
+    for (const video of preview.querySelectorAll("video")) {
+      const source = video.currentSrc || video.getAttribute("src") || video.querySelector("source")?.getAttribute("src") || "";
+      const box = document.createElement("span");
+      box.className = "video-still";
+      box.dataset.src = source;
+      box.textContent = t("videoStill")(videoName(source));
+      video.replaceWith(box);
+    }
+  };
+
   const showHeldBackImages = () => {
     for (const image of preview.querySelectorAll("img[data-external-src]")) {
       const address = image.dataset.externalSrc;
@@ -1886,6 +2026,304 @@
     svg.setAttribute("role", "img");
     return svg;
   };
+  const loadScript = (src) => new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = src;
+    script.onload = resolve;
+    script.onerror = () => reject(new Error(src));
+    document.head.appendChild(script);
+  });
+
+  // A fenced block in one of these languages becomes an empty <div> of this class
+  // holding its source, ready to be drawn.
+  const takeFences = (languages, className) => Array.from(preview.querySelectorAll("pre > code"), (code) => {
+    const language = Array.from(code.classList).find((name) => name.startsWith("language-"))?.slice(9).toLowerCase();
+    if (!languages.includes(language)) return null;
+    const pre = code.parentElement;
+    const element = document.createElement("div");
+    element.className = className;
+    element.dataset.language = language;
+    const line = pre.dataset.line ?? code.dataset.line;
+    if (line) element.dataset.line = line;
+    element.textContent = code.textContent;
+    pre.replaceWith(element);
+    return element;
+  }).filter(Boolean);
+
+  // 3D models (```stl, ASCII STL as on GitHub) are drawn offline with the bundled
+  // three.js: drag to turn, wheel to zoom. A model keeps its view while you type
+  // elsewhere, and its picture goes into PDF, PNG, HTML, and Word.
+  const modelViews = new Map();
+  let threeLoaded = null;
+  const loadThree = () => threeLoaded ??= loadScript("lib/three/stl-viewer.min.js").catch((error) => {
+    threeLoaded = null;
+    throw error;
+  });
+  const createModelView = (source) => {
+    const T = window.MdThree;
+    const geometry = new T.STLLoader().parse(source);
+    if (!geometry.attributes.position?.count) throw new Error(t("modelEmpty"));
+    geometry.computeVertexNormals();
+    geometry.center();
+    const box = new T.Box3().setFromBufferAttribute(geometry.attributes.position);
+    const size = Math.max(box.getSize(new T.Vector3()).length(), 1e-6);
+    const scene = new T.Scene();
+    // A dark stage, so the cream body stands out (11.0:1; Identity 4-4 (4)).
+    scene.background = new T.Color("#2B3A20");
+    // Colors from the 5garashi palette: the first solid is cream, the others
+    // (letters on a body, say) volt. A solid whose name has a color in it
+    // ("solid letters #0969DA") takes that color.
+    const names = geometry.userData.groupNames ?? [];
+    const materials = (geometry.groups.length > 1 ? geometry.groups : [null]).map((_, index) => new T.MeshStandardMaterial({
+      color: names[index]?.match(/#[0-9a-f]{6}/i)?.[0] ?? (index === 0 ? "#FFF3D6" : "#B92613"),
+      metalness: 0.05,
+      roughness: 0.6
+    }));
+    const mesh = new T.Mesh(geometry, materials.length > 1 ? materials : materials[0]);
+    // STL is Z-up; the view is Y-up.
+    mesh.rotation.x = -Math.PI / 2;
+    scene.add(mesh);
+    scene.add(new T.AmbientLight(0xffffff, 0.9));
+    const camera = new T.PerspectiveCamera(40, 640 / 384, size / 100, size * 100);
+    camera.position.set(size * 0.95, size * 0.75, size * 1.45);
+    const light = new T.DirectionalLight(0xffffff, 1.6);
+    light.position.set(1, 2, 3);
+    camera.add(light);
+    scene.add(camera);
+    const renderer = new T.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+    renderer.setPixelRatio(window.devicePixelRatio || 1);
+    renderer.setSize(640, 384, false);
+    const canvas = renderer.domElement;
+    canvas.setAttribute("role", "img");
+    canvas.setAttribute("aria-label", t("modelLabel"));
+    canvas.tabIndex = 0;
+    const controls = new T.OrbitControls(camera, canvas);
+    controls.listenToKeyEvents(canvas);
+    const draw = () => renderer.render(scene, camera);
+    controls.addEventListener("change", draw);
+    draw();
+    const element = document.createElement("div");
+    element.className = "stl diagram-rendered";
+    element.appendChild(canvas);
+    return {
+      element,
+      dispose: () => {
+        controls.dispose();
+        geometry.dispose();
+        materials.forEach((material) => material.dispose());
+        renderer.dispose();
+        renderer.forceContextLoss();
+      }
+    };
+  };
+  const renderModels = async (elements, generation) => {
+    const used = new Set();
+    // The same model written twice gets a view for each (a view can be in one place only).
+    const seen = new Map();
+    for (const element of elements) {
+      const text = element.textContent;
+      const nth = (seen.get(text) ?? 0) + 1;
+      seen.set(text, nth);
+      const source = nth > 1 ? `${text}\n#${nth}` : text;
+      let view = modelViews.get(source);
+      if (!view) {
+        element.classList.add("diagram-pending");
+        try {
+          await loadThree();
+          if (generation !== renderGeneration) return;
+          view = createModelView(text);
+          modelViews.set(source, view);
+        } catch (error) {
+          showDiagramError(element, text, error?.message ?? String(error));
+          continue;
+        }
+      }
+      used.add(source);
+      if (view.element.dataset.line !== element.dataset.line) {
+        if (element.dataset.line) view.element.dataset.line = element.dataset.line;
+      }
+      element.replaceWith(view.element);
+    }
+    // Models no longer in the document give their drawing context back.
+    for (const [source, view] of modelViews) {
+      if (!used.has(source)) {
+        view.dispose();
+        modelViews.delete(source);
+      }
+    }
+  };
+
+  // Maps (```geojson, ```topojson) are drawn with the bundled d3-geo on a simple
+  // world outline (Natural Earth), offline. With "OpenStreetMap" chosen in
+  // Settings, map tiles are loaded behind the shapes instead (Web Mercator, so
+  // the two line up), with the required credit.
+  const mapCache = new Map();
+  let geoLoaded = null;
+  let worldOutline = null;
+  const loadGeo = () => geoLoaded ??= Promise.all([
+    loadScript("lib/geo/geo.min.js"),
+    fetch("lib/geo/countries-110m.json").then((response) => response.json())
+  ]).then(([, world]) => {
+    worldOutline = window.MdGeo.feature(world, world.objects.countries);
+  }).catch((error) => {
+    geoLoaded = null;
+    throw error;
+  });
+  const mapFeatures = (language, source) => {
+    const data = JSON.parse(source);
+    const G = window.MdGeo;
+    const asFeatures = (value) => {
+      if (!value) return [];
+      if (value.type === "FeatureCollection") return value.features ?? [];
+      if (value.type === "Feature") return [value];
+      if (value.type === "GeometryCollection" && !value.geometries) return [];
+      return [{ type: "Feature", properties: {}, geometry: value }];
+    };
+    if (language === "topojson" || data.type === "Topology") {
+      return Object.values(data.objects ?? {}).flatMap((object) => asFeatures(G.feature(data, object)));
+    }
+    return asFeatures(data);
+  };
+  const svgNamespace = "http://www.w3.org/2000/svg";
+  const svgElement = (name, attributes = {}) => {
+    const element = document.createElementNS(svgNamespace, name);
+    for (const [key, value] of Object.entries(attributes)) element.setAttribute(key, String(value));
+    return element;
+  };
+  const drawMap = (language, source, tiles) => {
+    const G = window.MdGeo;
+    // GeoJSON winds outer rings the other way round from d3-geo, which would read
+    // a small area as the whole world outside it; such areas are turned around.
+    const rewind = (feature) => {
+      const polygons = feature.geometry.type === "Polygon" ? [feature.geometry.coordinates]
+        : feature.geometry.type === "MultiPolygon" ? feature.geometry.coordinates : [];
+      for (const rings of polygons) {
+        if (G.geoArea({ type: "Polygon", coordinates: rings }) > 2 * Math.PI) rings.forEach((ring) => ring.reverse());
+      }
+      return feature;
+    };
+    const features = mapFeatures(language, source).filter((feature) => feature?.geometry).map(rewind);
+    if (features.length === 0) throw new Error(t("mapEmpty"));
+    const collection = { type: "FeatureCollection", features };
+    const width = 640;
+    const height = 400;
+    const [[west, south], [east, north]] = G.geoBounds(collection);
+    if (![west, south, east, north].every(Number.isFinite)) throw new Error(t("mapEmpty"));
+    // Web Mercator at a tile zoom level, chosen so the shapes fit with a margin.
+    const worldX = (longitude) => (longitude + 180) / 360 * 256;
+    const worldY = (latitude) => {
+      const sine = Math.sin(Math.max(-85, Math.min(85, latitude)) * Math.PI / 180);
+      return (0.5 - Math.log((1 + sine) / (1 - sine)) / (4 * Math.PI)) * 256;
+    };
+    const spanX = Math.abs(worldX(east) - worldX(west));
+    const spanY = Math.abs(worldY(south) - worldY(north));
+    const fit = Math.log2(Math.min((width - 80) / Math.max(spanX, 1e-9), (height - 80) / Math.max(spanY, 1e-9)));
+    // The offline outline is coarse, so it never zooms past country scale.
+    const zoom = Math.max(0, Math.min(tiles ? 16 : 6, Math.floor(fit)));
+    const worldSize = 256 * 2 ** zoom;
+    const centerX = (worldX(west) + worldX(east)) / 2 * 2 ** zoom;
+    const centerY = (worldY(north) + worldY(south)) / 2 * 2 ** zoom;
+    const projection = G.geoMercator()
+      .scale(worldSize / (2 * Math.PI))
+      .translate([width / 2 - (centerX - worldSize / 2), height / 2 - (centerY - worldSize / 2)])
+      .clipExtent([[-20, -20], [width + 20, height + 20]]);
+    const path = G.geoPath(projection).pointRadius(6);
+
+    const svg = svgElement("svg", { viewBox: `0 0 ${width} ${height}`, width, height, role: "img", "aria-label": t("mapLabel") });
+    if (tiles) {
+      const group = svgElement("g", { class: "map-tiles" });
+      const left = centerX - width / 2;
+      const top = centerY - height / 2;
+      const count = 2 ** zoom;
+      for (let tileX = Math.floor(left / 256); tileX * 256 < left + width; tileX++) {
+        for (let tileY = Math.max(0, Math.floor(top / 256)); tileY * 256 < top + height && tileY < count; tileY++) {
+          const wrapped = ((tileX % count) + count) % count;
+          group.appendChild(svgElement("image", {
+            href: `https://tile.openstreetmap.org/${zoom}/${wrapped}/${tileY}.png`,
+            x: tileX * 256 - left, y: tileY * 256 - top, width: 256, height: 256
+          }));
+        }
+      }
+      svg.appendChild(group);
+    } else {
+      svg.appendChild(svgElement("rect", { width, height, fill: "#DCEBF5" }));
+      svg.appendChild(svgElement("path", { d: path(worldOutline) ?? "", fill: "#F3EFE2", stroke: "#B9B2A0", "stroke-width": 0.6 }));
+    }
+    // The shapes, with GitHub's simplestyle properties (stroke, fill, marker-color).
+    for (const feature of features) {
+      const style = feature.properties ?? {};
+      const point = /Point$/.test(feature.geometry.type);
+      const line = /LineString$/.test(feature.geometry.type);
+      const color = style["marker-color"] ?? style.stroke ?? "#B92613";
+      const shape = svgElement("path", {
+        d: path(feature) ?? "",
+        fill: point ? color : line ? "none" : style.fill ?? "#B92613",
+        "fill-opacity": point ? 1 : style["fill-opacity"] ?? 0.25,
+        stroke: point ? "#FFFFFF" : style.stroke ?? "#B92613",
+        "stroke-width": point ? 2 : style["stroke-width"] ?? 2,
+        "stroke-opacity": style["stroke-opacity"] ?? 1
+      });
+      const name = style.name ?? style.title;
+      if (name) {
+        const title = svgElement("title");
+        title.textContent = String(name);
+        shape.appendChild(title);
+      }
+      svg.appendChild(shape);
+    }
+    if (tiles) {
+      // OpenStreetMap's tiles must carry this credit.
+      const credit = svgElement("g", { class: "map-credit" });
+      credit.appendChild(svgElement("rect", { x: width - 196, y: height - 18, width: 196, height: 18, fill: "#FFFFFF", "fill-opacity": 0.85 }));
+      const text = svgElement("text", { x: width - 6, y: height - 5, "text-anchor": "end", "font-size": 11, fill: "#1A1A1A" });
+      text.textContent = "© OpenStreetMap contributors";
+      credit.appendChild(text);
+      svg.appendChild(credit);
+    }
+    return svg;
+  };
+  // Map tiles finish loading before a PDF, PNG, or Word export takes its picture.
+  const tilesLoaded = (svg) => Promise.race([
+    Promise.all(Array.from(svg.querySelectorAll(".map-tiles image"), (image) =>
+      new Promise((resolve) => { image.addEventListener("load", resolve, { once: true }); image.addEventListener("error", resolve, { once: true }); }))),
+    new Promise((resolve) => setTimeout(resolve, 6000))
+  ]);
+  const renderMaps = async (elements, generation) => {
+    const tiles = displaySettings.mapBackground === "always" || (displaySettings.mapBackground === "ask" && mapsAllowed);
+    const waits = [];
+    let drawn = 0;
+    for (const element of elements) {
+      const source = element.textContent;
+      const language = element.dataset.language;
+      const key = `${tiles}\n${language}\n${source}`;
+      try {
+        let markup = mapCache.get(key);
+        if (!markup) {
+          element.classList.add("diagram-pending");
+          await loadGeo();
+          if (generation !== renderGeneration) return;
+          markup = drawMap(language, source, tiles).outerHTML;
+          if (mapCache.size > 50) mapCache.clear();
+          mapCache.set(key, markup);
+        }
+        element.innerHTML = markup;
+        element.classList.remove("diagram-pending");
+        element.classList.add("diagram-rendered");
+        drawn++;
+        if (tiles) waits.push(tilesLoaded(element.firstElementChild));
+      } catch (error) {
+        showDiagramError(element, source, error?.message ?? String(error));
+      }
+    }
+    await Promise.all(waits);
+    // Only the window that shows the notice asks (not the preview window).
+    const waiting = displaySettings.mapBackground === "ask" && !mapsAllowed && !previewWindow ? drawn : 0;
+    if (waiting !== mapsWaiting) {
+      mapsWaiting = waiting;
+      updateNotice();
+    }
+  };
+
   // Graphviz sizes boxes with Latin font measurements, so Japanese labels come out
   // wider than their box; a label that does not fit is made smaller to fit.
   const fitGraphvizText = (svg) => {
@@ -1962,7 +2400,7 @@
   // Save as Word: the colors of every code block (in document order), as runs per
   // line, read from the preview while it shows the day palette.
   window.mdeditorCodeColors = () => Array.from(preview.querySelectorAll("pre > code"))
-    .filter((code) => !code.closest(".mermaid, .graphviz")).map((code) => {
+    .filter((code) => !code.closest(".mermaid, .graphviz, .stl, .geo-map")).map((code) => {
     const lines = [[]];
     let baseWeight = 400;
     const walk = (node, style) => {
@@ -1997,11 +2435,15 @@
       (element) => (element.classList.contains("diagram-rendered") ? element.innerHTML : null)
     );
     preview.innerHTML = html;
+    showVideos();
     showHeldBackImages();
     moveAnchorsOffIds();
     labelTaskCheckboxes();
     showUnsupportedDiagrams();
     const graphs = prepareGraphviz();
+    const models = takeFences(["stl"], "stl");
+    const maps = takeFences(["geojson", "topojson"], "geo-map");
+    convertMathFences();
     renderMath();
     highlightCode();
     const keepPlace = () => {
@@ -2011,6 +2453,12 @@
     keepPlace();
     await renderDiagrams(generation, previousSvgs, diagramCache);
     await renderGraphviz(graphs, generation);
+    await renderModels(models, generation);
+    await renderMaps(maps, generation);
+    if (forPrint) {
+      openAllDetails();
+      stillVideos();
+    }
     if (generation === renderGeneration) keepPlace();
   };
 
@@ -2019,7 +2467,23 @@
   // the KaTeX fonts; heading ids come back; app-only attributes are dropped.
   window.mdeditorExportHtml = () => {
     const copy = preview.cloneNode(true);
-    for (const holder of copy.querySelectorAll(".external-image[data-external-src]")) {
+    const canvases = Array.from(preview.querySelectorAll(".stl canvas"));
+    copy.querySelectorAll(".stl canvas").forEach((canvas, index) => {
+      const image = document.createElement("img");
+      image.src = canvases[index]?.toDataURL("image/png") ?? "";
+      image.alt = canvas.getAttribute("aria-label") ?? "";
+      canvas.replaceWith(image);
+    });
+    copy.querySelectorAll(".map-tiles, .map-credit").forEach((element) => element.remove());
+    for (const video of copy.querySelectorAll("video, .external-video, .video-still")) {
+      const source = video.dataset.externalSrc || video.dataset.src || video.getAttribute("src") || video.querySelector("source")?.getAttribute("src") || "";
+      const link = document.createElement("a");
+      // Local videos are linked by their path beside the document.
+      link.href = source.startsWith("https://document.mdeditor.local/") ? decodeURIComponent(new URL(source).pathname.slice(1)) : source;
+      link.textContent = t("videoStill")(videoName(source));
+      video.replaceWith(link);
+    }
+    for (const holder of copy.querySelectorAll(".external-image[data-external-src]:not(.external-video)")) {
       const image = document.createElement("img");
       image.src = holder.dataset.externalSrc;
       image.alt = holder.dataset.alt ?? "";
@@ -2195,7 +2659,10 @@
     } else if (message.type === "autoBackup") {
       backupCheckbox.checked = Boolean(message.enabled);
     } else if (message.type === "encodingNotice") {
-      noticeState = message.kind ? { kind: message.kind, encoding: message.encoding } : null;
+      // No encoding to announce clears the line, but never the held-back image
+      // notice: that one changes only with the images (externalNotice).
+      if (message.kind) noticeState = { kind: message.kind, encoding: message.encoding };
+      else if (noticeState?.kind !== "external") noticeState = null;
       updateNotice();
     } else if (message.type === "paper") {
       paper = paperOrder.includes(message.paper) ? message.paper : "auto";
@@ -2205,12 +2672,14 @@
       theme = themeOrder.includes(message.theme) ? message.theme : "auto";
       updateThemeButton();
     } else if (message.type === "setText") {
+      mapNoticeClosed = false;
       view.setState(EditorState.create({ doc: message.text, extensions: editorExtensions() }));
       // A newly loaded document starts at the top, not where the last one was.
       editorScroller.scrollTop = 0;
       preview.scrollTop = 0;
       if (previewDetached) post({ type: "syncLine", line: 0, edge: "top" });
     } else if (message.type === "preview") {
+      mapsAllowed = Boolean(message.mapsAllowed);
       renderPreview(message.html, message.forPrint, message.lines).finally(() => {
         if (message.notifyRendered) post({ type: "previewRendered", requestId: message.requestId });
       });

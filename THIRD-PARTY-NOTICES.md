@@ -25,6 +25,7 @@ The 5garashi.com logotype and symbol mark in `wwwroot/assets/` are not covered b
 | AngleSharp.Css | 1.0.2 | MIT | Copyright (c) 2013 - 2026 AngleSharp | https://github.com/AngleSharp/AngleSharp.Css |
 | ReverseMarkdown | 6.2.1 | MIT | Copyright (c) Babu Annamalai | https://github.com/mysticmind/reversemarkdown-net |
 | MimeKitLite | 4.18.1 | MIT | Copyright (c) .NET Foundation and Contributors | https://github.com/jstedfast/MimeKit |
+| YamlDotNet | 18.1.0 | MIT | Copyright (c) Antoine Aubry and contributors | https://github.com/aaubry/YamlDotNet |
 | Mammoth (.NET) | 1.13.0 | BSD-2-Clause | Copyright 2015 - 2016 Michael Williamson | https://github.com/mwilliamson/dotnet-mammoth |
 | DocumentFormat.OpenXml (Open XML SDK) | 3.5.1 | MIT | Copyright (c) Microsoft Corporation | https://github.com/dotnet/Open-XML-SDK |
 | Microsoft.Web.WebView2 (SDK) | 1.0.4258.31 | BSD-3-Clause (Microsoft) | Copyright (C) Microsoft Corporation | https://www.nuget.org/packages/Microsoft.Web.WebView2 |
@@ -34,6 +35,10 @@ The 5garashi.com logotype and symbol mark in `wwwroot/assets/` are not covered b
 | Viz.js (WebAssembly build of Graphviz) | 3.31.0 | MIT | Copyright (c) Michael Daines | https://github.com/mdaines/viz-js |
 | Graphviz (inside Viz.js, object code) | 16.1.0 | EPL-1.0 | Copyright (c) AT&T and the Graphviz contributors | https://gitlab.com/graphviz/graphviz |
 | Expat (inside Viz.js, object code) | — | MIT | Copyright (c) 1998-2000 Thai Open Source Software Center Ltd and Clark Cooper; Copyright (c) 2001-2025 Expat maintainers | https://libexpat.github.io |
+| three.js (core, STLLoader, OrbitControls) | 0.186.1 | MIT | Copyright © 2010-2026 three.js authors | https://threejs.org/ |
+| d3-geo | 3.1.1 | ISC | Copyright 2010-2024 Mike Bostock | https://github.com/d3/d3-geo |
+| topojson-client | 3.1.0 | ISC | Copyright 2012-2019 Michael Bostock | https://github.com/topojson/topojson-client |
+| world-atlas (countries-110m, from Natural Earth, public domain) | 2.0.2 | ISC | Copyright 2013-2019 Michael Bostock | https://github.com/topojson/world-atlas |
 | CodeMirror 6 (view 6.43.12, state 6.7.6, commands 6.11.1) | 6 | MIT | Copyright (C) 2018-2021 by Marijn Haverbeke and others | https://codemirror.net/ |
 
 Microsoft Edge WebView2 Runtime is not distributed with mdEditor; it is provided by Windows or installed separately under Microsoft's terms. The .NET runtime's own third-party notices are at https://github.com/dotnet/runtime/blob/main/THIRD-PARTY-NOTICES.TXT.
@@ -90,7 +95,7 @@ Microsoft Edge WebView2 Runtime is not distributed with mdEditor; it is provided
 
 ## MIT License
 
-Applies to: .NET Runtime, HtmlSanitizer, AngleSharp, AngleSharp.Css, ReverseMarkdown, MimeKitLite, Viz.js, Expat, DocumentFormat.OpenXml, Mermaid, KaTeX, CodeMirror, and the MIT-licensed libraries above. Each component's copyright notice is listed in the tables above.
+Applies to: .NET Runtime, HtmlSanitizer, AngleSharp, AngleSharp.Css, ReverseMarkdown, MimeKitLite, YamlDotNet, three.js, Viz.js, Expat, DocumentFormat.OpenXml, Mermaid, KaTeX, CodeMirror, and the MIT-licensed libraries above. Each component's copyright notice is listed in the tables above.
 
 ```text
 Copyright (c) <year> <copyright holders>
@@ -245,6 +250,85 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ```
+
+## ISC License (d3-geo)
+
+```text
+Copyright 2010-2024 Mike Bostock
+
+Permission to use, copy, modify, and/or distribute this software for any purpose
+with or without fee is hereby granted, provided that the above copyright notice
+and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
+THIS SOFTWARE.
+
+This license applies to GeographicLib, versions 1.12 and later.
+
+Copyright 2008-2012 Charles Karney
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+```
+
+## ISC License (topojson-client)
+
+```text
+Copyright 2012-2019 Michael Bostock
+
+Permission to use, copy, modify, and/or distribute this software for any purpose
+with or without fee is hereby granted, provided that the above copyright notice
+and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
+THIS SOFTWARE.
+```
+
+## ISC License (world-atlas)
+
+```text
+Copyright 2013-2019 Michael Bostock
+
+Permission to use, copy, modify, and/or distribute this software for any purpose
+with or without fee is hereby granted, provided that the above copyright notice
+and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
+THIS SOFTWARE.
+```
+
+## OpenStreetMap map tiles (only when chosen in Settings)
+
+When detailed maps are loaded (Load detailed maps in the notice bar, or Settings > Internet > Detailed maps (OpenStreetMap) > Always load), map images come from tile.openstreetmap.org and are shown with the credit "© OpenStreetMap contributors" (map data under the Open Database License, https://www.openstreetmap.org/copyright). They are not bundled with the app and not kept in saved HTML. / 詳細な地図を読み込んだとき（お知らせ欄の「詳細な地図を読み込む」、または「いつも読み込む」の設定）だけ、地図の画像を tile.openstreetmap.org から読み込み、「© OpenStreetMap contributors」の表示を付けます（地図のデータは Open Database License）。アプリには含めず、保存した HTML にも入れません。
 
 ## ISC License (d3)
 
