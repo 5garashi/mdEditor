@@ -65,10 +65,9 @@ internal static class TableOfContents
     })).Trim();
 }
 
-// Front matter (the YAML block between --- lines at the top), read as YAML and
-// shown the way GitHub shows it: a map is a table with its keys as headers and
-// its values in one row, a list is a one-row table, and nested maps and lists
-// become tables inside the cells.
+// Front matter (the YAML block between --- lines at the top), read as YAML into
+// maps, lists, and text, then shown as a card of key and value rows (ToHtml) or
+// as indented text (ToText).
 internal abstract record YamlValue;
 internal sealed record YamlText(string Text) : YamlValue;
 internal sealed record YamlMap(List<(string Key, YamlValue Value)> Entries) : YamlValue;
