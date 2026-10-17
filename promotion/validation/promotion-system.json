@@ -25,9 +25,20 @@
     {
       "index": 4,
       "ok": true,
-      "svg": 19831
+      "svg": 23205
     }
   ],
   "relativeLinks": "pass",
-  "scope": "Chrome rendering with bundled engine; native app and PDF pagination unverified"
+  "scope": "Chrome rendering with bundled engine; native app and PDF pagination unverified",
+  "visualReview": {
+    "diagram": 4,
+    "width": 900,
+    "result": "labels inside nodes; no label overlap in inspected screenshot",
+    "evidence": "promotion-system-flow-1.5.3.png",
+    "unverified": [
+      "native mdEditor document preview",
+      "PDF pagination",
+      "screen reader"
+    ]
+  }
 }

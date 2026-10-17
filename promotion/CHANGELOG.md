@@ -3,12 +3,17 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.5.2
+版 / Version: 1.5.3
 ライセンス / License: MIT
 最終更新 / Last updated: 2026-10-17
 SPDX-License-Identifier: MIT
 -->
 # 変更履歴 / Changelog
+
+## 1.5.3 — 2026-10-17
+
+- 台帳のtimelineで日本語が重なる問題を、短いラベルと改行を使う縦型flowchartへ変更して修正。Markdown・Mermaidの書き方チェックリストを追加。
+- Replace the overlapping timeline with a vertical flowchart and add authoring and visual-review checks.
 
 ## 1.5.2 — 2026-10-17
 

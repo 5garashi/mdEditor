@@ -3,7 +3,7 @@
 概要 / Description: GitHubを核にしたプロモーションの全体図・更新手順・公開台帳 / GitHub-centered promotion guide and publication register
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-17
-版 / Version: 1.5.2
+版 / Version: 1.5.3
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
@@ -170,17 +170,24 @@ stateDiagram-v2
 
 ```mermaid
 %%{init: {'theme':'base','themeVariables':{'primaryColor':'#FFFDF2','primaryTextColor':'#385723','primaryBorderColor':'#385723','lineColor':'#385723','secondaryColor':'#FFE699','tertiaryColor':'#F9EFCB'}}}%%
-timeline
-    title 今回の更新の流れ（JST）
-    2026-10-16 : ソース1.0.10の変更を調査
-               : 更新画像・PDF・記事・SNSの案内を作成
-               : 新しい実操作動画の収録を開始
-    2026-10-17 : 日英の新動画をYouTube・TikTokへ公開
-               : 日英紹介ページを新動画へ更新
-               : LinkedIn・Zenn・資料ページ・PDFを更新
-               : Xを正しいアカウントで公開
-               : 一連の仕組みと公開先をこの台帳へ統合
+flowchart TD
+    D16["2026-10-16 JST<br/>調査・制作"]
+    A["ソース1.0.10を調査"]
+    B["画像・PDF・記事<br/>SNS原稿を作成"]
+    C["新しい実操作動画<br/>収録を開始"]
+    D17["2026-10-17 JST<br/>公開・記録"]
+    D["日英の動画を公開<br/>YouTube・TikTok"]
+    E["日英の紹介ページ<br/>新動画へ更新"]
+    F["LinkedIn・Zenn<br/>資料・PDFを更新"]
+    G["Xで新動画を案内"]
+    H["仕組み・公開先を<br/>この台帳へ統合"]
+    D16 --> A --> B --> C --> D17
+    D17 --> D --> E --> F --> G --> H
 ```
+
+日付ごとの作業を上から下へ読みます。同じ日付内の並びは作業をまとめたもので、分単位の実行順序を表すものではありません。横並びのtimelineでは長い日本語が隣の列へはみ出したため、短いラベルと明示改行を使う縦のフローチャートへ変更しました。
+
+2026-10-17の再確認：同梱Mermaidで全5図の描画成功を確認し、この図は900px幅の描画画像でラベルの枠内収まりと重なりがないことを目視確認しました。[確認画像](validation/promotion-system-flow-1.5.3.png)。mdEditor本体の表示とPDF改ページは今回未確認です。
 
 ### 詳細記録と原本
 
@@ -240,7 +247,9 @@ timeline
 
 ## 8. mdEditorでの利用と確認範囲
 
-この `.md` ファイルをmdEditorの「開く」で選ぶと、Mermaidの全体図、ブランチの関係図、シーケンス図、状態遷移図、タイムラインを文章と一緒に読めます。図の修正はコードブロック内の文字を編集します。共有する場合は「名前を付けて保存」でPDF・HTMLなどを選び、図や表の改ページを確認してください。
+この `.md` ファイルをmdEditorの「開く」で選ぶと、Mermaidの全体図、ブランチの関係図、シーケンス図、状態遷移図、日付順のフローチャートを文章と一緒に読めます。図の修正はコードブロック内の文字を編集します。共有する場合は「名前を付けて保存」でPDF・HTMLなどを選び、図や表の改ページを確認してください。
+
+作成・修正のたびに[Markdown・Mermaidの書き方チェックリスト](MARKDOWN-CHECKLIST.md)を使います。「描画できた」と「文字が重ならず読める」は別の確認項目です。
 
 図と同じ判断材料を本文・表にも記載し、色だけで進捗を表しません。日本語を主に、英語の概要と媒体名を併記しています。配色はIdentityの文書用パレットを参照。2026-10-17にmdEditor同梱のMermaidを使ったChrome検証で、5図すべてのSVG描画と文書内の相対リンクを確認しました。[検証記録](validation/promotion-system.json)。mdEditor本体でこの文書を開く操作、読み上げ、実OSのコントラストテーマ、全図のPDF改ページは今回未確認です。完全準拠は宣言しません。
 
