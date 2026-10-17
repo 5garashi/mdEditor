@@ -3,12 +3,17 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.5.0
+版 / Version: 1.5.2
 ライセンス / License: MIT
-最終更新 / Last updated: 2026-10-16
+最終更新 / Last updated: 2026-10-17
 SPDX-License-Identifier: MIT
 -->
 # 変更履歴 / Changelog
+
+## 1.5.2 — 2026-10-17
+
+- GitHubを核にした媒体展開・更新手順・1.0.10公開結果をPROMOTION-SYSTEM.mdへ統合。5つのMermaidチャートと次回依頼文を追加。
+- Add a single promotion guide with five Mermaid diagrams, channel publication links and a reusable next-release checklist.
 
 ## 1.5.1 — 2026-10-17
 
