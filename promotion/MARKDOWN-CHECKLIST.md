@@ -3,17 +3,25 @@
 概要 / Description: Identity共通チェックリストに対するmdEditor固有の補足 / mdEditor-specific supplement to the shared Identity checklist
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-17
-版 / Version: 1.5.4
+版 / Version: 1.5.5
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
 # Markdown・Mermaid確認のmdEditor補足
 
-**共通の正本は、Identity側の[Markdown・図の書き方チェックリスト](https://github.com/5garashi/5garashi-identity/blob/main/docs/MARKDOWN-CHECKLIST.md)です。** 原則は[Design Office Identity](https://5garashi.github.io/5garashi-identity/) 第8条 8-9にあります。今回の移行で参照した版は[4.16.0のチェックリスト](https://github.com/5garashi/5garashi-identity/blob/v4.16.0/docs/MARKDOWN-CHECKLIST.md)です。
+**共通の正本はIdentity側のチェックリストです。本資料は[Identity 4.17.0の共通チェックリスト](https://github.com/5garashi/5garashi-identity/blob/v4.17.0/docs/MARKDOWN-CHECKLIST.md)を固定参照します。** 原則は[Design Office Identity](https://5garashi.github.io/5garashi-identity/) 第8条 8-9にあります。[最新版](https://github.com/5garashi/5garashi-identity/blob/main/docs/MARKDOWN-CHECKLIST.md)への更新時は、変更内容と製品側の確認結果を記録します。
 
 このファイルはmdEditor固有の描画環境・確認方法・制約・不具合記録だけを管理します。一般的なMarkdownの書き方と確認記録のひな形は複製せず、上の正本を参照してください。プロモーションの入口は[全体図と更新台帳](PROMOTION-SYSTEM.md)です。
 
 English: Shared writing and review rules are maintained by Identity. This file keeps only mdEditor's rendering environment, product-specific checks and incident evidence. A successful render does not confirm readability or accessibility (Identity 8-9 (1), 7-7 (k)).
+
+## GitHubとmdEditorの共通表示方針
+
+READMEなどGitHubでも読む文書では、関係・流れ・手順・状態を理解しやすくする場合にチャートを使います。両方で描画できる範囲の `mermaid` コードブロックを使用し、文章・表のほうが分かりやすい場合はそちらを選びます。
+
+mdEditorで描画できても、Graphviz（DOT）やPlantUMLを共通Markdownの直接描画用コードブロックには使いません。必要なら画像と代替テキスト・本文説明を用意します。外部拡張機能や特定の設定を読者の必須条件にしません。これはmdEditor本体のGraphviz機能を禁止する規則ではなく、GitHubと共有する文書の記法を選ぶ方針です。
+
+GitHubのMermaid版は今回未確認です。同梱版と同じとは仮定せず、片方の新しい版だけで使える記法を避けます。`accTitle`・`accDescr` は対象図種と両表示環境で使えることを確認してから付け、本文による説明も残します。
 
 ## 1. 同梱エンジンと記法の確認範囲
 
@@ -39,6 +47,9 @@ English: Shared writing and review rules are maintained by Identity. This file k
 5. 配布する場合は「名前を付けて保存」でPDF・HTMLを選ぶ。PDFは改ページ・図の切れ・余白・リンクを、HTMLはブラウザーで図と本文を確認する。
 6. 共通チェックリストの確認記録に、自動確認・目視確認・書き出し確認・未確認条件を分けて記載する。
 
+7. 同じコミットのMarkdownをGitHubのファイル画面で開き、ライト・ダーク両方で全図の描画、文字の収まり、切れ・重なりを確認する。Markdown変換APIやコード表示だけでは図の表示確認としない。
+8. GitHubとmdEditorの確認結果を環境別に記録し、片方だけで成功したものを両環境で互換確認済みとしない。
+
 同梱JSをChromeで直接描画した確認は、同じエンジンの動作確認です。mdEditor本体のプレビュー、テーマ処理、PDF・HTML出力まで確認したという意味ではありません。Identity 8-9 (1)と7-7 (k)に従い、SVG生成の成功だけで表示品質・アクセシビリティを確認済みとしません。
 
 ## 3. 製品固有の確認項目
@@ -49,6 +60,8 @@ English: Shared writing and review rules are maintained by Identity. This file k
 - [ ] 主画面、新しい実演動画、記事中の操作名とリンクが同じ対象版を示している。
 - [ ] Word取り込みで色・配置を再現しないこと、Wordへの図・数式は画像になること、数値を自動計算しないことを、対象資料で必要に応じて説明した。
 - [ ] 同梱エンジンでの構文・描画確認と、mdEditor本体の表示・書き出し確認を区別した。
+- [ ] GitHubのライト・ダークと、mdEditor本体の昼・夜で、同じ原稿の各図を確認した。未確認の組み合わせは明記した。
+- [ ] GitHubと共有する文書にDOT・PlantUMLの直接描画を前提とする図を入れていない。
 
 ## 4. 今回の修正から残す教訓
 
@@ -67,9 +80,23 @@ English: Shared writing and review rules are maintained by Identity. This file k
 | 根拠 | [検証JSON](validation/promotion-system.json)、[確認画像](validation/promotion-system-flow-1.5.3.png) |
 | 未確認 | mdEditor本体でこの文書を開く操作、昼夜両方の実プレビュー、全図の目視、PDF・HTML書き出し、読み上げ、実OSコントラストテーマ |
 
-この実例を、全5図の表示品質やアクセシビリティを一括確認済みとする根拠には使いません。次回はIdentity側の[確認記録のひな形](https://github.com/5garashi/5garashi-identity/blob/main/docs/MARKDOWN-CHECKLIST.md)を使い、その回で実施した条件を記録します。
+この実例を、全5図の表示品質やアクセシビリティを一括確認済みとする根拠には使いません。次回はIdentity側の[確認記録のひな形（4.17.0）](https://github.com/5garashi/5garashi-identity/blob/v4.17.0/docs/MARKDOWN-CHECKLIST.md)を使い、その回で実施した条件を記録します。
 
-デザイン参照 / Design reference: [Design Office Identity 4.16.0](https://5garashi.github.io/5garashi-identity/) 第8条 8-9・[docs/MARKDOWN-CHECKLIST.md](https://github.com/5garashi/5garashi-identity/blob/main/docs/MARKDOWN-CHECKLIST.md)。共通原則の管理先はIdentity、製品固有の補足と記録の管理先はmdEditorです。文書はMIT。
+### Identity 4.17.0への移行時点の表示確認表
+
+対象は台帳の5図です。以下は2026-10-17時点の既存検証の棚卸しで、新たに両環境の目視確認を完了したという記録ではありません。
+
+| 表示環境 | 描画確認 | 目視・文字の収まり | 根拠・次の確認 |
+| --- | --- | --- | --- |
+| Chrome＋mdEditor同梱Mermaid 11.17.2 | 5図成功 | 修正した日付順flowchartのみ900px幅で確認 | 上記JSONと画像。アプリ本体の検証ではない |
+| GitHub ライト | 未確認 | 未確認 | 次回の文書公開確認で担当者が実表示を確認 |
+| GitHub ダーク | 未確認 | 未確認 | 次回の文書公開確認で担当者が実表示を確認 |
+| mdEditor本体 昼 | 未確認 | 未確認 | 次回の文書公開確認で担当者が実プレビューを確認 |
+| mdEditor本体 夜 | 未確認 | 未確認 | 次回の文書公開確認で担当者が実プレビューを確認 |
+
+既存の図はMermaidで記述されていますが、両環境の互換性はまだ確認済みとしていません。PDF・HTML出力、読み上げも別の確認対象です。
+
+デザイン参照 / Design reference: [Design Office Identity 4.17.0](https://5garashi.github.io/5garashi-identity/) 第8条 8-9・[docs/MARKDOWN-CHECKLIST.md（4.17.0）](https://github.com/5garashi/5garashi-identity/blob/v4.17.0/docs/MARKDOWN-CHECKLIST.md)。共通原則の管理先はIdentity、製品固有の補足と記録の管理先はmdEditorです。文書はMIT。
 
 ---
 

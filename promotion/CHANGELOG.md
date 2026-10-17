@@ -3,12 +3,17 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.5.4
+版 / Version: 1.5.5
 ライセンス / License: MIT
 最終更新 / Last updated: 2026-10-17
 SPDX-License-Identifier: MIT
 -->
 # 変更履歴 / Changelog
+
+## 1.5.5 — 2026-10-17
+
+- Identity 4.17.0の固定URLへ参照を更新。GitHub・mdEditor共通のMermaid利用と環境別確認の方針、既存5図の未確認事項を記録。
+- Pin Identity 4.17.0 references and record shared Mermaid usage and environment-specific verification gaps.
 
 ## 1.5.4 — 2026-10-17
 
