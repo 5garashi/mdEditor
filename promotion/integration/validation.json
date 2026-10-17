@@ -1,8 +1,152 @@
 {
-  "integration_version": "1.0.0",
-  "date": "2026-10-13 JST",
+  "integration_version": "1.2.0",
+  "date": "2026-10-18 JST",
   "local_references": "pass",
   "cases": [
+    {
+      "page": "index.html",
+      "theme": "light",
+      "width": 1280,
+      "text_px": 16,
+      "scrollWidth": 1265,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "index.html",
+      "theme": "light",
+      "width": 320,
+      "text_px": 16,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "index.html",
+      "theme": "light",
+      "width": 640,
+      "text_px": 16,
+      "scrollWidth": 625,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "index.html",
+      "theme": "light",
+      "width": 320,
+      "text_px": 32,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "index.html",
+      "theme": "dark",
+      "width": 1280,
+      "text_px": 16,
+      "scrollWidth": 1265,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "index.html",
+      "theme": "dark",
+      "width": 320,
+      "text_px": 16,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "index.html",
+      "theme": "dark",
+      "width": 640,
+      "text_px": 16,
+      "scrollWidth": 625,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "index.html",
+      "theme": "dark",
+      "width": 320,
+      "text_px": 32,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "en.html",
+      "theme": "light",
+      "width": 1280,
+      "text_px": 16,
+      "scrollWidth": 1265,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "en.html",
+      "theme": "light",
+      "width": 320,
+      "text_px": 16,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "en.html",
+      "theme": "light",
+      "width": 640,
+      "text_px": 16,
+      "scrollWidth": 625,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "en.html",
+      "theme": "light",
+      "width": 320,
+      "text_px": 32,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "en.html",
+      "theme": "dark",
+      "width": 1280,
+      "text_px": 16,
+      "scrollWidth": 1265,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "en.html",
+      "theme": "dark",
+      "width": 320,
+      "text_px": 16,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "en.html",
+      "theme": "dark",
+      "width": 640,
+      "text_px": 16,
+      "scrollWidth": 625,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "en.html",
+      "theme": "dark",
+      "width": 320,
+      "text_px": 32,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
     {
       "page": "resources.html",
       "theme": "light",
@@ -442,5 +586,5 @@
     "Narrator",
     "actual Windows forced colors"
   ],
-  "browser": "Chrome/155.0.8059.39"
+  "browser": "Chrome/155.0.8059.80"
 }

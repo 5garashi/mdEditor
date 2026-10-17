@@ -1,32 +1,32 @@
-<!--
-ファイル名 / File: description-ja.txt
-概要 / Description: 日本語のYouTube説明文。管理ヘッダーは投稿時に除去 / Japanese YouTube demo description
-作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
-作成日 / Created: 2026-10-13
-版 / Version: 1.0.3
-ライセンス / License: MIT
-SPDX-License-Identifier: MIT
--->
-mdEditor 1.0.10の実操作デモです。Word・CSV・WebページをMarkdownで開き、図と数式を見ながら編集し、Word・PDF・HTML・PNGへ書き出します。
+回転する3Dモデルから、mdEditorの表現と使い方を紹介します。diagram-testを上から下へ見たあと、主な20機能を実画面と字幕で紹介。
 
-00:00 紹介
-00:03 Word文書を開く
-00:12 追記してMarkdownで保存
-00:17 CSVを表として開く
-00:29 URLを開く
-00:39 図と数式の技術メモを編集
-00:47 名前を付けて保存の形式一覧
-00:52 Wordに書き出す
-01:02 PDFに書き出す
-01:11 HTMLに書き出す
-01:18 PNGに書き出す
+- 書きながら横で仕上がりを確認。スクロールも連動
+- プレビューを 2 台目のディスプレイに。編集中の行を表示
+- ビューアーとしても。プレビューをウィンドウいっぱいに
+- Mermaid・Graphviz の図と数式をオフラインで表示
+- 3D モデル（STL）をマウスで回して確認
+- 地図（GeoJSON）。許可すると OpenStreetMap の地図も
+- 約 40 の言語のコードを色分け。PDF・Word にも色が残る
+- 見出しから目次を作り、ボタン 1 つで新しくする
+- GitHub と同じ注意書き・フロントマター・折りたたみ
+- 文書の中の動画をプレビューで再生
+- プレビューと同じ見た目の PDF をワンクリックで
+- Word・HTML・メール・CSV・JSON・Jupyter Notebook・画像を開ける
+- HTML・PNG・Word・CSV・JSON・Jupyter Notebook・テキストに保存
+- 画像はドロップや貼り付けで、そのまま文書に
+- 安全な保存と、異常終了からの自動復元
+- Shift_JIS・EUC-JP・UTF-8 のファイルを正しく開ける
+- ネット上の画像・動画・地図は、許可したときだけ読み込む
+- 広告なし、計測なし、アカウント不要
+- キーボードで全操作。ショートカットも変更できる
+- 画面読み上げ・文書の読み上げ・ダークモードに対応
 
-使い方・サンプル: https://5garashi.github.io/mdEditor/
-Microsoft Store: https://apps.microsoft.com/detail/9nww2qrclmhc?hl=ja-JP&gl=JP
-開発: https://www.5garashi.com/
+使い方・サンプル・PDF
+https://5garashi.github.io/mdEditor/
 
-録画は改変していないソース版1.0.10を使用しています。Storeからインストールしたバイナリの録画ではなく、Store配信版の番号は未確認です。Wordの色や配置は取り込み時に引き継ぎません。Wordへの書き出しでは図・数式が画像になります。数値の自動計算はしません。
-画面・字幕・編集: OpenAI Codex、依頼: 5garashi.com設計事務所。保存先ダイアログのPC名・共有先は伏せています。
-音楽: Light Steps — 5garashi.com設計事務所（作曲・音源生成: Codex）— CC BY 4.0。48秒の抜粋を反復し、フェードを追加。
-音源・デザイン出典: https://5garashi.github.io/5garashi-identity/
-音楽ライセンス: https://creativecommons.org/licenses/by/4.0/
+収録は更新済みソース版1.0.12（8ab7cef）のビルド。Store配信版番号は未確認です。インターネット上の画像・動画・地図は許可して収録。別窓の紹介は、背景を除いた安定した実録画1秒を繰り返して編集しています。紹介機能すべての網羅的な再試験ではありません。Wordの色・配置、Notebookの実行結果は再現しません。
+
+Music: Light Steps v1 — 5garashi.com Design Office; composition/synthesis: Codex. CC BY 4.0. https://creativecommons.org/licenses/by/4.0/ Excerpt repeated and faded.
+Sample video: Big Buck Bunny © 2008 Blender Foundation, CC BY 3.0. https://peach.blender.org/about/ Short silent screen capture.
+Map: © OpenStreetMap contributors https://www.openstreetmap.org/copyright
+App and samples: MIT. https://github.com/5garashi/mdEditor

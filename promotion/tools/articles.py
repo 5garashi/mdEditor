@@ -185,6 +185,8 @@ mdEditor is a development project by [5garashi.com Design Office](https://www.5g
 
 Design reference: [Design Office Identity 4.15.0](https://5garashi.github.io/5garashi-identity/), 5garashi.com Design Office. Official logos are CC BY-ND 4.0; this article and its notation examples are MIT.
 '''
+from showcase_article import article
+JA=article('ja');EN=article('en')
 for lang,text in [('ja',JA),('en',EN)]:
     file=f'multichannel/articles/technical-note-{lang}.md'
     (ROOT/file).write_text(header('promotion/'+file,lang=='en')+text+signature(lang=='en'),encoding='utf-8',newline='\n')

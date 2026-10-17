@@ -10,7 +10,7 @@ from pathlib import Path
 import base64, mimetypes, re
 ROOT=Path(__file__).resolve().parents[1]
 VERSION=(ROOT/'VERSION').read_text().strip()
-DATE='2026-10-17'
+DATE='2026-10-18'
 
 def header(file,en=False):
     labels=['File','Description','Author','Created','Version','License'] if en else ['ファイル名 / File','概要 / Description','作成者 / Author','作成日 / Created','版 / Version','ライセンス / License']
@@ -58,7 +58,8 @@ def uri(path):
 def build():
     review=ROOT/'review'; review.mkdir(exist_ok=True)
     for en,file in [(False,'index.html'),(True,'en.html')]:
-        content=page(en)
+        from showcase import apply
+        content=apply(page(en), "en" if en else "ja")
         (ROOT/file).write_text(content,encoding='utf-8',newline='\n')
         standalone=content.replace('<link rel="stylesheet" href="style.css">','<style>\n'+(ROOT/'style.css').read_text(encoding='utf-8-sig')+'\n</style>')
         standalone=standalone.replace('<script src="player.js" defer></script>','<script>\ndocument.addEventListener("DOMContentLoaded", () => {\n'+(ROOT/'player.js').read_text(encoding='utf-8')+'\n});\n</script>')

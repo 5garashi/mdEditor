@@ -1,0 +1,102 @@
+[
+  {
+    "key": "edit",
+    "ja": "書きながら横で仕上がりを確認。スクロールも連動",
+    "en": "Live preview beside your text, scrolling together"
+  },
+  {
+    "key": "detach",
+    "ja": "プレビューを 2 台目のディスプレイに。編集中の行を表示",
+    "en": "Preview on a second display, following the line you edit"
+  },
+  {
+    "key": "viewer",
+    "ja": "ビューアーとしても。プレビューをウィンドウいっぱいに",
+    "en": "Also a viewer: the preview fills the window"
+  },
+  {
+    "key": "offline",
+    "ja": "Mermaid・Graphviz の図と数式をオフラインで表示",
+    "en": "Mermaid and Graphviz diagrams and math, offline"
+  },
+  {
+    "key": "3d",
+    "ja": "3D モデル（STL）をマウスで回して確認",
+    "en": "3D models (STL) you turn with the mouse"
+  },
+  {
+    "key": "maps",
+    "ja": "地図（GeoJSON）。許可すると OpenStreetMap の地図も",
+    "en": "Maps (GeoJSON), with OpenStreetMap when you allow it"
+  },
+  {
+    "key": "code",
+    "ja": "約 40 の言語のコードを色分け。PDF・Word にも色が残る",
+    "en": "Colored code for about 40 languages, kept in PDF and Word"
+  },
+  {
+    "key": "toc",
+    "ja": "見出しから目次を作り、ボタン 1 つで新しくする",
+    "en": "Table of contents from your headings, updated with one press"
+  },
+  {
+    "key": "github",
+    "ja": "GitHub と同じ注意書き・フロントマター・折りたたみ",
+    "en": "GitHub-style alerts, front matter, and collapsible sections"
+  },
+  {
+    "key": "video",
+    "ja": "文書の中の動画をプレビューで再生",
+    "en": "Videos play right in the preview"
+  },
+  {
+    "key": "pdf",
+    "ja": "プレビューと同じ見た目の PDF をワンクリックで",
+    "en": "One-click PDF that looks exactly like the preview"
+  },
+  {
+    "key": "import",
+    "ja": "Word・HTML・メール・CSV・JSON・Jupyter Notebook・画像を開ける",
+    "en": "Opens Word, HTML, e-mail, CSV, JSON, Jupyter Notebooks, and images"
+  },
+  {
+    "key": "export",
+    "ja": "HTML・PNG・Word・CSV・JSON・Jupyter Notebook・テキストに保存",
+    "en": "Saves as HTML, PNG, Word, CSV, JSON, Jupyter Notebook, or text"
+  },
+  {
+    "key": "images",
+    "ja": "画像はドロップや貼り付けで、そのまま文書に",
+    "en": "Drop or paste pictures straight into your document"
+  },
+  {
+    "key": "recovery",
+    "ja": "安全な保存と、異常終了からの自動復元",
+    "en": "Safe saving and automatic crash recovery"
+  },
+  {
+    "key": "encoding",
+    "ja": "Shift_JIS・EUC-JP・UTF-8 のファイルを正しく開ける",
+    "en": "Opens Shift_JIS, EUC-JP, and UTF-8 files correctly"
+  },
+  {
+    "key": "internet",
+    "ja": "ネット上の画像・動画・地図は、許可したときだけ読み込む",
+    "en": "Internet images, videos, and maps load only when you allow them"
+  },
+  {
+    "key": "privacy",
+    "ja": "広告なし、計測なし、アカウント不要",
+    "en": "No ads, no tracking, no account"
+  },
+  {
+    "key": "keyboard",
+    "ja": "キーボードで全操作。ショートカットも変更できる",
+    "en": "Everything from the keyboard, with custom shortcuts"
+  },
+  {
+    "key": "accessibility",
+    "ja": "画面読み上げ・文書の読み上げ・ダークモードに対応",
+    "en": "Screen reader support, read-aloud, and dark mode"
+  }
+]

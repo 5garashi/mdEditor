@@ -3,7 +3,7 @@
 概要 / Description: GitHubを核にしたプロモーションの全体図・更新手順・公開台帳 / GitHub-centered promotion guide and publication register
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-17
-版 / Version: 1.7.1
+版 / Version: 1.8.0
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->

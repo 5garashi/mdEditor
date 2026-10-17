@@ -3,13 +3,15 @@
 概要 / Description: GitHubで一元管理する公開構成 / Single-source publication plan
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-13
-版 / Version: 1.1.0
+版 / Version: 1.2.0
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
 # GitHub一元管理と5garashi.comからの導線 / Single-source publication
 
-バージョン / Version: 1.1.1 · [CHANGELOG.md](CHANGELOG.md)
+バージョン / Version: 1.2.0 · [CHANGELOG.md](CHANGELOG.md)
+
+2026-10-18：[1.0.12の日英資料と公開記録](../multichannel/update-2026-10-18/README.md)。3Dから始まる紹介ページ、20機能ガイド、資料・制作事例・埋め込みカードを更新。
 
 2026-10-17: 資料ページ・埋め込みカードを1.0.10の実演と新しい日英PDFへ更新。[媒体別の記録](../multichannel/update-2026-10-17/PUBLICATION.md)。Resources and office-site cards now reference source 1.0.10.
 

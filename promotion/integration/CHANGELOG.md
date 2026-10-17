@@ -1,3 +1,9 @@
+# Changelog
+
+## 1.2.0 — 2026-10-18
+
+- Source 1.0.12: visual-first landing, resource links, twenty-feature PDFs and office-site cards.
+
 # 更新履歴 / Changelog
 
 ## 1.1.1 — 2026-10-17

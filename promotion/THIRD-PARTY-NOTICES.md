@@ -40,3 +40,7 @@ QRの制作にはqrcode 8.2（BSDライセンス、内包コードにMIT表記�
 
 **作成者 / Author**: 5garashi.com設計事務所 / 5garashi.com Design Office
 **最終更新 / Last updated**: 2026-10-13 JST
+
+## 2026-10-18 showcase
+
+Big Buck Bunny © 2008 Blender Foundation / www.bigbuckbunny.org, CC BY 3.0. https://peach.blender.org/about/ — short silent screen capture inside the mdEditor sample. Map: © OpenStreetMap contributors, https://www.openstreetmap.org/copyright; attribution retained.

@@ -3,14 +3,14 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.7.1
+版 / Version: 1.8.0
 ライセンス / License: MIT
 最終更新 / Last updated: 2026-10-18
 SPDX-License-Identifier: MIT
 -->
 # mdEditor 宣伝キット / Promotion kit
 
-2026-10-18 改訂：[1.0.12 動画 revision 1.1.1 と関連資料](showcase-1.0.12-revision-1.1.1/README.md)。冒頭は編集画面と回転する3Dモデルで紹介し、その後にdiagram-testの連続表示と主な20機能を紹介します。肌色の長方形を使わず、ファイル選択ダイアログの区間をカットしました。 別窓の開閉と隙間に映った背景も、アプリの2ウィンドウだけを切り出した映像へ差し替えました。日英・横縦の動画、画像、PDF、Web/SNS原稿を収録しています。公開差し替え前の確認用です。 English: Revised rotating-3D opening, main-feature overview and mask-free editing, ready for review.
+2026-10-18：[日英の紹介画像・PDF・20機能ガイド・投稿原稿](multichannel/update-2026-10-18/README.md)と紹介・資料ページを、ソース1.0.12の3Dから始まる構成へ更新。動画は背景の映り込みを除いたrevision 1.1.1です。[公開記録](multichannel/update-2026-10-18/PUBLICATION.md)に各媒体の確認結果をまとめます。
 
 **更新作業の入口：[プロモーションの全体図と更新台帳](PROMOTION-SYSTEM.md)**。GitHubを核にした各媒体の関係、公開先、今回の実施結果、次回の一括更新手順を5つのMermaidチャートと表にまとめています。Start here for the promotion workflow, publication links and next-release checklist.
 
@@ -18,7 +18,7 @@ SPDX-License-Identifier: MIT
 
 作成・修正時はIdentity管理の[共通チェックリスト（4.17.0）](https://github.com/5garashi/5garashi-identity/blob/v4.17.0/docs/MARKDOWN-CHECKLIST.md)と[mdEditor固有の補足](MARKDOWN-CHECKLIST.md)を使い、構文・表示・内容を分けて確認します。図はGitHubとmdEditorで共通に描画できるMermaidを選び、両環境の実表示を別々に確認します。
 
-バージョン / Version: 1.7.1 · [CHANGELOG.md](CHANGELOG.md)
+バージョン / Version: 1.8.0 · [CHANGELOG.md](CHANGELOG.md)
 
 Windows版の実操作を使った日英紹介ページ、1.0.10の操作デモ、初めて試すための日英6サンプルです。Word・CSV・Webの取り込みとWord・PDF・HTML・PNGの書き出しを実演します。
 
