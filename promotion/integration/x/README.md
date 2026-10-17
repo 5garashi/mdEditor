@@ -11,7 +11,7 @@ SPDX-License-Identifier: MIT
 
 状態: 本人が別メールアドレスで新規アカウント @5garashi_com を作成。本人提供の画面でプロフィール設定、事務所紹介、mdEditor紹介、Store入手リンクの3投稿を確認。以下の初回投稿原稿は準備時の案であり、実際の初回投稿は事務所紹介です。各投稿のURLは未取得です。
 
-2026-10-17: 1.0.10の新動画案内原稿を準備済み。現在ChromeのXは本人の別アカウント@5garashiで、@5garashi_comへのログイン待ち。誤って送信した今回の投稿2111156023612600784は取り消しました。その他の既存投稿は維持。Latest demo copy is ready; login to @5garashi_com is required.
+2026-10-17: [1.0.10の新動画案内](https://x.com/5garashi_com/status/2111263200478105694)を@5garashi_comから公開しました。別Chromeウィンドウで本人のログインを確認。最初に別アカウントへ誤って送信した今回の投稿2111156023612600784は取り消し済みです。その他の既存投稿は維持。New source-build 1.0.10 demo links are published from @5garashi_com.
 
 ## アカウント / Account
 
