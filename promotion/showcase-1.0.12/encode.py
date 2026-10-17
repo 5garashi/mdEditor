@@ -25,7 +25,7 @@ def encode(lang,take):
  ass+=f'Dialogue: 1,0:00:00.00,{old.stamp(duration,True)},Credit,,0,0,0,,Source 1.0.12 | Light Steps: CC BY 4.0 | 5garashi.com\n'
  video_start=next(e['seconds'] for e in events if e['key']=='video');video_end=next(e['seconds'] for e in events if e['key']=='github')
  ass+=f'Dialogue: 1,{old.stamp(video_start,True)},{old.stamp(video_end,True)},Credit,,0,0,18,,Big Buck Bunny (c) 2008 Blender Foundation | CC BY 3.0 | bigbuckbunny.org\n'
- (w/'captions.ass').write_text(ass,encoding='utf-8-sig');(OUT/f'mdEditor-showcase-{lang}.vtt').write_text(vtt,encoding='utf-8')
+ (w/'captions.ass').write_text(ass,encoding='utf-8-sig');(OUT/f'mdEditor-showcase-{lang}.vtt').write_text(vtt.rstrip()+'\n',encoding='utf-8')
  # Cover the native picker's private navigation pane only while a picker is open.
  intervals=record['privacy_intervals'];enabled='+'.join(f'between(t,{a:.2f},{b:.2f})' for a,b in intervals)
  privacy=f"drawbox=x=132:y=128:w=150:h=420:color=0xF9EFCB:t=fill:enable='{enabled}'" if intervals else 'null'

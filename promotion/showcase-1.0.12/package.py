@@ -95,6 +95,7 @@ The package is ready for review. New social uploads and replacement of the curre
 **最終更新 / Last updated**: 2026-10-17 JST
 '''
 (OUT/'README.md').write_text(HEADER+body,encoding='utf-8');(OUT/'VERSION').write_text('1.0.0\n');(OUT/'CHANGELOG.md').write_text('# 更新履歴 / Changelog\n\n## 1.0.0 — 2026-10-17\n\n- サンプルの連続表示・3D拡大回転・新機能と編集保存を日英で収録し、関連資料を同じ構成で作成。\n- Create bilingual visual-first videos, cards, PDFs and page/post drafts.\n',encoding='utf-8')
+cp=OUT/'CHANGELOG.md';cp.write_text(HEADER.replace('File: README.md','File: CHANGELOG.md')+cp.read_text(encoding='utf-8')+'\n---\n\n**作成者 / Author**: 5garashi.com設計事務所 / 5garashi.com Design Office\n**最終更新 / Last updated**: 2026-10-17 JST\n',encoding='utf-8')
 shutil.copy2(B/'source.json',OUT/'source-verification.json')
 for name in ['record.py','encode.py','materials.py','package.py']:shutil.copy2(B/name,OUT/name)
 for lang,take in [('en','take2'),('ja','take1')]:
