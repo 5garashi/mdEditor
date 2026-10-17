@@ -16,6 +16,9 @@ license: MIT
 -->
 # Diagram and Chart Rendering Test
 
+> [!NOTE]
+> This document assumes it is shown in mdEditor. On GitHub, the Graphviz (` ```dot `) and PlantUML diagrams stay as code, and the video in the same folder is a link. Check the rendering in mdEditor (Identity 8-9 (8)).
+
 This test document checks that diagrams and charts render correctly in the mdEditor preview.
 Compare the "Expected" note in each section with the actual preview.
 

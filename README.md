@@ -69,6 +69,18 @@ Markdown を書きながら、整形された仕上がりをすぐ横で確か�
 
 ![「名前を付けて保存」で、Markdown・テキスト・PDF・HTML・PNG・Word・CSV・TSV・JSON・Jupyter Notebook を選べます。Word・HTML・CSV・メール・Jupyter Notebook などのファイルも開けます。](docs/images/5-save-as.ja.png)
 
+**コードの色分けと目次** — 言語名を書いたコードを色分けして表示します。「目次」ボタンで、見出しから目次を作って入れます。
+
+![言語名を書いたコードを色分けして表示します。「目次」ボタンで、見出しから目次を作って入れます。](docs/images/6-code-toc.ja.png)
+
+**3D モデル** — STL で書いた 3D モデルを、ドラッグで回して確かめられます。インターネットにつながなくても表示します。
+
+![STL で書いた 3D モデルを、ドラッグで回して確かめられます。インターネットにつながなくても表示します。](docs/images/7-3d-model.ja.png)
+
+**地図とフロントマター** — GeoJSON の地図は、許可すると OpenStreetMap の詳しい地図の上に描きます。先頭の YAML は、項目と値の一覧になります。
+
+![GeoJSON の地図は、許可すると OpenStreetMap の詳しい地図の上に描きます。先頭の YAML は、項目と値の一覧になります。](docs/images/8-map.ja.png)
+
 ## セットアップ
 
 1. .NET 10 SDK がインストールされた Windows で、`setup.cmd` をダブルクリックします（PowerShell から `powershell -ExecutionPolicy Bypass -File .\setup.ps1` を実行しても同じです）。`.ps1` はダブルクリックではメモ帳で開くだけで実行されないため、`setup.cmd` から呼び出します。アプリは `%LOCALAPPDATA%\Programs\mdEditor` に発行され、現在のユーザー向けに登録されます。`.md`・`.markdown` のほか、`.html`・`.htm` も「プログラムから開く」と「既定のアプリ」の候補に出ます（ブラウザーの関連付けは変えません）。Microsoft Store 版は `.html` を関連付けません（「開く」とドラッグ＆ドロップで開けます）。
@@ -604,7 +616,7 @@ flowchart LR
 
 上の表で「対応」の図は、テスト文書で表示を確認済みです。これ以外の Mermaid の図（`block-beta` など）も Mermaid 11.17.2 が対応していれば表示されますが、確認はしていません。
 
-samples/ のサンプルは、mdEditor が描ける図と描けない図をそのまま示すためのものなので、GitHub では表示されない書き方（Graphviz、PlantUML など）も含みます（Identity 8-9 (7) の対象外。Identity 1-4 (1)）。この README のそれ以外の説明、CHANGELOG.md、PRIVACY.md は、GitHub で表示できる書き方だけを使います。
+[samples/diagram-test.md](./samples/diagram-test.md) と [samples/diagram-test.en.md](./samples/diagram-test.en.md) の 2 つは、mdEditor での表示を前提にした文書で、GitHub での表示との互換の決まり（Identity 8-9 (7)）を当てはめません。mdEditor が描ける図と描けない図をそのまま示して確かめるためのサンプルなので、GitHub では描けない書き方（Graphviz、PlantUML）も含み、表示は mdEditor で確かめています（Identity 8-9 (8)、1-4 (1)）。この前提は、それぞれの文書の冒頭にも書いています。この README のそれ以外の説明、CHANGELOG.md、PRIVACY.md、ほかのサンプルは、GitHub で表示できる書き方だけを使います。
 
 ## アクセシビリティの確認記録
 
@@ -631,7 +643,7 @@ Identity 第7条 7-7 の出荷前チェックの記録です。
 
 ## デザインと公式素材
 
-画面デザインは5garashi.com Design Office Identity v4.18.0（2026-10-17）に基づきます。ツールバーの「表示」ボタンで、表示テーマを「自動」（Windows の「アプリ モード」に合わせる）→「ライト」→「ダーク」の順に切り替えられます。選んだテーマは次回の起動でも使います。ダークでは第4条 4-2 の夜の配色（ダークモード）で表示し、ロゴタイプは第3条 3-7 の灰色抜きの反転版に切り替わります（右上のシンボルマークは、3-7 (5) によりダークでも赤のままです）。編集欄・プレビュー・図もダーク表示になり、ウィンドウのタイトルバーも合わせます。印刷とPDFは常に昼の配色です。公式ロゴタイプ（日本語版・英語版と、それぞれのダークモード用の反転版。表示言語に合わせて切り替えます）とシンプル版マークは [5garashi/5garashi-identity](https://github.com/5garashi/5garashi-identity) のSVG素材を改変せずに同梱し、アプリのウィンドウ・実行ファイル・Markdown関連付けのアイコンにはシンプル版マークを使用します。各SVGファイルに記載された作者、著作権、CC BY-ND 4.0 ライセンスを保持しています。
+画面デザインは5garashi.com Design Office Identity v4.20.0（2026-10-17）に基づきます。ツールバーの「表示」ボタンで、表示テーマを「自動」（Windows の「アプリ モード」に合わせる）→「ライト」→「ダーク」の順に切り替えられます。選んだテーマは次回の起動でも使います。ダークでは第4条 4-2 の夜の配色（ダークモード）で表示し、ロゴタイプは第3条 3-7 の灰色抜きの反転版に切り替わります（右上のシンボルマークは、3-7 (5) によりダークでも赤のままです）。編集欄・プレビュー・図もダーク表示になり、ウィンドウのタイトルバーも合わせます。印刷とPDFは常に昼の配色です。公式ロゴタイプ（日本語版・英語版と、それぞれのダークモード用の反転版。表示言語に合わせて切り替えます）とシンプル版マークは [5garashi/5garashi-identity](https://github.com/5garashi/5garashi-identity) のSVG素材を改変せずに同梱し、アプリのウィンドウ・実行ファイル・Markdown関連付けのアイコンにはシンプル版マークを使用します。各SVGファイルに記載された作者、著作権、CC BY-ND 4.0 ライセンスを保持しています。
 
 ## ライセンス
 
@@ -692,6 +704,18 @@ An editor that shows the formatted result right beside the Markdown you are writ
 **Save in many formats** — Save As writes Markdown, text, PDF, HTML, PNG, Word, CSV, TSV, JSON, or Jupyter Notebook. Word, HTML, CSV, e-mail, Jupyter Notebook, and more open too.
 
 ![Save As writes Markdown, text, PDF, HTML, PNG, Word, CSV, TSV, JSON, or Jupyter Notebook. Word, HTML, CSV, e-mail, Jupyter Notebook, and more open too.](docs/images/5-save-as.en.png)
+
+**Colored code and contents** — Code with a language name is shown in color. Contents builds a table of contents from your headings.
+
+![Code with a language name is shown in color. Contents builds a table of contents from your headings.](docs/images/6-code-toc.en.png)
+
+**3D models** — A 3D model written in STL turns as you drag it. It shows without an internet connection.
+
+![A 3D model written in STL turns as you drag it. It shows without an internet connection.](docs/images/7-3d-model.en.png)
+
+**Maps and front matter** — A GeoJSON map is drawn on a detailed OpenStreetMap map once you allow it. YAML front matter at the top becomes a list of keys and values.
+
+![A GeoJSON map is drawn on a detailed OpenStreetMap map once you allow it. YAML front matter at the top becomes a list of keys and values.](docs/images/8-map.en.png)
 
 ### Setup
 
@@ -851,7 +875,7 @@ flowchart LR
 
 Everything marked Yes is verified with the test documents. Other Mermaid diagrams (such as `block-beta`) render if Mermaid 11.17.2 supports them, but they have not been checked.
 
-The samples in samples/ show as they are which diagrams mdEditor can and cannot draw, so they include syntax that GitHub does not render (Graphviz, PlantUML, and so on). They are outside Identity 8-9 (7), as Identity 1-4 (1) allows. The rest of this README, CHANGELOG.md, and PRIVACY.md keep to what GitHub can show.
+Two documents, [samples/diagram-test.md](./samples/diagram-test.md) and [samples/diagram-test.en.md](./samples/diagram-test.en.md), assume they are shown in mdEditor and are not held to GitHub compatibility (Identity 8-9 (7)). They show as they are which diagrams mdEditor can and cannot draw, so they include syntax GitHub cannot render (Graphviz, PlantUML), and their rendering is checked in mdEditor (Identity 8-9 (8), 1-4 (1)). Each says so at the top. The rest of this README, CHANGELOG.md, PRIVACY.md, and the other samples keep to what GitHub can show.
 
 
 ### Written as on GitHub
@@ -1243,7 +1267,7 @@ Also confirmed: read-aloud can use voices on the PC (such as Microsoft Ayumi), t
 
 ### Design and official assets
 
-The screen design follows the 5garashi.com Design Office Identity v4.18.0 (2026-10-17). The "Theme" button in the toolbar cycles the theme through Auto (follows the Windows app mode), Light, and Dark, and the choice is remembered for the next launch. In Dark, the app uses the night palette (dark mode) of Art. 4-2, and the logotype switches to the gray reversal of Art. 3-7 (the symbol mark at the top right stays red in Dark too, as Art. 3-7 (5) allows). The editor, preview, diagrams, and window title bar follow as well. Printing and PDFs always use the day palette. The official logotype (Japanese and English versions, each with its dark-mode reversal, chosen by the display language) and simple symbol mark are bundled unmodified from the SVG assets of [5garashi/5garashi-identity](https://github.com/5garashi/5garashi-identity). The simple mark is used for the window, the executable, and the Markdown file association icons. The author, copyright, and CC BY-ND 4.0 license stated in each SVG file are preserved.
+The screen design follows the 5garashi.com Design Office Identity v4.20.0 (2026-10-17). The "Theme" button in the toolbar cycles the theme through Auto (follows the Windows app mode), Light, and Dark, and the choice is remembered for the next launch. In Dark, the app uses the night palette (dark mode) of Art. 4-2, and the logotype switches to the gray reversal of Art. 3-7 (the symbol mark at the top right stays red in Dark too, as Art. 3-7 (5) allows). The editor, preview, diagrams, and window title bar follow as well. Printing and PDFs always use the day palette. The official logotype (Japanese and English versions, each with its dark-mode reversal, chosen by the display language) and simple symbol mark are bundled unmodified from the SVG assets of [5garashi/5garashi-identity](https://github.com/5garashi/5garashi-identity). The simple mark is used for the window, the executable, and the Markdown file association icons. The author, copyright, and CC BY-ND 4.0 license stated in each SVG file are preserved.
 
 ### License
 
