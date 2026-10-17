@@ -1,0 +1,22 @@
+{
+  "features-en.pdf": {
+    "pages": 2,
+    "characters": 1396,
+    "links": 2
+  },
+  "features-ja.pdf": {
+    "pages": 2,
+    "characters": 906,
+    "links": 2
+  },
+  "one-page-en.pdf": {
+    "pages": 1,
+    "characters": 407,
+    "links": 1
+  },
+  "one-page-ja.pdf": {
+    "pages": 1,
+    "characters": 258,
+    "links": 1
+  }
+}
