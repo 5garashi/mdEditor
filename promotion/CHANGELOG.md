@@ -3,12 +3,17 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.9.3
+版 / Version: 1.9.4
 ライセンス / License: MIT
 最終更新 / Last updated: 2026-10-18
 SPDX-License-Identifier: MIT
 -->
 # 変更履歴 / Changelog
+
+## 1.9.4 — 2026-10-18
+
+- 所有者の指定により、Redditの2投稿・原稿・Reddit案内のStore版未確認の文を、1.0.12の配信を案内する指定文へ更新。動画と投稿URLは保持。
+- Apply the owner-requested Microsoft Store 1.0.12 wording to both Reddit posts and saved copy.
 
 ## 1.9.3 — 2026-10-18
 

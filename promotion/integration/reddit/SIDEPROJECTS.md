@@ -3,7 +3,7 @@
 概要 / Description: Redditでの初回試行と公開記録 / Initial Reddit trial and publication record
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-18
-版 / Version: 1.9.3
+版 / Version: 1.9.4
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
@@ -54,7 +54,7 @@ The app has no ads or tracking and needs no account. Internet images, video and 
 Microsoft Store: https://apps.microsoft.com/detail/9nww2qrclmhc?hl=en-US&gl=US
 Source code (MIT): https://github.com/5garashi/mdEditor
 
-A few limits: Windows only. Word import does not preserve colors or layout. GitHub also renders ASCII STL and GeoJSON code blocks in Markdown. Rendering and interaction may differ between GitHub and mdEditor; identical behavior has not been verified. The recording uses source build 1.0.12; I haven't verified the current Store build number.
+A few limits: Windows only. Word import does not preserve colors or layout. GitHub also renders ASCII STL and GeoJSON code blocks in Markdown. Rendering and interaction may differ between GitHub and mdEditor; identical behavior has not been verified. The video demonstrates mdEditor 1.0.12, also available from the Microsoft Store.
 
 Which would be most useful in your own workflow: reading Markdown, diagrams/PDF, or bringing existing documents into Markdown?
 
@@ -91,3 +91,9 @@ u/5garashi
 GitHubでもMarkdown内のASCII STL・GeoJSONを描画できるため、mdEditor固有との説明を訂正しました。Redditの既存投稿を編集し、保存後の本文で訂正を確認。動画は保持しています。GitHubとmdEditorの表示・操作の完全一致は検証していません。
 
 根拠：[GitHub公式 Creating diagrams](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams)。
+
+## 2026-10-18 配信版の説明更新 / Store version wording
+
+所有者の指定により、Redditの2投稿と保存原稿を次の文に変更しました。版の根拠は所有者の確認であり、こちらでStore配布パッケージを新たに取得して検証したものではありません。
+
+> The video demonstrates mdEditor 1.0.12, also available from the Microsoft Store.

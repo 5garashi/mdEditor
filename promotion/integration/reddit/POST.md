@@ -3,7 +3,7 @@
 概要 / Description: r/windowsapps初回投稿原稿 / Initial r/windowsapps developer post
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-18
-版 / Version: 1.9.3
+版 / Version: 1.9.4
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
@@ -36,7 +36,7 @@ The app has no ads or tracking and needs no account. Internet images, video and 
 Microsoft Store: https://apps.microsoft.com/detail/9nww2qrclmhc?hl=en-US&gl=US
 Source code (MIT): https://github.com/5garashi/mdEditor
 
-A few limits: Windows only. Word import does not preserve colors or layout. GitHub also renders ASCII STL and GeoJSON code blocks in Markdown. Rendering and interaction may differ between GitHub and mdEditor; identical behavior has not been verified. The recording uses source build 1.0.12; I haven't verified the current Store build number.
+A few limits: Windows only. Word import does not preserve colors or layout. GitHub also renders ASCII STL and GeoJSON code blocks in Markdown. Rendering and interaction may differ between GitHub and mdEditor; identical behavior has not been verified. The video demonstrates mdEditor 1.0.12, also available from the Microsoft Store.
 
 Which would be most useful in your own workflow: reading Markdown, diagrams/PDF, or bringing existing documents into Markdown?
 
