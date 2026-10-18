@@ -3,12 +3,17 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.10.0
+版 / Version: 1.10.1
 ライセンス / License: MIT
 最終更新 / Last updated: 2026-10-18
 SPDX-License-Identifier: MIT
 -->
 # 変更履歴 / Changelog
+
+## 1.10.1 — 2026-10-18
+
+- GitHub実表示とmdEditor 1.0.12本体での5図の描画を確認し、確認範囲・画面画像を保存。分割プレビューで文字が小さい制約、拡大の案内、未確認項目を記録。
+- Record live GitHub/native rendering checks, small-label limitations and remaining visual/accessibility checks.
 
 ## 1.10.0 — 2026-10-18
 

@@ -1,0 +1,81 @@
+{
+  "date": "2026-10-18 JST",
+  "engine": "mdEditor bundled wwwroot/lib/mermaid/mermaid.min.js",
+  "diagrams": [
+    {
+      "index": 0,
+      "ok": true,
+      "svg": 43904
+    },
+    {
+      "index": 1,
+      "ok": true,
+      "svg": 21811
+    },
+    {
+      "index": 2,
+      "ok": true,
+      "svg": 38108
+    },
+    {
+      "index": 3,
+      "ok": true,
+      "svg": 46451
+    },
+    {
+      "index": 4,
+      "ok": true,
+      "svg": 23205
+    }
+  ],
+  "relativeLinks": "pass",
+  "scope": "Document opened in native source build 1.0.12; five native SVGs rendered. GitHub live five diagram controls loaded and expanded overview visually checked. Screenshots record limited views, not complete accessibility validation.",
+  "document_version": "1.10.1",
+  "visual_review": "Native split preview screenshots for diagrams 0,2,3 reviewed. Diagram 0 and 2 labels too small for comfortable reading at fit width; rendering is not treated as a readability/accessibility pass.",
+  "github": {
+    "url": "https://github.com/5garashi/mdEditor/blob/promotion/site-integration/promotion/PROMOTION-SYSTEM.md",
+    "theme": "light",
+    "rendered_diagrams": 5,
+    "visual_review": "Expanded overview: both Reddit communities visible; no obvious node label overlap in the visible region. Entire diagram and other diagrams not fully visually reviewed."
+  },
+  "native": {
+    "date": "2026-10-18 JST",
+    "app_source": "1.0.12",
+    "diagrams": [
+      {
+        "index": 0,
+        "viewBox": "0 0 2127.18798828125 990",
+        "text": "rendered"
+      },
+      {
+        "index": 1,
+        "viewBox": "0 -35 1631.0625 257",
+        "text": "rendered"
+      },
+      {
+        "index": 2,
+        "viewBox": "-50 -10 1366 1473",
+        "text": "rendered"
+      },
+      {
+        "index": 3,
+        "viewBox": "0 0 1053.7945556640625 894",
+        "text": "rendered"
+      },
+      {
+        "index": 4,
+        "viewBox": "0 0 197.75 1198",
+        "text": "rendered"
+      }
+    ],
+    "native_document_open": "passed"
+  },
+  "unverified": [
+    "GitHub dark mode",
+    "mdEditor night mode",
+    "full visual review of every diagram",
+    "screen reader",
+    "OS contrast themes",
+    "PDF page breaks"
+  ]
+}

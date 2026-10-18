@@ -3,7 +3,7 @@
 概要 / Description: GitHubを核にしたプロモーションの全体図・更新手順・公開台帳 / GitHub-centered promotion guide and publication register
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-17
-版 / Version: 1.10.0
+版 / Version: 1.10.1
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
@@ -294,7 +294,7 @@ flowchart TD
 
 作成・修正のたびに、Identity管理の[共通チェックリスト（参照タグ4.20.0）](https://github.com/5garashi/5garashi-identity/blob/v4.20.0/docs/MARKDOWN-CHECKLIST.md)と[mdEditor固有の補足](MARKDOWN-CHECKLIST.md)を使います。「描画できた」と「文字が重ならず読める」は別の確認項目です。GitHubとmdEditorの両方で共通に描画できるMermaidを選び、両環境の確認結果を分けて記録します。共通原則はIdentity第8条8-9で管理しています。
 
-図と同じ判断材料を本文・表にも記載し、色だけで進捗を表しません。日本語を主に、英語の概要と媒体名を併記しています。配色はIdentityの文書用パレットを参照。2026-10-17の検証記録は改訂前の5図が対象です。今回のReddit追加後の検証結果は[1.10.0の記録](validation/promotion-system-1.10.0.json)を参照してください。GitHub実表示とmdEditor本体での今回の図の目視確認は未実施です。[検証記録](validation/promotion-system.json)。mdEditor本体でこの文書を開く操作、読み上げ、実OSのコントラストテーマ、全図のPDF改ページは今回未確認です。完全準拠は宣言しません。
+図と同じ判断材料を本文・表にも記載し、色だけで進捗を表しません。日本語を主に、英語の概要と媒体名を併記しています。配色はIdentityの文書用パレットを参照。2026-10-17の検証記録は改訂前の5図が対象です。今回のReddit追加後の検証結果は[1.10.0の記録](validation/promotion-system-1.10.0.json)を参照してください。2026-10-18にGitHubの明色表示で5図の読み込みと拡大全体図内のRedditラベルを確認し、mdEditor 1.0.12本体でもこの文書を開いて5図のSVG描画を確認しました。[実表示の確認記録](validation/promotion-system-1.10.1.json)。左右分割のプレビューでは全体図とシーケンス図の文字が小さく、描画成功を可読性の合格とは扱いません。mdEditorでは「プレビューをウィンドウ全体に表示」と拡大を使い、GitHubでは図の拡大表示を使ってください。図の要点は媒体一覧・手順・状態の文章でも確認できます。[検証記録](validation/promotion-system.json)。暗色表示、全図・全領域の文字の収まり、読み上げ、実OSのコントラストテーマ、全図のPDF改ページは今回未確認です。完全準拠は宣言しません。
 
 デザイン基準出典 / Design reference: [Design Office Identity 4.20.0](https://5garashi.github.io/5garashi-identity/)、5garashi.com設計事務所 / 5garashi.com Design Office。原本はCC BY-ND 4.0。この文書の文章と図のコードは既存資料と同じMITです。
 
