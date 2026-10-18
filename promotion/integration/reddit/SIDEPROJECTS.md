@@ -3,13 +3,13 @@
 概要 / Description: Redditでの初回試行と公開記録 / Initial Reddit trial and publication record
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-18
-版 / Version: 1.9.2
+版 / Version: 1.9.3
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
 # r/sideprojects — 動画投稿 / Video post
 
-**??????Reddit????????????2026-10-18????????r/sideprojects??????????URL???????????????????????????????????????????????** ??????????????????????????
+**現在の状態：Redditのフィルターにより削除。2026-10-18、所有者の依頼でモデレーターへ投稿URL付きの確認・承認依頼を送信済み。返信・再掲載は未確認です。** 以下の一覧表示・自動再生の確認は投稿直後の履歴です。
 
 2026-10-18、**u/5garashi**から[実演動画付き投稿](https://www.reddit.com/r/sideprojects/comments/1x8shm2/i_built_mdeditor_a_free_opensource_windows/)を公開しました。主媒体として動画を添付し、「本文に追加」は使用していません。コミュニティのカード一覧で、投稿を開かずに動画が表示され、自動再生で時刻が進むことを確認しました。閲覧者の自動再生設定によって再生の動作は変わります。
 
@@ -54,7 +54,7 @@ The app has no ads or tracking and needs no account. Internet images, video and 
 Microsoft Store: https://apps.microsoft.com/detail/9nww2qrclmhc?hl=en-US&gl=US
 Source code (MIT): https://github.com/5garashi/mdEditor
 
-A few limits: Windows only. Word import does not preserve colors or layout. STL and GeoJSON blocks are mdEditor-specific extensions, not portable GitHub-rendered Markdown. The recording uses source build 1.0.12; I haven't verified the current Store build number.
+A few limits: Windows only. Word import does not preserve colors or layout. GitHub also renders ASCII STL and GeoJSON code blocks in Markdown. Rendering and interaction may differ between GitHub and mdEditor; identical behavior has not been verified. The recording uses source build 1.0.12; I haven't verified the current Store build number.
 
 Which would be most useful in your own workflow: reading Markdown, diagrams/PDF, or bringing existing documents into Markdown?
 
@@ -66,9 +66,9 @@ Clip music: Light Steps, 5garashi.com Design Office / Codex, CC BY 4.0 (excerpt 
 **最終更新 / Last updated**: 2026-10-18 JST  
 **デザイン参照 / Design reference**: Design Office Identity 4.20.0、第8条・第9条・第12条。https://5garashi.github.io/5garashi-identity/
 
-## ???????????? / Moderator review request
+## モデレーターへの確認依頼 / Moderator review request
 
-????u/5garashi????/r/sideprojects????Request to review a post removed by Reddit filters?
+送信者：u/5garashi。宛先：/r/sideprojects。件名：Request to review a post removed by Reddit filters。
 
 ```text
 Hello r/sideprojects moderators,
@@ -85,3 +85,9 @@ If the post is appropriate for the community, would you consider approving it? I
 Thank you for your time.
 u/5garashi
 ```
+
+## 2026-10-18 訂正 / Correction
+
+GitHubでもMarkdown内のASCII STL・GeoJSONを描画できるため、mdEditor固有との説明を訂正しました。Redditの既存投稿を編集し、保存後の本文で訂正を確認。動画は保持しています。GitHubとmdEditorの表示・操作の完全一致は検証していません。
+
+根拠：[GitHub公式 Creating diagrams](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams)。

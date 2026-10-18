@@ -3,12 +3,22 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.9.2
+版 / Version: 1.9.3
 ライセンス / License: MIT
 最終更新 / Last updated: 2026-10-18
 SPDX-License-Identifier: MIT
 -->
 # 変更履歴 / Changelog
+
+## 1.9.3 — 2026-10-18
+
+- GitHubのASCII STL・GeoJSON対応に関する誤記をRedditの2投稿と保存原稿で訂正。動画を保持して保存後の本文を確認。削除状況と問い合わせの記録の文字化けを修正。
+- Correct GitHub STL/GeoJSON support claims in both Reddit posts and source copy; repair status records.
+
+## 1.9.2 — 2026-10-18
+
+- r/sideprojectsのフィルター削除と、所有者の依頼によるモデレーターへの確認依頼送信を記録。1.9.3で文字化けと欠落していた本節を修復。返信・承認は未確認。
+- Record filter removal and the requested moderator review message.
 
 ## 1.9.1 — 2026-10-18
 

@@ -3,13 +3,13 @@
 概要 / Description: GitHubを核にしたプロモーションの全体図・更新手順・公開台帳 / GitHub-centered promotion guide and publication register
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-17
-版 / Version: 1.9.2
+版 / Version: 1.9.3
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
 # mdEditor プロモーションの全体図と更新台帳
 
-2026-10-18?r/sideprojects????????????????????????????????????????[?????????](integration/reddit/SIDEPROJECTS.md)?
+2026-10-18：r/sideprojectsはフィルター削除、モデレーターへ確認依頼済み。STL・GeoJSONのGitHub対応に関する誤記はRedditの2投稿と原稿で訂正しました。[現在の状態と訂正記録](integration/reddit/SIDEPROJECTS.md)。
 
 2026-10-18：[r/sideprojectsの動画投稿と確認記録](integration/reddit/SIDEPROJECTS.md)を追加。一覧での動画表示と自動再生を確認しました。
 
