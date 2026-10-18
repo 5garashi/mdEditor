@@ -3,11 +3,13 @@
 概要 / Description: Redditでの初回試行と公開記録 / Initial Reddit trial and publication record
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-18
-版 / Version: 1.9.1
+版 / Version: 1.9.2
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
 # r/sideprojects — 動画投稿 / Video post
+
+**??????Reddit????????????2026-10-18????????r/sideprojects??????????URL???????????????????????????????????????????????** ??????????????????????????
 
 2026-10-18、**u/5garashi**から[実演動画付き投稿](https://www.reddit.com/r/sideprojects/comments/1x8shm2/i_built_mdeditor_a_free_opensource_windows/)を公開しました。主媒体として動画を添付し、「本文に追加」は使用していません。コミュニティのカード一覧で、投稿を開かずに動画が表示され、自動再生で時刻が進むことを確認しました。閲覧者の自動再生設定によって再生の動作は変わります。
 
@@ -63,3 +65,23 @@ Clip music: Light Steps, 5garashi.com Design Office / Codex, CC BY 4.0 (excerpt 
 **作成者 / Author**: 5garashi.com設計事務所 / 5garashi.com Design Office  
 **最終更新 / Last updated**: 2026-10-18 JST  
 **デザイン参照 / Design reference**: Design Office Identity 4.20.0、第8条・第9条・第12条。https://5garashi.github.io/5garashi-identity/
+
+## ???????????? / Moderator review request
+
+????u/5garashi????/r/sideprojects????Request to review a post removed by Reddit filters?
+
+```text
+Hello r/sideprojects moderators,
+
+Could you please review this post? It now shows that it was removed by Reddit's filters:
+https://www.reddit.com/r/sideprojects/comments/1x8shm2/i_built_mdeditor_a_free_opensource_windows/
+
+I am the developer of mdEditor, a free, MIT-licensed Windows Markdown editor. The post includes an actual demo video, the problem it addresses, features and limitations, and links to the Microsoft Store and source code. I also disclosed that development is AI-assisted, including Codex.
+
+I selected Showcase: Open Source because I could not find a vibecoded showcase flair in the available choices. If a different flair or other changes are required, please let me know.
+
+If the post is appropriate for the community, would you consider approving it? I have not reposted it.
+
+Thank you for your time.
+u/5garashi
+```
