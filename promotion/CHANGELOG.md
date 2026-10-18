@@ -3,12 +3,17 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.9.4
+版 / Version: 1.10.0
 ライセンス / License: MIT
 最終更新 / Last updated: 2026-10-18
 SPDX-License-Identifier: MIT
 -->
 # 変更履歴 / Changelog
+
+## 1.10.0 — 2026-10-18
+
+- Redditの2コミュニティを全体図・手順・進捗・公開結果に統合。削除後の承認待ちを区別。ワークスペースとリポジトリの直下に正本への入口を追加。
+- Integrate both Reddit communities into the workflow and add shallow navigation entries without duplicating the register.
 
 ## 1.9.4 — 2026-10-18
 

@@ -3,25 +3,19 @@
 概要 / Description: GitHubを核にしたプロモーションの全体図・更新手順・公開台帳 / GitHub-centered promotion guide and publication register
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-17
-版 / Version: 1.9.4
+版 / Version: 1.10.0
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
 # mdEditor プロモーションの全体図と更新台帳
 
-2026-10-18：Redditの2投稿を、Storeでも配信中のmdEditor 1.0.12を紹介する指定文へ更新しました。[変更記録](integration/reddit/SIDEPROJECTS.md)。
-
-2026-10-18：r/sideprojectsはフィルター削除、モデレーターへ確認依頼済み。STL・GeoJSONのGitHub対応に関する誤記はRedditの2投稿と原稿で訂正しました。[現在の状態と訂正記録](integration/reddit/SIDEPROJECTS.md)。
-
-2026-10-18：[r/sideprojectsの動画投稿と確認記録](integration/reddit/SIDEPROJECTS.md)を追加。一覧での動画表示と自動再生を確認しました。
-
-2026-10-18：[Reddit初回試行](integration/reddit/README.md)を追加。u/5garashiからr/windowsappsへ[英語の実演付き開発者投稿](https://www.reddit.com/r/windowsapps/comments/1x8rt4k/i_built_a_free_windows_markdown_editor_with_live/)を公開。[反応と返信負担の記録](integration/reddit/TRIAL.md)はここへ戻します。
+2026-10-18：Redditの **r/windowsapps・r/sideprojects** を全体図・媒体一覧・更新手順・進捗・結果に統合しました。r/sideprojectsはフィルター削除、モデレーターへ確認依頼済みで、承認は未確認です。[Reddit資料](integration/reddit/README.md)・[詳細記録](integration/reddit/SIDEPROJECTS.md)。
 
 このファイルを、**「次の版で何を更新するか」「どこから公開するか」「公開できたか」**を確認する入口にします。アプリのソース・紹介原稿・画像・動画・検証結果をGitHubに置き、各媒体へ展開し、公開URLと確認結果をここへ戻します。次回は媒体を個別に依頼する代わりに、末尾の依頼文を使えます。
 
-今回の対象はソース版 **1.0.12**、動画パッケージ **revision 1.1.1**、YouTube公開管理 **revision 3.0.0**。2026-10-18 JSTに日英動画と各媒体を公開・確認しました。Store配信版番号は未確認です。文書の版はヘッダー、資料キットは[VERSION](VERSION)、改版内容は[CHANGELOG](CHANGELOG.md)で管理します。
+今回の対象はソース版 **1.0.12**、動画パッケージ **revision 1.1.1**、YouTube公開管理 **revision 3.0.0**。2026-10-18 JSTに日英動画と各媒体を公開・確認しました。Store配信版も1.0.12として案内します（所有者確認。収録はソースビルド）。文書の版はヘッダー、資料キットは[VERSION](VERSION)、改版内容は[CHANGELOG](CHANGELOG.md)で管理します。
 
-最新版：[日英の公開資料と媒体別記録](multichannel/update-2026-10-18/README.md)。3Dから始め、主な20機能へつなぐ日英の紹介・資料ページ、PDF・画像・サンプル、YouTube・TikTok・X・LinkedIn・Zennを更新しました。[動画原本と編集記録](showcase-1.0.12-revision-1.1.1/README.md)には背景映り込みの除去方法も保存しています。
+最新版：[日英の公開資料と媒体別記録](multichannel/update-2026-10-18/README.md)。3Dから始め、主な20機能へつなぐ日英の紹介・資料ページ、PDF・画像・サンプル、YouTube・TikTok・X・LinkedIn・Zennを更新し、Redditの2コミュニティへの初回投稿とその後の状態も記録しました。[動画原本と編集記録](showcase-1.0.12-revision-1.1.1/README.md)には背景映り込みの除去方法も保存しています。
 
 English: This is the single entry point for the GitHub-centered promotion process, channel inventory, verified publication links and next-release checklist. It describes the existing mix of automation and browser work; it does not implement a new automatic publisher.
 
@@ -36,6 +30,9 @@ flowchart TD
     HUB --> VIDEO["日英動画・字幕・サムネイル"]
     VIDEO --> YT["YouTube<br/>ActionsとAPIで公開"]
     VIDEO --> TT["TikTok<br/>ブラウザーから公開"]
+    VIDEO --> REDDIT["Reddit向け英語の短い実演<br/>主動画として添付"]
+    REDDIT --> RW["r/windowsapps<br/>Developer"]
+    REDDIT --> RS["r/sideprojects<br/>Showcase・AI支援の開示"]
     HUB --> COPY["日英投稿文・画像・PDF・記事"]
     COPY --> X["X：新しい実演を案内"]
     COPY --> LI["LinkedIn：用途と実演を案内"]
@@ -45,6 +42,8 @@ flowchart TD
     YT --> VERIFY["公開URL・内容・公開範囲を確認"]
     TT --> VERIFY
     X --> VERIFY
+    RW --> VERIFY
+    RS --> VERIFY
     LI --> VERIFY
     ZENN --> VERIFY
     OFFICE --> VERIFY
@@ -52,7 +51,7 @@ flowchart TD
     LOG --> HUB
 ```
 
-図の読み方：GitHubに保存しただけではSNS公開は完了しません。公開後のURL・内容・公開範囲まで確認して、台帳へ記録します。事務所サイトのカードはGitHub Pagesで管理できますが、Google Sites側の埋め込み表示は別途確認します。
+図の読み方：GitHubに保存しただけではSNS公開は完了しません。公開後のURL・内容・公開範囲まで確認して、台帳へ記録します。Redditは2コミュニティのルールと掲載状態を別々に確認します。投稿直後に表示できても、後からフィルター削除される場合があります。事務所サイトのカードはGitHub Pagesで管理できますが、Google Sites側の埋め込み表示は別途確認します。
 
 ## 2. 何をどこで管理するか
 
@@ -66,7 +65,7 @@ flowchart TD
 | 生の録画・作業用ファイル | このPCの `work/` | 録画素材・中間生成物。GitHubにある配布物とは区別する |
 | ローカル配布物 | このPCの `deliverables/` | MP4・字幕・検証記録・ZIP。GitHub上の原本も参照する |
 
-このPCの入口は `C:\miFfplay\mdEditorPromotion\audit-source\promotion\PROMOTION-SYSTEM.md` です。`work/publish-video-2026-10-17/repo` は今回の公開作業用コピーで、恒久的な原稿の入口ではありません。
+このPCでは、ワークスペース直下の `README.md` または `PROMOTION-SYSTEM.md` からこの正本へ移動できます。正本は `C:\miFfplay\mdEditorPromotion\audit-source\promotion\PROMOTION-SYSTEM.md` です。`work/publish-video-2026-10-17/repo` は今回の公開作業用コピーで、恒久的な原稿の入口ではありません。
 
 ```mermaid
 %%{init: {'theme':'base','themeVariables':{'primaryColor':'#FFFDF2','primaryTextColor':'#385723','primaryBorderColor':'#385723','lineColor':'#385723','secondaryColor':'#FFE699','tertiaryColor':'#F9EFCB'}}}%%
@@ -94,12 +93,13 @@ flowchart LR
 | TikTok 日英 | 縦動画・説明・宣伝開示・必要なAIラベル | ログイン済みブラウザー | 審査完了、「誰でも」、投稿URL、動画の版を確認 |
 | X | 新版の用途と日英実演リンク。画像使用時は代替テキスト | ログイン済みブラウザー | **@5garashi_com**、送信結果、投稿URL、本文を確認 |
 | LinkedIn | 開発者としての更新案内、用途、実演リンク | 本人プロフィールのブラウザー | **MOTOMASA IGARASHI**、Anyone、投稿URL、本文を確認 |
-| Reddit（初回試行） | 英語の短い実演・開発者の明示・Storeリンク | u/5garashiのブラウザー、Developerフレア | 週1投稿まで。固定URL・本文・再生・掲載状態を確認し、反応と返信時間を記録 |
+| Reddit r/windowsapps | 英語の短い実演・開発者の明示・Storeリンク | u/5garashi、Developerフレア | 週1投稿まで（2026-10-18確認）。URL・本文・再生・掲載状態・反応と返信時間を記録 |
+| Reddit r/sideprojects | 主動画・解決する用途・機能・制約・AI支援開発の開示 | u/5garashi、選択可能な適切なShowcaseフレア | 詳細説明・関係開示・過剰宣伝禁止。URL・一覧動画・掲載状態を確認。削除時は承認待ちを明記 |
 | Zenn | 既存記事の新画面・新動画・保存手順・制約 | 対象記事だけを連携元へpush | Zennの公開HTMLで新しい内容を確認 |
 | 事務所サイト | 日英紹介へのリンク、埋め込みカード | カードはPages。サイト本文変更は別作業 | 公開サイト内のリンクと埋め込み表示を確認 |
 | 配布資料 | 日英SNS画像・1枚PDF・必要なZIP | GitHubへ保存し資料ページから案内 | 画像の可読性、PDFページ数・文字・リンク、配信一致 |
 
-公開方法の詳細：[YouTube自動化](integration/youtube/automation/README.md)、[TikTok](integration/tiktok/README.md)、[X](integration/x/README.md)、[LinkedIn](integration/LINKEDIN-FIRST-POST.md)、[Zenn](integration/zenn/README.md)、[Pages公開処理](integration/publish.py)。過去の説明を含むため、現在の状態はこの台帳の「今回の公開結果」を優先します。
+公開方法の詳細：[YouTube自動化](integration/youtube/automation/README.md)、[TikTok](integration/tiktok/README.md)、[X](integration/x/README.md)、[LinkedIn](integration/LINKEDIN-FIRST-POST.md)、[Zenn](integration/zenn/README.md)、[Reddit](integration/reddit/README.md)・[r/sideprojects](integration/reddit/SIDEPROJECTS.md)、[Pages公開処理](integration/publish.py)。過去の説明を含むため、現在の状態はこの台帳の「今回の公開結果」を優先します。
 
 ## 4. 更新の順番 — 一度の依頼で各媒体まで進める
 
@@ -119,6 +119,9 @@ sequenceDiagram
     Worker->>Git: 原稿・配布物・検証結果を保存
     Worker->>Media: Pagesと動画を公開
     Media-->>Worker: 公開URL・処理結果・審査状態
+    Worker->>Worker: Reddit各コミュニティのルール・フレア・既存投稿を確認
+    Worker->>Media: Reddit各媒体へ主動画・用途・開発者開示を投稿
+    Media-->>Worker: 一覧表示・再生・掲載状態を確認
     Worker->>Media: 記事・SNSへ新しい実演を案内
     alt 正しいアカウントにログイン済み
         Worker->>Media: 許可された範囲を公開して確認
@@ -132,7 +135,7 @@ sequenceDiagram
     Worker-->>Owner: この台帳へのリンクと未完了事項を報告
 ```
 
-YouTubeとPagesを先に整え、そのURLをSNSと記事へ案内するとリンクの食い違いを減らせます。YouTubeの `sync` は新動画を非公開で用意し、確認後の `publish` で公開します。TikTokは投稿送信後の審査完了まで確認します。
+YouTubeとPagesを先に整え、そのURLをSNSと記事へ案内するとリンクの食い違いを減らせます。YouTubeの `sync` は新動画を非公開で用意し、確認後の `publish` で公開します。TikTokは投稿送信後の審査完了まで確認します。Redditはコミュニティごとに既存投稿とルールを確認し、有意な更新がない連投を避けます。動画は「本文に追加」せず主媒体として添付し、説明欄が保持されていることを送信前に確認します。一覧の動画表示と自動再生は閲覧者の設定に依存します。
 
 ## 5. 進捗の扱い — 原稿完成と公開完了を分ける
 
@@ -147,6 +150,8 @@ stateDiagram-v2
     state "公開送信済み・審査中" as Submitted
     state "公開確認済み" as Verified
     state "要修正" as Fix
+    state "フィルター削除・掲載停止" as Removed
+    state "モデレーター確認・承認待ち" as Review
     Planned --> Prepared
     Prepared --> Saved: 原稿と配布物を確認
     Prepared --> Fix: 検証で問題を発見
@@ -156,10 +161,15 @@ stateDiagram-v2
     Saved --> Submitted: 公開処理を実行
     Submitted --> Verified: URL・本文・公開範囲を確認
     Submitted --> Fix: 内容違い・処理失敗
+    Submitted --> Removed: フィルター削除
+    Verified --> Removed: 後日の削除を確認
+    Removed --> Review: 所有者の依頼で確認を送信
+    Review --> Verified: 承認と再掲載を確認
+    Review --> Fix: 修正が必要と回答
     Verified --> [*]
 ```
 
-各媒体の状態を個別に記録します。「送信済み」で止まった媒体を「公開確認済み」とは扱いません。応答不明時は先に管理画面・既存IDを調べ、重複投稿を避けます。
+各媒体の状態を個別に記録します。「送信済み」で止まった媒体を「公開確認済み」とは扱いません。応答不明時は先に管理画面・既存IDを調べ、重複投稿を避けます。Redditで削除された場合は自動的に再投稿せず、状態を掲載停止へ戻します。モデレーターへの連絡は所有者が依頼した場合に行い、送信済みと承認済みを区別します。
 
 ## 6. 今回の公開結果 — ソース1.0.12
 
@@ -173,6 +183,8 @@ stateDiagram-v2
 | TikTok EN | [開く](https://www.tiktok.com/@5garashi_com/video/7697747556910042375) | 公開確認済み |
 | X | [開く](https://x.com/5garashi_com/status/2111568105919131719) | 公開確認済み |
 | LinkedIn | [開く](https://www.linkedin.com/feed/update/urn:li:activity:7517332938926256128/) | 公開確認済み |
+| Reddit r/windowsapps | [投稿](https://www.reddit.com/r/windowsapps/comments/1x8rt4k/) | 投稿・本文訂正を確認。[原稿・記録](integration/reddit/POST.md)。継続掲載は未監視 |
+| Reddit r/sideprojects | [投稿](https://www.reddit.com/r/sideprojects/comments/1x8shm2/) | フィルター削除。モデレーターへ確認依頼済み、承認・再掲載は未確認。[記録](integration/reddit/SIDEPROJECTS.md) |
 | Zenn | [開く](https://zenn.dev/5garashi_com/articles/mdeditor-diagrams-math-pdf) | 公開確認済み |
 | 日英紹介・資料・PDF・画像 | [日本語](https://5garashi.github.io/mdEditor/) / [English](https://5garashi.github.io/mdEditor/en.html) / [資料](https://5garashi.github.io/mdEditor/resources.html) | 原本と配信一致 |
 | 制作事例・事務所カード | [制作事例](https://5garashi.github.io/mdEditor/case-study.html) / [カード](https://5garashi.github.io/mdEditor/office-card-ja.html) | 日英更新済み |
@@ -252,8 +264,9 @@ flowchart TD
 6. YouTube日英を用意・確認・公開し、最新動画入口と旧動画の説明を更新する。
 7. TikTok日英を正しいアカウントで投稿し、審査と公開範囲を確認する。
 8. X・LinkedInで新版を案内し、Zenn既存記事の画面・手順・リンクを更新する。
-9. 事務所サイトのリンクと埋め込み表示を確認する。本文の変更が必要な場合は範囲内で対応する。
-10. 公開URL、確認日、コミット、完了・待ち・未確認事項をこの台帳にまとめて保存する。
+9. Redditのr/windowsapps・r/sideprojectsを個別に判断し、ルールに沿って英語の主動画投稿・本文を更新する。既存投稿の削除・承認待ちを確認し、連投しない。
+10. 事務所サイトのリンクと埋め込み表示を確認する。本文の変更が必要な場合は範囲内で対応する。
+11. 公開URL、確認日、コミット、完了・待ち・未確認事項をこの台帳にまとめて保存する。
 
 | 次回の記入欄 | 値 |
 | --- | --- |
@@ -263,13 +276,15 @@ flowchart TD
 | YouTube 日英 | 未着手 |
 | TikTok 日英 | 未着手 |
 | X・LinkedIn・Zenn | 未着手 |
+| Reddit r/windowsapps | ルール・既存投稿・掲載状態を確認して判断 |
+| Reddit r/sideprojects | 承認待ちの結果・ルールを確認して判断 |
 | 事務所サイト・PDF・画像・サンプル | 未着手 |
 | 公開元コミット・詳細記録 | 未記入 |
 | 未完了項目・次の担当 | 未記入 |
 
 ### 次回の依頼文
 
-> mdEditorをソース版 X.Y.Z に更新しました。promotion/PROMOTION-SYSTEM.md を入口に、記載の全媒体を対象にプロモーション資料・実演動画・紹介ページ・記事・SNSを更新し、公開確認と台帳更新まで進めてください。日英の対象は媒体別一覧に従ってください。ログインなど本人操作が必要な媒体は理由を記録し、ほかの媒体を進めてください。旧投稿・旧動画は削除せず、ユーザーの未コミット変更を保持してください。
+> mdEditorをソース版 X.Y.Z に更新しました。promotion/PROMOTION-SYSTEM.md を入口に、記載の全媒体を対象にプロモーション資料・実演動画・紹介ページ・記事・SNSを更新し、公開確認と台帳更新まで進めてください。日英の対象は媒体別一覧に従ってください。Redditのr/windowsapps・r/sideprojectsも個別に確認し、既存の削除・承認待ちと投稿頻度のルールを踏まえて更新可否を判断してください。ログインなど本人操作が必要な媒体は理由を記録し、ほかの媒体を進めてください。旧投稿・旧動画は削除せず、ユーザーの未コミット変更を保持してください。
 
 この文書を保存しただけでは、将来のSNS公開を自動実行しません。実際の更新は、その回の依頼と対象範囲に基づいて行います。
 
@@ -279,7 +294,7 @@ flowchart TD
 
 作成・修正のたびに、Identity管理の[共通チェックリスト（参照タグ4.20.0）](https://github.com/5garashi/5garashi-identity/blob/v4.20.0/docs/MARKDOWN-CHECKLIST.md)と[mdEditor固有の補足](MARKDOWN-CHECKLIST.md)を使います。「描画できた」と「文字が重ならず読める」は別の確認項目です。GitHubとmdEditorの両方で共通に描画できるMermaidを選び、両環境の確認結果を分けて記録します。共通原則はIdentity第8条8-9で管理しています。
 
-図と同じ判断材料を本文・表にも記載し、色だけで進捗を表しません。日本語を主に、英語の概要と媒体名を併記しています。配色はIdentityの文書用パレットを参照。2026-10-17にmdEditor同梱のMermaidを使ったChrome検証で、5図すべてのSVG描画と文書内の相対リンクを確認しました。[検証記録](validation/promotion-system.json)。mdEditor本体でこの文書を開く操作、読み上げ、実OSのコントラストテーマ、全図のPDF改ページは今回未確認です。完全準拠は宣言しません。
+図と同じ判断材料を本文・表にも記載し、色だけで進捗を表しません。日本語を主に、英語の概要と媒体名を併記しています。配色はIdentityの文書用パレットを参照。2026-10-17の検証記録は改訂前の5図が対象です。今回のReddit追加後の検証結果は[1.10.0の記録](validation/promotion-system-1.10.0.json)を参照してください。GitHub実表示とmdEditor本体での今回の図の目視確認は未実施です。[検証記録](validation/promotion-system.json)。mdEditor本体でこの文書を開く操作、読み上げ、実OSのコントラストテーマ、全図のPDF改ページは今回未確認です。完全準拠は宣言しません。
 
 デザイン基準出典 / Design reference: [Design Office Identity 4.20.0](https://5garashi.github.io/5garashi-identity/)、5garashi.com設計事務所 / 5garashi.com Design Office。原本はCC BY-ND 4.0。この文書の文章と図のコードは既存資料と同じMITです。
 

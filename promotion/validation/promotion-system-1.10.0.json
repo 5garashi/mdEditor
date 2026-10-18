@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-18 JST",
+  "engine": "mdEditor bundled wwwroot/lib/mermaid/mermaid.min.js",
+  "diagrams": [
+    {
+      "index": 0,
+      "ok": true,
+      "svg": 43904
+    },
+    {
+      "index": 1,
+      "ok": true,
+      "svg": 21811
+    },
+    {
+      "index": 2,
+      "ok": true,
+      "svg": 38108
+    },
+    {
+      "index": 3,
+      "ok": true,
+      "svg": 46451
+    },
+    {
+      "index": 4,
+      "ok": true,
+      "svg": 23205
+    }
+  ],
+  "relativeLinks": "pass",
+  "scope": "Chrome SVG rendering with mdEditor bundled engine; relative links verified; GitHub/native app/PDF/accessibility unverified",
+  "document_version": "1.10.0",
+  "visual_review": "Modified diagrams not yet visually reviewed in GitHub or native mdEditor"
+}
