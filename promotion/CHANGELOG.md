@@ -3,12 +3,17 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.9.0
+版 / Version: 1.9.1
 ライセンス / License: MIT
 最終更新 / Last updated: 2026-10-18
 SPDX-License-Identifier: MIT
 -->
 # 変更履歴 / Changelog
+
+## 1.9.1 — 2026-10-18
+
+- r/sideprojectsへ主動画付き投稿を公開。一覧での動画表示・自動再生を確認し、英文と確認範囲を保存。
+- Publish a video-first r/sideprojects post and verify feed autoplay in desktop Chrome.
 
 ## 1.9.0 — 2026-10-18
 

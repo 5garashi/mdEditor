@@ -3,11 +3,13 @@
 概要 / Description: GitHubを核にしたプロモーションの全体図・更新手順・公開台帳 / GitHub-centered promotion guide and publication register
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-17
-版 / Version: 1.9.0
+版 / Version: 1.9.1
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
 # mdEditor プロモーションの全体図と更新台帳
+
+2026-10-18：[r/sideprojectsの動画投稿と確認記録](integration/reddit/SIDEPROJECTS.md)を追加。一覧での動画表示と自動再生を確認しました。
 
 2026-10-18：[Reddit初回試行](integration/reddit/README.md)を追加。u/5garashiからr/windowsappsへ[英語の実演付き開発者投稿](https://www.reddit.com/r/windowsapps/comments/1x8rt4k/i_built_a_free_windows_markdown_editor_with_live/)を公開。[反応と返信負担の記録](integration/reddit/TRIAL.md)はここへ戻します。
 

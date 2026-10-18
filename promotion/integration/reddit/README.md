@@ -3,11 +3,13 @@
 概要 / Description: Redditでの初回試行と公開記録 / Initial Reddit trial and publication record
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-18
-版 / Version: 1.9.0
+版 / Version: 1.9.1
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
 # Reddit — r/windowsapps
+
+2026-10-18：[r/sideprojectsの動画投稿と確認記録](SIDEPROJECTS.md)を追加。一覧での動画表示と自動再生を確認しました。
 
 2026-10-18、**u/5garashi** から[初回の開発者投稿](https://www.reddit.com/r/windowsapps/comments/1x8rt4k/i_built_a_free_windows_markdown_editor_with_live/)を公開しました。Developerフレア、開発元の明示、Microsoft StoreとMITソースへのリンクを付けています。アカウント登録の本人確認は所有者が実施しました。
 
