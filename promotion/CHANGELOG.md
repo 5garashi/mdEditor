@@ -3,12 +3,17 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.8.0
+版 / Version: 1.9.0
 ライセンス / License: MIT
 最終更新 / Last updated: 2026-10-18
 SPDX-License-Identifier: MIT
 -->
 # 変更履歴 / Changelog
+
+## 1.9.0 — 2026-10-18
+
+- r/windowsappsで初回の開発者投稿を公開。31秒の英語実演、実際のPDF出力、原稿、公開確認、反応と返信時間の記録欄を追加。
+- Publish the first disclosed Reddit developer post with a short actual demo and trial records.
 
 ## 1.8.0 — 2026-10-18
 

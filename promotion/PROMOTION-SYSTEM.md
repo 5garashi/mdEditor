@@ -3,11 +3,13 @@
 概要 / Description: GitHubを核にしたプロモーションの全体図・更新手順・公開台帳 / GitHub-centered promotion guide and publication register
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-17
-版 / Version: 1.8.0
+版 / Version: 1.9.0
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
 # mdEditor プロモーションの全体図と更新台帳
+
+2026-10-18：[Reddit初回試行](integration/reddit/README.md)を追加。u/5garashiからr/windowsappsへ[英語の実演付き開発者投稿](https://www.reddit.com/r/windowsapps/comments/1x8rt4k/i_built_a_free_windows_markdown_editor_with_live/)を公開。[反応と返信負担の記録](integration/reddit/TRIAL.md)はここへ戻します。
 
 このファイルを、**「次の版で何を更新するか」「どこから公開するか」「公開できたか」**を確認する入口にします。アプリのソース・紹介原稿・画像・動画・検証結果をGitHubに置き、各媒体へ展開し、公開URLと確認結果をここへ戻します。次回は媒体を個別に依頼する代わりに、末尾の依頼文を使えます。
 
@@ -86,6 +88,7 @@ flowchart LR
 | TikTok 日英 | 縦動画・説明・宣伝開示・必要なAIラベル | ログイン済みブラウザー | 審査完了、「誰でも」、投稿URL、動画の版を確認 |
 | X | 新版の用途と日英実演リンク。画像使用時は代替テキスト | ログイン済みブラウザー | **@5garashi_com**、送信結果、投稿URL、本文を確認 |
 | LinkedIn | 開発者としての更新案内、用途、実演リンク | 本人プロフィールのブラウザー | **MOTOMASA IGARASHI**、Anyone、投稿URL、本文を確認 |
+| Reddit（初回試行） | 英語の短い実演・開発者の明示・Storeリンク | u/5garashiのブラウザー、Developerフレア | 週1投稿まで。固定URL・本文・再生・掲載状態を確認し、反応と返信時間を記録 |
 | Zenn | 既存記事の新画面・新動画・保存手順・制約 | 対象記事だけを連携元へpush | Zennの公開HTMLで新しい内容を確認 |
 | 事務所サイト | 日英紹介へのリンク、埋め込みカード | カードはPages。サイト本文変更は別作業 | 公開サイト内のリンクと埋め込み表示を確認 |
 | 配布資料 | 日英SNS画像・1枚PDF・必要なZIP | GitHubへ保存し資料ページから案内 | 画像の可読性、PDFページ数・文字・リンク、配信一致 |
