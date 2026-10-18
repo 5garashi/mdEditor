@@ -46,6 +46,8 @@
       aboutSupport: "サポート・お問い合わせ", aboutPrivacy: "プライバシーポリシー",
       aboutNote: "リンクは選んだときだけブラウザーで開きます。起動時の広告や、PDF への宣伝の挿入はありません。",
       open: "開く", openTitle: "開く (Ctrl+O)", save: "保存", saveTitle: "保存 (Ctrl+S)",
+      restoreDiscarded: "前の文書に戻す",
+      restoreDiscardedTitle: (name) => `前の文書「${name}」に戻します。保存しなかった変更があったときは、閉じたときの状態に戻します`,
       saveAs: "名前を付けて保存",
       languageToggle: "English", languageLabel: "表示言語を English に切り替える",
       editorHeading: "Markdown を編集", editorLabel: "Markdown テキスト",
@@ -82,6 +84,7 @@
       modelLabel: "3D モデル（STL）。ドラッグで回転、ホイールで拡大・縮小", modelEmpty: "三角形がありません",
       mapLabel: "地図（GeoJSON）", mapEmpty: "地図に描く図形がありません",
       toc: "目次", tocNoHeadings: "目次にする見出しがありません。「## 見出し」のように見出しを書いてから、もう一度押してください。",
+      dropInsert: "カーソルの位置に入れる", dropOpen: "ファイルとして開く",
       tocUpdated: "目次を新しくしました。", tocInserted: "カーソルの位置に目次を入れました。見出しを変えたら、もう一度「目次」を押すと新しくなります。",
       help: "書き方", helpTitle: "Markdown の書き方 (F1)", helpHeading: "Markdown の簡単な書き方",
       shortcuts: "キー操作", shortcutHeading: "キーボードショートカット",
@@ -124,7 +127,7 @@
       shortcutTurnedOn: "キーボードショートカットを使います。", shortcutTurnedOff: "キーボードショートカットを使いません（Esc とダイアログ内の操作は使えます）。",
       shortcutResetDone: "すべてのキーを初期設定に戻しました。",
       shortcutNames: {
-        open: "開く", save: "保存", saveAs: "名前を付けて保存", pdf: "PDFに保存", paper: "用紙の切り替え",
+        open: "開く", restoreDiscarded: "前の文書に戻す", save: "保存", saveAs: "名前を付けて保存", pdf: "PDFに保存", paper: "用紙の切り替え",
         theme: "表示テーマの切り替え", language: "表示言語の切り替え", encoding: "文字コード",
         toc: "目次を入れる・新しくする", findReplace: "検索・置換", findNext: "次を検索", findPrev: "前を検索", replaceAll: "すべて置換",
         help: "Markdown の書き方", shortcuts: "キー操作の一覧", fullscreenEditor: "編集画面をウィンドウ全体に表示",
@@ -178,6 +181,8 @@
       aboutSupport: "Support and contact", aboutPrivacy: "Privacy policy",
       aboutNote: "Links open in your browser only when you choose them. The app shows no ads at startup and never inserts promotions into PDFs.",
       open: "Open", openTitle: "Open (Ctrl+O)", save: "Save", saveTitle: "Save (Ctrl+S)",
+      restoreDiscarded: "Back to previous document",
+      restoreDiscardedTitle: (name) => `Goes back to the previous document, ${name}. Changes it had that were not saved come back as they were`,
       saveAs: "Save As",
       languageToggle: "日本語", languageLabel: "Switch the display language to Japanese",
       editorHeading: "Edit Markdown", editorLabel: "Markdown text",
@@ -214,6 +219,7 @@
       modelLabel: "3D model (STL). Drag to turn, use the wheel to zoom", modelEmpty: "There are no triangles",
       mapLabel: "Map (GeoJSON)", mapEmpty: "There are no shapes to draw on the map",
       toc: "Contents", tocNoHeadings: "There are no headings for a table of contents. Write headings such as \"## Heading\", then press it again.",
+      dropInsert: "Insert at the cursor", dropOpen: "Open as a file",
       tocUpdated: "The table of contents was updated.", tocInserted: "A table of contents was inserted at the cursor. After changing headings, press Contents again to update it.",
       help: "Syntax", helpTitle: "Markdown syntax (F1)", helpHeading: "Markdown quick reference",
       shortcuts: "Keys", shortcutHeading: "Keyboard shortcuts",
@@ -256,7 +262,7 @@
       shortcutTurnedOn: "Keyboard shortcuts are on.", shortcutTurnedOff: "Keyboard shortcuts are off (Esc and keys inside dialogs still work).",
       shortcutResetDone: "All keys are back to their defaults.",
       shortcutNames: {
-        open: "Open", save: "Save", saveAs: "Save As", pdf: "Save as PDF", paper: "Switch paper size",
+        open: "Open", restoreDiscarded: "Back to previous document", save: "Save", saveAs: "Save As", pdf: "Save as PDF", paper: "Switch paper size",
         theme: "Switch theme", language: "Switch language", encoding: "Text encoding",
         toc: "Insert or update the table of contents", findReplace: "Find/Replace", findNext: "Find next", findPrev: "Find previous", replaceAll: "Replace all",
         help: "Markdown syntax", shortcuts: "Keyboard shortcuts", fullscreenEditor: "Fill window with editor",
@@ -467,6 +473,14 @@
   };
 
   document.getElementById("open-button").addEventListener("click", () => post({ type: "open" }));
+  // Shown only while a document closed with "No" to saving can be brought back.
+  const restoreButton = document.getElementById("restore-button");
+  let discardedName = null;
+  const updateRestoreButton = () => {
+    restoreButton.hidden = discardedName === null;
+    restoreButton.title = discardedName === null ? "" : t("restoreDiscardedTitle")(discardedName);
+  };
+  restoreButton.addEventListener("click", () => post({ type: "restoreDiscarded" }));
   document.getElementById("save-button").addEventListener("click", () => post({ type: "save" }));
   // Save As lists every format (Markdown, text, PDF, HTML, PNG, Word), like Open.
   // Keeping the original Markdown in the HTML is a choice in Settings (off by default).
@@ -1265,6 +1279,7 @@
   // Only Ctrl + letter/digit and F keys are allowed so typing is never captured.
   const shortcutDefinitions = [
     { id: "open", keys: "Ctrl+O", button: "open-button", run: () => post({ type: "open" }) },
+    { id: "restoreDiscarded", keys: "Ctrl+Shift+B", button: "restore-button", run: () => post({ type: "restoreDiscarded" }) },
     { id: "openUrl", keys: "Ctrl+Shift+K", button: "url-button", run: () => openUrlDialog() },
     { id: "save", keys: "Ctrl+S", button: "save-button", run: () => post({ type: "save" }) },
     { id: "saveAs", keys: "Ctrl+Shift+S", button: "save-as-button", run: () => saveAs() },
@@ -2517,40 +2532,62 @@
     Array.from(event.dataTransfer?.types ?? []).includes("Files");
   const hasLink = (event) =>
     Array.from(event.dataTransfer?.types ?? []).includes("text/uri-list");
+  // While files are dragged, a label by the pointer says what dropping there does:
+  // on the editor they go in at the cursor, anywhere else a file opens.
+  const dropHint = document.createElement("div");
+  dropHint.className = "drop-hint";
+  dropHint.hidden = true;
+  document.body.append(dropHint);
+  const hideDropHint = () => {
+    dropHint.hidden = true;
+    document.body.classList.remove("dragging");
+  };
   window.addEventListener("dragover", (event) => {
     if (!hasFiles(event) && !hasLink(event)) return;
     event.preventDefault();
     event.dataTransfer.dropEffect = "copy";
     document.body.classList.add("dragging");
+    if (!hasFiles(event)) return;
+    dropHint.textContent = t(editorHost.contains(event.target) ? "dropInsert" : "dropOpen");
+    dropHint.hidden = false;
+    // Beside the picture Windows draws around the pointer (about 90px wide): to its
+    // right, or to its left when the window has no room there.
+    const right = event.clientX + 56;
+    const x = right + dropHint.offsetWidth <= window.innerWidth - 8 ? right : event.clientX - 56 - dropHint.offsetWidth;
+    const y = Math.min(event.clientY - dropHint.offsetHeight / 2, window.innerHeight - dropHint.offsetHeight - 8);
+    dropHint.style.left = `${Math.max(8, x)}px`;
+    dropHint.style.top = `${Math.max(8, y)}px`;
   }, true);
   window.addEventListener("dragleave", (event) => {
-    if (event.relatedTarget === null) document.body.classList.remove("dragging");
+    if (event.relatedTarget === null) hideDropHint();
   }, true);
+  window.addEventListener("dragend", hideDropHint, true);
   window.addEventListener("drop", (event) => {
     const link = event.dataTransfer?.getData("text/uri-list")?.split("\n").find((line) => line && !line.startsWith("#"));
     if (!hasFiles(event) && link?.trim().startsWith("https://")) {
       event.preventDefault();
       event.stopPropagation();
-      document.body.classList.remove("dragging");
+      hideDropHint();
       post({ type: "openUrl", url: link.trim() });
       return;
     }
-    if (!hasFiles(event)) return;
-    event.preventDefault();
-    event.stopPropagation();
-    document.body.classList.remove("dragging");
-    const files = Array.from(event.dataTransfer.files);
-    // Images dropped on the editor go into the document at the drop point;
-    // anywhere else a file (an image too) opens as a document.
-    const isImage = (file) => /\.(png|jpe?g|gif|bmp|webp)$/i.test(file.name);
-    if (editorHost.contains(event.target) && files.length > 0 && files.every(isImage)) {
-      const position = view.posAtCoords({ x: event.clientX, y: event.clientY });
-      if (position !== null) view.dispatch({ selection: { anchor: position } });
-      window.chrome.webview.postMessageWithAdditionalObjects({ type: "dropImages", count: files.length }, files);
+    if (!hasFiles(event)) {
+      hideDropHint();
       return;
     }
+    event.preventDefault();
+    event.stopPropagation();
+    hideDropHint();
+    const files = Array.from(event.dataTransfer.files);
+    // On the editor, the files go in at the drop point (the cursor moves there
+    // first); anywhere else the app opens the file.
+    const onEditor = editorHost.contains(event.target);
+    if (onEditor) {
+      const position = view.posAtCoords({ x: event.clientX, y: event.clientY });
+      if (position !== null) view.dispatch({ selection: { anchor: position } });
+    }
     window.chrome.webview.postMessageWithAdditionalObjects(
-      { type: "dropFile", count: files.length },
+      { type: "dropFile", count: files.length, onEditor },
       files
     );
   }, true);
@@ -2613,9 +2650,22 @@
     if (message.type === "tocText") {
       if (message.text) placeToc(message.text);
       else showNoticeMessage(t("tocNoHeadings"));
+    } else if (message.type === "discarded") {
+      discardedName = message.name ?? null;
+      updateRestoreButton();
     } else if (message.type === "insertText") {
       const { from, to } = view.state.selection.main;
-      view.dispatch({ changes: { from, to, insert: message.text }, selection: { anchor: from + message.text.length } });
+      // The editor keeps "\n" line breaks; "\r\n" would make the length below wrong.
+      let insert = message.text.replace(/\r\n?/g, "\n");
+      if (message.block) {
+        // A file's content goes in as blocks of its own, with blank lines around it.
+        const head = view.state.sliceDoc(0, from);
+        const tail = view.state.sliceDoc(to);
+        const before = head === "" || head.endsWith("\n\n") ? "" : head.endsWith("\n") ? "\n" : "\n\n";
+        const after = tail.startsWith("\n") ? "" : "\n";
+        insert = `${before}${insert}${after}`;
+      }
+      view.dispatch({ changes: { from, to, insert }, selection: { anchor: from + insert.length }, scrollIntoView: true });
       view.focus();
     } else if (message.type === "documentInfo") {
       documentName.textContent = message.name;

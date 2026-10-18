@@ -59,8 +59,8 @@ internal static class Strings
         ["Word 文書を書き込めません。同じ名前の文書を Word で開いている場合は閉じるか、別の名前で保存してください"] =
             "The Word document cannot be written. If Word has a document with this name open, close it there, or save under another name",
         ["Word 文書を書き出せません。少し待ってから、もう一度お試しください"] = "The Word document cannot be exported. Wait a moment, then try again",
-        ["開けるファイル|*.md;*.markdown;*.txt;*.html;*.htm;*.docx;*.eml;*.csv;*.tsv;*.json;*.xml;*.ipynb;*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp|Markdown ファイル (*.md;*.markdown)|*.md;*.markdown|テキスト ファイル (*.txt)|*.txt|HTML ファイル (*.html;*.htm)|*.html;*.htm|Word 文書 (*.docx)|*.docx|メール (*.eml)|*.eml|CSV / TSV (*.csv;*.tsv)|*.csv;*.tsv|JSON / XML (*.json;*.xml)|*.json;*.xml|Jupyter Notebook (*.ipynb)|*.ipynb|画像 (*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp)|*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp|すべてのファイル (*.*)|*.*"] =
-            "Files mdEditor can open|*.md;*.markdown;*.txt;*.html;*.htm;*.docx;*.eml;*.csv;*.tsv;*.json;*.xml;*.ipynb;*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp|Markdown files (*.md;*.markdown)|*.md;*.markdown|Text files (*.txt)|*.txt|HTML files (*.html;*.htm)|*.html;*.htm|Word documents (*.docx)|*.docx|E-mail (*.eml)|*.eml|CSV / TSV (*.csv;*.tsv)|*.csv;*.tsv|JSON / XML (*.json;*.xml)|*.json;*.xml|Jupyter Notebook (*.ipynb)|*.ipynb|Images (*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp)|*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp|All files (*.*)|*.*",
+        ["開けるファイル|*.md;*.markdown;*.txt;*.html;*.htm;*.docx;*.eml;*.csv;*.tsv;*.json;*.xml;*.ipynb;*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp;*.mp4;*.m4v;*.webm;*.ogv;*.mov|Markdown ファイル (*.md;*.markdown)|*.md;*.markdown|テキスト ファイル (*.txt)|*.txt|HTML ファイル (*.html;*.htm)|*.html;*.htm|Word 文書 (*.docx)|*.docx|メール (*.eml)|*.eml|CSV / TSV (*.csv;*.tsv)|*.csv;*.tsv|JSON / XML (*.json;*.xml)|*.json;*.xml|Jupyter Notebook (*.ipynb)|*.ipynb|画像 (*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp)|*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp|動画 (*.mp4;*.m4v;*.webm;*.ogv;*.mov)|*.mp4;*.m4v;*.webm;*.ogv;*.mov|すべてのファイル (*.*)|*.*"] =
+            "Files mdEditor can open|*.md;*.markdown;*.txt;*.html;*.htm;*.docx;*.eml;*.csv;*.tsv;*.json;*.xml;*.ipynb;*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp;*.mp4;*.m4v;*.webm;*.ogv;*.mov|Markdown files (*.md;*.markdown)|*.md;*.markdown|Text files (*.txt)|*.txt|HTML files (*.html;*.htm)|*.html;*.htm|Word documents (*.docx)|*.docx|E-mail (*.eml)|*.eml|CSV / TSV (*.csv;*.tsv)|*.csv;*.tsv|JSON / XML (*.json;*.xml)|*.json;*.xml|Jupyter Notebook (*.ipynb)|*.ipynb|Images (*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp)|*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp|Videos (*.mp4;*.m4v;*.webm;*.ogv;*.mov)|*.mp4;*.m4v;*.webm;*.ogv;*.mov|All files (*.*)|*.*",
         ["Markdown ファイル (*.md)|*.md|テキスト ファイル (*.txt)|*.txt|すべてのファイル (*.*)|*.*"] =
             "Markdown files (*.md)|*.md|Text files (*.txt)|*.txt|All files (*.*)|*.*",
         ["Markdown ファイル (*.md)|*.md|テキスト（そのまま）(*.txt)|*.txt|テキスト（記号なし）(*.txt)|*.txt|PDF (*.pdf)|*.pdf|HTML (*.html)|*.html|PNG 画像 (*.png)|*.png|Word 文書 (*.docx)|*.docx|CSV（文書の中の表）(*.csv)|*.csv|TSV（文書の中の表）(*.tsv)|*.tsv|JSON（文書の中の表）(*.json)|*.json|Jupyter Notebook (*.ipynb)|*.ipynb"] =
@@ -84,8 +84,18 @@ internal static class Strings
             "The page could not be opened. Check the address and your internet connection, then try again.",
         ["Markdown・HTML ファイル (*.md;*.markdown;*.html;*.htm)|*.md;*.markdown;*.html;*.htm|Markdown ファイル (*.md;*.markdown)|*.md;*.markdown|HTML ファイル (*.html;*.htm)|*.html;*.htm|すべてのファイル (*.*)|*.*"] =
             "Markdown and HTML files (*.md;*.markdown;*.html;*.htm)|*.md;*.markdown;*.html;*.htm|Markdown files (*.md;*.markdown)|*.md;*.markdown|HTML files (*.html;*.htm)|*.html;*.htm|All files (*.*)|*.*",
-        ["開けるファイル（.md、.txt、.html、.docx、.eml、.csv、.tsv、.json、.xml、.ipynb、画像）を1つだけドロップしてください。画像を編集画面にドロップすると、文書に入れます。"] =
-            "Drop exactly one file mdEditor can open (.md, .txt, .html, .docx, .eml, .csv, .tsv, .json, .xml, .ipynb, or an image). Images dropped on the editor are inserted into the document.",
+        ["開けるファイル（.md、.txt、.html、.docx、.eml、.csv、.tsv、.json、.xml、.ipynb、画像、動画）は、1つだけドロップしてください。編集画面にドロップすると、ファイルの中身・画像・動画・リンクを文書に入れます。フォルダーはドロップできません。"] =
+            "Drop only one file that mdEditor opens (.md, .txt, .html, .docx, .eml, .csv, .tsv, .json, .xml, .ipynb, an image, or a video). Files dropped on the editor go into the document instead, as their content, images and videos, or links. Folders cannot be dropped.",
+        ["mdEditor では開けないファイルです。編集画面にドロップすると、リンクとして入ります。"] =
+            "mdEditor cannot open this file. Drop it on the editor to insert it as a link.",
+        ["「{0}」の中身を入れました。ファイルとして開くときは、編集画面の外にドロップしてください（Ctrl+Z で取り消せます）。"] =
+            "The content of {0} was inserted. To open it as a file, drop it outside the editor (Ctrl+Z undoes this).",
+        ["前の文書のファイルが見つかりません。移動・名前の変更・削除がされていないか確かめてください。\n\n{0}"] =
+            "The previous document's file cannot be found. Check whether it was moved, renamed, or deleted.\n\n{0}",
+        ["「{0}」を、閉じたとき（{1}）の状態に戻しました。まだ保存していません。"] =
+            "{0} is back as it was when it was closed ({1}). It has not been saved yet.",
+        ["ファイルの中身を読み込めません。「開く」で開けるか確かめてから、もう一度お試しください"] =
+            "The file's content cannot be read. Check that it opens with Open, then try again",
         ["Jupyter Notebook を読み込めません。Jupyter で開けるか確かめて、もう一度開いてください"] =
             "The Jupyter Notebook cannot be read. Check that it opens in Jupyter, then open it again",
         ["Jupyter Notebook を Markdown に変換して開きました。コードは言語付きのコードの枠、実行結果は「output」の枠・画像・表になります。保存すると Markdown ファイルになります（ノートブックは変わりません）。"] =
@@ -96,6 +106,8 @@ internal static class Strings
             "Jupyter Notebook export",
         ["画像を開きました。画像の下に説明を書き足して、Markdown ファイルとして保存できます。別のフォルダーに保存したときは、画像もそこに写します。"] =
             "The image was opened. Write a description below it and save it as a Markdown file. If you save in another folder, the image is copied there too.",
+        ["動画を開きました。動画の下に説明を書き足して、Markdown ファイルとして保存できます。別のフォルダーに保存したときは、動画もそこに写します。"] =
+            "The video was opened. Write a description below it and save it as a Markdown file. If you save in another folder, the video is copied there too.",
         ["JSON の一覧を Markdown の表にして開きました。項目の名前を見出しの行にしています。"] =
             "The JSON list was opened as a Markdown table, with the field names as the header row. ",
         ["JSON として読めない所があるので、中身をそのままコードの枠に入れて開きました。"] =
@@ -108,10 +120,10 @@ internal static class Strings
             "The XML was opened in a code block. You can add notes before and after it. ",
         ["保存すると Markdown ファイルになります（元のファイルは変わりません）。"] =
             "Saving creates a Markdown file (the original file is unchanged).",
-        ["画像を入れるには、先に文書を保存します（画像は文書の横の「名前-images」フォルダーに置きます）。保存先を選びますか？"] =
-            "To insert images, save the document first (images go in a \"name-images\" folder beside it). Choose where to save?",
-        ["画像を写せません。文書のフォルダーに書き込めるか確かめて、もう一度お試しください"] =
-            "The image cannot be copied. Check that you can write to the document's folder, then try again",
+        ["画像・動画・ファイルを入れるには、先に文書を保存します（文書の横の「名前-files」フォルダーに置きます）。保存先を選びますか？"] =
+            "To insert images, videos, or files, save the document first (they go in a \"name-files\" folder beside it). Choose where to save?",
+        ["ファイルを写せません。文書のフォルダーに書き込めるか確かめて、もう一度お試しください"] =
+            "The file cannot be copied. Check that you can write to the document's folder, then try again",
         ["JSONの書き出し"] =
             "JSON export",
         ["メールを読み込めません。メールアプリから .eml 形式で保存し直してから、もう一度開いてください"] =

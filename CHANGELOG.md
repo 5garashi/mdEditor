@@ -12,6 +12,24 @@
 
 The version number lives in [VERSION](./VERSION). Add each new version at the top, with a `## version — date` heading (used as the GitHub Release notes).
 
+## 1.0.13 — 2026-10-18
+
+- ドラッグ＆ドロップを「編集画面に落とせば入れる、外に落とせば開く」にそろえた。ドラッグしている間は、ポインターの横に「カーソルの位置に入れる」「ファイルとして開く」を表示する。
+  - 動画（.mp4・.m4v・.webm・.ogv・.mov）は画像と同じ扱いにした。「開く」で開け、編集画面に落とすと文書の横の「名前-files」フォルダーに写して `![](名前-files/動画.mp4)` を入れる。
+  - 「開く」で開けるファイル（.md・.txt・.html・.docx・.eml・.csv・.json・.ipynb など）を編集画面に落とすと、開かずに、「開く」と同じように Markdown にした中身をカーソルの位置に入れる（これまでは開いていた）。中身の中の画像・動画は「名前-files」フォルダーに写し、ほかのファイルへのリンクは元のファイルを指すように書き換える。Markdown のフロントマターは入れない。入れたことはお知らせ欄に表示し、Ctrl+Z で取り消せる。
+  - 開けないファイル（.pdf・.pptx・.zip など）は、編集画面に落とすと「名前-files」フォルダーに写してリンク（`[資料.pdf](名前-files/資料.pdf)`）を入れる。外に落としたときは、編集画面に落とすとリンクとして入ることを知らせる（これまでは「開けるファイルを1つだけドロップしてください」とだけ表示していた）。
+- 文書に入れる画像・動画・ファイルの置き場所を、「名前-images」から「名前-files」フォルダーにした（ドロップ、貼り付け、Word・メール・Jupyter Notebook を開いたときの画像も）。前の版で作った「名前-images」を使っている文書は、そのまま表示できる。
+- 「前の文書に戻す」（Ctrl+Shift+B）を加えた。別の文書を開く前に開いていた最後の文書に戻す。「保存しますか？」で「いいえ」を選んで閉じた文書は、閉じたときの状態（書きかけの内容・ファイルの場所・文字コード）に未保存のまま戻し、変更のないまま閉じた文書はそのファイルを開き直す。ボタンは戻せる文書があるときだけ「開く」の横に出る。控えは自動バックアップと同じ `%LOCALAPPDATA%\mdEditor\Recovery` に 1 つだけ置き（変更のない文書はファイルの場所だけ）、使うか次に文書を閉じると入れ替わる。自動バックアップがオフのときは控えを残さない（PRIVACY.md に追記）。
+- README に、Markdown のまま人に渡すときは「名前-files」フォルダーも一緒に渡すこと（文書は相対パスで指しているため）を書いた。
+
+- Drag and drop now follows one rule: dropped on the editor, a file goes in; dropped anywhere else, it opens. While you drag, a label beside the pointer says "Insert at the cursor" or "Open as a file".
+  - Videos (.mp4, .m4v, .webm, .ogv, .mov) work like images: they open with Open, and dropped on the editor they are copied to the "name-files" folder beside the document with `![](name-files/video.mp4)` inserted.
+  - A file Open accepts (.md, .txt, .html, .docx, .eml, .csv, .json, .ipynb, and so on) dropped on the editor no longer opens: its content, converted to Markdown as Open does, goes in at the cursor. Images and videos in it are copied to the "name-files" folder, and links to other files are changed to point to the original files. Front matter is left out. The notice bar says what went in, and Ctrl+Z undoes it.
+  - A file mdEditor cannot open (.pdf, .pptx, .zip, and so on) dropped on the editor is copied to the "name-files" folder and inserted as a link (`[report.pdf](name-files/report.pdf)`). Dropped anywhere else, a message says that dropping it on the editor inserts a link (before, it only said "drop exactly one file mdEditor can open").
+- Images, videos, and files inserted in a document now go in a "name-files" folder instead of "name-images" (drops, pastes, and the pictures of Word documents, e-mails, and Jupyter Notebooks that are opened). Documents that use a "name-images" folder from earlier versions still show as before.
+- Back to previous document (Ctrl+Shift+B): goes back to the last document that was open before another one took its place. One closed with "No" to "Save changes?" comes back unsaved, as it was when it was closed (its text, file, and encoding); one closed without changes is opened again from its file. The button beside Open shows only while there is one. A single copy is kept in `%LOCALAPPDATA%\mdEditor\Recovery`, where automatic backup keeps its copies (only the file location for a document without changes), until it is used or replaced when the next document is closed. With automatic backup off, no copy is kept (added to PRIVACY.md).
+- The README says to give the "name-files" folder along with the Markdown file, because the document points to it by relative paths.
+
 ## 1.0.12 — 2026-10-17
 
 - GitHub と同じ書き方に対応した: 注意書き（`> [!NOTE]` など。色付きの枠）、フロントマター（YamlDotNet 18.1.0 で読み、「項目名と値」を縦に並べたカードとして表示。一覧はタグのような札、入れ子の項目はカードの中に並べ、Web のアドレスはリンクにする。左の線と項目名は灰色（Identity 4-3 の --document-muted））、` ```math ` のコードブロック、`` $`x`$ `` の文中の数式、絵文字の短縮名（`:smile:` など）。
