@@ -184,6 +184,24 @@ public partial class MainWindow : Window
     private bool _hasUndecodableBytes;
     // Crash recovery: unsaved text is copied to LocalAppData (never over the
     // document itself) and offered back at the next start if the app ended abnormally.
+    // Images, videos, and files a document brings along go in a folder beside it named "name-files".
+    private const string FilesSuffix = "-files";
+
+    // The last document left for another one, kept so that "Back to previous
+    // document" can bring it back (one copy, shared by every window, kept across
+    // restarts until it is replaced or used): closed with "No" to saving, its
+    // unsaved text; left without changes, only its file, which is opened again.
+    private static readonly string DiscardedFile = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "mdEditor", "Recovery", "discarded.json");
+
+    private sealed record DiscardedRecord(
+        string? Path, string Encoding, string Text, string? ImportFolder, string? ImportName,
+        string? SuggestFolder, string? ImportAssets, string? ImportImageFile, DateTime SavedAt, bool Changed = true);
+
+    // A saved document with no changes that the save question let go: it is kept
+    // as the previous document only once another document really takes its place.
+    private string? _leavingClean;
+
     private static readonly string RecoveryFolder = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "mdEditor", "Recovery");
     private static readonly long ProcessStartTicks = Process.GetCurrentProcess().StartTime.ToUniversalTime().Ticks;
@@ -213,6 +231,8 @@ public partial class MainWindow : Window
             SendPreview();
         };
         _backupTimer.Tick += (_, _) => WriteRecoveryCopy();
+        // Another window may have kept or used the discarded copy meanwhile.
+        Activated += (_, _) => SendDiscardedState();
         _backupTimer.Start();
         // A normal exit (saved, or changes deliberately discarded) leaves no copy behind.
         Closed += (_, _) => DeleteRecoveryCopy();
@@ -334,6 +354,7 @@ public partial class MainWindow : Window
                     SendToPage(new { type = "language", lang = Strings.ForcedLanguage });
                 }
                 SendToPage(new { type = "theme", theme = _theme });
+                SendDiscardedState();
                 SendPaper();
                 SendZoom();
                 SendToPage(new { type = "autoBackup", enabled = _autoBackup });
@@ -381,7 +402,11 @@ public partial class MainWindow : Window
                 else
                 {
                     DeleteRecoveryCopy();
+                    // With backup off, no copy of a discarded document stays on the PC either.
+                    TryDelete(DiscardedFile);
                 }
+
+                SendDiscardedState();
                 break;
             case "zoom":
                 ChangeZoom(root.GetProperty("action").GetString());
@@ -400,10 +425,14 @@ public partial class MainWindow : Window
             case "setLanguage":
                 Strings.Language = root.GetProperty("lang").GetString() == "en" ? "en" : "ja";
                 SendDocumentInfo();
+                SendDiscardedState();
                 UpdatePreviewWindowTitle();
                 break;
             case "dropFile":
-                await HandleDropAsync(e);
+                await HandleDropAsync(e, root.TryGetProperty("onEditor", out var onEditor) && onEditor.GetBoolean());
+                break;
+            case "restoreDiscarded":
+                await RestoreDiscardedAsync();
                 break;
             case "toc":
                 SendToPage(new { type = "tocText", text = TableOfContents.Build(_text, _markdownPipeline) });
@@ -412,13 +441,9 @@ public partial class MainWindow : Window
                 await OpenSampleAsync(root.GetProperty("text").GetString(),
                     root.TryGetProperty("name", out var sampleName) ? sampleName.GetString() : null);
                 break;
-            case "dropImages":
-                await InsertImagesAsync(
-                    (e.AdditionalObjects ?? []).OfType<CoreWebView2File>().Select(file => file.Path).Where(IsImagePath).ToList(), null);
-                break;
             case "pasteImage":
                 var pastedType = root.TryGetProperty("mime", out var mime) ? mime.GetString() : null;
-                await InsertImagesAsync([], Convert.FromBase64String(root.GetProperty("data").GetString() ?? string.Empty),
+                await InsertFilesAsync([], Convert.FromBase64String(root.GetProperty("data").GetString() ?? string.Empty),
                     pastedType switch { "image/jpeg" => ".jpg", "image/gif" => ".gif", "image/bmp" => ".bmp", "image/webp" => ".webp", _ => ".png" });
                 break;
             case "change":
@@ -699,58 +724,69 @@ public partial class MainWindow : Window
         }
     }
 
-    private async Task HandleDropAsync(CoreWebView2WebMessageReceivedEventArgs e)
+    // On the editor, dropped files go in at the cursor: images and videos as
+    // pictures, files mdEditor opens as their content (converted as Open does),
+    // and other files as links. Anywhere else, one file mdEditor opens is opened.
+    private async Task HandleDropAsync(CoreWebView2WebMessageReceivedEventArgs e, bool onEditor)
     {
-        if (!TryGetDroppedMarkdownPath(e, out var filePath))
+        var paths = (e.AdditionalObjects ?? []).OfType<CoreWebView2File>().Select(file => file.Path).ToList();
+        if (paths.Count > 0 && !paths.Any(Directory.Exists))
         {
-            MessageBox.Show(
-                Strings.Tr("開けるファイル（.md、.txt、.html、.docx、.eml、.csv、.tsv、.json、.xml、.ipynb、画像）を1つだけドロップしてください。画像を編集画面にドロップすると、文書に入れます。"),
-                "mdEditor",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
-            return;
+            if (onEditor)
+            {
+                await InsertFilesAsync(paths, null);
+                return;
+            }
+
+            if (paths.Count == 1 && (IsDocumentPath(paths[0]) || IsMediaPath(paths[0])))
+            {
+                if (await ConfirmSaveChangesAsync())
+                {
+                    await LoadDocumentAsync(paths[0]);
+                }
+
+                return;
+            }
+
+            if (paths.All(path => !IsDocumentPath(path) && !IsMediaPath(path)))
+            {
+                MessageBox.Show(
+                    Strings.Tr("mdEditor では開けないファイルです。編集画面にドロップすると、リンクとして入ります。"),
+                    "mdEditor",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+                return;
+            }
         }
 
-        if (await ConfirmSaveChangesAsync())
-        {
-            await LoadDocumentAsync(filePath);
-        }
+        MessageBox.Show(
+            Strings.Tr("開けるファイル（.md、.txt、.html、.docx、.eml、.csv、.tsv、.json、.xml、.ipynb、画像、動画）は、1つだけドロップしてください。編集画面にドロップすると、ファイルの中身・画像・動画・リンクを文書に入れます。フォルダーはドロップできません。"),
+            "mdEditor",
+            MessageBoxButton.OK,
+            MessageBoxImage.Information);
     }
 
-    private static bool TryGetDroppedMarkdownPath(
-        CoreWebView2WebMessageReceivedEventArgs e,
-        out string filePath)
-    {
-        filePath = string.Empty;
-        var files = e.AdditionalObjects;
-        if (files is null
-            || files.Count != 1
-            || files[0] is not CoreWebView2File file)
-        {
-            return false;
-        }
-
-        var extension = Path.GetExtension(file.Path).ToLowerInvariant();
-        if (extension is not (".md" or ".markdown" or ".txt" or ".html" or ".htm" or ".docx" or ".eml" or ".csv" or ".tsv" or ".json" or ".xml" or ".ipynb")
-            && !IsImagePath(file.Path))
-        {
-            return false;
-        }
-
-        filePath = file.Path;
-        return true;
-    }
+    // Files that open as a document of their own (images and videos open too, see IsMediaPath).
+    private static bool IsDocumentPath(string path) =>
+        Path.GetExtension(path).ToLowerInvariant() is ".md" or ".markdown" or ".txt" or ".html" or ".htm" or ".docx"
+            or ".eml" or ".csv" or ".tsv" or ".json" or ".xml" or ".ipynb";
 
     private const string OpenFilter =
-        "開けるファイル|*.md;*.markdown;*.txt;*.html;*.htm;*.docx;*.eml;*.csv;*.tsv;*.json;*.xml;*.ipynb;*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp"
+        "開けるファイル|*.md;*.markdown;*.txt;*.html;*.htm;*.docx;*.eml;*.csv;*.tsv;*.json;*.xml;*.ipynb;*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp;*.mp4;*.m4v;*.webm;*.ogv;*.mov"
         + "|Markdown ファイル (*.md;*.markdown)|*.md;*.markdown|テキスト ファイル (*.txt)|*.txt|HTML ファイル (*.html;*.htm)|*.html;*.htm"
         + "|Word 文書 (*.docx)|*.docx|メール (*.eml)|*.eml|CSV / TSV (*.csv;*.tsv)|*.csv;*.tsv|JSON / XML (*.json;*.xml)|*.json;*.xml|Jupyter Notebook (*.ipynb)|*.ipynb"
-        + "|画像 (*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp)|*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp|すべてのファイル (*.*)|*.*";
+        + "|画像 (*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp)|*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp"
+        + "|動画 (*.mp4;*.m4v;*.webm;*.ogv;*.mov)|*.mp4;*.m4v;*.webm;*.ogv;*.mov|すべてのファイル (*.*)|*.*";
 
     private static readonly HashSet<string> ImageExtensions =
         new(StringComparer.OrdinalIgnoreCase) { ".png", ".jpg", ".jpeg", ".gif", ".bmp", ".webp" };
 
     private static bool IsImagePath(string path) => ImageExtensions.Contains(Path.GetExtension(path));
+
+    private static bool IsVideoPath(string path) => VideoContentTypes.ContainsKey(Path.GetExtension(path));
+
+    // Images and videos: shown in the document with the image syntax.
+    private static bool IsMediaPath(string path) => IsImagePath(path) || IsVideoPath(path);
 
     private async Task OpenDocumentAsync()
     {
@@ -776,6 +812,7 @@ public partial class MainWindow : Window
         try
         {
             var fullPath = Path.GetFullPath(path);
+            RememberLeftDocument(fullPath);
             if (string.Equals(Path.GetExtension(fullPath), ".docx", StringComparison.OrdinalIgnoreCase))
             {
                 try
@@ -805,7 +842,7 @@ public partial class MainWindow : Window
                 return;
             }
 
-            if (IsImagePath(fullPath))
+            if (IsMediaPath(fullPath))
             {
                 ImportImage(fullPath);
                 return;
@@ -1321,8 +1358,21 @@ public partial class MainWindow : Window
     private void ImportDocx(string path)
     {
         var name = Path.GetFileNameWithoutExtension(path);
-        var imagesName = name + "-images";
-        var assets = Path.Combine(Path.GetTempPath(), "mdEditor-import-" + Guid.NewGuid().ToString("N"));
+        var (markdown, assets, count) = ConvertDocx(path);
+        ApplyImported(markdown, assets, name + ".md", false, Strings.Tr(
+            "Word の文書を Markdown に変換して開きました。見出し・リスト・表・リンク・画像は戻り、色や配置は戻りません。保存すると Markdown ファイルになります（Word の文書は変わりません）。"));
+        _suggestFolder = Path.GetDirectoryName(path);
+        _importAssets = count > 0 ? Path.Combine(assets, name + FilesSuffix) : null;
+    }
+
+    private static string NewImportFolder() =>
+        Path.Combine(Path.GetTempPath(), "mdEditor-import-" + Guid.NewGuid().ToString("N"));
+
+    // Word to Markdown; its images are written to "name-files" in a new temporary folder.
+    private static (string Markdown, string Assets, int Images) ConvertDocx(string path)
+    {
+        var imagesName = Path.GetFileNameWithoutExtension(path) + FilesSuffix;
+        var assets = NewImportFolder();
         var count = 0;
         var converter = new Mammoth.DocumentConverter().ImageConverter(image =>
         {
@@ -1350,11 +1400,7 @@ public partial class MainWindow : Window
             };
         });
         var html = converter.ConvertToHtml(path).Value;
-        var (markdown, _) = HtmlImport.ToMarkdown(html, null, _ => true);
-        ApplyImported(markdown, assets, name + ".md", false, Strings.Tr(
-            "Word の文書を Markdown に変換して開きました。見出し・リスト・表・リンク・画像は戻り、色や配置は戻りません。保存すると Markdown ファイルになります（Word の文書は変わりません）。"));
-        _suggestFolder = Path.GetDirectoryName(path);
-        _importAssets = count > 0 ? Path.Combine(assets, imagesName) : null;
+        return (HtmlImport.ToMarkdown(html, null, _ => true).Markdown, assets, count);
     }
 
     // A mail opens as Markdown (see MailImport); its pictures are handled like a
@@ -1362,7 +1408,7 @@ public partial class MainWindow : Window
     private void ImportMail(string path)
     {
         var name = Path.GetFileNameWithoutExtension(path);
-        var imagesName = name + "-images";
+        var imagesName = name + FilesSuffix;
         var assets = Path.Combine(Path.GetTempPath(), "mdEditor-import-" + Guid.NewGuid().ToString("N"));
         var result = MailImport.ToMarkdown(path, assets, imagesName, Strings.Language == "ja");
         ApplyImported(result.Markdown, assets, name + ".md", false, Strings.Tr(
@@ -1380,14 +1426,15 @@ public partial class MainWindow : Window
                 "表のファイルを Markdown の表にして開きました。1 行目を見出しの行にしています。保存すると Markdown ファイルになります（元のファイルは変わりません）。"));
     }
 
-    // An image opens as a new document that shows it, ready for a description
-    // below. The image stays where it is; the document refers to it by name.
+    // An image or a video opens as a new document that shows it, ready for a
+    // description below. The file stays where it is; the document refers to it by name.
     private void ImportImage(string path)
     {
         var name = Path.GetFileNameWithoutExtension(path);
         var markdown = $"![{EscapeAlt(name)}]({EscapeImagePath(Path.GetFileName(path))})\n\n";
-        ApplyImported(markdown, Path.GetDirectoryName(path)!, name + ".md", false, Strings.Tr(
-            "画像を開きました。画像の下に説明を書き足して、Markdown ファイルとして保存できます。別のフォルダーに保存したときは、画像もそこに写します。"));
+        ApplyImported(markdown, Path.GetDirectoryName(path)!, name + ".md", false, Strings.Tr(IsVideoPath(path)
+            ? "動画を開きました。動画の下に説明を書き足して、Markdown ファイルとして保存できます。別のフォルダーに保存したときは、動画もそこに写します。"
+            : "画像を開きました。画像の下に説明を書き足して、Markdown ファイルとして保存できます。別のフォルダーに保存したときは、画像もそこに写します。"));
         _importImageFile = path;
     }
 
@@ -1398,7 +1445,7 @@ public partial class MainWindow : Window
     private void ImportNotebook(string path, DecodedDocument decoded)
     {
         var name = Path.GetFileNameWithoutExtension(path);
-        var imagesName = name + "-images";
+        var imagesName = name + FilesSuffix;
         var assets = Path.Combine(Path.GetTempPath(), "mdEditor-import-" + Guid.NewGuid().ToString("N"));
         var result = NotebookFormat.ToMarkdown(decoded.Text, assets, imagesName);
         ApplyImported(result.Markdown, result.Images > 0 ? assets : Path.GetDirectoryName(path)!, name + ".md", false, Strings.Tr(
@@ -1432,15 +1479,36 @@ public partial class MainWindow : Window
     private static string EscapeImagePath(string relative) =>
         string.Join("/", relative.Split('/', '\\').Select(part => Uri.EscapeDataString(part)));
 
-    // Images dropped on the editor or pasted are put in a "name-images" folder
-    // beside the document (or used where they are, when already inside the
-    // document's folder) and inserted at the cursor. A new document is saved first.
-    private async Task InsertImagesAsync(IReadOnlyList<string> files, byte[]? pasted, string pastedExtension = ".png")
+    // Dropped files and pasted pictures go in at the cursor. Images, videos, and
+    // other files are put in a "name-files" folder beside the document (or used
+    // where they are, when already inside the document's folder) and inserted as
+    // pictures or links; files mdEditor opens are inserted as their content. A new
+    // document is saved first when something has to be placed beside it.
+    private async Task InsertFilesAsync(IReadOnlyList<string> files, byte[]? pasted, string pastedExtension = ".png")
     {
-        if (_filePath is null)
+        var contents = new Dictionary<string, (string Markdown, string[] Folders)>();
+        foreach (var file in files.Where(IsDocumentPath))
+        {
+            try
+            {
+                contents[file] = await ConvertForInsertAsync(file);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException
+                                           or NotSupportedException or InvalidDataException or InvalidOperationException
+                                           or FormatException or System.Xml.XmlException or KeyNotFoundException
+                                           or JsonException or MimeKit.ParseException)
+            {
+                ShowFileError("ファイルの中身を読み込めません。「開く」で開けるか確かめてから、もう一度お試しください", ex);
+                return;
+            }
+        }
+
+        var needsFolder = pasted is not null || files.Any(file => !IsDocumentPath(file))
+            || contents.Values.Any(content => RebaseReferences(content.Markdown, content.Folders, null).Count > 0);
+        if (_filePath is null && needsFolder)
         {
             var answer = MessageBox.Show(
-                Strings.Tr("画像を入れるには、先に文書を保存します（画像は文書の横の「名前-images」フォルダーに置きます）。保存先を選びますか？"),
+                Strings.Tr("画像・動画・ファイルを入れるには、先に文書を保存します（文書の横の「名前-files」フォルダーに置きます）。保存先を選びますか？"),
                 "mdEditor", MessageBoxButton.OKCancel, MessageBoxImage.Information);
             if (answer != MessageBoxResult.OK || !await SaveDocumentAsAsync() || _filePath is null)
             {
@@ -1450,49 +1518,207 @@ public partial class MainWindow : Window
 
         try
         {
-            var documentFolder = Path.GetDirectoryName(_filePath)!;
-            var imagesName = Path.GetFileNameWithoutExtension(_filePath) + "-images";
-            var imagesFolder = Path.Combine(documentFolder, imagesName);
+            var documentFolder = _filePath is null ? null : Path.GetDirectoryName(_filePath)!;
+            var imagesFolder = _filePath is null ? null
+                : Path.Combine(documentFolder!, Path.GetFileNameWithoutExtension(_filePath) + FilesSuffix);
             var inserted = new List<string>();
 
             string Place(string fileName, Action<string> write)
             {
-                Directory.CreateDirectory(imagesFolder);
+                Directory.CreateDirectory(imagesFolder!);
                 var stem = Path.GetFileNameWithoutExtension(fileName);
                 var extension = Path.GetExtension(fileName);
-                var target = Path.Combine(imagesFolder, fileName);
+                var target = Path.Combine(imagesFolder!, fileName);
                 for (var n = 2; File.Exists(target); n++)
                 {
-                    target = Path.Combine(imagesFolder, $"{stem}-{n}{extension}");
+                    target = Path.Combine(imagesFolder!, $"{stem}-{n}{extension}");
                 }
 
                 write(target);
                 return target;
             }
 
+            // A file as this document refers to it: copied beside it unless it is already inside its folder.
+            string Copied(string full)
+            {
+                var inside = full.StartsWith(documentFolder!.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase);
+                return LinkTarget(documentFolder, inside ? full : Place(Path.GetFileName(full), path => File.Copy(full, path)));
+            }
+
             foreach (var file in files)
             {
                 var full = Path.GetFullPath(file);
-                var inside = full.StartsWith(documentFolder.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase);
-                var target = inside ? full : Place(Path.GetFileName(full), path => File.Copy(full, path));
-                inserted.Add($"![{EscapeAlt(Path.GetFileNameWithoutExtension(full))}]({EscapeImagePath(Path.GetRelativePath(documentFolder, target))})");
+                if (contents.TryGetValue(file, out var content))
+                {
+                    // Pictures in the content are copied beside this document; other files it links to stay where they are.
+                    inserted.Add(documentFolder is null ? content.Markdown : RebaseReferences(content.Markdown, content.Folders,
+                        target => IsMediaPath(target) ? Copied(target) : LinkTarget(documentFolder, target)).Text);
+                }
+                else if (IsMediaPath(full))
+                {
+                    inserted.Add($"![{EscapeAlt(Path.GetFileNameWithoutExtension(full))}]({Copied(full)})");
+                }
+                else
+                {
+                    inserted.Add($"[{EscapeAlt(Path.GetFileName(full))}]({Copied(full)})");
+                }
             }
 
             if (pasted is not null)
             {
-                var target = Place($"image-{DateTime.Now:yyyyMMdd-HHmmss}{pastedExtension}",path => File.WriteAllBytes(path, pasted));
-                inserted.Add($"![]({EscapeImagePath(Path.GetRelativePath(documentFolder, target))})");
+                var target = Place($"image-{DateTime.Now:yyyyMMdd-HHmmss}{pastedExtension}", path => File.WriteAllBytes(path, pasted));
+                inserted.Add($"![]({LinkTarget(documentFolder!, target)})");
             }
 
             if (inserted.Count > 0)
             {
-                SendToPage(new { type = "insertText", text = string.Join("\n\n", inserted) + "\n" });
+                // Content goes in as blocks of its own (blank lines around it), so its headings and tables stay intact.
+                SendToPage(new { type = "insertText", text = string.Join("\n\n", inserted.Select(text => text.Trim('\n'))) + "\n", block = contents.Count > 0 });
+            }
+
+            if (contents.Count > 0)
+            {
+                SendToPage(new
+                {
+                    type = "notice",
+                    text = string.Format(Strings.Tr("「{0}」の中身を入れました。ファイルとして開くときは、編集画面の外にドロップしてください（Ctrl+Z で取り消せます）。"),
+                        string.Join(Strings.Language == "en" ? ", " : "、", contents.Keys.Select(Path.GetFileName)))
+                });
             }
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException)
         {
-            ShowFileError("画像を写せません。文書のフォルダーに書き込めるか確かめて、もう一度お試しください", ex);
+            ShowFileError("ファイルを写せません。文書のフォルダーに書き込めるか確かめて、もう一度お試しください", ex);
         }
+    }
+
+    // The Markdown a file mdEditor opens adds when dropped on the editor, made as
+    // Open makes it, and the folders its relative image and link targets start
+    // from (none for text, tables, and data, whose content is not Markdown links).
+    private async Task<(string Markdown, string[] Folders)> ConvertForInsertAsync(string path)
+    {
+        var folder = Path.GetDirectoryName(Path.GetFullPath(path))!;
+        var imagesName = Path.GetFileNameWithoutExtension(path) + FilesSuffix;
+        var extension = Path.GetExtension(path).ToLowerInvariant();
+        if (extension == ".docx")
+        {
+            var (markdown, assets, _) = ConvertDocx(path);
+            return (markdown, [assets, folder]);
+        }
+
+        if (extension == ".eml")
+        {
+            var assets = NewImportFolder();
+            return (MailImport.ToMarkdown(path, assets, imagesName, Strings.Language == "ja").Markdown, [assets, folder]);
+        }
+
+        var text = DecodeDocument(await File.ReadAllBytesAsync(path)).Text;
+        if (TableFiles.IsTablePath(path))
+        {
+            return (TableFiles.ToMarkdown(text, extension == ".tsv" ? '\t' : ','), []);
+        }
+
+        if (extension == ".ipynb")
+        {
+            var assets = NewImportFolder();
+            return (NotebookFormat.ToMarkdown(text, assets, imagesName).Markdown, [assets, folder]);
+        }
+
+        if (DataFiles.IsDataPath(path))
+        {
+            return ((extension == ".json" ? DataFiles.JsonToMarkdown(text) : DataFiles.XmlToMarkdown(text)).Markdown, []);
+        }
+
+        if (IsHtmlPath(path))
+        {
+            return (HtmlImport.ToMarkdown(text, null, relative => ExistsBeside(folder, relative)).Markdown, [folder]);
+        }
+
+        // Markdown goes in without its front matter, which only belongs at the top of a document.
+        return extension is ".md" or ".markdown"
+            ? (System.Text.RegularExpressions.Regex.Replace(text, @"\A\uFEFF?---[ \t]*\r?\n.*?\r?\n(?:---|\.\.\.)[ \t]*(?:\r?\n|\z)", string.Empty,
+                System.Text.RegularExpressions.RegexOptions.Singleline), [folder])
+            : (text, []);
+    }
+
+    private static readonly MarkdownPipeline ReferencePipeline =
+        new MarkdownPipelineBuilder().UseAdvancedExtensions().UsePreciseSourceLocation().Build();
+
+    // Relative image and link targets in inserted content start from the file it
+    // came from. Each one found as a file under one of the folders is replaced by
+    // what relocate returns (with relocate null, they are only counted). Targets
+    // written through a reference definition are left as they are.
+    private static (string Text, int Count) RebaseReferences(string markdown, IReadOnlyList<string> folders, Func<string, string>? relocate)
+    {
+        if (folders.Count == 0)
+        {
+            return (markdown, 0);
+        }
+
+        var edits = new List<(int Start, int Length, string Target)>();
+        foreach (var link in Markdig.Markdown.Parse(markdown, ReferencePipeline).Descendants<LinkInline>())
+        {
+            if (link.Url is not { Length: > 0 } url || link.UrlSpan.IsEmpty || link.UrlSpan.End >= markdown.Length
+                || markdown.Substring(link.UrlSpan.Start, link.UrlSpan.Length).Trim('<', '>') != url
+                || ResolveLocalFile(url, folders) is not { } local)
+            {
+                continue;
+            }
+
+            edits.Add((link.UrlSpan.Start, link.UrlSpan.Length, relocate is null ? string.Empty : relocate(local.Path) + local.Suffix));
+        }
+
+        if (relocate is null)
+        {
+            return (markdown, edits.Count);
+        }
+
+        var text = new StringBuilder(markdown);
+        foreach (var edit in edits.OrderByDescending(edit => edit.Start))
+        {
+            text.Remove(edit.Start, edit.Length).Insert(edit.Start, edit.Target);
+        }
+
+        return (text.ToString(), edits.Count);
+    }
+
+    // A relative target ("images/a.png#x") as a file that exists under one of the folders, and its "#"/"?" part.
+    private static (string Path, string Suffix)? ResolveLocalFile(string url, IReadOnlyList<string> folders)
+    {
+        if (url.StartsWith('#') || url.StartsWith('/') || url.StartsWith('\\')
+            || System.Text.RegularExpressions.Regex.IsMatch(url, @"^[A-Za-z][A-Za-z0-9+.-]*:"))
+        {
+            return null;
+        }
+
+        var cut = url.IndexOfAny(['#', '?']);
+        var part = cut < 0 ? url : url[..cut];
+        var suffix = cut < 0 ? string.Empty : url[cut..];
+        try
+        {
+            var relative = Uri.UnescapeDataString(part).Replace('/', Path.DirectorySeparatorChar);
+            foreach (var folder in folders)
+            {
+                var full = Path.GetFullPath(Path.Combine(folder, relative));
+                if (part.Length > 0 && File.Exists(full))
+                {
+                    return (full, suffix);
+                }
+            }
+        }
+        catch (Exception ex) when (ex is ArgumentException or NotSupportedException or PathTooLongException or UriFormatException)
+        {
+        }
+
+        return null;
+    }
+
+    // How a document in this folder links to a file: a relative path, or a file:
+    // address when the file is on another drive.
+    private static string LinkTarget(string documentFolder, string file)
+    {
+        var relative = Path.GetRelativePath(documentFolder, file);
+        return Path.IsPathRooted(relative) ? new Uri(file).AbsoluteUri : EscapeImagePath(relative);
     }
 
     // The first save of a document opened from Word puts its images beside the file.
@@ -1561,6 +1787,7 @@ public partial class MainWindow : Window
 
     private void ApplyImported(string markdown, string? folder, string name, bool allowExternal, string? notice)
     {
+        RememberLeftDocument(null);
         DeleteRecoveryCopy();
         _filePath = null;
         _importFolder = folder;
@@ -2901,6 +3128,7 @@ public partial class MainWindow : Window
     {
         if (!_isDirty)
         {
+            _leavingClean = _filePath;
             return true;
         }
 
@@ -2912,9 +3140,146 @@ public partial class MainWindow : Window
         return result switch
         {
             MessageBoxResult.Yes => await SaveDocumentAsync(),
-            MessageBoxResult.No => true,
+            MessageBoxResult.No => KeepDiscardedCopy(changed: true),
             _ => false
         };
+    }
+
+    // "No" to saving still keeps the document's last state (unless automatic
+    // backup is off), so that a wrong "No" can be undone with "Back to previous document".
+    // A document without changes keeps only its file (its text is already there).
+    private bool KeepDiscardedCopy(bool changed)
+    {
+        _leavingClean = null;
+        if (_autoBackup)
+        {
+            try
+            {
+                Directory.CreateDirectory(RecoveryFolder);
+                var record = new DiscardedRecord(_filePath, EncodingId(_encoding), changed ? _text : string.Empty, _importFolder, _importName,
+                    _suggestFolder, _importAssets, _importImageFile, DateTime.Now, changed);
+                var tempPath = $"{DiscardedFile}.{Environment.ProcessId}.tmp";
+                File.WriteAllText(tempPath, JsonSerializer.Serialize(record), Utf8NoBom);
+                File.Move(tempPath, DiscardedFile, overwrite: true);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or SecurityException)
+            {
+                // Best effort, like the recovery copy.
+            }
+        }
+
+        SendDiscardedState();
+        return true;
+    }
+
+    // Called where another document takes the place of the open one (newPath is
+    // its file, null for a new one): a saved document without changes that the
+    // save question let go becomes the previous document. Opening the same file
+    // again (another encoding, say) does not count.
+    private void RememberLeftDocument(string? newPath)
+    {
+        if (_leavingClean is { } path && !_isDirty && string.Equals(path, _filePath, StringComparison.OrdinalIgnoreCase)
+            && !string.Equals(path, newPath, StringComparison.OrdinalIgnoreCase))
+        {
+            KeepDiscardedCopy(changed: false);
+        }
+
+        _leavingClean = null;
+    }
+
+    private static DiscardedRecord? ReadDiscarded()
+    {
+        try
+        {
+            return File.Exists(DiscardedFile) ? JsonSerializer.Deserialize<DiscardedRecord>(File.ReadAllText(DiscardedFile)) : null;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or SecurityException or JsonException)
+        {
+            return null;
+        }
+    }
+
+    // Tells the page whether "Back to previous document" has something to bring back, and its name.
+    private void SendDiscardedState()
+    {
+        if (!_pageReady)
+        {
+            return;
+        }
+
+        var record = _autoBackup ? ReadDiscarded() : null;
+        SendToPage(new
+        {
+            type = "discarded",
+            name = record is null ? null : record.Path is null ? record.ImportName ?? Strings.Tr("新しい文書.md") : Path.GetFileName(record.Path)
+        });
+    }
+
+    // Opens the last discarded document as it was when it was closed: unsaved,
+    // with the same file and encoding, so that saving writes it as usual.
+    private async Task RestoreDiscardedAsync()
+    {
+        if (ReadDiscarded() is not { } record)
+        {
+            SendDiscardedState();
+            return;
+        }
+
+        // A document without changes comes back from its file; when the file is
+        // gone there is nothing to go back to, and the open document stays as it is.
+        if (!record.Changed && (record.Path is null || !File.Exists(record.Path)))
+        {
+            TryDelete(DiscardedFile);
+            SendDiscardedState();
+            MessageBox.Show(
+                string.Format(Strings.Tr("前の文書のファイルが見つかりません。移動・名前の変更・削除がされていないか確かめてください。\n\n{0}"), record.Path),
+                "mdEditor", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
+        if (!await ConfirmSaveChangesAsync())
+        {
+            return;
+        }
+
+        // The copy is used up, unless the question just now replaced it with the document closed in its place.
+        if (ReadDiscarded() is { } current && current.SavedAt == record.SavedAt && current.Text == record.Text)
+        {
+            TryDelete(DiscardedFile);
+        }
+
+        if (!record.Changed)
+        {
+            // It had no changes: its file is opened again as it is now.
+            await LoadDocumentAsync(record.Path!);
+            SendDiscardedState();
+            return;
+        }
+
+        RememberLeftDocument(record.Path);
+        DeleteRecoveryCopy();
+        _filePath = record.Path;
+        _importFolder = record.ImportFolder;
+        _importName = record.ImportName;
+        _suggestFolder = record.SuggestFolder;
+        _importAssets = record.ImportAssets;
+        _importImageFile = record.ImportImageFile;
+        _encoding = EncodingFromId(record.Encoding) ?? Utf8NoBom;
+        _encodingSource = "detected";
+        _hasUndecodableBytes = false;
+        _text = record.Text;
+        _changeVersion++;
+        _isDirty = true;
+        var notice = string.Format(Strings.Tr("「{0}」を、閉じたとき（{1}）の状態に戻しました。まだ保存していません。"),
+            record.Path is null ? record.ImportName ?? Strings.Tr("新しい文書.md") : Path.GetFileName(record.Path), record.SavedAt.ToString("g"));
+        ResetExternalConsent(false, notice);
+        SendDocumentInfo();
+        SendToPage(new { type = "setText", text = _text });
+        SendEncodingNotice();
+        SendToPage(new { type = "notice", text = notice });
+        SendPreview();
+        WriteRecoveryCopy();
+        SendDiscardedState();
     }
 
     private async void Window_Closing(object? sender, CancelEventArgs e)
@@ -3415,7 +3780,7 @@ public partial class MainWindow : Window
                 window.Fullscreen.Set(window, false);
                 break;
             case "dropFile":
-                await HandleDropAsync(e);
+                await HandleDropAsync(e, false);
                 break;
         }
     }

@@ -21,7 +21,7 @@ Windows で Markdown ファイルを開き、テキストと整形済み表示�
 
 *A Windows app that opens Markdown files and lets you edit the text side by side with a rendered preview.* [日本語](#特長) / [English](#english)
 
-バージョン / Version: 1.0.12（変更の記録 / Changes: [CHANGELOG.md](./CHANGELOG.md)）
+バージョン / Version: 1.0.13（変更の記録 / Changes: [CHANGELOG.md](./CHANGELOG.md)）
 
 ## 特長
 
@@ -109,17 +109,29 @@ Microsoft Edge WebView2 Runtime が必要です。Microsoft Edge がインスト
 
 - **サンプル**: 「図と数式」「基本の書き方」の短いサンプルと、使えるすべての図・チャート・数式を確かめる「図・チャート表示テスト」（日本語・英語。[samples/](./samples/) の 2 つのファイル）を、選んだときだけ新しい文書として開きます（開いていた文書に変更があれば、先に保存するか聞きます。開いていたファイルには書き込みません）。
 - **このアプリについて**: 会社紹介・作品・サポート・プライバシーポリシーへのリンクを表示します。リンクは選んだときだけブラウザーで開きます。
-- **開く**: Markdown ファイルを選択します。テキスト（.txt）、Word 文書（.docx）、HTML ファイル（.html、.htm）も開けます。テキストはそのまま開いて、そのまま上書き保存できます。Word 文書は Markdown に変換して開き、見出し・リスト・表・リンク・画像が戻ります（色や配置は戻りません）。画像は最初に保存するとき、Markdown ファイルの横に「名前-images」フォルダーとして置きます。Word の文書は書き換えません。HTML ファイル（.html、.htm）も開けます。HTML は Markdown に変換して開き、見出し・段落・リスト・表・リンク・画像・数式が戻ります（色や配置、図の絵は戻りません）。保存すると Markdown ファイルになり、元の HTML ファイルは書き換えません。
+- **開く**: Markdown ファイルを選択します。テキスト（.txt）、Word 文書（.docx）、HTML ファイル（.html、.htm）も開けます。テキストはそのまま開いて、そのまま上書き保存できます。Word 文書は Markdown に変換して開き、見出し・リスト・表・リンク・画像が戻ります（色や配置は戻りません）。画像は最初に保存するとき、Markdown ファイルの横に「名前-files」フォルダーとして置きます。Word の文書は書き換えません。HTML ファイル（.html、.htm）も開けます。HTML は Markdown に変換して開き、見出し・段落・リスト・表・リンク・画像・数式が戻ります（色や配置、図の絵は戻りません）。保存すると Markdown ファイルになり、元の HTML ファイルは書き換えません。
   - **メール（.eml）**: 件名を見出しにし、差出人・宛先・日付・添付ファイルの名前と本文を Markdown に変換して開きます。本文の中の画像は Word 文書と同じように扱います。メールの中のインターネット上の画像（受信の確認に使われることがあります）は、確認するまで読み込みません。添付ファイルの中身は取り出しません。
   - **CSV・TSV（.csv、.tsv）**: Markdown の表にして開きます。1 行目を見出しの行にします。Excel で保存した Shift_JIS の CSV も開けます。
   - **JSON（.json）**: 一覧（オブジェクトの配列）は表にして開き、項目の名前を見出しの行にします。それ以外の JSON はコードの枠に入れて開くので、前後に説明を書き足せます。
   - **XML（.xml）**: コードの枠に入れて開きます。前後に説明を書き足せます。
   - **Jupyter Notebook（.ipynb）**: Markdown のセルはそのまま、コードのセルは言語付きのコードの枠（```python など）になります。実行結果は、文字は「output」の枠、画像と表（pandas など）はそのまま表示します。セルに貼り付けた画像も表示します。
   - **画像（.png、.jpg、.gif、.bmp、.webp）**: その画像を表示する新しい文書として開きます。画像の下に説明を書き足して、Markdown ファイルとして保存できます。別のフォルダーに保存したときは、画像もそこに写します。
-- **画像を文書に入れる**: 画像ファイルを編集画面にドラッグ＆ドロップするか、画面の切り取りなどを編集画面に貼り付ける（Ctrl+V）と、文書の横の「名前-images」フォルダーに画像を置き、カーソルの位置に `![](名前-images/画像.png)` を入れます。文書のフォルダーの中にある画像は、写さずにそのまま使います。まだ保存していない文書では、先に保存先を聞きます。編集画面以外にドロップした画像は、画像の文書として開きます。
+  - **動画（.mp4、.m4v、.webm、.ogv、.mov）**: その動画を表示する新しい文書として開きます。扱いは画像と同じです。
+- **ドラッグ＆ドロップ**: 編集画面にドロップしたファイルはカーソルの位置に入り、編集画面の外にドロップしたファイルは開きます。ドラッグしている間は、ポインターの横に「カーソルの位置に入れる」か「ファイルとして開く」を表示します。
+
+  | ファイル | 編集画面にドロップ | 編集画面の外にドロップ |
+  | :--- | :--- | :--- |
+  | 画像・動画 | 文書の横の「名前-files」フォルダーに写し、`![](名前-files/画像.png)` を入れる | 画像・動画の文書として開く |
+  | 「開く」で開けるファイル（.md、.txt、.html、.docx、.eml、.csv、.json、.ipynb など） | 「開く」と同じように Markdown にした中身を入れる | 開く（未保存の変更があれば、先に確認する） |
+  | 開けないファイル（.pdf、.pptx、.zip など） | 「名前-files」フォルダーに写し、リンク `[資料.pdf](名前-files/資料.pdf)` を入れる | 開かずに、編集画面にドロップするとリンクとして入ることを知らせる |
+
+  - 中身を入れたときは、お知らせ欄に表示します。開くつもりだったときは、Ctrl+Z で取り消して、編集画面の外にドロップし直します。
+  - 中身の中の画像・動画も「名前-files」フォルダーに写します。そのほかのファイルへのリンクは、元のファイルを指すように書き換えます。Markdown の先頭のフロントマター（`---` で囲んだ部分）は入れません。
+  - 文書のフォルダーの中にあるファイルは、写さずにそのまま使います。ファイルを写す必要があるのにまだ保存していない文書では、先に保存先を聞きます。
+  - 画面の切り取りなどを編集画面に貼り付けた（Ctrl+V）ときも、画像を「名前-files」フォルダーに置いて入れます。
+  - **Markdown のまま人に渡すときは、「名前-files」フォルダーも一緒に渡してください。** 文書は、入れた画像・動画・ファイルを、文書のある場所からの相対パス（`名前-files/…`）で指しています。.md ファイルだけを渡すと、相手の PC では表示されず、リンクも開けません。.md ファイルとフォルダーを同じ場所に置いたまま、まとめて（たとえば 1 つの zip にして）渡します。中身を入れたときに元のファイルを指すよう書き換えたリンク（`../資料/…` など）は、そのファイルも一緒に渡さないと開けません。PDF・HTML・PNG・Word に保存したものは画像が中に入りますが、動画と、リンクで入れたファイルは入りません。
 - **URLを開く / Ctrl+Shift+K**: `https://` で始まる Web ページを、Markdown に変換して開きます。ブラウザーからリンクをドラッグして開くこともできます。ページのスクリプトは実行しないので、開いたあとに読み込まれる内容（ランキングの数字など）は入りません。
 - **インターネット上の画像・動画**: 初期設定では読み込まず、お知らせ欄の「画像・動画を読み込む」で読み込みます（その文書だけ）。「設定」→「インターネット」で「いつも読み込む」「読み込まない」も選べます。`http://` の画像は読み込みません。手元にない画像やリンクは、ページの元のアドレス（`<base>`、canonical、og:url）から探します。
-- **ドラッグ&ドロップ**: `.md`・`.markdown`・`.html`・`.htm` のファイルをアプリ画面へ1つドロップして開きます。未保存の変更がある場合は、開く前に確認します。
 - **保存**: 現在のファイルに上書きします。新規文書は保存先を選びます。
 - **名前を付けて保存**: 保存先とファイル名を選びます。「開く」と同じように、ファイルの種類で保存の形式を選べます。
   - **Markdown（.md）・テキスト（そのまま）（.txt）**: 文書そのものを保存します（中身はそのまま）。以後の「保存」はこのファイルに上書きします。
@@ -129,6 +141,12 @@ Microsoft Edge WebView2 Runtime が必要です。Microsoft Edge がインスト
 - **JSON**: 文書の中の表を、見出しの行を項目の名前にしたオブジェクトの配列にします（UTF-8）。値は文字のまま書き出すので、「007」のような番号の 0 も消えません。表が 2 つ以上あるときは「名前-1.json」…に分けて保存します。
 - **Jupyter Notebook**: 言語付きのコードの枠をコードのセルに、それ以外を Markdown のセルにします。実行結果は入れません（Jupyter で実行すると作り直されます）。.ipynb を開いて編集した文書を保存し直すと、元のノートブックと同じセルの並びに戻ります。
 - **Ctrl+O**: ファイルを開きます。
+- **前の文書に戻す / Ctrl+Shift+B**: 別の文書を開く前に開いていた文書に戻します。「開く」の横のボタンは、戻せる文書があるときだけ表示します。たとえば、編集画面の外にファイルをドロップして別の文書を開いてしまったときや、そのとき「キャンセル」のつもりで「いいえ」を押したときに使います。
+  - 「保存しますか？」で「いいえ」を選んで閉じた文書は、閉じたときの状態（書きかけの内容・ファイルの場所・文字コード）に、まだ保存していない状態で戻ります。保存すると、元のファイルに上書きします。
+  - 変更のないまま閉じた文書は、そのファイルを開き直します。ファイルが移動・削除されていたときは、そう知らせます。
+  - 戻せるのは、最後に閉じた 1 つの文書だけです。ほかのウィンドウで閉じた文書や、アプリを終了するときに「いいえ」で閉じた文書も戻せます（次の起動のあとも）。「開く」のファイル選択を取り消したときのように、文書が入れ替わらなかったときは、前の文書はそのままです。
+  - 戻す前に、今の文書に変更があれば保存するか聞きます。ここで「いいえ」を選ぶと、今の文書と入れ替わり、もう一度押すと今の文書に戻れます。
+  - 控えは自動バックアップと同じ場所に置きます。変更のない文書は、ファイルの場所だけを控えます。設定で自動バックアップをオフにしているときは控えを残さず、このボタンも出ません。
 - **Ctrl+S**: 保存します。
 - **Ctrl+Shift+S**: 名前を付けて保存します。
 - **PDF**: 整形したプレビューをPDFに書き出します。
@@ -170,7 +188,7 @@ Microsoft Edge WebView2 Runtime が必要です。Microsoft Edge がインスト
 | 操作 | キー | 操作 | キー |
 | :--- | :--- | :--- | :--- |
 | 開く | Ctrl+O | 検索・置換 | Ctrl+H |
-| 目次を入れる・新しくする | Ctrl+Shift+J | | |
+| 目次を入れる・新しくする | Ctrl+Shift+J | 前の文書に戻す | Ctrl+Shift+B |
 | 保存 | Ctrl+S | 次を検索 / 前を検索 | F3 / Shift+F3 |
 | 名前を付けて保存 | Ctrl+Shift+S | すべて置換 | Ctrl+Shift+H |
 | PDFに保存 | Ctrl+Shift+P | Markdown の書き方 | F1 |
@@ -745,17 +763,29 @@ On pull requests, GitHub Actions checks that the three match. When merged into m
 
 - **Samples**: puts a short sample ("Diagrams and math" or "Basic writing") or the "Diagram and chart test" of every supported diagram, chart, and formula (Japanese or English; the two files in [samples/](./samples/)) as a new document, only when you choose it (if the open document has changes, you are asked to save them first; the open file is never written).
 - **About**: shows links to the company, works, support, and the privacy policy. Links open in your browser only when you choose them.
-- **Open**: choose a Markdown file. Text (.txt), Word (.docx), and HTML (.html, .htm) files open too. Text opens and saves back as it is. A Word document opens as Markdown: headings, lists, tables, links, and images come back (colors and layout do not); its images are placed beside the Markdown file in a "name-images" folder on the first save, and the Word document is never written. HTML files (.html, .htm) open too: they are converted to Markdown, and headings, paragraphs, lists, tables, links, images, and math come back (colors, layout, and drawn diagrams do not). Saving makes a Markdown file and never writes the HTML file.
+- **Open**: choose a Markdown file. Text (.txt), Word (.docx), and HTML (.html, .htm) files open too. Text opens and saves back as it is. A Word document opens as Markdown: headings, lists, tables, links, and images come back (colors and layout do not); its images are placed beside the Markdown file in a "name-files" folder on the first save, and the Word document is never written. HTML files (.html, .htm) open too: they are converted to Markdown, and headings, paragraphs, lists, tables, links, images, and math come back (colors, layout, and drawn diagrams do not). Saving makes a Markdown file and never writes the HTML file.
   - **E-mail (.eml)**: opens as Markdown with the subject as the heading, then the sender, recipients, date, attachment names, and the body. Pictures in the body are handled like a Word document's. Internet images in the mail (sometimes used to track opening) do not load until you allow them. Attachments are not extracted.
   - **CSV, TSV (.csv, .tsv)**: opens as a Markdown table with the first row as the header. Shift_JIS CSV files saved by Excel open too.
   - **JSON (.json)**: a list (an array of objects) opens as a table with the field names as the header row. Other JSON opens in a code block, so you can add notes before and after it.
   - **XML (.xml)**: opens in a code block, with room for notes before and after it.
   - **Jupyter Notebook (.ipynb)**: Markdown cells stay as they are and code cells become code blocks with their language (```python and so on). Text outputs become "output" blocks; pictures and tables (such as pandas) show as they are, and so do pictures pasted into cells.
   - **Images (.png, .jpg, .gif, .bmp, .webp)**: open as a new document that shows the image. Write a description below it and save it as Markdown; saving in another folder copies the image there too.
-- **Insert images**: drag image files onto the editor, or paste a picture such as a screen capture into it (Ctrl+V). The images go in a "name-images" folder beside the document, and `![](name-images/image.png)` is inserted at the cursor. Images already inside the document's folder are used where they are. A document that has not been saved asks where to save first. An image dropped anywhere other than the editor opens as an image document.
+  - **Videos (.mp4, .m4v, .webm, .ogv, .mov)**: open as a new document that shows the video, the same way as images.
+- **Drag and drop**: files dropped on the editor go in at the cursor, and files dropped anywhere else open. While you drag, a label beside the pointer says "Insert at the cursor" or "Open as a file".
+
+  | File | Dropped on the editor | Dropped anywhere else |
+  | :--- | :--- | :--- |
+  | Images and videos | Copied to a "name-files" folder beside the document, with `![](name-files/image.png)` inserted | Opens as an image or video document |
+  | Files Open accepts (.md, .txt, .html, .docx, .eml, .csv, .json, .ipynb, and so on) | Their content goes in, converted to Markdown as Open does | Opens (unsaved changes are asked about first) |
+  | Files mdEditor cannot open (.pdf, .pptx, .zip, and so on) | Copied to the "name-files" folder, with a link such as `[report.pdf](name-files/report.pdf)` inserted | Not opened; a message says that dropping it on the editor inserts a link |
+
+  - When content goes in, the notice bar says so. If you meant to open the file, press Ctrl+Z and drop it outside the editor instead.
+  - Images and videos in the content are copied to the "name-files" folder too. Links to other files are changed to point to the original files. Front matter at the top of Markdown (the part between `---` lines) is left out.
+  - Files already inside the document's folder are used where they are. A document that has not been saved asks where to save first when files have to be copied.
+  - A picture pasted into the editor (Ctrl+V), such as a screen capture, also goes in the "name-files" folder.
+  - **When you give someone the Markdown file, give them the "name-files" folder too.** The document points to the images, videos, and files you inserted by paths relative to its own location (`name-files/...`). With the .md file alone, they do not show and the links do not open on the other PC. Keep the .md file and the folder side by side and send them together (for example, in one zip file). Links changed to point to an original file when content went in (such as `../docs/...`) open only if that file goes along too. Files saved as PDF, HTML, PNG, or Word include the images, but not videos or files inserted as links.
 - **Open URL / Ctrl+Shift+K**: opens a web page that starts with `https://` as Markdown. You can also drag a link in from a browser. The page's scripts never run, so content it loads afterwards (such as live rankings) is not included.
 - **Images and videos on the internet**: not loaded by default; Load images and videos in the notice bar loads them for that document. Settings > Internet can also be Always load or Never load. Images over `http://` are never loaded. Images and links not found beside the file resolve from the page's own address (`<base>`, canonical, or og:url).
-- **Drag and drop**: drop one `.md`, `.markdown`, `.html`, or `.htm` file onto the window to open it. If there are unsaved changes, you are asked before it opens.
 - **Save**: overwrite the current file. A new document asks where to save.
 - **Save As**: choose a location and file name. As with Open, the file type chooses the format.
   - **Markdown (.md), text as written (.txt)**: save the document itself (the content as it is). Save then writes to this file.
@@ -765,6 +795,12 @@ On pull requests, GitHub Actions checks that the three match. When merged into m
 - **JSON**: the tables in the document as arrays of objects keyed by the header row (UTF-8). Values are written as text, so numbers such as 007 keep their zeros. Two or more tables are saved as name-1.json and so on.
 - **Jupyter Notebook**: code blocks with a language become code cells and everything else Markdown cells. Outputs are not included (Jupyter makes them again when run). A document opened from an .ipynb file saves back to the same cells.
 - **Ctrl+O**: open a file.
+- **Back to previous document / Ctrl+Shift+B**: goes back to the document that was open before another one took its place. The button beside Open shows only while there is a document to go back to. Use it when, for example, you dropped a file outside the editor and it opened another document, perhaps after pressing "No" when you meant "Cancel".
+  - A document closed with "No" to "Save changes?" comes back as it was when you closed it (the unsaved text, its file, and its encoding), still unsaved. Saving it writes over its file as usual.
+  - A document closed without changes is opened again from its file. If the file was moved or deleted, a message says so.
+  - Only the last document closed can come back. That includes one closed in another window, or with "No" when closing the app (also after the next start). When no other document took its place, as when you cancel the file dialog of Open, the previous document stays as it was.
+  - If the current document has changes, you are asked to save them first. Choosing "No" there swaps the two, so pressing the button again returns to the current one.
+  - The copy is kept where automatic backup keeps its copies. For a document without changes, only its file location is kept. With automatic backup turned off in Settings, no copy is kept and the button does not show.
 - **Ctrl+S**: save.
 - **Ctrl+Shift+S**: save as.
 - **PDF**: export the rendered preview as a PDF.
@@ -806,7 +842,7 @@ On pull requests, GitHub Actions checks that the three match. When merged into m
 | Command | Key | Command | Key |
 | :--- | :--- | :--- | :--- |
 | Open | Ctrl+O | Find/Replace | Ctrl+H |
-| Insert or update the table of contents | Ctrl+Shift+J | | |
+| Insert or update the table of contents | Ctrl+Shift+J | Back to previous document | Ctrl+Shift+B |
 | Save | Ctrl+S | Find next / previous | F3 / Shift+F3 |
 | Save As | Ctrl+Shift+S | Replace all | Ctrl+Shift+H |
 | Save as PDF | Ctrl+Shift+P | Markdown syntax | F1 |

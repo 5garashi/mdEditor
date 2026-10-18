@@ -304,6 +304,25 @@ body.dragging {
   outline-offset: -8px;
 }
 
+#restore-button[hidden] {
+  display: none;
+}
+
+/* What dropping here does, beside the pointer while files are dragged. */
+.drop-hint {
+  position: fixed;
+  z-index: 1000;
+  padding: 6px 12px;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  background: var(--card);
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
 .actions {
   flex: 1 1 auto;
   flex-wrap: wrap;

@@ -8,7 +8,7 @@
 -->
 # mdEditor プライバシーポリシー / Privacy Policy
 
-最終更新 / Last updated: 2026-10-17
+最終更新 / Last updated: 2026-10-18
 
 [日本語](#日本語) / [English](#english)
 
@@ -23,6 +23,7 @@ mdEditor（以下「本アプリ」）は、5garashi.com設計事務所が提供
 - メール（.eml）を開いたときも、本文の中の画像を同じ一時フォルダーに取り出します。メールの中のインターネット上の画像は、下の「通信が発生する場合」のとおり、確認するまで読み込みません。
 - PDF・HTML・PNG・Word・テキスト・CSV の書き出しも PC の中で行います。書き出した HTML は、開いても外部に通信しません（文書の中のネット上の画像だけは、その画像のサーバーから読み込みます）。
 - 自動バックアップ（設定でオフにできます）は、保存していない変更を15秒ごとに `%LOCALAPPDATA%\mdEditor\Recovery` に控えます。控えは保存するか正常に終了すると消え、異常終了したときだけ次の起動で復元に使います。
+- 自動バックアップがオンのときは、「前の文書に戻す」のために、別の文書に入れ替わって閉じた最後の文書を、同じフォルダーに 1 つだけ控えます（`discarded.json`）。「保存しますか？」で「いいえ」を選んで閉じた文書は内容とファイルの場所を、変更のない文書はファイルの場所だけを控えます。戻すと消え、次に文書を閉じると入れ替わります。自動バックアップをオフにすると消えます。
 - 読み上げ（設定でオンにしたときだけ）は、この PC に入っている Windows の音声だけを使います。文章をインターネット上の音声サービスに送ることはありません。
 
 ### 保存する設定
@@ -63,6 +64,7 @@ mdEditor (the "app") is a Markdown editor for Windows provided by 5garashi.com D
 - When you open an e-mail (.eml), pictures in its body go to the same temporary folder. Internet images in a mail do not load until you allow them, as described under "When network connections happen".
 - PDF, HTML, PNG, Word, text, and CSV export also happen entirely on your PC. A saved HTML file makes no connections when opened, except that web images in the document load from their servers.
 - Automatic backup (can be turned off in Settings) copies unsaved changes every 15 seconds to `%LOCALAPPDATA%\mdEditor\Recovery`. The copy is removed when you save or close normally, and is used only to restore your work after an abnormal exit.
+- While automatic backup is on, the last document that another document replaced is kept for Back to previous document, as a single copy in the same folder (`discarded.json`): for a document closed with "No" to "Save changes?", its content and file location; for a document without changes, only its file location. It is removed when it is brought back, replaced when the next document is closed, and removed when you turn automatic backup off.
 - Read-aloud (only when turned on in Settings) uses only the Windows voices installed on this PC. Text is never sent to an online speech service.
 
 ### Settings stored on your PC
