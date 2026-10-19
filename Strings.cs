@@ -63,8 +63,8 @@ internal static class Strings
             "Files mdEditor can open|*.md;*.markdown;*.txt;*.html;*.htm;*.docx;*.eml;*.csv;*.tsv;*.json;*.xml;*.ipynb;*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp;*.mp4;*.m4v;*.webm;*.ogv;*.mov|Markdown files (*.md;*.markdown)|*.md;*.markdown|Text files (*.txt)|*.txt|HTML files (*.html;*.htm)|*.html;*.htm|Word documents (*.docx)|*.docx|E-mail (*.eml)|*.eml|CSV / TSV (*.csv;*.tsv)|*.csv;*.tsv|JSON / XML (*.json;*.xml)|*.json;*.xml|Jupyter Notebook (*.ipynb)|*.ipynb|Images (*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp)|*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp|Videos (*.mp4;*.m4v;*.webm;*.ogv;*.mov)|*.mp4;*.m4v;*.webm;*.ogv;*.mov|All files (*.*)|*.*",
         ["Markdown ファイル (*.md)|*.md|テキスト ファイル (*.txt)|*.txt|すべてのファイル (*.*)|*.*"] =
             "Markdown files (*.md)|*.md|Text files (*.txt)|*.txt|All files (*.*)|*.*",
-        ["Markdown ファイル (*.md)|*.md|テキスト（そのまま）(*.txt)|*.txt|テキスト（記号なし）(*.txt)|*.txt|PDF (*.pdf)|*.pdf|HTML (*.html)|*.html|PNG 画像 (*.png)|*.png|Word 文書 (*.docx)|*.docx|CSV（文書の中の表）(*.csv)|*.csv|TSV（文書の中の表）(*.tsv)|*.tsv|JSON（文書の中の表）(*.json)|*.json|Jupyter Notebook (*.ipynb)|*.ipynb"] =
-            "Markdown files (*.md)|*.md|Text, as written (*.txt)|*.txt|Text, without marks (*.txt)|*.txt|PDF (*.pdf)|*.pdf|HTML (*.html)|*.html|PNG images (*.png)|*.png|Word documents (*.docx)|*.docx|CSV, the tables in the document (*.csv)|*.csv|TSV, the tables in the document (*.tsv)|*.tsv|JSON, the tables in the document (*.json)|*.json|Jupyter Notebook (*.ipynb)|*.ipynb",
+        ["Markdown ファイル (*.md)|*.md|テキスト（そのまま）(*.txt)|*.txt|テキスト（記号なし）(*.txt)|*.txt|PDF (*.pdf)|*.pdf|HTML (*.html)|*.html|PNG 画像 (*.png)|*.png|Word 文書 (*.docx)|*.docx|CSV（文書の中の表）(*.csv)|*.csv|TSV（文書の中の表）(*.tsv)|*.tsv|JSON（文書の中の表）(*.json)|*.json|Jupyter Notebook (*.ipynb)|*.ipynb|配布用 ZIP（文書と「名前_files」フォルダー）(*.zip)|*.zip"] =
+            "Markdown files (*.md)|*.md|Text, as written (*.txt)|*.txt|Text, without marks (*.txt)|*.txt|PDF (*.pdf)|*.pdf|HTML (*.html)|*.html|PNG images (*.png)|*.png|Word documents (*.docx)|*.docx|CSV, the tables in the document (*.csv)|*.csv|TSV, the tables in the document (*.tsv)|*.tsv|JSON, the tables in the document (*.json)|*.json|Jupyter Notebook (*.ipynb)|*.ipynb|ZIP for sharing, the document and its name_files folder (*.zip)|*.zip",
         ["Word の文書を Markdown に変換して開きました。見出し・リスト・表・リンク・画像は戻り、色や配置は戻りません。保存すると Markdown ファイルになります（Word の文書は変わりません）。"] =
             "Converted the Word document to Markdown. Headings, lists, tables, links, and images come back; colors and layout do not. Saving makes a Markdown file (the Word document stays as it is).",
         ["Word の文書を読み込めません。Word で開けるか確かめて、.docx 形式で保存し直してから、もう一度開いてください"] =
@@ -94,6 +94,17 @@ internal static class Strings
             "The previous document's file cannot be found. Check whether it was moved, renamed, or deleted.\n\n{0}",
         ["「{0}」を、閉じたとき（{1}）の状態に戻しました。まだ保存していません。"] =
             "{0} is back as it was when it was closed ({1}). It has not been saved yet.",
+        ["「{0}」フォルダーを作り、{1}を保存しました。"] = "Created the {0} folder and saved {1} in it.",
+        ["「{0}」フォルダーに{1}を保存しました。"] = "Saved {1} in the {0} folder.",
+        ["「{0}」フォルダーにある同じファイル{1}を使いました。"] = "Used the identical {1} already in the {0} folder.",
+        ["「{0}」フォルダーを複製しています… {1} / {2}（{3}）"] = "Copying the {0} folder... {1} of {2} ({3})",
+        ["「{0}」と「{1}」フォルダーを {2} に複製しました。"] = "Copied {0} and the {1} folder to {2}.",
+        ["「{0}」と「{1}」フォルダーとして複製しました。"] = "Copied as {0} and the {1} folder.",
+        ["「{0}」と「{1}」フォルダーとして {2} に複製しました。"] = "Copied as {0} and the {1} folder to {2}.",
+        ["同じ名前の別のファイルがあった {0} 個は、番号（(1) など）を付けて保存し、リンクも合わせました。"] =
+            "{0} file(s) whose names were taken by different files were saved with a number such as (1), and their links follow.",
+        ["「{0}」フォルダーの外を指すリンク {1} 個は、元のファイルを指すように書き換えました。"] =
+            "{1} link(s) to files outside the {0} folder now point to the original files.",
         ["ファイルの中身を読み込めません。「開く」で開けるか確かめてから、もう一度お試しください"] =
             "The file's content cannot be read. Check that it opens with Open, then try again",
         ["Jupyter Notebook を読み込めません。Jupyter で開けるか確かめて、もう一度開いてください"] =
@@ -120,8 +131,8 @@ internal static class Strings
             "The XML was opened in a code block. You can add notes before and after it. ",
         ["保存すると Markdown ファイルになります（元のファイルは変わりません）。"] =
             "Saving creates a Markdown file (the original file is unchanged).",
-        ["画像・動画・ファイルを入れるには、先に文書を保存します（文書の横の「名前-files」フォルダーに置きます）。保存先を選びますか？"] =
-            "To insert images, videos, or files, save the document first (they go in a \"name-files\" folder beside it). Choose where to save?",
+        ["画像・動画・ファイルを入れるには、先に文書を保存します（文書の横の「名前_files」フォルダーに置きます）。保存先を選びますか？"] =
+            "To insert images, videos, or files, save the document first (they go in a \"name_files\" folder beside it). Choose where to save?",
         ["ファイルを写せません。文書のフォルダーに書き込めるか確かめて、もう一度お試しください"] =
             "The file cannot be copied. Check that you can write to the document's folder, then try again",
         ["JSONの書き出し"] =
@@ -146,6 +157,16 @@ internal static class Strings
             "The table was saved.",
         ["文書の中の表を、1 つずつ別のファイルに保存しました。"] =
             "Each table in the document was saved as its own file.",
+        ["配布用 ZIP の書き出し"] =
+            "ZIP for sharing",
+        ["「{0}」フォルダーに、文書から参照されていないファイルが {1} 個あります。ごみ箱に移してから ZIP にしますか？\n\n{2}\n\n「いいえ」を選ぶと、ファイルは残したまま、ZIP には入れません。"] =
+            "The {0} folder has {1} files the document does not refer to. Move them to the Recycle Bin, then make the ZIP?\n\n{2}\n\nWith No, the files stay where they are and are left out of the ZIP.",
+        ["「{0}」を ZIP に保存しました。"] =
+            "Saved {0} in a ZIP.",
+        ["「{0}」と「{1}」フォルダーのファイル {2} 個を ZIP に保存しました。"] =
+            "Saved {0} and {2} files from the {1} folder in a ZIP.",
+        ["文書から参照している「{0}」フォルダーの外のファイル {1} 個は、ZIP に入っていません。"] =
+            "{1} files the document refers to outside the {0} folder are not in the ZIP.",
         ["mdEditor で保存した HTML から、元の Markdown を開きました。保存すると Markdown ファイルになります（HTML ファイルは変わりません）。"] =
             "Opened the original Markdown kept in this HTML file by mdEditor. Saving makes a Markdown file (the HTML file stays as it is).",
         ["HTML を Markdown に変換して開きました。色や配置、図の絵は元に戻りません。保存すると Markdown ファイルになります（HTML ファイルは変わりません）。"] =

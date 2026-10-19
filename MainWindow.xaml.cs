@@ -9,6 +9,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Net.Http;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -36,16 +37,9 @@ public partial class MainWindow : Window
 {
     private readonly string? _initialPath;
     private readonly string? _initialAnchor;
-    private readonly MarkdownPipeline _markdownPipeline =
-        // GitHub-style heading ids keep Japanese text, so links like [x](#セットアップ) work.
-        new MarkdownPipelineBuilder()
-            .UseAutoIdentifiers(AutoIdentifierOptions.GitHub)
-            .UseAdvancedExtensions()
-            // As on GitHub: front matter becomes a table and :smile: an emoji
-            // (smileys such as :) stay text).
-            .UseYamlFrontMatter()
-            .UseEmojiAndSmiley(enableSmileys: false)
-            .Build();
+    // "Closer to GitHub" (Settings > Markdown) leaves out mdEditor's own syntax.
+    private bool _nearGitHub = LoadSetting("NearGitHub") == "on";
+    private MarkdownPipeline _markdownPipeline = MarkdownPipelines.Build(LoadSetting("NearGitHub") == "on");
     private readonly HtmlSanitizer _htmlSanitizer = new();
     private readonly DispatcherTimer _previewTimer = new()
     {
@@ -184,8 +178,9 @@ public partial class MainWindow : Window
     private bool _hasUndecodableBytes;
     // Crash recovery: unsaved text is copied to LocalAppData (never over the
     // document itself) and offered back at the next start if the app ended abnormally.
-    // Images, videos, and files a document brings along go in a folder beside it named "name-files".
-    private const string FilesSuffix = "-files";
+    // Images, videos, and files a document brings along go in a folder beside it
+    // named "name_files", as browsers name the folder of a page saved complete.
+    private const string FilesSuffix = "_files";
 
     // The last document left for another one, kept so that "Back to previous
     // document" can bring it back (one copy, shared by every window, kept across
@@ -215,6 +210,22 @@ public partial class MainWindow : Window
 
     [DllImport("dwmapi.dll")]
     private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attribute, ref int value, int size);
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    private struct ShFileOperationInfo
+    {
+        public IntPtr Hwnd;
+        public uint Func;
+        public string From;
+        public string? To;
+        public ushort Flags;
+        public int AnyOperationsAborted;
+        public IntPtr NameMappings;
+        public string? ProgressTitle;
+    }
+
+    [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
+    private static extern int SHFileOperation(ref ShFileOperationInfo operation);
 
     public MainWindow(string? initialPath, string? initialAnchor = null)
     {
@@ -258,9 +269,13 @@ public partial class MainWindow : Window
         _htmlSanitizer.AllowedAttributes.Clear();
         _htmlSanitizer.AllowedAttributes.UnionWith(
         [
-            "align", "alt", "checked", "cite", "class", "colspan", "controls", "data-external-src", "data-line", "datetime", "dir",
+            "align", "alt", "checked", "cite", "class", "colspan", "controls", "data-external-src", "data-line", "data-source", "datetime", "dir",
             "disabled", "height", "href", "id", "lang", "loop", "media", "muted", "name", "open", "playsinline", "poster", "reversed",
-            "rowspan", "src", "srcset", "start", "style", "title", "type", "valign", "width"
+            "rowspan", "src", "srcset", "start", "style", "title", "type", "valign", "width",
+            // Older presentational attributes GitHub keeps too, such as <br clear="all">
+            // to end text flowing around a picture and <table border="1">.
+            "abbr", "axis", "border", "cellpadding", "cellspacing", "clear", "color", "compact", "frame", "headers",
+            "hreflang", "hspace", "itemprop", "noshade", "nowrap", "rules", "scope", "size", "span", "summary", "vspace"
         ]);
         // Markdig writes table alignment as style="text-align: ..."; nothing else is kept.
         _htmlSanitizer.AllowedCssProperties.Clear();
@@ -358,6 +373,7 @@ public partial class MainWindow : Window
                 SendPaper();
                 SendZoom();
                 SendToPage(new { type = "autoBackup", enabled = _autoBackup });
+                SendToPage(new { type = "nearGitHub", enabled = _nearGitHub });
                 SendToPage(new { type = "appInfo", version = AppVersion });
                 SendToPage(new { type = "externalImages", value = _externalImages });
                 if (await OfferRecoveryAsync())
@@ -391,6 +407,12 @@ public partial class MainWindow : Window
                 _theme = NormalizeTheme(root.GetProperty("theme").GetString());
                 SaveSetting("Theme", _theme);
                 ApplyTheme();
+                break;
+            case "setNearGitHub":
+                _nearGitHub = root.GetProperty("enabled").GetBoolean();
+                SaveSetting("NearGitHub", _nearGitHub ? "on" : "off");
+                _markdownPipeline = MarkdownPipelines.Build(_nearGitHub);
+                SendPreview();
                 break;
             case "setAutoBackup":
                 _autoBackup = root.GetProperty("enabled").GetBoolean();
@@ -449,8 +471,13 @@ public partial class MainWindow : Window
             case "change":
                 _text = root.GetProperty("text").GetString() ?? string.Empty;
                 _changeVersion++;
-                _isDirty = true;
-                SendDocumentInfo();
+                // Links the app rewrote while saving (host) are already in the saved file.
+                if (!(root.TryGetProperty("host", out var host) && host.GetBoolean()))
+                {
+                    _isDirty = true;
+                    SendDocumentInfo();
+                }
+
                 _previewTimer.Stop();
                 _previewTimer.Start();
                 break;
@@ -990,12 +1017,13 @@ public partial class MainWindow : Window
     // itself (the text as it is); PDF, HTML, PNG, and Word export a copy and the
     // document stays as it was. Save of a new document offers the text formats only.
     // Types after the first two, in the order of the Save As list.
-    private static readonly string[] ExportTypes = ["plain", ".pdf", ".html", ".png", ".docx", ".csv", ".tsv", ".json", ".ipynb"];
+    private static readonly string[] ExportTypes = ["plain", ".pdf", ".html", ".png", ".docx", ".csv", ".tsv", ".json", ".ipynb", ".zip"];
 
     private const string SaveAsFilter =
         "Markdown ファイル (*.md)|*.md|テキスト（そのまま）(*.txt)|*.txt|テキスト（記号なし）(*.txt)|*.txt"
         + "|PDF (*.pdf)|*.pdf|HTML (*.html)|*.html|PNG 画像 (*.png)|*.png|Word 文書 (*.docx)|*.docx"
-        + "|CSV（文書の中の表）(*.csv)|*.csv|TSV（文書の中の表）(*.tsv)|*.tsv|JSON（文書の中の表）(*.json)|*.json|Jupyter Notebook (*.ipynb)|*.ipynb";
+        + "|CSV（文書の中の表）(*.csv)|*.csv|TSV（文書の中の表）(*.tsv)|*.tsv|JSON（文書の中の表）(*.json)|*.json|Jupyter Notebook (*.ipynb)|*.ipynb"
+        + "|配布用 ZIP（文書と「名前_files」フォルダー）(*.zip)|*.zip";
 
     private async Task<bool> SaveDocumentAsAsync(bool allowExports = false, bool embedSource = false)
     {
@@ -1034,6 +1062,7 @@ public partial class MainWindow : Window
                 case ".png": await ExportPngAsync(target); break;
                 case ".docx": await ExportDocxAsync(target); break;
                 case ".ipynb": await ExportNotebookAsync(target); break;
+                case ".zip": await ExportZipAsync(target); break;
                 default: await ExportTablesAsync(target, type); break;
             }
 
@@ -1043,6 +1072,9 @@ public partial class MainWindow : Window
         try
         {
             var fullPath = Path.GetFullPath(dialog.FileName);
+            var moved = _filePath is not null && !string.Equals(_filePath, fullPath, StringComparison.OrdinalIgnoreCase)
+                ? await CarryFilesFolderAsync(_filePath, fullPath)
+                : null;
             if (!await WriteDocumentAsync(fullPath))
             {
                 return false;
@@ -1052,6 +1084,11 @@ public partial class MainWindow : Window
             _filePath = fullPath;
             SendDocumentInfo();
             SendPreview();
+            if (moved is not null)
+            {
+                SendToPage(new { type = "notice", text = moved });
+            }
+
             return true;
         }
         catch (UnauthorizedAccessException ex)
@@ -1076,6 +1113,110 @@ public partial class MainWindow : Window
         }
 
         return false;
+    }
+
+    // Save As to another folder or name: the document's name_files folder is
+    // copied whole beside the new file (as "newname_files"; files whose names are
+    // taken there get " (1)" and so on, identical ones are shared), and links are
+    // rewritten in the text and the editor: links into the folder follow the copy,
+    // and other relative links point to the same files from the new place. The
+    // original file and folder are not changed. Returns the notice, or null.
+    private async Task<string?> CarryFilesFolderAsync(string oldPath, string newPath)
+    {
+        var oldFolder = Path.GetDirectoryName(oldPath)!;
+        var newFolder = Path.GetDirectoryName(newPath)!;
+        var oldFiles = Path.Combine(oldFolder, Path.GetFileNameWithoutExtension(oldPath) + FilesSuffix);
+        var newFiles = Path.Combine(newFolder, Path.GetFileNameWithoutExtension(newPath) + FilesSuffix);
+        var sameFolder = string.Equals(oldFolder, newFolder, StringComparison.OrdinalIgnoreCase);
+        var hasFiles = Directory.Exists(oldFiles) && !string.Equals(oldFiles, newFiles, StringComparison.OrdinalIgnoreCase);
+        var renamed = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        if (hasFiles)
+        {
+            var all = Directory.GetFiles(oldFiles, "*", SearchOption.AllDirectories);
+            var folderName = Path.GetFileName(oldFiles);
+            var lastReport = DateTime.MinValue;
+            for (var i = 0; i < all.Length; i++)
+            {
+                if (DateTime.UtcNow - lastReport > TimeSpan.FromMilliseconds(250))
+                {
+                    lastReport = DateTime.UtcNow;
+                    SendToPage(new
+                    {
+                        type = "notice",
+                        text = string.Format(Strings.Tr("「{0}」フォルダーを複製しています… {1} / {2}（{3}）"), folderName, i + 1, all.Length, Path.GetFileName(all[i]))
+                    });
+                }
+
+                var relative = Path.GetRelativePath(oldFiles, all[i]);
+                var target = Path.Combine(newFiles, relative);
+                Directory.CreateDirectory(Path.GetDirectoryName(target)!);
+                var source = all[i];
+                var (placed, _) = await Task.Run(() => PlaceFile(target, source, null));
+                if (!string.Equals(placed, target, StringComparison.OrdinalIgnoreCase))
+                {
+                    renamed[relative] = Path.GetRelativePath(newFiles, placed);
+                }
+            }
+        }
+
+        // Links into the folder follow the copy; others are kept, or, in another folder, point to the same files.
+        var outside = 0;
+        var edits = ReferenceEdits(_text, [oldFolder], target =>
+        {
+            if (hasFiles && IsInside(target, oldFiles))
+            {
+                var relative = Path.GetRelativePath(oldFiles, target);
+                return LinkTarget(newFolder, Path.Combine(newFiles, renamed.GetValueOrDefault(relative, relative)));
+            }
+
+            // From a sibling folder, "../x" may still be right; only links that change are rewritten.
+            var moved = LinkTarget(newFolder, target);
+            if (sameFolder || moved == LinkTarget(oldFolder, target))
+            {
+                return null;
+            }
+
+            outside++;
+            return moved;
+        });
+        if (edits.Count > 0)
+        {
+            var text = new StringBuilder(_text);
+            foreach (var edit in edits.OrderByDescending(edit => edit.Start))
+            {
+                text.Remove(edit.Start, edit.Length).Insert(edit.Start, edit.Target);
+            }
+
+            // The editor counts lines with "\n" only, so "\r" before an edit moves it left.
+            int EditorOffset(int index) => index - _text.AsSpan(0, index).Count('\r');
+            SendToPage(new
+            {
+                type = "applyEdits",
+                edits = edits.Select(edit => new { from = EditorOffset(edit.Start), to = EditorOffset(edit.Start + edit.Length), insert = edit.Target })
+            });
+            _text = text.ToString();
+        }
+
+        var notices = new List<string>();
+        if (hasFiles)
+        {
+            var sameName = string.Equals(Path.GetFileName(oldPath), Path.GetFileName(newPath), StringComparison.OrdinalIgnoreCase);
+            notices.Add(string.Format(Strings.Tr(sameName
+                    ? "「{0}」と「{1}」フォルダーを {2} に複製しました。"
+                    : sameFolder ? "「{0}」と「{1}」フォルダーとして複製しました。" : "「{0}」と「{1}」フォルダーとして {2} に複製しました。"),
+                Path.GetFileName(newPath), Path.GetFileName(newFiles), newFolder));
+            if (renamed.Count > 0)
+            {
+                notices.Add(string.Format(Strings.Tr("同じ名前の別のファイルがあった {0} 個は、番号（(1) など）を付けて保存し、リンクも合わせました。"), renamed.Count));
+            }
+        }
+
+        if (outside > 0)
+        {
+            notices.Add(string.Format(Strings.Tr("「{0}」フォルダーの外を指すリンク {1} 個は、元のファイルを指すように書き換えました。"), Path.GetFileName(newFiles), outside));
+        }
+
+        return notices.Count == 0 ? null : string.Join(Strings.Language == "en" ? " " : string.Empty, notices);
     }
 
     // BOMs win; otherwise strict UTF-8, falling back to the system ANSI code page
@@ -1368,7 +1509,7 @@ public partial class MainWindow : Window
     private static string NewImportFolder() =>
         Path.Combine(Path.GetTempPath(), "mdEditor-import-" + Guid.NewGuid().ToString("N"));
 
-    // Word to Markdown; its images are written to "name-files" in a new temporary folder.
+    // Word to Markdown; its images are written to "name_files" in a new temporary folder.
     private static (string Markdown, string Assets, int Images) ConvertDocx(string path)
     {
         var imagesName = Path.GetFileNameWithoutExtension(path) + FilesSuffix;
@@ -1480,7 +1621,7 @@ public partial class MainWindow : Window
         string.Join("/", relative.Split('/', '\\').Select(part => Uri.EscapeDataString(part)));
 
     // Dropped files and pasted pictures go in at the cursor. Images, videos, and
-    // other files are put in a "name-files" folder beside the document (or used
+    // other files are put in a "name_files" folder beside the document (or used
     // where they are, when already inside the document's folder) and inserted as
     // pictures or links; files mdEditor opens are inserted as their content. A new
     // document is saved first when something has to be placed beside it.
@@ -1508,7 +1649,7 @@ public partial class MainWindow : Window
         if (_filePath is null && needsFolder)
         {
             var answer = MessageBox.Show(
-                Strings.Tr("画像・動画・ファイルを入れるには、先に文書を保存します（文書の横の「名前-files」フォルダーに置きます）。保存先を選びますか？"),
+                Strings.Tr("画像・動画・ファイルを入れるには、先に文書を保存します（文書の横の「名前_files」フォルダーに置きます）。保存先を選びますか？"),
                 "mdEditor", MessageBoxButton.OKCancel, MessageBoxImage.Information);
             if (answer != MessageBoxResult.OK || !await SaveDocumentAsAsync() || _filePath is null)
             {
@@ -1519,30 +1660,26 @@ public partial class MainWindow : Window
         try
         {
             var documentFolder = _filePath is null ? null : Path.GetDirectoryName(_filePath)!;
-            var imagesFolder = _filePath is null ? null
+            var filesFolder = _filePath is null ? null
                 : Path.Combine(documentFolder!, Path.GetFileNameWithoutExtension(_filePath) + FilesSuffix);
+            var folderIsNew = filesFolder is not null && !Directory.Exists(filesFolder);
             var inserted = new List<string>();
+            var saved = new List<string>();
+            var reused = new List<string>();
 
-            string Place(string fileName, Action<string> write)
-            {
-                Directory.CreateDirectory(imagesFolder!);
-                var stem = Path.GetFileNameWithoutExtension(fileName);
-                var extension = Path.GetExtension(fileName);
-                var target = Path.Combine(imagesFolder!, fileName);
-                for (var n = 2; File.Exists(target); n++)
-                {
-                    target = Path.Combine(imagesFolder!, $"{stem}-{n}{extension}");
-                }
-
-                write(target);
-                return target;
-            }
-
-            // A file as this document refers to it: copied beside it unless it is already inside its folder.
+            // A file as this document refers to it: copied into its name_files folder
+            // unless it is already there (an identical file there is used instead).
             string Copied(string full)
             {
-                var inside = full.StartsWith(documentFolder!.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase);
-                return LinkTarget(documentFolder, inside ? full : Place(Path.GetFileName(full), path => File.Copy(full, path)));
+                if (IsInside(full, filesFolder!))
+                {
+                    return LinkTarget(documentFolder!, full);
+                }
+
+                Directory.CreateDirectory(filesFolder!);
+                var (target, same) = PlaceFile(Path.Combine(filesFolder!, Path.GetFileName(full)), full, null);
+                (same ? reused : saved).Add(Path.GetFileName(target));
+                return LinkTarget(documentFolder!, target);
             }
 
             foreach (var file in files)
@@ -1550,9 +1687,9 @@ public partial class MainWindow : Window
                 var full = Path.GetFullPath(file);
                 if (contents.TryGetValue(file, out var content))
                 {
-                    // Pictures in the content are copied beside this document; other files it links to stay where they are.
-                    inserted.Add(documentFolder is null ? content.Markdown : RebaseReferences(content.Markdown, content.Folders,
-                        target => IsMediaPath(target) ? Copied(target) : LinkTarget(documentFolder, target)).Text);
+                    // Every file the content shows or links to comes along into name_files.
+                    inserted.Add(documentFolder is null ? content.Markdown
+                        : RebaseReferences(content.Markdown, content.Folders, Copied).Text);
                 }
                 else if (IsMediaPath(full))
                 {
@@ -1566,7 +1703,9 @@ public partial class MainWindow : Window
 
             if (pasted is not null)
             {
-                var target = Place($"image-{DateTime.Now:yyyyMMdd-HHmmss}{pastedExtension}", path => File.WriteAllBytes(path, pasted));
+                Directory.CreateDirectory(filesFolder!);
+                var (target, _) = PlaceFile(Path.Combine(filesFolder!, $"image-{DateTime.Now:yyyyMMdd-HHmmss}{pastedExtension}"), null, pasted);
+                saved.Add(Path.GetFileName(target));
                 inserted.Add($"![]({LinkTarget(documentFolder!, target)})");
             }
 
@@ -1576,20 +1715,106 @@ public partial class MainWindow : Window
                 SendToPage(new { type = "insertText", text = string.Join("\n\n", inserted.Select(text => text.Trim('\n'))) + "\n", block = contents.Count > 0 });
             }
 
+            var notices = new List<string>();
             if (contents.Count > 0)
             {
-                SendToPage(new
+                notices.Add(string.Format(Strings.Tr("「{0}」の中身を入れました。ファイルとして開くときは、編集画面の外にドロップしてください（Ctrl+Z で取り消せます）。"),
+                    string.Join(Strings.Language == "en" ? ", " : "、", contents.Keys.Select(Path.GetFileName))));
+            }
+
+            if (filesFolder is not null)
+            {
+                var folderName = Path.GetFileName(filesFolder);
+                if (saved.Count > 0)
                 {
-                    type = "notice",
-                    text = string.Format(Strings.Tr("「{0}」の中身を入れました。ファイルとして開くときは、編集画面の外にドロップしてください（Ctrl+Z で取り消せます）。"),
-                        string.Join(Strings.Language == "en" ? ", " : "、", contents.Keys.Select(Path.GetFileName)))
-                });
+                    notices.Add(string.Format(Strings.Tr(folderIsNew ? "「{0}」フォルダーを作り、{1}を保存しました。" : "「{0}」フォルダーに{1}を保存しました。"),
+                        folderName, NameList(saved)));
+                }
+
+                if (reused.Count > 0)
+                {
+                    notices.Add(string.Format(Strings.Tr("「{0}」フォルダーにある同じファイル{1}を使いました。"), folderName, NameList(reused)));
+                }
+            }
+
+            if (notices.Count > 0)
+            {
+                SendToPage(new { type = "notice", text = string.Join(Strings.Language == "en" ? " " : string.Empty, notices) });
             }
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException)
         {
             ShowFileError("ファイルを写せません。文書のフォルダーに書き込めるか確かめて、もう一度お試しください", ex);
         }
+    }
+
+    // File names in a notice: 「a.png」「b.pdf」 in Japanese, "a.png", "b.pdf" in English.
+    private static string NameList(IEnumerable<string> names) => Strings.Language == "en"
+        ? string.Join(", ", names.Select(name => $"\"{name}\""))
+        : string.Concat(names.Select(name => $"「{name}」"));
+
+    private static bool IsInside(string path, string folder) =>
+        path.StartsWith(folder.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase);
+
+    // Writes a file (a copy of source, or bytes) at target, or, when another file
+    // already has that name, at "name (1).ext", "name (2).ext", ... as browsers
+    // do. A file with the same content already there is used instead (Same).
+    private static (string Path, bool Same) PlaceFile(string target, string? source, byte[]? bytes)
+    {
+        var folder = Path.GetDirectoryName(target)!;
+        var stem = Path.GetFileNameWithoutExtension(target);
+        var extension = Path.GetExtension(target);
+        for (var n = 1; ; n++)
+        {
+            if (!File.Exists(target))
+            {
+                if (source is not null)
+                {
+                    File.Copy(source, target);
+                }
+                else
+                {
+                    File.WriteAllBytes(target, bytes!);
+                }
+
+                return (target, false);
+            }
+
+            if (source is not null ? SameContent(source, target) : SameContent(bytes!, target))
+            {
+                return (target, true);
+            }
+
+            target = Path.Combine(folder, $"{stem} ({n}){extension}");
+        }
+    }
+
+    private static bool SameContent(string a, string b)
+    {
+        if (string.Equals(Path.GetFullPath(a), Path.GetFullPath(b), StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        if (new FileInfo(a).Length != new FileInfo(b).Length)
+        {
+            return false;
+        }
+
+        using var first = File.OpenRead(a);
+        using var second = File.OpenRead(b);
+        return System.Security.Cryptography.SHA256.HashData(first).AsSpan().SequenceEqual(System.Security.Cryptography.SHA256.HashData(second));
+    }
+
+    private static bool SameContent(byte[] bytes, string file)
+    {
+        if (new FileInfo(file).Length != bytes.Length)
+        {
+            return false;
+        }
+
+        using var stream = File.OpenRead(file);
+        return System.Security.Cryptography.SHA256.HashData(bytes).AsSpan().SequenceEqual(System.Security.Cryptography.SHA256.HashData(stream));
     }
 
     // The Markdown a file mdEditor opens adds when dropped on the editor, made as
@@ -1646,28 +1871,12 @@ public partial class MainWindow : Window
 
     // Relative image and link targets in inserted content start from the file it
     // came from. Each one found as a file under one of the folders is replaced by
-    // what relocate returns (with relocate null, they are only counted). Targets
-    // written through a reference definition are left as they are.
-    private static (string Text, int Count) RebaseReferences(string markdown, IReadOnlyList<string> folders, Func<string, string>? relocate)
+    // what relocate returns (with relocate null, they are only counted; when it
+    // returns null, that target stays). Targets written through a reference
+    // definition are left as they are.
+    private static (string Text, int Count) RebaseReferences(string markdown, IReadOnlyList<string> folders, Func<string, string?>? relocate)
     {
-        if (folders.Count == 0)
-        {
-            return (markdown, 0);
-        }
-
-        var edits = new List<(int Start, int Length, string Target)>();
-        foreach (var link in Markdig.Markdown.Parse(markdown, ReferencePipeline).Descendants<LinkInline>())
-        {
-            if (link.Url is not { Length: > 0 } url || link.UrlSpan.IsEmpty || link.UrlSpan.End >= markdown.Length
-                || markdown.Substring(link.UrlSpan.Start, link.UrlSpan.Length).Trim('<', '>') != url
-                || ResolveLocalFile(url, folders) is not { } local)
-            {
-                continue;
-            }
-
-            edits.Add((link.UrlSpan.Start, link.UrlSpan.Length, relocate is null ? string.Empty : relocate(local.Path) + local.Suffix));
-        }
-
+        var edits = ReferenceEdits(markdown, folders, relocate ?? (_ => string.Empty));
         if (relocate is null)
         {
             return (markdown, edits.Count);
@@ -1680,6 +1889,31 @@ public partial class MainWindow : Window
         }
 
         return (text.ToString(), edits.Count);
+    }
+
+    private static List<(int Start, int Length, string Target)> ReferenceEdits(
+        string markdown, IReadOnlyList<string> folders, Func<string, string?> relocate)
+    {
+        var edits = new List<(int Start, int Length, string Target)>();
+        if (folders.Count == 0)
+        {
+            return edits;
+        }
+
+        foreach (var link in Markdig.Markdown.Parse(markdown, ReferencePipeline).Descendants<LinkInline>())
+        {
+            if (link.Url is not { Length: > 0 } url || link.UrlSpan.IsEmpty || link.UrlSpan.End >= markdown.Length
+                || markdown.Substring(link.UrlSpan.Start, link.UrlSpan.Length).Trim('<', '>') != url
+                || ResolveLocalFile(url, folders) is not { } local
+                || relocate(local.Path) is not { } target)
+            {
+                continue;
+            }
+
+            edits.Add((link.UrlSpan.Start, link.UrlSpan.Length, target + local.Suffix));
+        }
+
+        return edits;
     }
 
     // A relative target ("images/a.png#x") as a file that exists under one of the folders, and its "#"/"?" part.
@@ -2832,6 +3066,186 @@ public partial class MainWindow : Window
         }
     }
 
+    // A ZIP to hand the document to someone: the Markdown file and its name_files
+    // folder, under the names the links use. Files in the folder the document does
+    // not refer to are left out and, when the user agrees, moved to the Recycle Bin
+    // first. Without a folder (or a saved document), the ZIP holds the text only.
+    private async Task ExportZipAsync(string path)
+    {
+        var title = Strings.Tr("配布用 ZIP の書き出し");
+        var documentName = _filePath is null ? Path.GetFileNameWithoutExtension(path) + ".md" : Path.GetFileName(_filePath);
+        var documentFolder = _filePath is null ? null : Path.GetDirectoryName(_filePath)!;
+        var filesFolder = documentFolder is null ? null
+            : Path.Combine(documentFolder, Path.GetFileNameWithoutExtension(_filePath) + FilesSuffix);
+        byte[] bytes;
+        try
+        {
+            bytes = EncodeDocument(_text, _encoding);
+        }
+        catch (EncoderFallbackException)
+        {
+            bytes = EncodeDocument(_text, Utf8NoBom);
+        }
+
+        try
+        {
+            var included = new List<string>();
+            var outside = 0;
+            if (documentFolder is not null && filesFolder is not null)
+            {
+                var referenced = ReferencedFiles(_text, documentFolder, filesFolder);
+                outside = referenced.Count(file => !IsInside(file, filesFolder));
+                if (Directory.Exists(filesFolder))
+                {
+                    var all = Directory.GetFiles(filesFolder, "*", SearchOption.AllDirectories);
+                    included.AddRange(all.Where(referenced.Contains));
+                    var unused = all.Where(file => !referenced.Contains(file)).ToList();
+                    if (unused.Count > 0)
+                    {
+                        var shown = unused.Take(10).Select(file => Path.GetRelativePath(filesFolder, file)).ToList();
+                        if (unused.Count > shown.Count)
+                        {
+                            shown.Add("…");
+                        }
+
+                        var answer = MessageBox.Show(
+                            string.Format(Strings.Tr("「{0}」フォルダーに、文書から参照されていないファイルが {1} 個あります。ごみ箱に移してから ZIP にしますか？\n\n{2}\n\n「いいえ」を選ぶと、ファイルは残したまま、ZIP には入れません。"),
+                                Path.GetFileName(filesFolder), unused.Count, string.Join("\n", shown)),
+                            title, MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                        if (answer == MessageBoxResult.Cancel)
+                        {
+                            return;
+                        }
+
+                        if (answer == MessageBoxResult.Yes)
+                        {
+                            MoveToRecycleBin(unused);
+                            RemoveEmptyFolders(filesFolder);
+                        }
+                    }
+                }
+            }
+
+            var tempPath = Path.Combine(Path.GetDirectoryName(Path.GetFullPath(path))!, $".mdEditor-{Guid.NewGuid():N}.tmp");
+            try
+            {
+                await Task.Run(() =>
+                {
+                    using (var archive = ZipFile.Open(tempPath, ZipArchiveMode.Create))
+                    {
+                        using (var entry = archive.CreateEntry(documentName, CompressionLevel.Optimal).Open())
+                        {
+                            entry.Write(bytes);
+                        }
+
+                        foreach (var file in included)
+                        {
+                            var name = Path.GetFileName(filesFolder!) + "/"
+                                + Path.GetRelativePath(filesFolder!, file).Replace(Path.DirectorySeparatorChar, '/');
+                            archive.CreateEntryFromFile(file, name, CompressionLevel.Optimal);
+                        }
+                    }
+
+                    File.Move(tempPath, path, overwrite: true);
+                });
+            }
+            finally
+            {
+                if (File.Exists(tempPath))
+                {
+                    try { File.Delete(tempPath); } catch (IOException) { } catch (UnauthorizedAccessException) { }
+                }
+            }
+
+            var message = included.Count == 0
+                ? string.Format(Strings.Tr("「{0}」を ZIP に保存しました。"), documentName)
+                : string.Format(Strings.Tr("「{0}」と「{1}」フォルダーのファイル {2} 個を ZIP に保存しました。"),
+                    documentName, Path.GetFileName(filesFolder!), included.Count);
+            if (outside > 0)
+            {
+                message += "\n\n" + string.Format(Strings.Tr("文書から参照している「{0}」フォルダーの外のファイル {1} 個は、ZIP に入っていません。"),
+                    Path.GetFileName(filesFolder!), outside);
+            }
+
+            MessageBox.Show($"{message}\n\n{path}", title, MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidDataException)
+        {
+            ShowFileError("ファイルを保存できません。ほかのアプリで開いている場合は閉じるか、「名前を付けて保存」で別の場所に保存してください", ex);
+        }
+    }
+
+    // Every local file the document refers to: Markdown links and pictures (also
+    // through reference definitions) and src/href/poster in raw HTML. A file in
+    // name_files whose path from the document is written anywhere in the text
+    // counts too, so a file is only left out when nothing in the document can mean it.
+    private static HashSet<string> ReferencedFiles(string markdown, string documentFolder, string filesFolder)
+    {
+        var parsed = Markdig.Markdown.Parse(markdown, ReferencePipeline);
+        var urls = parsed.Descendants<LinkInline>().Select(link => link.Url)
+            .Concat(parsed.Descendants<LinkReferenceDefinition>().Select(definition => definition.Url))
+            .Concat(System.Text.RegularExpressions.Regex.Matches(markdown,
+                    """\b(?:src|href|poster|data)\s*=\s*(?:"([^"]*)"|'([^']*)')""",
+                    System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+                .Select(match => System.Net.WebUtility.HtmlDecode(match.Groups[1].Success ? match.Groups[1].Value : match.Groups[2].Value)));
+
+        var result = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var url in urls.OfType<string>())
+        {
+            if (ResolveLocalFile(url.Trim(), [documentFolder]) is { } local)
+            {
+                result.Add(local.Path);
+            }
+        }
+
+        if (Directory.Exists(filesFolder))
+        {
+            foreach (var file in Directory.GetFiles(filesFolder, "*", SearchOption.AllDirectories))
+            {
+                var relative = Path.GetRelativePath(documentFolder, file);
+                if (markdown.Contains(relative, StringComparison.OrdinalIgnoreCase)
+                    || markdown.Contains(relative.Replace('\\', '/'), StringComparison.OrdinalIgnoreCase)
+                    || markdown.Contains(EscapeImagePath(relative), StringComparison.OrdinalIgnoreCase))
+                {
+                    result.Add(file);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    // To the Recycle Bin, so a file left out by mistake can be put back.
+    private void MoveToRecycleBin(IReadOnlyList<string> files)
+    {
+        const uint delete = 3;
+        const ushort silent = 0x4, noConfirmation = 0x10, allowUndo = 0x40, noErrorUi = 0x400;
+        var operation = new ShFileOperationInfo
+        {
+            Hwnd = new WindowInteropHelper(this).Handle,
+            Func = delete,
+            From = string.Join('\0', files) + "\0\0",
+            Flags = silent | noConfirmation | allowUndo | noErrorUi
+        };
+        if (SHFileOperation(ref operation) != 0 || operation.AnyOperationsAborted != 0)
+        {
+            throw new IOException("SHFileOperation could not move the files to the Recycle Bin.");
+        }
+    }
+
+    // Folders left empty inside name_files (the folder itself stays).
+    private static void RemoveEmptyFolders(string folder)
+    {
+        foreach (var child in Directory.GetDirectories(folder))
+        {
+            RemoveEmptyFolders(child);
+            if (!Directory.EnumerateFileSystemEntries(child).Any())
+            {
+                Directory.Delete(child);
+            }
+        }
+    }
+
     // The colored code lines from the preview (CSS colors such as "rgb(207, 34, 46)").
     private static List<IReadOnlyList<IReadOnlyList<CodeRun>>> ReadCodeColors(JsonElement blocks)
     {
@@ -3373,11 +3787,30 @@ public partial class MainWindow : Window
         using var writer = new StringWriter();
         var renderer = new HtmlRenderer(writer);
         _markdownPipeline.Setup(renderer);
-        renderer.ObjectRenderers.ReplaceOrAdd<HtmlBlockRenderer>(new RawHtmlBlockRenderer());
-        renderer.ObjectRenderers.ReplaceOrAdd<HtmlInlineRenderer>(new RawHtmlInlineRenderer());
+        // Each image carries data-source, where it starts in the editor (which has "\n"
+        // line breaks only), so Image size and position finds it from the preview.
+        var returns = new List<int>();
+        for (var index = text.IndexOf('\r'); index >= 0; index = text.IndexOf('\r', index + 1))
+        {
+            returns.Add(index);
+        }
+
+        int EditorOffset(int index)
+        {
+            var before = returns.BinarySearch(index);
+            return index - (before >= 0 ? before : ~before);
+        }
+
+        renderer.ObjectRenderers.ReplaceOrAdd<HtmlBlockRenderer>(new RawHtmlBlockRenderer(EditorOffset));
+        renderer.ObjectRenderers.ReplaceOrAdd<HtmlInlineRenderer>(new RawHtmlInlineRenderer(EditorOffset));
         renderer.ObjectRenderers.ReplaceOrAdd<Markdig.Extensions.Yaml.YamlFrontMatterHtmlRenderer>(new FrontMatterTableRenderer());
         var document = Markdown.Parse(text, _markdownPipeline);
         ResolveRelativeImages(document);
+        foreach (var image in document.Descendants<LinkInline>().Where(link => link.IsImage))
+        {
+            image.GetAttributes().AddProperty(
+                "data-source", EditorOffset(image.Span.Start).ToString(System.Globalization.CultureInfo.InvariantCulture));
+        }
         // Source line of each block, used by the page to keep the editor and preview
         // scrolled to the same place.
         foreach (var block in document.Descendants<Block>())
@@ -3579,24 +4012,36 @@ public partial class MainWindow : Window
         _noticedBlocked = -1;
     }
 
-    private sealed class RawHtmlBlockRenderer : HtmlObjectRenderer<HtmlBlock>
+    // An <img> written as HTML gets data-source too (see RenderMarkdown).
+    private static string MarkImageSources(string html, int start, Func<int, int> editorOffset) =>
+        System.Text.RegularExpressions.Regex.Replace(html, @"<img\b", match =>
+                $"<img data-source=\"{editorOffset(start + match.Index).ToString(System.Globalization.CultureInfo.InvariantCulture)}\"",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+    private sealed class RawHtmlBlockRenderer(Func<int, int> editorOffset) : HtmlObjectRenderer<HtmlBlock>
     {
         protected override void Write(HtmlRenderer renderer, HtmlBlock obj)
         {
-            if (obj.Type != HtmlBlockType.Comment)
+            if (obj.Type == HtmlBlockType.Comment)
             {
-                renderer.WriteLeafRawLines(obj, true, false);
+                return;
+            }
+
+            foreach (var line in obj.Lines.Lines.Take(obj.Lines.Count))
+            {
+                renderer.Write(MarkImageSources(line.Slice.ToString(), line.Slice.Start, editorOffset));
+                renderer.WriteLine();
             }
         }
     }
 
-    private sealed class RawHtmlInlineRenderer : HtmlObjectRenderer<HtmlInline>
+    private sealed class RawHtmlInlineRenderer(Func<int, int> editorOffset) : HtmlObjectRenderer<HtmlInline>
     {
         protected override void Write(HtmlRenderer renderer, HtmlInline obj)
         {
             if (!obj.Tag.StartsWith("<!--", StringComparison.Ordinal))
             {
-                renderer.Write(obj.Tag);
+                renderer.Write(MarkImageSources(obj.Tag, obj.Span.Start, editorOffset));
             }
         }
     }
@@ -3762,7 +4207,13 @@ public partial class MainWindow : Window
                 break;
             case "command":
                 // Document commands (Save, Open, Find, Settings, ...) belong to this window.
-                SendToPage(new { type = "runCommand", id = root.GetProperty("id").GetString() });
+                SendToPage(new
+                {
+                    type = "runCommand",
+                    id = root.GetProperty("id").GetString(),
+                    // Image size and position from the preview window: where the image starts.
+                    at = root.TryGetProperty("at", out var at) && at.ValueKind == JsonValueKind.Number ? at.GetInt32() : (int?)null
+                });
                 break;
             case "attachPreview":
                 window.Close();

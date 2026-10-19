@@ -21,7 +21,7 @@ Windows で Markdown ファイルを開き、テキストと整形済み表示�
 
 *A Windows app that opens Markdown files and lets you edit the text side by side with a rendered preview.* [日本語](#特長) / [English](#english)
 
-バージョン / Version: 1.0.13（変更の記録 / Changes: [CHANGELOG.md](./CHANGELOG.md)）
+バージョン / Version: 1.0.14（変更の記録 / Changes: [CHANGELOG.md](./CHANGELOG.md)）
 
 ## 特長
 
@@ -33,7 +33,7 @@ Markdown を書きながら、整形された仕上がりをすぐ横で確か�
 - **2 台のディスプレイで、書く画面と見る画面を分けられる**: プレビューだけを別のウィンドウに出し、2 台目のディスプレイで最大化や全画面表示にできます。ウィンドウが分かれても、編集欄とプレビューのスクロールは文書の同じ行でそろいます。広い画面でも本文は読みやすい幅に収まり、表や図は広く表示します。ウィンドウの場所は次回の起動でも使います。
 - **図・グラフ・数式・表がそのまま見える**: フローチャート、シーケンス図、ガントチャート、円グラフなどの Mermaid の図、KaTeX の数式、表、チェックリスト、文書内の画像をプレビューに表示します。
 - **PDF と HTML に書き出し**: プレビューの見た目のまま、図や数式も含めて PDF に保存します。用紙は A4 と Letter から選べます（初期設定は地域に合わせて自動）。1 つのファイルで完結する HTML にも保存でき、メールで送ったり Web に載せたりできます。
-- **いろいろな形式を開いて、保存できる**: Word・HTML・Web ページ・メール・CSV・JSON・Jupyter Notebook・画像を開いて Markdown として編集でき、「名前を付けて保存」で PNG・Word・CSV・JSON・Jupyter Notebook などにも保存できます。
+- **いろいろな形式を開いて、保存できる**: Word・HTML・Web ページ・メール・CSV・JSON・Jupyter Notebook・画像を開いて Markdown として編集でき、「名前を付けて保存」で PNG・Word・CSV・JSON・Jupyter Notebook・配布用 ZIP などにも保存できます。
 - **書き方をその場で確認**: F1 で Markdown の書き方の一覧を表示し、例を編集欄に挿入できます。
 - **文字コードで困らない**: UTF-8 だけでなく Shift_JIS や EUC-JP などの古いファイルも判定して開き、推定したときや読めない文字があるときは知らせます。保存する文字コードも選べます。
 - **書いたものを守る**: 保存は書き込みが途中で失敗しても元のファイルが壊れない方法で行います。保存していない変更は自動でバックアップし、アプリが異常終了しても次の起動で復元できます。
@@ -65,9 +65,9 @@ Markdown を書きながら、整形された仕上がりをすぐ横で確か�
 
 ![Markdown の書き方の一覧（F1）。「挿入」を押すと、カーソルの位置に例が入ります。](docs/images/4-syntax.ja.png)
 
-**いろいろな形式で保存** — 「名前を付けて保存」で、Markdown・テキスト・PDF・HTML・PNG・Word・CSV・TSV・JSON・Jupyter Notebook を選べます。Word・HTML・CSV・メール・Jupyter Notebook などのファイルも開けます。
+**いろいろな形式で保存** — 「名前を付けて保存」で、Markdown・テキスト・PDF・HTML・PNG・Word・CSV・TSV・JSON・Jupyter Notebook・配布用 ZIP（文書と「名前_files」フォルダー）を選べます。Word・HTML・CSV・メール・Jupyter Notebook などのファイルも開けます。
 
-![「名前を付けて保存」で、Markdown・テキスト・PDF・HTML・PNG・Word・CSV・TSV・JSON・Jupyter Notebook を選べます。Word・HTML・CSV・メール・Jupyter Notebook などのファイルも開けます。](docs/images/5-save-as.ja.png)
+![「名前を付けて保存」で、Markdown・テキスト・PDF・HTML・PNG・Word・CSV・TSV・JSON・Jupyter Notebook・配布用 ZIP（文書と「名前_files」フォルダー）を選べます。Word・HTML・CSV・メール・Jupyter Notebook などのファイルも開けます。](docs/images/5-save-as.ja.png)
 
 **コードの色分けと目次** — 言語名を書いたコードを色分けして表示します。「目次」ボタンで、見出しから目次を作って入れます。
 
@@ -109,7 +109,7 @@ Microsoft Edge WebView2 Runtime が必要です。Microsoft Edge がインスト
 
 - **サンプル**: 「図と数式」「基本の書き方」の短いサンプルと、使えるすべての図・チャート・数式を確かめる「図・チャート表示テスト」（日本語・英語。[samples/](./samples/) の 2 つのファイル）を、選んだときだけ新しい文書として開きます（開いていた文書に変更があれば、先に保存するか聞きます。開いていたファイルには書き込みません）。
 - **このアプリについて**: 会社紹介・作品・サポート・プライバシーポリシーへのリンクを表示します。リンクは選んだときだけブラウザーで開きます。
-- **開く**: Markdown ファイルを選択します。テキスト（.txt）、Word 文書（.docx）、HTML ファイル（.html、.htm）も開けます。テキストはそのまま開いて、そのまま上書き保存できます。Word 文書は Markdown に変換して開き、見出し・リスト・表・リンク・画像が戻ります（色や配置は戻りません）。画像は最初に保存するとき、Markdown ファイルの横に「名前-files」フォルダーとして置きます。Word の文書は書き換えません。HTML ファイル（.html、.htm）も開けます。HTML は Markdown に変換して開き、見出し・段落・リスト・表・リンク・画像・数式が戻ります（色や配置、図の絵は戻りません）。保存すると Markdown ファイルになり、元の HTML ファイルは書き換えません。
+- **開く**: Markdown ファイルを選択します。テキスト（.txt）、Word 文書（.docx）、HTML ファイル（.html、.htm）も開けます。テキストはそのまま開いて、そのまま上書き保存できます。Word 文書は Markdown に変換して開き、見出し・リスト・表・リンク・画像が戻ります（色や配置は戻りません）。画像は最初に保存するとき、Markdown ファイルの横に「名前_files」フォルダーとして置きます。Word の文書は書き換えません。HTML ファイル（.html、.htm）も開けます。HTML は Markdown に変換して開き、見出し・段落・リスト・表・リンク・画像・数式が戻ります（色や配置、図の絵は戻りません）。保存すると Markdown ファイルになり、元の HTML ファイルは書き換えません。
   - **メール（.eml）**: 件名を見出しにし、差出人・宛先・日付・添付ファイルの名前と本文を Markdown に変換して開きます。本文の中の画像は Word 文書と同じように扱います。メールの中のインターネット上の画像（受信の確認に使われることがあります）は、確認するまで読み込みません。添付ファイルの中身は取り出しません。
   - **CSV・TSV（.csv、.tsv）**: Markdown の表にして開きます。1 行目を見出しの行にします。Excel で保存した Shift_JIS の CSV も開けます。
   - **JSON（.json）**: 一覧（オブジェクトの配列）は表にして開き、項目の名前を見出しの行にします。それ以外の JSON はコードの枠に入れて開くので、前後に説明を書き足せます。
@@ -121,25 +121,35 @@ Microsoft Edge WebView2 Runtime が必要です。Microsoft Edge がインスト
 
   | ファイル | 編集画面にドロップ | 編集画面の外にドロップ |
   | :--- | :--- | :--- |
-  | 画像・動画 | 文書の横の「名前-files」フォルダーに写し、`![](名前-files/画像.png)` を入れる | 画像・動画の文書として開く |
+  | 画像・動画 | 文書の横の「名前_files」フォルダーに写し、`![](名前_files/画像.png)` を入れる | 画像・動画の文書として開く |
   | 「開く」で開けるファイル（.md、.txt、.html、.docx、.eml、.csv、.json、.ipynb など） | 「開く」と同じように Markdown にした中身を入れる | 開く（未保存の変更があれば、先に確認する） |
-  | 開けないファイル（.pdf、.pptx、.zip など） | 「名前-files」フォルダーに写し、リンク `[資料.pdf](名前-files/資料.pdf)` を入れる | 開かずに、編集画面にドロップするとリンクとして入ることを知らせる |
+  | 開けないファイル（.pdf、.pptx、.zip など） | 「名前_files」フォルダーに写し、リンク `[資料.pdf](名前_files/資料.pdf)` を入れる | 開かずに、編集画面にドロップするとリンクとして入ることを知らせる |
 
   - 中身を入れたときは、お知らせ欄に表示します。開くつもりだったときは、Ctrl+Z で取り消して、編集画面の外にドロップし直します。
-  - 中身の中の画像・動画も「名前-files」フォルダーに写します。そのほかのファイルへのリンクは、元のファイルを指すように書き換えます。Markdown の先頭のフロントマター（`---` で囲んだ部分）は入れません。
-  - 文書のフォルダーの中にあるファイルは、写さずにそのまま使います。ファイルを写す必要があるのにまだ保存していない文書では、先に保存先を聞きます。
-  - 画面の切り取りなどを編集画面に貼り付けた（Ctrl+V）ときも、画像を「名前-files」フォルダーに置いて入れます。
-  - **Markdown のまま人に渡すときは、「名前-files」フォルダーも一緒に渡してください。** 文書は、入れた画像・動画・ファイルを、文書のある場所からの相対パス（`名前-files/…`）で指しています。.md ファイルだけを渡すと、相手の PC では表示されず、リンクも開けません。.md ファイルとフォルダーを同じ場所に置いたまま、まとめて（たとえば 1 つの zip にして）渡します。中身を入れたときに元のファイルを指すよう書き換えたリンク（`../資料/…` など）は、そのファイルも一緒に渡さないと開けません。PDF・HTML・PNG・Word に保存したものは画像が中に入りますが、動画と、リンクで入れたファイルは入りません。
+  - 中身が表示する画像・動画やリンク先のファイルも、「名前_files」フォルダーに写します。Markdown の先頭のフロントマター（`---` で囲んだ部分）は入れません。
+  - 「名前_files」フォルダーの外にあるファイルは、文書と同じフォルダーにあるものも含めて、すべて「名前_files」フォルダーに写します。すでに「名前_files」フォルダーの中にあるファイルは、写さずにそのまま使います。
+  - 写したことはお知らせ欄に出します（「「A_files」フォルダーを作り、「B.pdf」を保存しました。」など）。フォルダーに同じ名前の別のファイルがあるときは、ブラウザーのダウンロードと同じように「B (1).pdf」「B (2).pdf」と番号を付けます。中身がまったく同じファイルがあるときは、写さずにそれを使います。
+  - ファイルを写す必要があるのにまだ保存していない文書では、先に保存先を聞きます。
+  - 画面の切り取りなどを編集画面に貼り付けた（Ctrl+V）ときも、画像を「名前_files」フォルダーに置いて入れます。
+  - **Markdown のまま人に渡すときは、「名前_files」フォルダーも一緒に渡してください。** 文書は、入れた画像・動画・ファイルを、文書のある場所からの相対パス（`名前_files/…`）で指しています。.md ファイルだけを渡すと、相手の PC では表示されず、リンクも開けません。.md ファイルとフォルダーを同じ場所に置いたまま、まとめて（たとえば 1 つの zip にして）渡します。「名前_files」フォルダーの外を指すリンク（自分で書いた `../資料/…` など）は、そのファイルも一緒に渡さないと開けません。PDF・HTML・PNG・Word に保存したものは画像が中に入りますが、動画と、リンクで入れたファイルは入りません。
 - **URLを開く / Ctrl+Shift+K**: `https://` で始まる Web ページを、Markdown に変換して開きます。ブラウザーからリンクをドラッグして開くこともできます。ページのスクリプトは実行しないので、開いたあとに読み込まれる内容（ランキングの数字など）は入りません。
 - **インターネット上の画像・動画**: 初期設定では読み込まず、お知らせ欄の「画像・動画を読み込む」で読み込みます（その文書だけ）。「設定」→「インターネット」で「いつも読み込む」「読み込まない」も選べます。`http://` の画像は読み込みません。手元にない画像やリンクは、ページの元のアドレス（`<base>`、canonical、og:url）から探します。
 - **保存**: 現在のファイルに上書きします。新規文書は保存先を選びます。
 - **名前を付けて保存**: 保存先とファイル名を選びます。「開く」と同じように、ファイルの種類で保存の形式を選べます。
+  - Markdown（またはテキストのそのまま）で別の場所か別の名前に保存すると、「名前_files」フォルダーも丸ごと複製します。名前を変えたときは、フォルダーも新しい名前（「C.md」なら「C_files」）で複製し、文書の中のリンクも書き換えます（保存するファイルと編集画面の両方。Ctrl+Z で戻せます）。元の文書とフォルダーは変えません。
+  - 複製している間は、お知らせ欄に進み具合（何個目か）を出し、終わると「「A.md」と「A_files」フォルダーを D:\資料 に複製しました。」「「C.md」と「C_files」フォルダーとして複製しました。」「「C.md」と「C_files」フォルダーとして D:\資料 に複製しました。」と出します。
+  - 保存先に同じ名前のフォルダーがあるときは、上書きせずに中へ足します。同じ名前の別のファイルには「(1)」などの番号を付け、リンクも合わせます。中身が同じファイルは、そのまま使います。
+  - 別の場所に保存したとき、「名前_files」フォルダーの外を指す相対リンク（自分で書いた `../資料/x.pdf` など）は、元のファイルを指すように書き換えます。
+  - PDF・HTML・PNG・Word などへの保存は、画像が中に入るので、フォルダーは複製しません。
   - **Markdown（.md）・テキスト（そのまま）（.txt）**: 文書そのものを保存します（中身はそのまま）。以後の「保存」はこのファイルに上書きします。
-  - **テキスト（記号なし）・PDF・HTML・PNG・Word（.docx）・CSV・TSV・JSON・Jupyter Notebook**: 文書を書き出します。編集中の文書のファイルはそのままです。書き出しの内容は下のとおりです。
+  - **テキスト（記号なし）・PDF・HTML・PNG・Word（.docx）・CSV・TSV・JSON・Jupyter Notebook・配布用 ZIP**: 文書を書き出します。編集中の文書のファイルはそのままです。書き出しの内容は下のとおりです。
 - **テキスト（記号なし）**: プレビューに見えている文字だけを .txt にします。見出しや太字の記号は消え、行は書いたとおりに改行します。リストは「・」か番号、表はタブ区切り、リンクは「文字（アドレス）」、図は「［図］」になります。
 - **CSV・TSV**: 文書の中の表を CSV（カンマ区切り）か TSV（タブ区切り）にします。表が 2 つ以上あるときは「名前-1.csv」「名前-2.csv」…に分けて保存します。Excel で文字化けしないよう、UTF-8（BOM 付き）で保存します。
 - **JSON**: 文書の中の表を、見出しの行を項目の名前にしたオブジェクトの配列にします（UTF-8）。値は文字のまま書き出すので、「007」のような番号の 0 も消えません。表が 2 つ以上あるときは「名前-1.json」…に分けて保存します。
 - **Jupyter Notebook**: 言語付きのコードの枠をコードのセルに、それ以外を Markdown のセルにします。実行結果は入れません（Jupyter で実行すると作り直されます）。.ipynb を開いて編集した文書を保存し直すと、元のノートブックと同じセルの並びに戻ります。
+- **配布用 ZIP**: 人に渡すための ZIP にします。中身は文書（.md）と「名前_files」フォルダーで、名前はリンクのとおりなので、展開するとそのまま表示できます。文書は編集画面の内容（未保存の変更も含む）で入れます。「名前_files」フォルダーがない文書（まだ保存していない文書も）は、文書だけを入れます。
+  - 「名前_files」フォルダーに、文書から参照されていないファイル（リンク・画像・HTML の src や href のどれにも書かれていないもの）があるときは、一覧を見せて確かめます。「はい」でごみ箱に移してから ZIP にし、「いいえ」ではファイルを残したまま ZIP には入れません。どちらでも、参照されていないファイルは ZIP に入りません。
+  - 「名前_files」フォルダーの外のファイルへのリンクは、ZIP に入れず、その数を知らせます。
 - **Ctrl+O**: ファイルを開きます。
 - **前の文書に戻す / Ctrl+Shift+B**: 別の文書を開く前に開いていた文書に戻します。「開く」の横のボタンは、戻せる文書があるときだけ表示します。たとえば、編集画面の外にファイルをドロップして別の文書を開いてしまったときや、そのとき「キャンセル」のつもりで「いいえ」を押したときに使います。
   - 「保存しますか？」で「いいえ」を選んで閉じた文書は、閉じたときの状態（書きかけの内容・ファイルの場所・文字コード）に、まだ保存していない状態で戻ります。保存すると、元のファイルに上書きします。
@@ -157,8 +167,13 @@ Microsoft Edge WebView2 Runtime が必要です。Microsoft Edge がインスト
 - **文字コード**: ファイル名の横に文書の文字コードを表示します。押すと文字コードを選び、「この文字コードで開き直す」または「次の保存からこの文字コードにする」を選べます。
 - **Ctrl+Shift+P**: PDFに保存します。
 - **目次 / Ctrl+Shift+J**: 文書の見出しから目次（見出しへのリンクの一覧）を作り、カーソルの位置に入れます。目次は `<!-- toc -->` と `<!-- /toc -->` の間に入り（プレビューには出ません）、見出しを変えたあともう一度押すと、その場所の目次を新しくします。文書の題名（先頭のただ 1 つの `#` 見出し）は目次に入れず、3 段階の深さまで入れます。目次のリンクは、プレビュー・PDF・HTML・Word のどれでも見出しに移動します。
+- **画像の調整 / Ctrl+Shift+F**: 画像の大きさと位置を選び、GitHub と同じ書き方（HTML の `<img>`）に書き換えます。編集欄で画像の行にカーソルを置いて押すか、プレビューの画像を右クリックします。
+  - 大きさ: 元の大きさ、本文の幅の 25%・50%・75%・100%、幅のピクセル指定（`width="50%"`、`width="300"`）。高さは縦横の比を保ちます。
+  - 位置: 指定しない（左）、中央（`<p align="center">`）、右（`<p align="right">`）、左または右に置いて文章を回り込ませる（`align="left"`・`align="right"`）。中央と右は、画像だけの行で選べます。画像の下に続けて書いた文があるときは、空行を 1 つ入れます（HTML のかたまりが文を飲み込まないように）。
+  - 「元の大きさ」と「指定しない」に戻すと、Markdown の `![説明](ファイル)` に戻ります。書き換えは Ctrl+Z で取り消せます。
+  - PDF・PNG・HTML はプレビューのとおりになります。Word では、大きさと、中央・右・左右への寄せを反映します（文章の回り込みは、左右に寄せた画像になります）。記号なしのテキストでは、Markdown の画像と同じく「［説明］」になります。
 - **Ctrl+H**: 編集画面の検索・置換バーを開きます。「置換」「すべて置換」が使えます（`Enter` で次を検索、`Esc` で閉じる）。
-- **書き方 / F1**: Markdown の書き方を「基本」「図（Mermaid）」「数式（KaTeX）」に分けて一覧で表示します。図はフローチャート・シーケンス図・ガントチャート・円グラフ・クラス図・状態遷移図・ER 図・マインドマップ、数式は分数・平方根・総和・行列・場合分けなど 10 種類で、図は一覧の中に描いて見せます。「挿入」で編集欄のカーソル位置に例を入れます（`Esc` で閉じる）。
+- **書き方 / F1**: Markdown の書き方を「基本」「図（Mermaid）」「数式（KaTeX）」「GitHub と同じ書き方」「そのほかの図と動画」に分けて一覧で表示します。図はフローチャート・シーケンス図・ガントチャート・円グラフ・クラス図・状態遷移図・ER 図・マインドマップ・棒グラフと折れ線グラフ・タイムライン、数式は分数・平方根・総和・行列・場合分けなど 10 種類で、図は一覧の中に描いて見せます。GitHub と同じ書き方は注意書き・折りたたみ・キーの表示・絵文字、そのほかの図と動画は Graphviz・地図（GeoJSON）・動画です（どれも samples/diagram-test から選んで短くした例）。「挿入」で編集欄のカーソル位置に例を入れます（`Esc` で閉じる）。
 - **Ctrl+F**: ウィンドウ標準の検索です。プレビューの検索にも使えます。
 - **スクロールの連動**: 編集欄とプレビューのどちらかをスクロールすると、もう一方も同じ位置に移動します。検索・置換や見出しへのリンクで移動したときも連動します。
 - **見出しへのリンク**: `[日本語](#セットアップ)` のような文書内のリンクを押すと、プレビューがその見出しへ移動します。見出しのIDは GitHub と同じ規則（日本語はそのまま、英字は小文字、空白は `-`）で作ります。
@@ -175,6 +190,7 @@ Microsoft Edge WebView2 Runtime が必要です。Microsoft Edge がインスト
 - **設定 / Ctrl+Shift+O**: 読みやすさと操作のしやすさを、使う人に合わせて調整します。自動バックアップ以外は初期設定がオフ（標準）で、必要な人だけが選べます。設定は次回の起動でも使います。
   - **書体**: 「BIZ UD ゴシック」（Windows に入っているユニバーサルデザイン書体）に切り替えます。
   - **文字の大きさ・行間**: 編集欄とプレビューの文字を 125%・150%・200% に、行間を「広め」「とても広い」にできます。
+  - **Markdown の書き方**: 「GitHub での表示に近づける」をオンにすると（初期設定はオフ）、GitHub にない mdEditor 独自の書き方（`x^2^` の上付き、`H~2~O` の下付き、`==強調==`、`++挿入++`、定義リスト、`:::` の囲み、`{#id}` などの属性、略語、罫線の表、`a.` の番号）を、GitHub と同じく書いたとおりの文字で表示し、`~文字~` を取り消し線にします。PDF・Word などの書き出しも同じです。GitHub と完全に同じになるわけではありません（図・地図・3D モデル、コードの色分け、数式の描き方などは mdEditor のままです）。設定は次回の起動でも使います。
   - **書き出し**: 「HTMLに保存するとき、元の Markdown も入れる」をオンにすると（初期設定はオフ）、保存した HTML を mdEditor で開いたとき、書いたときのとおり（図や数式の書き方も含めて）に戻ります。HTML の中に元の文章がそのまま入り、画面に出ないコメント（`<!-- -->`）も含まれるので、人に渡す前に確かめてください。
   - **プレビューの本文の幅**: 広い画面では、読みやすいように本文の幅を全角でおよそ 44 字までにして中央に置きます（表・図・コード・数式はもっと広く表示します）。「プレビューの本文の幅を制限しない」で、画面の端まで使えます。
   - **画面全体の表示倍率**: 「拡大」「縮小」「100% に戻す」で画面全体を拡大・縮小します。Ctrl + マウスホイール、Ctrl + プラス／マイナス、Ctrl + 0 でも変えられ、倍率は次回の起動でも使います。
@@ -189,6 +205,7 @@ Microsoft Edge WebView2 Runtime が必要です。Microsoft Edge がインスト
 | :--- | :--- | :--- | :--- |
 | 開く | Ctrl+O | 検索・置換 | Ctrl+H |
 | 目次を入れる・新しくする | Ctrl+Shift+J | 前の文書に戻す | Ctrl+Shift+B |
+| 画像の大きさと位置 | Ctrl+Shift+F | | |
 | 保存 | Ctrl+S | 次を検索 / 前を検索 | F3 / Shift+F3 |
 | 名前を付けて保存 | Ctrl+Shift+S | すべて置換 | Ctrl+Shift+H |
 | PDFに保存 | Ctrl+Shift+P | Markdown の書き方 | F1 |
@@ -240,6 +257,10 @@ GitHub の README などで使われる次の書き方も、GitHub と同じよ�
 | 文中の数式（GitHub の書き方） | `` $`x^2`$ `` | 数式 |
 | 絵文字の短縮名 | `:smile:`、`:+1:` | 絵文字（`:)` などはそのまま） |
 | 折りたたみ | `<details><summary>…</summary>…</details>` | 押すと開く。PDF・PNG・Word に保存するときは開いた状態で入る |
+| 画像の大きさと位置 | `<img src="…" alt="…" width="50%">`、`<p align="center"><img …></p>`、`<img … align="left">` | 本文の幅に対する割合かピクセルの幅、中央・右寄せ、文章の回り込み。「画像の調整」（Ctrl+Shift+F）かプレビューの右クリックで書き換えられる。Word にも大きさと寄せが入る |
+| メールアドレス | `info@example.com` | メールのリンク（文末の「.」は含めない。コードの中はリンクにしない） |
+| 表の中のコードの縦棒 | 表のセルのコードの中で、縦棒の前に `\` を付ける | コードの中に縦棒 1 本（`\` は表示しない） |
+| GitHub が残す古い属性 | `<br clear="all">`、`<table border="1">`、`nowrap`、`cellpadding`、`hspace` など | 書いたとおりに効く。`<br clear="all">` で画像の回り込みを終えられる |
 | 昼と夜で切り替わる画像 | `<picture>` と `<source media="(prefers-color-scheme: dark)">`、画像の URL の末尾の `#gh-dark-mode-only` / `#gh-light-mode-only` | 表示の配色に合う画像だけを表示 |
 
 ### 3D モデル・地図・動画の例
@@ -584,7 +605,7 @@ endsolid letters
     { "type": "Feature", "properties": { "name": "東京" }, "geometry": { "type": "Point", "coordinates": [139.767, 35.681] } },
     { "type": "Feature", "properties": { "name": "大阪", "marker-color": "#0969DA" }, "geometry": { "type": "Point", "coordinates": [135.502, 34.693] } },
     { "type": "Feature", "properties": { "name": "東海道" }, "geometry": { "type": "LineString", "coordinates": [[139.767, 35.681], [138.383, 34.976], [136.906, 35.170], [135.502, 34.693]] } },
-    { "type": "Feature", "properties": { "name": "富士山", "fill": "#B92613" }, "geometry": { "type": "Polygon", "coordinates": [[[139.0032,35.3606], [139.0008,35.39], [138.9938,35.4188], [138.9822,35.4467], [138.9662,35.4731], [138.9462,35.4976], [138.9224,35.5197], [138.8953,35.5391], [138.8653,35.5555], [138.8329,35.5685], [138.7988,35.5779], [138.7634,35.5837], [138.7274,35.5856], [138.6914,35.5837], [138.656,35.5779], [138.6219,35.5685], [138.5895,35.5555], [138.5595,35.5391], [138.5324,35.5197], [138.5086,35.4976], [138.4886,35.4731], [138.4726,35.4467], [138.461,35.4188], [138.454,35.39], [138.4516,35.3606], [138.454,35.3312], [138.461,35.3024], [138.4726,35.2745], [138.4886,35.2481], [138.5086,35.2236], [138.5324,35.2015], [138.5595,35.1821], [138.5895,35.1657], [138.6219,35.1527], [138.656,35.1433], [138.6914,35.1375], [138.7274,35.1356], [138.7634,35.1375], [138.7988,35.1433], [138.8329,35.1527], [138.8653,35.1657], [138.8953,35.1821], [138.9224,35.2015], [138.9462,35.2236], [138.9662,35.2481], [138.9822,35.2745], [138.9938,35.3024], [139.0008,35.3312], [139.0032,35.3606]]] } }
+    { "type": "Feature", "properties": { "name": "富士山", "fill": "#B92613" }, "geometry": { "type": "Polygon", "coordinates": [[[138.7274, 35.4731], [138.6080, 35.3043], [138.8468, 35.3043], [138.7274, 35.4731]]] } }
   ]
 }
 ```
@@ -661,7 +682,7 @@ Identity 第7条 7-7 の出荷前チェックの記録です。
 
 ## デザインと公式素材
 
-画面デザインは5garashi.com Design Office Identity v4.20.0（2026-10-17）に基づきます。ツールバーの「表示」ボタンで、表示テーマを「自動」（Windows の「アプリ モード」に合わせる）→「ライト」→「ダーク」の順に切り替えられます。選んだテーマは次回の起動でも使います。ダークでは第4条 4-2 の夜の配色（ダークモード）で表示し、ロゴタイプは第3条 3-7 の灰色抜きの反転版に切り替わります（右上のシンボルマークは、3-7 (5) によりダークでも赤のままです）。編集欄・プレビュー・図もダーク表示になり、ウィンドウのタイトルバーも合わせます。印刷とPDFは常に昼の配色です。公式ロゴタイプ（日本語版・英語版と、それぞれのダークモード用の反転版。表示言語に合わせて切り替えます）とシンプル版マークは [5garashi/5garashi-identity](https://github.com/5garashi/5garashi-identity) のSVG素材を改変せずに同梱し、アプリのウィンドウ・実行ファイル・Markdown関連付けのアイコンにはシンプル版マークを使用します。各SVGファイルに記載された作者、著作権、CC BY-ND 4.0 ライセンスを保持しています。
+画面デザインは5garashi.com Design Office Identity v4.20.0（2026-10-17）に基づきます。ツールバーの「表示」ボタンで、表示テーマを「自動」（Windows の「アプリ モード」に合わせる）→「ライト」→「ダーク」の順に切り替えられます。選んだテーマは次回の起動でも使います。ダークでは第4条 4-2 の夜の配色（ダークモード）で表示し、ロゴタイプは第3条 3-7 の灰色抜きの反転版に切り替わります（右上のシンボルマークは、3-7 (5) によりダークでも赤のままです）。編集欄・プレビュー・図もダーク表示になり、ウィンドウのタイトルバーも合わせます。印刷とPDFは常に昼の配色です。公式ロゴタイプ（日本語版・英語版と、それぞれのダークモード用の反転版。表示言語に合わせて切り替えます）とシンプル版マークは [5garashi/5garashi-identity](https://github.com/5garashi/5garashi-identity) のSVG素材を改変せずに同梱し、アプリのウィンドウ・実行ファイル・Markdown関連付けのアイコンにはシンプル版マークを使用します。各SVGファイルに記載された作者、著作権、CC BY-ND 4.0 ライセンスを保持しています。samples/diagram-test の「22. 画像の大きさと位置」の例にも、同じ公式アセット（シンボルマーク、ロゴタイプとその反転版、紹介画像 og_image.png。CC BY-ND 4.0）を改変せずに使っています（samples/import-test-images）。
 
 ## ライセンス
 
@@ -687,7 +708,7 @@ An editor that shows the formatted result right beside the Markdown you are writ
 - **Write on one display, read on another**: open the preview in its own window and maximize it, or make it full screen, on a second display. The editor and the preview still scroll together, matched line by line. On a wide screen the text keeps a readable width while tables and diagrams spread out. The window's place is remembered for next time.
 - **Diagrams, charts, math, and tables as they look**: Mermaid diagrams such as flowcharts, sequence diagrams, Gantt charts, and pie charts, KaTeX math, tables, task lists, and images in the document appear in the preview.
 - **Export to PDF and HTML**: save the preview as a PDF exactly as it looks, diagrams and math included, on A4 or Letter paper (chosen automatically by region at first). Or save it as one self-contained HTML file to email or put on the web.
-- **Open and save many formats**: Word, HTML, web pages, e-mail, CSV, JSON, Jupyter Notebooks, and images open as Markdown, and Save As also writes PNG, Word, CSV, JSON, Jupyter Notebook, and more.
+- **Open and save many formats**: Word, HTML, web pages, e-mail, CSV, JSON, Jupyter Notebooks, and images open as Markdown, and Save As also writes PNG, Word, CSV, JSON, Jupyter Notebook, a ZIP for sharing, and more.
 - **Syntax help at hand**: F1 lists the Markdown syntax and inserts examples into the editor.
 - **No trouble with text encodings**: besides UTF-8, older files in Shift_JIS, EUC-JP, and more are detected and opened, with a notice when the encoding was guessed or some characters could not be read. You can also choose the encoding to save in.
 - **Your work is protected**: saving never leaves the original file broken, even if writing fails midway. Unsaved changes are backed up automatically and can be restored at the next launch after a crash.
@@ -719,9 +740,9 @@ An editor that shows the formatted result right beside the Markdown you are writ
 
 ![The Markdown quick reference (F1). Insert puts the example at the cursor.](docs/images/4-syntax.en.png)
 
-**Save in many formats** — Save As writes Markdown, text, PDF, HTML, PNG, Word, CSV, TSV, JSON, or Jupyter Notebook. Word, HTML, CSV, e-mail, Jupyter Notebook, and more open too.
+**Save in many formats** — Save As writes Markdown, text, PDF, HTML, PNG, Word, CSV, TSV, JSON, Jupyter Notebook, or a ZIP for sharing (the document and its name_files folder). Word, HTML, CSV, e-mail, Jupyter Notebook, and more open too.
 
-![Save As writes Markdown, text, PDF, HTML, PNG, Word, CSV, TSV, JSON, or Jupyter Notebook. Word, HTML, CSV, e-mail, Jupyter Notebook, and more open too.](docs/images/5-save-as.en.png)
+![Save As writes Markdown, text, PDF, HTML, PNG, Word, CSV, TSV, JSON, Jupyter Notebook, or a ZIP for sharing (the document and its name_files folder). Word, HTML, CSV, e-mail, Jupyter Notebook, and more open too.](docs/images/5-save-as.en.png)
 
 **Colored code and contents** — Code with a language name is shown in color. Contents builds a table of contents from your headings.
 
@@ -763,7 +784,7 @@ On pull requests, GitHub Actions checks that the three match. When merged into m
 
 - **Samples**: puts a short sample ("Diagrams and math" or "Basic writing") or the "Diagram and chart test" of every supported diagram, chart, and formula (Japanese or English; the two files in [samples/](./samples/)) as a new document, only when you choose it (if the open document has changes, you are asked to save them first; the open file is never written).
 - **About**: shows links to the company, works, support, and the privacy policy. Links open in your browser only when you choose them.
-- **Open**: choose a Markdown file. Text (.txt), Word (.docx), and HTML (.html, .htm) files open too. Text opens and saves back as it is. A Word document opens as Markdown: headings, lists, tables, links, and images come back (colors and layout do not); its images are placed beside the Markdown file in a "name-files" folder on the first save, and the Word document is never written. HTML files (.html, .htm) open too: they are converted to Markdown, and headings, paragraphs, lists, tables, links, images, and math come back (colors, layout, and drawn diagrams do not). Saving makes a Markdown file and never writes the HTML file.
+- **Open**: choose a Markdown file. Text (.txt), Word (.docx), and HTML (.html, .htm) files open too. Text opens and saves back as it is. A Word document opens as Markdown: headings, lists, tables, links, and images come back (colors and layout do not); its images are placed beside the Markdown file in a "name_files" folder on the first save, and the Word document is never written. HTML files (.html, .htm) open too: they are converted to Markdown, and headings, paragraphs, lists, tables, links, images, and math come back (colors, layout, and drawn diagrams do not). Saving makes a Markdown file and never writes the HTML file.
   - **E-mail (.eml)**: opens as Markdown with the subject as the heading, then the sender, recipients, date, attachment names, and the body. Pictures in the body are handled like a Word document's. Internet images in the mail (sometimes used to track opening) do not load until you allow them. Attachments are not extracted.
   - **CSV, TSV (.csv, .tsv)**: opens as a Markdown table with the first row as the header. Shift_JIS CSV files saved by Excel open too.
   - **JSON (.json)**: a list (an array of objects) opens as a table with the field names as the header row. Other JSON opens in a code block, so you can add notes before and after it.
@@ -775,25 +796,35 @@ On pull requests, GitHub Actions checks that the three match. When merged into m
 
   | File | Dropped on the editor | Dropped anywhere else |
   | :--- | :--- | :--- |
-  | Images and videos | Copied to a "name-files" folder beside the document, with `![](name-files/image.png)` inserted | Opens as an image or video document |
+  | Images and videos | Copied to a "name_files" folder beside the document, with `![](name_files/image.png)` inserted | Opens as an image or video document |
   | Files Open accepts (.md, .txt, .html, .docx, .eml, .csv, .json, .ipynb, and so on) | Their content goes in, converted to Markdown as Open does | Opens (unsaved changes are asked about first) |
-  | Files mdEditor cannot open (.pdf, .pptx, .zip, and so on) | Copied to the "name-files" folder, with a link such as `[report.pdf](name-files/report.pdf)` inserted | Not opened; a message says that dropping it on the editor inserts a link |
+  | Files mdEditor cannot open (.pdf, .pptx, .zip, and so on) | Copied to the "name_files" folder, with a link such as `[report.pdf](name_files/report.pdf)` inserted | Not opened; a message says that dropping it on the editor inserts a link |
 
   - When content goes in, the notice bar says so. If you meant to open the file, press Ctrl+Z and drop it outside the editor instead.
-  - Images and videos in the content are copied to the "name-files" folder too. Links to other files are changed to point to the original files. Front matter at the top of Markdown (the part between `---` lines) is left out.
-  - Files already inside the document's folder are used where they are. A document that has not been saved asks where to save first when files have to be copied.
-  - A picture pasted into the editor (Ctrl+V), such as a screen capture, also goes in the "name-files" folder.
-  - **When you give someone the Markdown file, give them the "name-files" folder too.** The document points to the images, videos, and files you inserted by paths relative to its own location (`name-files/...`). With the .md file alone, they do not show and the links do not open on the other PC. Keep the .md file and the folder side by side and send them together (for example, in one zip file). Links changed to point to an original file when content went in (such as `../docs/...`) open only if that file goes along too. Files saved as PDF, HTML, PNG, or Word include the images, but not videos or files inserted as links.
+  - Images and videos the content shows, and files it links to, are copied to the "name_files" folder too. Front matter at the top of Markdown (the part between `---` lines) is left out.
+  - Every file outside the "name_files" folder, including files in the document's own folder, is copied into the "name_files" folder. Files already inside it are used where they are.
+  - The notice bar says what was copied ("Created the A_files folder and saved "B.pdf" in it." and so on). When a different file in the folder already has the name, a number is added as browsers do for downloads ("B (1).pdf", "B (2).pdf"). A file with exactly the same content is used instead of a new copy.
+  - A document that has not been saved asks where to save first when files have to be copied.
+  - A picture pasted into the editor (Ctrl+V), such as a screen capture, also goes in the "name_files" folder.
+  - **When you give someone the Markdown file, give them the "name_files" folder too.** The document points to the images, videos, and files you inserted by paths relative to its own location (`name_files/...`). With the .md file alone, they do not show and the links do not open on the other PC. Keep the .md file and the folder side by side and send them together (for example, in one zip file). Links outside the "name_files" folder (such as `../docs/...` you wrote yourself) open only if that file goes along too. Files saved as PDF, HTML, PNG, or Word include the images, but not videos or files inserted as links.
 - **Open URL / Ctrl+Shift+K**: opens a web page that starts with `https://` as Markdown. You can also drag a link in from a browser. The page's scripts never run, so content it loads afterwards (such as live rankings) is not included.
 - **Images and videos on the internet**: not loaded by default; Load images and videos in the notice bar loads them for that document. Settings > Internet can also be Always load or Never load. Images over `http://` are never loaded. Images and links not found beside the file resolve from the page's own address (`<base>`, canonical, or og:url).
 - **Save**: overwrite the current file. A new document asks where to save.
 - **Save As**: choose a location and file name. As with Open, the file type chooses the format.
+  - Saving as Markdown (or text as written) to another folder or under another name copies the whole "name_files" folder too. Under a new name, the folder is copied under the new name too ("C_files" for "C.md"), and the links in the document are rewritten, both in the saved file and in the editor (Ctrl+Z undoes it). The original document and folder are not changed.
+  - While it copies, the notice bar shows how far it has got (which file of how many), then says "Copied A.md and the A_files folder to D:\Docs.", "Copied as C.md and the C_files folder.", or "Copied as C.md and the C_files folder to D:\Docs.".
+  - If a folder with that name is already there, files are added to it instead of written over: a different file with the same name gets a number such as (1), and its links follow. Identical files are shared.
+  - In another folder, relative links outside the "name_files" folder (such as `../docs/x.pdf` you wrote yourself) are changed to point to the original files.
+  - Saving as PDF, HTML, PNG, Word, and the other export formats copies no folder, because the images go inside the file.
   - **Markdown (.md), text as written (.txt)**: save the document itself (the content as it is). Save then writes to this file.
-  - **Text without marks, PDF, HTML, PNG, Word (.docx), CSV, TSV, JSON, Jupyter Notebook**: export the document; the file you are editing stays as it was. Each export is described below.
+  - **Text without marks, PDF, HTML, PNG, Word (.docx), CSV, TSV, JSON, Jupyter Notebook, ZIP for sharing**: export the document; the file you are editing stays as it was. Each export is described below.
 - **Text without marks**: only the words the preview shows, as a .txt file. Heading and emphasis marks are removed and lines break where you wrote them. Lists use a bullet or number, tables are tab-separated, links become "text (address)", and diagrams become "[Figure]".
 - **CSV, TSV**: the tables in the document as CSV (comma-separated) or TSV (tab-separated). Two or more tables are saved as name-1.csv, name-2.csv, and so on. Files are UTF-8 with a BOM so Excel shows Japanese correctly.
 - **JSON**: the tables in the document as arrays of objects keyed by the header row (UTF-8). Values are written as text, so numbers such as 007 keep their zeros. Two or more tables are saved as name-1.json and so on.
 - **Jupyter Notebook**: code blocks with a language become code cells and everything else Markdown cells. Outputs are not included (Jupyter makes them again when run). A document opened from an .ipynb file saves back to the same cells.
+- **ZIP for sharing**: a ZIP to hand to someone, holding the document (.md) and its "name_files" folder under the names the links use, so it shows as it is once extracted. The document goes in as the editor has it (unsaved changes included). A document without a "name_files" folder (or not saved yet) goes in alone.
+  - When the "name_files" folder has files the document does not refer to (in no link, picture, or HTML src or href), they are listed and you choose: Yes moves them to the Recycle Bin, then makes the ZIP; No keeps them where they are. Either way they stay out of the ZIP.
+  - Links to files outside the "name_files" folder are not put in the ZIP; the message says how many there are.
 - **Ctrl+O**: open a file.
 - **Back to previous document / Ctrl+Shift+B**: goes back to the document that was open before another one took its place. The button beside Open shows only while there is a document to go back to. Use it when, for example, you dropped a file outside the editor and it opened another document, perhaps after pressing "No" when you meant "Cancel".
   - A document closed with "No" to "Save changes?" comes back as it was when you closed it (the unsaved text, its file, and its encoding), still unsaved. Saving it writes over its file as usual.
@@ -811,8 +842,13 @@ On pull requests, GitHub Actions checks that the three match. When merged into m
 - **Encoding**: the document's encoding is shown next to the file name. Press it to choose an encoding and either reopen the file in it or use it from the next save.
 - **Ctrl+Shift+P**: save as PDF.
 - **Contents / Ctrl+Shift+J**: build a table of contents (links to the headings) and insert it at the cursor. It goes between `<!-- toc -->` and `<!-- /toc -->` (not shown in the preview); after changing headings, press it again to update that table in place. The document title (a single `#` heading at the top) is left out, and three levels are kept. The links go to the headings in the preview, PDF, HTML, and Word.
+- **Adjust image / Ctrl+Shift+F**: choose an image's size and position, and have it rewritten the way GitHub does it (HTML `<img>`). Put the cursor on the image's line in the editor and press it, or right-click the image in the preview.
+  - Size: original size, 25%, 50%, 75%, or 100% of the text width, or a width in pixels (`width="50%"`, `width="300"`). The height keeps the picture's proportions.
+  - Position: not set (left), center (`<p align="center">`), right (`<p align="right">`), or on the left or right with text flowing around it (`align="left"`, `align="right"`). Center and Right need the image on a line of its own. If text follows on the next line, a blank line goes in between, so the HTML block does not swallow it.
+  - Choosing Original size and Not set turns the image back into Markdown, `![description](file)`. Ctrl+Z undoes the change.
+  - PDF, PNG, and HTML follow the preview. Word gets the size and the center, right, or left placement (text does not flow around it there; the image is placed left or right). Text without marks shows "[description]", as for Markdown images.
 - **Ctrl+H**: open the editor's find/replace bar with Replace and Replace all (`Enter` finds next, `Esc` closes).
-- **Syntax / F1**: show a Markdown quick reference grouped into Basics, Diagrams (Mermaid), and Math (KaTeX): flowchart, sequence, Gantt, pie, class, state, ER, and mind map diagrams (drawn in the list), and ten math examples such as fractions, roots, sums, matrices, and cases. Insert puts an example at the cursor in the editor (`Esc` closes).
+- **Syntax / F1**: show a Markdown quick reference grouped into Basics, Diagrams (Mermaid), Math (KaTeX), Written as on GitHub, and Other drawings and video: flowchart, sequence, Gantt, pie, class, state, ER, mind map, bar and line chart, and timeline diagrams (drawn in the list), and ten math examples such as fractions, roots, sums, matrices, and cases. Written as on GitHub has alerts, collapsible sections, keys, and emoji; Other drawings and video has Graphviz, a map (GeoJSON), and video (all short versions of examples in samples/diagram-test). Insert puts an example at the cursor in the editor (`Esc` closes).
 - **Ctrl+F**: the standard window find, which also works in the preview.
 - **Scroll sync**: scrolling the editor or the preview moves the other to the same place, including jumps from find/replace and heading links.
 - **Heading links**: links within the document such as `[English](#english)` move the preview to that heading. Heading ids follow GitHub rules (Japanese kept as is, letters in lowercase, spaces as `-`).
@@ -829,6 +865,7 @@ On pull requests, GitHub Actions checks that the three match. When merged into m
 - **Settings / Ctrl+Shift+O**: adjust readability and ease of use to suit you. Every option except automatic backup starts off (standard), so only the people who need one turn it on. Settings are remembered.
   - **Typeface**: switch to BIZ UD Gothic, a Universal Design typeface included with Windows.
   - **Text size and line spacing**: make the editor and preview text 125%, 150%, or 200%, and the line spacing Wide or Wider.
+  - **Markdown syntax**: with "Show documents closer to GitHub" on (off by default), mdEditor's own syntax that GitHub does not have (`x^2^` superscript, `H~2~O` subscript, `==highlight==`, `++insert++`, definition lists, `:::` containers, attributes such as `{#id}`, abbreviations, grid tables, and `a.` numbering) shows as the plain text you wrote, as on GitHub, and `~text~` is struck through. Exports such as PDF and Word follow it too. It does not make the display identical to GitHub (diagrams, maps, 3D models, code colors, and how math is drawn stay mdEditor's own). The setting is remembered.
   - **Export**: with "Keep the original Markdown in saved HTML" on (off by default), HTML you save opens back in mdEditor exactly as written, diagram and math source included. The original text goes into the HTML file as it is, including comments (`<!-- -->`) that are never shown, so check it before you share the file.
   - **Preview text width**: on wide screens the preview text keeps a comfortable width (about 44 full-width characters), centered; tables, diagrams, code, and display math may be wider. "Don't limit the preview text width" uses the full width.
   - **Zoom**: zoom the whole window with Zoom in, Zoom out, and Reset to 100%. Ctrl + mouse wheel, Ctrl + plus/minus, and Ctrl + 0 also work; the zoom level is remembered.
@@ -843,6 +880,7 @@ On pull requests, GitHub Actions checks that the three match. When merged into m
 | :--- | :--- | :--- | :--- |
 | Open | Ctrl+O | Find/Replace | Ctrl+H |
 | Insert or update the table of contents | Ctrl+Shift+J | Back to previous document | Ctrl+Shift+B |
+| Image size and position | Ctrl+Shift+F | | |
 | Save | Ctrl+S | Find next / previous | F3 / Shift+F3 |
 | Save As | Ctrl+Shift+S | Replace all | Ctrl+Shift+H |
 | Save as PDF | Ctrl+Shift+P | Markdown syntax | F1 |
@@ -927,6 +965,10 @@ These ways of writing, common in GitHub READMEs, show the same way as on GitHub.
 | Inline math, GitHub style | `` $`x^2`$ `` | Math |
 | Emoji short names | `:smile:`, `:+1:` | Emoji (smileys such as `:)` stay text) |
 | Collapsible sections | `<details><summary>…</summary>…</details>` | Opens when pressed; saved open in PDF, PNG, and Word |
+| Image size and position | `<img src="…" alt="…" width="50%">`, `<p align="center"><img …></p>`, `<img … align="left">` | A width as a share of the text width or in pixels, centered or on the right, or with text flowing around it. Adjust image (Ctrl+Shift+F) or a right-click in the preview rewrites it. Word gets the size and placement too |
+| E-mail addresses | `info@example.com` | A mailto link (a full stop at the end is left out; addresses in code stay text) |
+| Bars in code inside a table | A `\` before the bar, in code inside a table cell | A single bar in the code (the `\` is not shown) |
+| Older attributes GitHub keeps | `<br clear="all">`, `<table border="1">`, `nowrap`, `cellpadding`, `hspace`, and so on | Work as written; `<br clear="all">` ends text flowing around a picture |
 | Day and night pictures | `<picture>` with `<source media="(prefers-color-scheme: dark)">`, or `#gh-dark-mode-only` / `#gh-light-mode-only` at the end of an image URL | Only the picture for the current palette |
 
 ### Examples: 3D model, map, and video
@@ -1268,10 +1310,9 @@ endsolid letters
 {
   "type": "FeatureCollection",
   "features": [
-    { "type": "Feature", "properties": { "name": "Tokyo" }, "geometry": { "type": "Point", "coordinates": [139.767, 35.681] } },
-    { "type": "Feature", "properties": { "name": "Osaka", "marker-color": "#0969DA" }, "geometry": { "type": "Point", "coordinates": [135.502, 34.693] } },
-    { "type": "Feature", "properties": { "name": "Tokaido" }, "geometry": { "type": "LineString", "coordinates": [[139.767, 35.681], [138.383, 34.976], [136.906, 35.170], [135.502, 34.693]] } },
-    { "type": "Feature", "properties": { "name": "Mt. Fuji", "fill": "#B92613" }, "geometry": { "type": "Polygon", "coordinates": [[[139.0032,35.3606], [139.0008,35.39], [138.9938,35.4188], [138.9822,35.4467], [138.9662,35.4731], [138.9462,35.4976], [138.9224,35.5197], [138.8953,35.5391], [138.8653,35.5555], [138.8329,35.5685], [138.7988,35.5779], [138.7634,35.5837], [138.7274,35.5856], [138.6914,35.5837], [138.656,35.5779], [138.6219,35.5685], [138.5895,35.5555], [138.5595,35.5391], [138.5324,35.5197], [138.5086,35.4976], [138.4886,35.4731], [138.4726,35.4467], [138.461,35.4188], [138.454,35.39], [138.4516,35.3606], [138.454,35.3312], [138.461,35.3024], [138.4726,35.2745], [138.4886,35.2481], [138.5086,35.2236], [138.5324,35.2015], [138.5595,35.1821], [138.5895,35.1657], [138.6219,35.1527], [138.656,35.1433], [138.6914,35.1375], [138.7274,35.1356], [138.7634,35.1375], [138.7988,35.1433], [138.8329,35.1527], [138.8653,35.1657], [138.8953,35.1821], [138.9224,35.2015], [138.9462,35.2236], [138.9662,35.2481], [138.9822,35.2745], [138.9938,35.3024], [139.0008,35.3312], [139.0032,35.3606]]] } }
+    { "type": "Feature", "properties": { "name": "British Museum", "marker": "triangle", "description": "The British Museum" }, "geometry": { "type": "Polygon", "coordinates": [[[-0.1270, 51.5199], [-0.1280, 51.5184], [-0.1260, 51.5184], [-0.1270, 51.5199]]] } },
+    { "type": "Feature", "properties": { "name": "Royal Observatory, Greenwich", "marker": "circle", "description": "Royal Observatory, Greenwich" }, "geometry": { "type": "Polygon", "coordinates": [[[0.0005, 51.4770], [0.0002, 51.4769], [0.0000, 51.4767], [0.0000, 51.4764], [0.0002, 51.4762], [0.0005, 51.4761], [0.0008, 51.4762], [0.0010, 51.4764], [0.0010, 51.4767], [0.0008, 51.4769], [0.0005, 51.4770]]] } },
+    { "type": "Feature", "properties": { "name": "Route", "description": "A line connecting the British Museum and the Royal Observatory, Greenwich" }, "geometry": { "type": "LineString", "coordinates": [[-0.1270, 51.5190], [0.0005, 51.4766]] } }
   ]
 }
 ```
@@ -1303,7 +1344,7 @@ Also confirmed: read-aloud can use voices on the PC (such as Microsoft Ayumi), t
 
 ### Design and official assets
 
-The screen design follows the 5garashi.com Design Office Identity v4.20.0 (2026-10-17). The "Theme" button in the toolbar cycles the theme through Auto (follows the Windows app mode), Light, and Dark, and the choice is remembered for the next launch. In Dark, the app uses the night palette (dark mode) of Art. 4-2, and the logotype switches to the gray reversal of Art. 3-7 (the symbol mark at the top right stays red in Dark too, as Art. 3-7 (5) allows). The editor, preview, diagrams, and window title bar follow as well. Printing and PDFs always use the day palette. The official logotype (Japanese and English versions, each with its dark-mode reversal, chosen by the display language) and simple symbol mark are bundled unmodified from the SVG assets of [5garashi/5garashi-identity](https://github.com/5garashi/5garashi-identity). The simple mark is used for the window, the executable, and the Markdown file association icons. The author, copyright, and CC BY-ND 4.0 license stated in each SVG file are preserved.
+The screen design follows the 5garashi.com Design Office Identity v4.20.0 (2026-10-17). The "Theme" button in the toolbar cycles the theme through Auto (follows the Windows app mode), Light, and Dark, and the choice is remembered for the next launch. In Dark, the app uses the night palette (dark mode) of Art. 4-2, and the logotype switches to the gray reversal of Art. 3-7 (the symbol mark at the top right stays red in Dark too, as Art. 3-7 (5) allows). The editor, preview, diagrams, and window title bar follow as well. Printing and PDFs always use the day palette. The official logotype (Japanese and English versions, each with its dark-mode reversal, chosen by the display language) and simple symbol mark are bundled unmodified from the SVG assets of [5garashi/5garashi-identity](https://github.com/5garashi/5garashi-identity). The simple mark is used for the window, the executable, and the Markdown file association icons. The author, copyright, and CC BY-ND 4.0 license stated in each SVG file are preserved. The image size and position examples in samples/diagram-test (section 22) use the same official assets, unmodified (the symbol mark, the logotypes and their reversals, and the banner og_image.png; CC BY-ND 4.0), in samples/import-test-images.
 
 ### License
 

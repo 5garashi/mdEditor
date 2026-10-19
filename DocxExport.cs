@@ -145,6 +145,33 @@ internal sealed class DocxExport
                 var videoSource = System.Text.RegularExpressions.Regex.Match(html.Lines.ToString(), @"srcs*=s*[""']([^""']+)").Groups[1].Value;
                 yield return Paragraph(style, [Run($"▶ {VideoName(videoSource)}", bold: true)]);
                 break;
+            case HtmlBlock html when ImageTag.IsMatch(html.Lines.ToString()):
+                // Pictures written as HTML (<p align="center"><img width="50%"></p>, as GitHub
+                // READMEs size and place them) in one paragraph, aligned as the HTML says.
+                var htmlSource = html.Lines.ToString();
+                var tags = ImageTag.Matches(htmlSource).Select(match => match.Value).ToList();
+                var placed = Paragraph(style, tags.Select(tag => (OpenXmlElement?)HtmlImage(tag) ?? Run($"［{HtmlAttribute(tag, "alt")}］")));
+                var wrapper = System.Text.RegularExpressions.Regex.Match(htmlSource,
+                    @"^\s*<(?:p|div)\b[^>]*\balign\s*=\s*[""']?(center|right|left)\b", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                var alignment = (wrapper.Success ? wrapper.Groups[1].Value : tags.Count == 1 ? HtmlAttribute(tags[0], "align") : null)?.ToLowerInvariant();
+                if (alignment is "center" or "right")
+                {
+                    placed.ParagraphProperties ??= new ParagraphProperties();
+                    placed.ParagraphProperties.Justification = new Justification
+                    {
+                        Val = alignment == "center" ? JustificationValues.Center : JustificationValues.Right
+                    };
+                }
+
+                yield return placed;
+                if (PlainTextExport.StripHtml(ImageTag.Replace(htmlSource, string.Empty)) is { } besideText)
+                {
+                    foreach (var line in besideText.Split('\n').Where(line => line.Trim().Length > 0))
+                    {
+                        yield return Paragraph(style, [Run(line.Trim())]);
+                    }
+                }
+                break;
             case HtmlBlock html:
                 // HTML written in Markdown keeps its text (Word cannot show the HTML itself).
                 if (PlainTextExport.StripHtml(string.Join("\n", html.Lines.Lines.Take(html.Lines.Count).Select(line => line.Slice.ToString()))) is { } htmlText)
@@ -473,6 +500,9 @@ internal sealed class DocxExport
                     // A video cannot play in Word: its name stands in its place.
                     result.Add(Run($"▶ {VideoName(System.Text.RegularExpressions.Regex.Match(html.Tag, @"srcs*=s*[""']([^""']+)").Groups[1].Value)}", bold: true));
                     break;
+                case HtmlInline html when ImageTag.IsMatch(html.Tag):
+                    result.Add(HtmlImage(html.Tag) ?? Run($"［{HtmlAttribute(html.Tag, "alt")}］", bold, italic, strike));
+                    break;
                 case HtmlEntityInline entity:
                     result.Add(Run(entity.Transcoded.ToString(), bold, italic, strike));
                     break;
@@ -561,9 +591,41 @@ internal sealed class DocxExport
             display ? "Figure" : "Formula");
     }
 
-    private Run? Image(LinkInline image)
+    private static readonly System.Text.RegularExpressions.Regex ImageTag =
+        new(@"<img\b[^>]*>", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+    // An attribute of an HTML tag, decoded ("a&amp;b" is "a&b"), or null.
+    private static string? HtmlAttribute(string tag, string name)
     {
-        if (_resolveImage(image.Url ?? string.Empty) is not { } path)
+        var match = System.Text.RegularExpressions.Regex.Match(tag,
+            $@"\s{name}\s*=\s*(?:""([^""]*)""|'([^']*)'|([^\s""'>]+))", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        return match.Success
+            ? System.Net.WebUtility.HtmlDecode(match.Groups[1].Success ? match.Groups[1].Value : match.Groups[2].Success ? match.Groups[2].Value : match.Groups[3].Value)
+            : null;
+    }
+
+    private Run? HtmlImage(string tag) =>
+        HtmlAttribute(tag, "src") is { Length: > 0 } source
+            ? Image(source, HtmlAttribute(tag, "alt") ?? string.Empty, HtmlAttribute(tag, "width"), HtmlAttribute(tag, "height"))
+            : null;
+
+    // A width or height as the HTML gives it: "50%" of the text width, or pixels ("300", "300px").
+    private static long? HtmlLength(string? value)
+    {
+        var match = System.Text.RegularExpressions.Regex.Match(value?.Trim() ?? string.Empty, @"^(\d+(?:\.\d+)?)\s*(%|px)?$");
+        if (!match.Success || !double.TryParse(match.Groups[1].Value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var number) || number <= 0)
+        {
+            return null;
+        }
+
+        return match.Groups[2].Value == "%" ? (long)(MaxWidthEmu * Math.Min(number, 100) / 100) : (long)(number * EmuPerPixel);
+    }
+
+    private Run? Image(LinkInline image) => Image(image.Url ?? string.Empty, PlainText(image), null, null);
+
+    private Run? Image(string url, string description, string? widthAttribute, string? heightAttribute)
+    {
+        if (_resolveImage(url) is not { } path)
         {
             return null;
         }
@@ -585,7 +647,24 @@ internal sealed class DocxExport
         {
             var bytes = File.ReadAllBytes(path);
             var frame = BitmapDecoder.Create(new MemoryStream(bytes), BitmapCreateOptions.None, BitmapCacheOption.OnLoad).Frames[0];
-            return Picture(bytes, type.Value, frame.PixelWidth * EmuPerPixel, frame.PixelHeight * EmuPerPixel, PlainText(image));
+            // The size the HTML asks for; one side alone keeps the picture's proportions.
+            long width = frame.PixelWidth * EmuPerPixel, height = frame.PixelHeight * EmuPerPixel;
+            var askedWidth = HtmlLength(widthAttribute);
+            var askedHeight = HtmlLength(heightAttribute is { } h && h.Trim().EndsWith('%') ? null : heightAttribute);
+            if (askedWidth is { } w && askedHeight is { } hh)
+            {
+                (width, height) = (w, hh);
+            }
+            else if (askedWidth is { } onlyWidth)
+            {
+                (width, height) = (onlyWidth, height * onlyWidth / Math.Max(1, width));
+            }
+            else if (askedHeight is { } onlyHeight)
+            {
+                (width, height) = (width * onlyHeight / Math.Max(1, height), onlyHeight);
+            }
+
+            return Picture(bytes, type.Value, width, height, description);
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or NotSupportedException or FileFormatException)
         {
