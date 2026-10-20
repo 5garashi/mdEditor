@@ -3,12 +3,14 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.9.4
+版 / Version: 1.11.0
 ライセンス / License: MIT
 最終更新 / Last updated: 2026-10-18
 SPDX-License-Identifier: MIT
 -->
 # mdEditor 宣伝キット / Promotion kit
+
+2026-10-20：**[ソース1.0.14の更新動画（確認用）](showcase-1.0.14-revision-1.0.0/README.md)** をローカル作成。3D紹介・サンプルツアー・主要機能に、画像のドロップ・サイズ・中央揃えを追加。以下の既存公開結果は1.0.12の記録で、媒体の差し替えは未実施です。
 
 2026-10-18：Redditの2投稿を、Storeでも配信中のmdEditor 1.0.12を紹介する指定文へ更新しました。[変更記録](integration/reddit/SIDEPROJECTS.md)。
 

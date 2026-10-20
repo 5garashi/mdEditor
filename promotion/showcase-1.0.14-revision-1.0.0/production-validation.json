@@ -1,0 +1,496 @@
+{
+  "date": "2026-10-20 JST",
+  "app_version": "1.0.14",
+  "native_app_about_verified": true,
+  "records": [
+    {
+      "language": "ja",
+      "checks": {
+        "intro_rotated": true,
+        "videos": [
+          {
+            "ready": 4,
+            "playing": true,
+            "muted": true
+          },
+          {
+            "ready": 4,
+            "playing": true,
+            "muted": true
+          }
+        ],
+        "detached_window": true,
+        "offline_figures": {
+          "mermaid": true,
+          "graphviz": true,
+          "math": true
+        },
+        "toc": true,
+        "pdf_export": true,
+        "imports": [
+          {
+            "file": "word-test.docx",
+            "name": "word-test.md",
+            "textLength": 284
+          },
+          {
+            "file": "html-test.html",
+            "name": "html-test.md",
+            "textLength": 573
+          },
+          {
+            "file": "mail-test.eml",
+            "name": "mail-test.md",
+            "textLength": 464
+          },
+          {
+            "file": "table-test.csv",
+            "name": "table-test.md",
+            "textLength": 189
+          },
+          {
+            "file": "json-list-test.json",
+            "name": "json-list-test.md",
+            "textLength": 304
+          },
+          {
+            "file": "notebook-test.ipynb",
+            "name": "notebook-test.md",
+            "textLength": 884
+          },
+          {
+            "file": "import-test-images/sample.png",
+            "name": "sample.md",
+            "textLength": 23
+          }
+        ],
+        "image_drop": "# 引き継ぎメモ\n\n書きながら、すぐ横で仕上がりを確認します。\n\n## 確認手順\n\n```mermaid\nflowchart LR\n A[書く] --> B[確認] --> C[共有]\n```\n\n$$P=\\frac{V^2}{R}=1\\,\\mathrm{W}$$\n\n## 構成\n\n```dot\ndigraph G { rankdir=LR; node [style=filled,fillcolor=\"#FFF3D6\",fontname=\"Meiryo\"]; Document -> Preview -> PDF; }\n```\n\n## コード\n\n```python\ndef total(items):\n    return sum(item[\"cost\"] for item in items)\n\nprint(total([{\"cost\": 120}, {\"cost\": 45}]))\n```\n\n## お知らせ\n\n> [!NOTE]\n> 編集できる原本も残してください。\n\n<details>\n<summary>詳しい情報</summary>\n\n文書の一部を折りたたんで表示できます。\n\n</details>\n\n## 次の作業\n\n- [ ] Review\n- [ ] Share\n\n![sample](main-features_files/sample.png)\n",
+        "image_adjust": "# 引き継ぎメモ\n\n書きながら、すぐ横で仕上がりを確認します。\n\n## 確認手順\n\n```mermaid\nflowchart LR\n A[書く] --> B[確認] --> C[共有]\n```\n\n$$P=\\frac{V^2}{R}=1\\,\\mathrm{W}$$\n\n## 構成\n\n```dot\ndigraph G { rankdir=LR; node [style=filled,fillcolor=\"#FFF3D6\",fontname=\"Meiryo\"]; Document -> Preview -> PDF; }\n```\n\n## コード\n\n```python\ndef total(items):\n    return sum(item[\"cost\"] for item in items)\n\nprint(total([{\"cost\": 120}, {\"cost\": 45}]))\n```\n\n## お知らせ\n\n> [!NOTE]\n> 編集できる原本も残してください。\n\n<details>\n<summary>詳しい情報</summary>\n\n文書の一部を折りたたんで表示できます。\n\n</details>\n\n## 次の作業\n\n- [ ] Review\n- [ ] Share\n\n<p align=\"center\"><img src=\"main-features_files/sample.png\" alt=\"sample\" width=\"50%\"></p>\n",
+        "image_render": {
+          "width": 307,
+          "natural": 240,
+          "align": "center",
+          "src": "https://document.mdeditor.local/main-features_files/sample.png"
+        }
+      },
+      "events": [
+        {
+          "seconds": 0.0,
+          "key": "intro",
+          "ja": "mdEditor：書く・読む・図にする、Windowsアプリ",
+          "en": "mdEditor: write, read and visualize on Windows"
+        },
+        {
+          "seconds": 7.215,
+          "key": "intro-more",
+          "ja": "仕上がりを見ながら編集。3Dも、文書の中で。",
+          "en": "Edit beside a live preview. Explore 3D inside your document."
+        },
+        {
+          "seconds": 21.079,
+          "key": "consent",
+          "ja": "この収録では、画像・動画・詳細地図の読み込みを許可",
+          "en": "Allow internet media and detailed maps for this recording"
+        },
+        {
+          "seconds": 28.443,
+          "key": "tour",
+          "ja": "diagram-test.mdを上から下へ。多彩な表現を一望",
+          "en": "A top-to-bottom tour of diagram-test.en.md"
+        },
+        {
+          "seconds": 90.649,
+          "key": "3d",
+          "ja": "STLを拡大・回転して、立体を確かめる",
+          "en": "Zoom and rotate an STL model to inspect it"
+        },
+        {
+          "seconds": 95.058,
+          "key": "maps",
+          "ja": "GeoJSONの地点・経路を、許可した詳細地図に表示",
+          "en": "Show GeoJSON locations and routes on a permitted detailed map"
+        },
+        {
+          "seconds": 99.879,
+          "key": "video",
+          "ja": "ローカルとネット上の動画を、文書内で再生",
+          "en": "Play local and permitted internet videos inside the document"
+        },
+        {
+          "seconds": 114.92,
+          "key": "edit",
+          "ja": "書きながら横で仕上がりを確認。スクロールも連動",
+          "en": "Write beside the live preview, with synchronized scrolling"
+        },
+        {
+          "seconds": 119.136,
+          "key": "detach",
+          "ja": "プレビューを別ウィンドウに。2台目の画面へ移動できる",
+          "en": "Detach the preview and move it to a second display"
+        },
+        {
+          "seconds": 125.298,
+          "key": "viewer",
+          "ja": "ビューアーとして、プレビューをウィンドウいっぱいに",
+          "en": "Use the full-window preview as a document viewer"
+        },
+        {
+          "seconds": 130.032,
+          "key": "offline",
+          "ja": "Mermaid・Graphvizの図と数式を、オフラインで表示",
+          "en": "Bundled Mermaid, Graphviz and math render offline"
+        },
+        {
+          "seconds": 138.438,
+          "key": "code",
+          "ja": "約40言語を色分け。PDF・Wordにも色を残す",
+          "en": "Highlight about 40 code languages; keep colors in PDF and Word"
+        },
+        {
+          "seconds": 145.252,
+          "key": "toc",
+          "ja": "見出しから目次を作成。もう一度押すと更新",
+          "en": "Build a contents list from headings; press again to update"
+        },
+        {
+          "seconds": 149.369,
+          "key": "github",
+          "ja": "GitHub形式の注意書き・フロントマター・折りたたみ",
+          "en": "GitHub-style alerts, front matter and collapsible sections"
+        },
+        {
+          "seconds": 153.168,
+          "key": "pdf",
+          "ja": "プレビューの見た目を、PDFへすぐ書き出し",
+          "en": "Export the preview directly to PDF"
+        },
+        {
+          "seconds": 162.538,
+          "key": "import",
+          "ja": "Word・HTML・メール・CSV・JSON・Notebook・画像を開ける",
+          "en": "Open Word, HTML, email, CSV, JSON, notebooks and images"
+        },
+        {
+          "seconds": 208.659,
+          "key": "export",
+          "ja": "HTML・PNG・Word・CSV・JSON・Notebook・テキストに保存",
+          "en": "Save HTML, PNG, Word, CSV, JSON, notebooks and text"
+        },
+        {
+          "seconds": 217.953,
+          "key": "images",
+          "ja": "画像を編集欄へドラッグ＆ドロップ。文書の横に自動保存",
+          "en": "Drag an image into the editor; keep it beside the document"
+        },
+        {
+          "seconds": 222.056,
+          "key": "image-adjust",
+          "ja": "画像の調整で、サイズを50％にして中央へ",
+          "en": "Adjust the image to 50% width and center it"
+        },
+        {
+          "seconds": 229.416,
+          "key": "share",
+          "ja": "文書と使った画像をまとめて渡せる、ZIP保存にも対応",
+          "en": "Save a ZIP containing the document and the files it uses"
+        },
+        {
+          "seconds": 233.418,
+          "key": "encoding",
+          "ja": "Shift_JIS・EUC-JP・UTF-8の日本語文書に対応",
+          "en": "Open Japanese text in Shift_JIS, EUC-JP and UTF-8"
+        },
+        {
+          "seconds": 243.278,
+          "key": "recovery",
+          "ja": "安全な保存と、異常終了からの自動復元",
+          "en": "Safe saving and automatic recovery after an unexpected exit"
+        },
+        {
+          "seconds": 246.445,
+          "key": "internet",
+          "ja": "ネット上の画像・動画・地図は、許可して読み込む",
+          "en": "Internet images, video and maps load only with permission"
+        },
+        {
+          "seconds": 249.594,
+          "key": "privacy",
+          "ja": "広告なし、計測なし、アカウント不要",
+          "en": "No ads, no tracking, no account required"
+        },
+        {
+          "seconds": 253.595,
+          "key": "keyboard",
+          "ja": "キーボードで全操作。ショートカットも変更できる",
+          "en": "Use the keyboard and customize shortcuts"
+        },
+        {
+          "seconds": 257.784,
+          "key": "accessibility",
+          "ja": "画面読み上げ・文書の読み上げ・ダークモードに対応",
+          "en": "Screen-reader support, document reading and dark mode"
+        },
+        {
+          "seconds": 263.039,
+          "key": "outro",
+          "ja": "mdEditor：書く。見る。整えて、渡す。",
+          "en": "mdEditor: write, explore, refine and share."
+        }
+      ],
+      "source": "1.0.14"
+    },
+    {
+      "language": "en",
+      "checks": {
+        "intro_rotated": true,
+        "videos": [
+          {
+            "ready": 4,
+            "playing": true,
+            "muted": true
+          },
+          {
+            "ready": 4,
+            "playing": true,
+            "muted": true
+          }
+        ],
+        "detached_window": true,
+        "offline_figures": {
+          "mermaid": true,
+          "graphviz": true,
+          "math": true
+        },
+        "toc": true,
+        "pdf_export": true,
+        "imports": [
+          {
+            "file": "word-test.en.docx",
+            "name": "word-test.en.md",
+            "textLength": 382
+          },
+          {
+            "file": "html-test.en.html",
+            "name": "html-test.en.md",
+            "textLength": 799
+          },
+          {
+            "file": "mail-test.en.eml",
+            "name": "mail-test.en.md",
+            "textLength": 624
+          },
+          {
+            "file": "table-test.en.csv",
+            "name": "table-test.en.md",
+            "textLength": 275
+          },
+          {
+            "file": "json-list-test.en.json",
+            "name": "json-list-test.en.md",
+            "textLength": 388
+          },
+          {
+            "file": "notebook-test.en.ipynb",
+            "name": "notebook-test.en.md",
+            "textLength": 984
+          },
+          {
+            "file": "import-test-images/sample.png",
+            "name": "sample.md",
+            "textLength": 23
+          }
+        ],
+        "image_drop": "# Project notes\n\nEdit the source and see the result beside it.\n\n## Review steps\n\n```mermaid\nflowchart LR\n A[Write] --> B[Review] --> C[Share]\n```\n\n$$P=\\frac{V^2}{R}=1\\,\\mathrm{W}$$\n\n## Components\n\n```dot\ndigraph G { rankdir=LR; node [style=filled,fillcolor=\"#FFF3D6\",fontname=\"Meiryo\"]; Document -> Preview -> PDF; }\n```\n\n## Code\n\n```python\ndef total(items):\n    return sum(item[\"cost\"] for item in items)\n\nprint(total([{\"cost\": 120}, {\"cost\": 45}]))\n```\n\n## Notes\n\n> [!NOTE]\n> Keep your editable source.\n\n<details>\n<summary>More information</summary>\n\nFold and unfold this part of the document.\n\n</details>\n\n## Next steps\n\n- [ ] Review\n- [ ] Share\n\n![sample](main-features_files/sample.png)\n",
+        "image_adjust": "# Project notes\n\nEdit the source and see the result beside it.\n\n## Review steps\n\n```mermaid\nflowchart LR\n A[Write] --> B[Review] --> C[Share]\n```\n\n$$P=\\frac{V^2}{R}=1\\,\\mathrm{W}$$\n\n## Components\n\n```dot\ndigraph G { rankdir=LR; node [style=filled,fillcolor=\"#FFF3D6\",fontname=\"Meiryo\"]; Document -> Preview -> PDF; }\n```\n\n## Code\n\n```python\ndef total(items):\n    return sum(item[\"cost\"] for item in items)\n\nprint(total([{\"cost\": 120}, {\"cost\": 45}]))\n```\n\n## Notes\n\n> [!NOTE]\n> Keep your editable source.\n\n<details>\n<summary>More information</summary>\n\nFold and unfold this part of the document.\n\n</details>\n\n## Next steps\n\n- [ ] Review\n- [ ] Share\n\n<p align=\"center\"><img src=\"main-features_files/sample.png\" alt=\"sample\" width=\"50%\"></p>\n",
+        "image_render": {
+          "width": 307,
+          "natural": 240,
+          "align": "center",
+          "src": "https://document.mdeditor.local/main-features_files/sample.png"
+        }
+      },
+      "events": [
+        {
+          "seconds": 0.0,
+          "key": "intro",
+          "ja": "mdEditor：書く・読む・図にする、Windowsアプリ",
+          "en": "mdEditor: write, read and visualize on Windows"
+        },
+        {
+          "seconds": 6.724,
+          "key": "intro-more",
+          "ja": "仕上がりを見ながら編集。3Dも、文書の中で。",
+          "en": "Edit beside a live preview. Explore 3D inside your document."
+        },
+        {
+          "seconds": 19.887,
+          "key": "consent",
+          "ja": "この収録では、画像・動画・詳細地図の読み込みを許可",
+          "en": "Allow internet media and detailed maps for this recording"
+        },
+        {
+          "seconds": 26.462,
+          "key": "tour",
+          "ja": "diagram-test.mdを上から下へ。多彩な表現を一望",
+          "en": "A top-to-bottom tour of diagram-test.en.md"
+        },
+        {
+          "seconds": 88.668,
+          "key": "3d",
+          "ja": "STLを拡大・回転して、立体を確かめる",
+          "en": "Zoom and rotate an STL model to inspect it"
+        },
+        {
+          "seconds": 93.113,
+          "key": "maps",
+          "ja": "GeoJSONの地点・経路を、許可した詳細地図に表示",
+          "en": "Show GeoJSON locations and routes on a permitted detailed map"
+        },
+        {
+          "seconds": 97.946,
+          "key": "video",
+          "ja": "ローカルとネット上の動画を、文書内で再生",
+          "en": "Play local and permitted internet videos inside the document"
+        },
+        {
+          "seconds": 112.881,
+          "key": "edit",
+          "ja": "書きながら横で仕上がりを確認。スクロールも連動",
+          "en": "Write beside the live preview, with synchronized scrolling"
+        },
+        {
+          "seconds": 117.129,
+          "key": "detach",
+          "ja": "プレビューを別ウィンドウに。2台目の画面へ移動できる",
+          "en": "Detach the preview and move it to a second display"
+        },
+        {
+          "seconds": 123.357,
+          "key": "viewer",
+          "ja": "ビューアーとして、プレビューをウィンドウいっぱいに",
+          "en": "Use the full-window preview as a document viewer"
+        },
+        {
+          "seconds": 128.095,
+          "key": "offline",
+          "ja": "Mermaid・Graphvizの図と数式を、オフラインで表示",
+          "en": "Bundled Mermaid, Graphviz and math render offline"
+        },
+        {
+          "seconds": 136.503,
+          "key": "code",
+          "ja": "約40言語を色分け。PDF・Wordにも色を残す",
+          "en": "Highlight about 40 code languages; keep colors in PDF and Word"
+        },
+        {
+          "seconds": 143.318,
+          "key": "toc",
+          "ja": "見出しから目次を作成。もう一度押すと更新",
+          "en": "Build a contents list from headings; press again to update"
+        },
+        {
+          "seconds": 147.462,
+          "key": "github",
+          "ja": "GitHub形式の注意書き・フロントマター・折りたたみ",
+          "en": "GitHub-style alerts, front matter and collapsible sections"
+        },
+        {
+          "seconds": 151.271,
+          "key": "pdf",
+          "ja": "プレビューの見た目を、PDFへすぐ書き出し",
+          "en": "Export the preview directly to PDF"
+        },
+        {
+          "seconds": 158.796,
+          "key": "import",
+          "ja": "Word・HTML・メール・CSV・JSON・Notebook・画像を開ける",
+          "en": "Open Word, HTML, email, CSV, JSON, notebooks and images"
+        },
+        {
+          "seconds": 204.716,
+          "key": "export",
+          "ja": "HTML・PNG・Word・CSV・JSON・Notebook・テキストに保存",
+          "en": "Save HTML, PNG, Word, CSV, JSON, notebooks and text"
+        },
+        {
+          "seconds": 213.217,
+          "key": "images",
+          "ja": "画像を編集欄へドラッグ＆ドロップ。文書の横に自動保存",
+          "en": "Drag an image into the editor; keep it beside the document"
+        },
+        {
+          "seconds": 217.227,
+          "key": "image-adjust",
+          "ja": "画像の調整で、サイズを50％にして中央へ",
+          "en": "Adjust the image to 50% width and center it"
+        },
+        {
+          "seconds": 224.489,
+          "key": "share",
+          "ja": "文書と使った画像をまとめて渡せる、ZIP保存にも対応",
+          "en": "Save a ZIP containing the document and the files it uses"
+        },
+        {
+          "seconds": 228.497,
+          "key": "encoding",
+          "ja": "Shift_JIS・EUC-JP・UTF-8の日本語文書に対応",
+          "en": "Open Japanese text in Shift_JIS, EUC-JP and UTF-8"
+        },
+        {
+          "seconds": 238.982,
+          "key": "recovery",
+          "ja": "安全な保存と、異常終了からの自動復元",
+          "en": "Safe saving and automatic recovery after an unexpected exit"
+        },
+        {
+          "seconds": 242.133,
+          "key": "internet",
+          "ja": "ネット上の画像・動画・地図は、許可して読み込む",
+          "en": "Internet images, video and maps load only with permission"
+        },
+        {
+          "seconds": 245.296,
+          "key": "privacy",
+          "ja": "広告なし、計測なし、アカウント不要",
+          "en": "No ads, no tracking, no account required"
+        },
+        {
+          "seconds": 249.3,
+          "key": "keyboard",
+          "ja": "キーボードで全操作。ショートカットも変更できる",
+          "en": "Use the keyboard and customize shortcuts"
+        },
+        {
+          "seconds": 253.441,
+          "key": "accessibility",
+          "ja": "画面読み上げ・文書の読み上げ・ダークモードに対応",
+          "en": "Screen-reader support, document reading and dark mode"
+        },
+        {
+          "seconds": 258.668,
+          "key": "outro",
+          "ja": "mdEditor：書く。見る。整えて、渡す。",
+          "en": "mdEditor: write, explore, refine and share."
+        }
+      ],
+      "source": "1.0.14"
+    }
+  ],
+  "source_files": {
+    "work\\video-update-1.0.14\\source\\VERSION": "f0f35b2a033a19acc45b96813e7c4bc72f308f9a0c244eed21f2fc8f7c7355ed",
+    "work\\video-update-1.0.14\\source\\samples\\diagram-test.md": "045afd2a2fe8286f7eda7fd244cc8caa72dd5346282d828d01563ecf1414f875",
+    "work\\video-update-1.0.14\\source\\samples\\diagram-test.en.md": "4070dd435b38c5d145549b76bb573f340fe6680a060b2e873aba901f95b88f26",
+    "work\\video-update-1.0.14\\STORE-LISTING.md": "a4272a362525cb6220ab6c9d4c44ae57a9c3c59ec658466eb7cc041072b3bd6e",
+    "work\\video-update-1.0.14\\app\\mdEditor.dll": "3d22e6d1c75571456ef3cfea778f8d6f7fcd436f8941b668d7d484e92a747fbb"
+  },
+  "full_decode": "passed; all four MP4 files decoded by encoder",
+  "selected_frames_visual_review": "opening, detached preview and image adjustment results checked; contact sheets checked separately",
+  "not_verified": [
+    "full manual frame-by-frame review",
+    "all export formats",
+    "crash recovery scenario",
+    "screen reader coverage",
+    "actual second physical display"
+  ],
+  "publication": "local only; not uploaded"
+}

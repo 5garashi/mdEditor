@@ -1,0 +1,682 @@
+{
+  "source": {
+    "version": "1.0.14",
+    "source_commit": "local-1.0.14-snapshot",
+    "language": "ja",
+    "events": [
+      {
+        "seconds": 0.0,
+        "key": "intro",
+        "ja": "mdEditor：書く・読む・図にする、Windowsアプリ",
+        "en": "mdEditor: write, read and visualize on Windows"
+      },
+      {
+        "seconds": 7.215,
+        "key": "intro-more",
+        "ja": "仕上がりを見ながら編集。3Dも、文書の中で。",
+        "en": "Edit beside a live preview. Explore 3D inside your document."
+      },
+      {
+        "seconds": 21.079,
+        "key": "consent",
+        "ja": "この収録では、画像・動画・詳細地図の読み込みを許可",
+        "en": "Allow internet media and detailed maps for this recording"
+      },
+      {
+        "seconds": 28.443,
+        "key": "tour",
+        "ja": "diagram-test.mdを上から下へ。多彩な表現を一望",
+        "en": "A top-to-bottom tour of diagram-test.en.md"
+      },
+      {
+        "seconds": 90.649,
+        "key": "3d",
+        "ja": "STLを拡大・回転して、立体を確かめる",
+        "en": "Zoom and rotate an STL model to inspect it"
+      },
+      {
+        "seconds": 95.058,
+        "key": "maps",
+        "ja": "GeoJSONの地点・経路を、許可した詳細地図に表示",
+        "en": "Show GeoJSON locations and routes on a permitted detailed map"
+      },
+      {
+        "seconds": 99.879,
+        "key": "video",
+        "ja": "ローカルとネット上の動画を、文書内で再生",
+        "en": "Play local and permitted internet videos inside the document"
+      },
+      {
+        "seconds": 114.92,
+        "key": "edit",
+        "ja": "書きながら横で仕上がりを確認。スクロールも連動",
+        "en": "Write beside the live preview, with synchronized scrolling"
+      },
+      {
+        "seconds": 119.136,
+        "key": "detach",
+        "ja": "プレビューを別ウィンドウに。2台目の画面へ移動できる",
+        "en": "Detach the preview and move it to a second display"
+      },
+      {
+        "seconds": 125.298,
+        "key": "viewer",
+        "ja": "ビューアーとして、プレビューをウィンドウいっぱいに",
+        "en": "Use the full-window preview as a document viewer"
+      },
+      {
+        "seconds": 130.032,
+        "key": "offline",
+        "ja": "Mermaid・Graphvizの図と数式を、オフラインで表示",
+        "en": "Bundled Mermaid, Graphviz and math render offline"
+      },
+      {
+        "seconds": 138.438,
+        "key": "code",
+        "ja": "約40言語を色分け。PDF・Wordにも色を残す",
+        "en": "Highlight about 40 code languages; keep colors in PDF and Word"
+      },
+      {
+        "seconds": 145.252,
+        "key": "toc",
+        "ja": "見出しから目次を作成。もう一度押すと更新",
+        "en": "Build a contents list from headings; press again to update"
+      },
+      {
+        "seconds": 149.369,
+        "key": "github",
+        "ja": "GitHub形式の注意書き・フロントマター・折りたたみ",
+        "en": "GitHub-style alerts, front matter and collapsible sections"
+      },
+      {
+        "seconds": 153.168,
+        "key": "pdf",
+        "ja": "プレビューの見た目を、PDFへすぐ書き出し",
+        "en": "Export the preview directly to PDF"
+      },
+      {
+        "seconds": 162.538,
+        "key": "import",
+        "ja": "Word・HTML・メール・CSV・JSON・Notebook・画像を開ける",
+        "en": "Open Word, HTML, email, CSV, JSON, notebooks and images"
+      },
+      {
+        "seconds": 208.659,
+        "key": "export",
+        "ja": "HTML・PNG・Word・CSV・JSON・Notebook・テキストに保存",
+        "en": "Save HTML, PNG, Word, CSV, JSON, notebooks and text"
+      },
+      {
+        "seconds": 217.953,
+        "key": "images",
+        "ja": "画像を編集欄へドラッグ＆ドロップ。文書の横に自動保存",
+        "en": "Drag an image into the editor; keep it beside the document"
+      },
+      {
+        "seconds": 222.056,
+        "key": "image-adjust",
+        "ja": "画像の調整で、サイズを50％にして中央へ",
+        "en": "Adjust the image to 50% width and center it"
+      },
+      {
+        "seconds": 229.416,
+        "key": "share",
+        "ja": "文書と使った画像をまとめて渡せる、ZIP保存にも対応",
+        "en": "Save a ZIP containing the document and the files it uses"
+      },
+      {
+        "seconds": 233.418,
+        "key": "encoding",
+        "ja": "Shift_JIS・EUC-JP・UTF-8の日本語文書に対応",
+        "en": "Open Japanese text in Shift_JIS, EUC-JP and UTF-8"
+      },
+      {
+        "seconds": 243.278,
+        "key": "recovery",
+        "ja": "安全な保存と、異常終了からの自動復元",
+        "en": "Safe saving and automatic recovery after an unexpected exit"
+      },
+      {
+        "seconds": 246.445,
+        "key": "internet",
+        "ja": "ネット上の画像・動画・地図は、許可して読み込む",
+        "en": "Internet images, video and maps load only with permission"
+      },
+      {
+        "seconds": 249.594,
+        "key": "privacy",
+        "ja": "広告なし、計測なし、アカウント不要",
+        "en": "No ads, no tracking, no account required"
+      },
+      {
+        "seconds": 253.595,
+        "key": "keyboard",
+        "ja": "キーボードで全操作。ショートカットも変更できる",
+        "en": "Use the keyboard and customize shortcuts"
+      },
+      {
+        "seconds": 257.784,
+        "key": "accessibility",
+        "ja": "画面読み上げ・文書の読み上げ・ダークモードに対応",
+        "en": "Screen-reader support, document reading and dark mode"
+      },
+      {
+        "seconds": 263.039,
+        "key": "outro",
+        "ja": "mdEditor：書く。見る。整えて、渡す。",
+        "en": "mdEditor: write, explore, refine and share."
+      }
+    ],
+    "remove_intervals": [
+      [
+        12.045566700049676,
+        18.020533000002615
+      ],
+      [
+        109.88723100000061,
+        114.91937300004065
+      ],
+      [
+        152.9190960000269,
+        160.53686170000583
+      ],
+      [
+        162.29083810001612,
+        167.43395510001574
+      ],
+      [
+        168.88742440001806,
+        173.82135420001578
+      ],
+      [
+        175.27579600003082,
+        180.234468700015
+      ],
+      [
+        181.6885939000058,
+        186.66190100001404
+      ],
+      [
+        188.11510780005483,
+        193.24510190001456
+      ],
+      [
+        194.69893480004976,
+        200.0174076000112
+      ],
+      [
+        201.47113660001196,
+        206.95559310005046
+      ],
+      [
+        212.41817150003044,
+        217.85845970001537
+      ],
+      [
+        233.16893400001572,
+        238.13786640000762
+      ]
+    ],
+    "checks": {
+      "intro_rotated": true,
+      "videos": [
+        {
+          "ready": 4,
+          "playing": true,
+          "muted": true
+        },
+        {
+          "ready": 4,
+          "playing": true,
+          "muted": true
+        }
+      ],
+      "detached_window": true,
+      "offline_figures": {
+        "mermaid": true,
+        "graphviz": true,
+        "math": true
+      },
+      "toc": true,
+      "pdf_export": true,
+      "imports": [
+        {
+          "file": "word-test.docx",
+          "name": "word-test.md",
+          "textLength": 284
+        },
+        {
+          "file": "html-test.html",
+          "name": "html-test.md",
+          "textLength": 573
+        },
+        {
+          "file": "mail-test.eml",
+          "name": "mail-test.md",
+          "textLength": 464
+        },
+        {
+          "file": "table-test.csv",
+          "name": "table-test.md",
+          "textLength": 189
+        },
+        {
+          "file": "json-list-test.json",
+          "name": "json-list-test.md",
+          "textLength": 304
+        },
+        {
+          "file": "notebook-test.ipynb",
+          "name": "notebook-test.md",
+          "textLength": 884
+        },
+        {
+          "file": "import-test-images/sample.png",
+          "name": "sample.md",
+          "textLength": 23
+        }
+      ],
+      "image_drop": "# 引き継ぎメモ\n\n書きながら、すぐ横で仕上がりを確認します。\n\n## 確認手順\n\n```mermaid\nflowchart LR\n A[書く] --> B[確認] --> C[共有]\n```\n\n$$P=\\frac{V^2}{R}=1\\,\\mathrm{W}$$\n\n## 構成\n\n```dot\ndigraph G { rankdir=LR; node [style=filled,fillcolor=\"#FFF3D6\",fontname=\"Meiryo\"]; Document -> Preview -> PDF; }\n```\n\n## コード\n\n```python\ndef total(items):\n    return sum(item[\"cost\"] for item in items)\n\nprint(total([{\"cost\": 120}, {\"cost\": 45}]))\n```\n\n## お知らせ\n\n> [!NOTE]\n> 編集できる原本も残してください。\n\n<details>\n<summary>詳しい情報</summary>\n\n文書の一部を折りたたんで表示できます。\n\n</details>\n\n## 次の作業\n\n- [ ] Review\n- [ ] Share\n\n![sample](main-features_files/sample.png)\n",
+      "image_adjust": "# 引き継ぎメモ\n\n書きながら、すぐ横で仕上がりを確認します。\n\n## 確認手順\n\n```mermaid\nflowchart LR\n A[書く] --> B[確認] --> C[共有]\n```\n\n$$P=\\frac{V^2}{R}=1\\,\\mathrm{W}$$\n\n## 構成\n\n```dot\ndigraph G { rankdir=LR; node [style=filled,fillcolor=\"#FFF3D6\",fontname=\"Meiryo\"]; Document -> Preview -> PDF; }\n```\n\n## コード\n\n```python\ndef total(items):\n    return sum(item[\"cost\"] for item in items)\n\nprint(total([{\"cost\": 120}, {\"cost\": 45}]))\n```\n\n## お知らせ\n\n> [!NOTE]\n> 編集できる原本も残してください。\n\n<details>\n<summary>詳しい情報</summary>\n\n文書の一部を折りたたんで表示できます。\n\n</details>\n\n## 次の作業\n\n- [ ] Review\n- [ ] Share\n\n<p align=\"center\"><img src=\"main-features_files/sample.png\" alt=\"sample\" width=\"50%\"></p>\n",
+      "image_render": {
+        "width": 307,
+        "natural": 240,
+        "align": "center",
+        "src": "https://document.mdeditor.local/main-features_files/sample.png"
+      }
+    },
+    "opening_reference": "docs/images/7-3d-model.ja.png",
+    "duration": 267.132,
+    "no_colored_masks": true
+  },
+  "duration": 201.45,
+  "cut_intervals_raw_seconds": [
+    [
+      12.045566700049676,
+      18.020533000002615
+    ],
+    [
+      109.88723100000061,
+      114.91937300004065
+    ],
+    [
+      152.9190960000269,
+      160.53686170000583
+    ],
+    [
+      162.29083810001612,
+      167.43395510001574
+    ],
+    [
+      168.88742440001806,
+      173.82135420001578
+    ],
+    [
+      175.27579600003082,
+      180.234468700015
+    ],
+    [
+      181.6885939000058,
+      186.66190100001404
+    ],
+    [
+      188.11510780005483,
+      193.24510190001456
+    ],
+    [
+      194.69893480004976,
+      200.0174076000112
+    ],
+    [
+      201.47113660001196,
+      206.95559310005046
+    ],
+    [
+      212.41817150003044,
+      217.85845970001537
+    ],
+    [
+      233.16893400001572,
+      238.13786640000762
+    ]
+  ],
+  "colored_masks": false,
+  "events": [
+    {
+      "seconds": 0,
+      "key": "intro",
+      "ja": "mdEditor：書く・読む・図にする、Windowsアプリ",
+      "en": "mdEditor: write, read and visualize on Windows"
+    },
+    {
+      "seconds": 7.215,
+      "key": "intro-more",
+      "ja": "仕上がりを見ながら編集。3Dも、文書の中で。",
+      "en": "Edit beside a live preview. Explore 3D inside your document."
+    },
+    {
+      "seconds": 15.104,
+      "key": "consent",
+      "ja": "この収録では、画像・動画・詳細地図の読み込みを許可",
+      "en": "Allow internet media and detailed maps for this recording"
+    },
+    {
+      "seconds": 22.468,
+      "key": "tour",
+      "ja": "diagram-test.mdを上から下へ。多彩な表現を一望",
+      "en": "A top-to-bottom tour of diagram-test.en.md"
+    },
+    {
+      "seconds": 30.468,
+      "key": "structures",
+      "ja": "構造や状態、やり取りを図に",
+      "en": "Visualize structure, states and interactions"
+    },
+    {
+      "seconds": 38.468,
+      "key": "charts",
+      "ja": "予定と数値を、見える形に",
+      "en": "Make schedules and numbers visible"
+    },
+    {
+      "seconds": 46.468,
+      "key": "ideas",
+      "ja": "つながりとアイデアを、ひと目で",
+      "en": "Explore relationships and ideas at a glance"
+    },
+    {
+      "seconds": 54.468,
+      "key": "intentional-error",
+      "ja": "テスト用の意図的な構文エラー例も含みます",
+      "en": "The test sample includes an intentional syntax-error example"
+    },
+    {
+      "seconds": 61.468,
+      "key": "math-tour",
+      "ja": "数式・表と図を、ひとつの文書に",
+      "en": "Keep equations, tables and diagrams together"
+    },
+    {
+      "seconds": 69.468,
+      "key": "code-tour",
+      "ja": "コードも色分けして読みやすく",
+      "en": "Read code with syntax highlighting"
+    },
+    {
+      "seconds": 77.468,
+      "key": "3d-tour",
+      "ja": "GitHub形式の表現から、3Dへ",
+      "en": "From GitHub-style content to interactive 3D"
+    },
+    {
+      "seconds": 84.674,
+      "key": "3d",
+      "ja": "STLを拡大・回転して、立体を確かめる",
+      "en": "Zoom and rotate an STL model to inspect it"
+    },
+    {
+      "seconds": 89.083,
+      "key": "maps",
+      "ja": "GeoJSONの地点・経路を、許可した詳細地図に表示",
+      "en": "Show GeoJSON locations and routes on a permitted detailed map"
+    },
+    {
+      "seconds": 93.904,
+      "key": "video",
+      "ja": "ローカルとネット上の動画を、文書内で再生",
+      "en": "Play local and permitted internet videos inside the document"
+    },
+    {
+      "seconds": 103.913,
+      "key": "edit",
+      "ja": "書きながら横で仕上がりを確認。スクロールも連動",
+      "en": "Write beside the live preview, with synchronized scrolling"
+    },
+    {
+      "seconds": 108.129,
+      "key": "detach",
+      "ja": "プレビューを別ウィンドウに。2台目の画面へ移動できる",
+      "en": "Detach the preview and move it to a second display"
+    },
+    {
+      "seconds": 114.291,
+      "key": "viewer",
+      "ja": "ビューアーとして、プレビューをウィンドウいっぱいに",
+      "en": "Use the full-window preview as a document viewer"
+    },
+    {
+      "seconds": 119.025,
+      "key": "offline",
+      "ja": "Mermaid・Graphvizの図と数式を、オフラインで表示",
+      "en": "Bundled Mermaid, Graphviz and math render offline"
+    },
+    {
+      "seconds": 127.431,
+      "key": "code",
+      "ja": "約40言語を色分け。PDF・Wordにも色を残す",
+      "en": "Highlight about 40 code languages; keep colors in PDF and Word"
+    },
+    {
+      "seconds": 134.245,
+      "key": "toc",
+      "ja": "見出しから目次を作成。もう一度押すと更新",
+      "en": "Build a contents list from headings; press again to update"
+    },
+    {
+      "seconds": 138.362,
+      "key": "github",
+      "ja": "GitHub形式の注意書き・フロントマター・折りたたみ",
+      "en": "GitHub-style alerts, front matter and collapsible sections"
+    },
+    {
+      "seconds": 141.912,
+      "key": "pdf",
+      "ja": "プレビューの見た目を、PDFへすぐ書き出し",
+      "en": "Export the preview directly to PDF"
+    },
+    {
+      "seconds": 143.666,
+      "key": "import",
+      "ja": "Word・HTML・メール・CSV・JSON・Notebook・画像を開ける",
+      "en": "Open Word, HTML, email, CSV, JSON, notebooks and images"
+    },
+    {
+      "seconds": 154.092,
+      "key": "export",
+      "ja": "HTML・PNG・Word・CSV・JSON・Notebook・テキストに保存",
+      "en": "Save HTML, PNG, Word, CSV, JSON, notebooks and text"
+    },
+    {
+      "seconds": 157.946,
+      "key": "images",
+      "ja": "画像を編集欄へドラッグ＆ドロップ。文書の横に自動保存",
+      "en": "Drag an image into the editor; keep it beside the document"
+    },
+    {
+      "seconds": 162.049,
+      "key": "image-adjust",
+      "ja": "画像の調整で、サイズを50％にして中央へ",
+      "en": "Adjust the image to 50% width and center it"
+    },
+    {
+      "seconds": 169.409,
+      "key": "share",
+      "ja": "文書と使った画像をまとめて渡せる、ZIP保存にも対応",
+      "en": "Save a ZIP containing the document and the files it uses"
+    },
+    {
+      "seconds": 173.162,
+      "key": "encoding",
+      "ja": "Shift_JIS・EUC-JP・UTF-8の日本語文書に対応",
+      "en": "Open Japanese text in Shift_JIS, EUC-JP and UTF-8"
+    },
+    {
+      "seconds": 178.302,
+      "key": "recovery",
+      "ja": "安全な保存と、異常終了からの自動復元",
+      "en": "Safe saving and automatic recovery after an unexpected exit"
+    },
+    {
+      "seconds": 181.469,
+      "key": "internet",
+      "ja": "ネット上の画像・動画・地図は、許可して読み込む",
+      "en": "Internet images, video and maps load only with permission"
+    },
+    {
+      "seconds": 184.618,
+      "key": "privacy",
+      "ja": "広告なし、計測なし、アカウント不要",
+      "en": "No ads, no tracking, no account required"
+    },
+    {
+      "seconds": 188.619,
+      "key": "keyboard",
+      "ja": "キーボードで全操作。ショートカットも変更できる",
+      "en": "Use the keyboard and customize shortcuts"
+    },
+    {
+      "seconds": 192.808,
+      "key": "accessibility",
+      "ja": "画面読み上げ・文書の読み上げ・ダークモードに対応",
+      "en": "Screen-reader support, document reading and dark mode"
+    },
+    {
+      "seconds": 198.063,
+      "key": "outro",
+      "ja": "mdEditor：書く。見る。整えて、渡す。",
+      "en": "mdEditor: write, explore, refine and share."
+    }
+  ],
+  "probe": {
+    "streams": [
+      {
+        "index": 0,
+        "codec_name": "h264",
+        "codec_long_name": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "profile": "High",
+        "codec_type": "video",
+        "codec_tag_string": "avc1",
+        "codec_tag": "0x31637661",
+        "width": 1280,
+        "height": 720,
+        "coded_width": 1280,
+        "coded_height": 720,
+        "closed_captions": 0,
+        "film_grain": 0,
+        "has_b_frames": 2,
+        "pix_fmt": "yuv420p",
+        "level": 31,
+        "chroma_location": "left",
+        "field_order": "progressive",
+        "refs": 1,
+        "is_avc": "true",
+        "nal_length_size": "4",
+        "id": "0x1",
+        "r_frame_rate": "20/1",
+        "avg_frame_rate": "20/1",
+        "time_base": "1/10240",
+        "start_pts": 0,
+        "start_time": "0.000000",
+        "duration_ts": 2062848,
+        "duration": "201.450000",
+        "bit_rate": "239341",
+        "bits_per_raw_sample": "8",
+        "nb_frames": "4029",
+        "disposition": {
+          "default": 1,
+          "dub": 0,
+          "original": 0,
+          "comment": 0,
+          "lyrics": 0,
+          "karaoke": 0,
+          "forced": 0,
+          "hearing_impaired": 0,
+          "visual_impaired": 0,
+          "clean_effects": 0,
+          "attached_pic": 0,
+          "timed_thumbnails": 0,
+          "captions": 0,
+          "descriptions": 0,
+          "metadata": 0,
+          "dependent": 0,
+          "still_image": 0
+        },
+        "tags": {
+          "language": "und",
+          "handler_name": "VideoHandler",
+          "vendor_id": "[0][0][0][0]"
+        }
+      },
+      {
+        "index": 1,
+        "codec_name": "aac",
+        "codec_long_name": "AAC (Advanced Audio Coding)",
+        "profile": "LC",
+        "codec_type": "audio",
+        "codec_tag_string": "mp4a",
+        "codec_tag": "0x6134706d",
+        "sample_fmt": "fltp",
+        "sample_rate": "44100",
+        "channels": 2,
+        "channel_layout": "stereo",
+        "bits_per_sample": 0,
+        "id": "0x2",
+        "r_frame_rate": "0/0",
+        "avg_frame_rate": "0/0",
+        "time_base": "1/44100",
+        "start_pts": 0,
+        "start_time": "0.000000",
+        "duration_ts": 8883945,
+        "duration": "201.450000",
+        "bit_rate": "198248",
+        "nb_frames": "8677",
+        "disposition": {
+          "default": 1,
+          "dub": 0,
+          "original": 0,
+          "comment": 0,
+          "lyrics": 0,
+          "karaoke": 0,
+          "forced": 0,
+          "hearing_impaired": 0,
+          "visual_impaired": 0,
+          "clean_effects": 0,
+          "attached_pic": 0,
+          "timed_thumbnails": 0,
+          "captions": 0,
+          "descriptions": 0,
+          "metadata": 0,
+          "dependent": 0,
+          "still_image": 0
+        },
+        "tags": {
+          "language": "und",
+          "handler_name": "SoundHandler",
+          "vendor_id": "[0][0][0][0]"
+        }
+      }
+    ],
+    "format": {
+      "filename": "C:\\miFfplay\\mdEditorPromotion\\deliverables\\mdEditor-showcase-1.0.14-revision-1.0.0\\mdEditor-showcase-ja.mp4",
+      "nb_streams": 2,
+      "nb_programs": 0,
+      "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+      "format_long_name": "QuickTime / MOV",
+      "start_time": "0.000000",
+      "duration": "201.450000",
+      "size": "11144954",
+      "bit_rate": "442589",
+      "probe_score": 100,
+      "tags": {
+        "major_brand": "isom",
+        "minor_version": "512",
+        "compatible_brands": "isomiso2avc1mp41",
+        "title": "mdEditor — 3D opening and main features",
+        "artist": "5garashi.com Design Office",
+        "encoder": "Lavf59.5.101",
+        "comment": "Actual source 1.0.14; complete file-dialog scenes cut with no colored masking rectangles; Light Steps CC BY 4.0 excerpt repeated and faded; sample film Big Buck Bunny (c) 2008 Blender Foundation CC BY 3.0"
+      }
+    }
+  },
+  "sha256": "25c71524fb8e45e120adf65caccee554a387774837d819bb4d2d4f334eac4045"
+}
