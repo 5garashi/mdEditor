@@ -5,7 +5,7 @@
 作成日 / Created: 2026-10-12
 版 / Version: 1.12.0
 ライセンス / License: MIT
-最終更新 / Last updated: 2026-10-18
+最終更新 / Last updated: 2026-10-20
 SPDX-License-Identifier: MIT
 -->
 # 変更履歴 / Changelog

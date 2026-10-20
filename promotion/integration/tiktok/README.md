@@ -3,7 +3,7 @@
 概要 / Description: TikTokプロフィールの設定記録 / TikTok profile setup record
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-13
-版 / Version: 1.12.0
+版 / Version: 1.3.0
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->

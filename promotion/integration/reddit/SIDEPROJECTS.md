@@ -3,7 +3,7 @@
 概要 / Description: Redditでの初回試行と公開記録 / Initial Reddit trial and publication record
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-18
-版 / Version: 1.12.0
+版 / Version: 1.3.0
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
