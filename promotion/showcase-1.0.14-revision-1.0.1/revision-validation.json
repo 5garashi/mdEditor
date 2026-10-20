@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-20 JST",
+  "revision": "1.0.1",
+  "opening_title": "mdEditor",
+  "change": "Real opening recaptured; remaining operations and timeline retained",
+  "music": "Light Steps; 48-second excerpt shifted 0.1s; no fade-in; original ending fade retained",
+  "windows_specific_cause": "not established",
+  "audio": {
+    "mdEditor-showcase-ja.mp4": {
+      "first_100ms_rms_dbfs": -12.19,
+      "duration": 201.45,
+      "full_decode": "passed by encoder"
+    },
+    "mdEditor-showcase-vertical-ja.mp4": {
+      "first_100ms_rms_dbfs": -12.19,
+      "duration": 201.45,
+      "full_decode": "passed by encoder"
+    },
+    "mdEditor-showcase-en.mp4": {
+      "first_100ms_rms_dbfs": -12.19,
+      "duration": 199.9,
+      "full_decode": "passed by encoder"
+    },
+    "mdEditor-showcase-vertical-en.mp4": {
+      "first_100ms_rms_dbfs": -12.19,
+      "duration": 199.9,
+      "full_decode": "passed by encoder"
+    }
+  }
+}

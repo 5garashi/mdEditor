@@ -3,12 +3,17 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.11.0
+版 / Version: 1.11.1
 ライセンス / License: MIT
 最終更新 / Last updated: 2026-10-18
 SPDX-License-Identifier: MIT
 -->
 # 変更履歴 / Changelog
+
+## 1.11.1 — 2026-10-20
+
+- 動画revision 1.0.1：日英の冒頭をmdEditorへ変更して再収録。BGMの冒頭を調整し、音声データ・4本の再生を確認。ローカル保存のみ。
+- Revise the video opening title and music onset in all four local videos.
 
 ## 1.11.0 — 2026-10-20
 

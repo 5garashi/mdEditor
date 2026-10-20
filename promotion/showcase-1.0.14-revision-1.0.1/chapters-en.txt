@@ -1,0 +1,34 @@
+00:00 mdEditor: write, read and visualize on Windows
+00:06 Edit beside a live preview. Explore 3D inside your document.
+00:13 Allow internet media and detailed maps for this recording
+00:20 A top-to-bottom tour of diagram-test.en.md
+00:28 Visualize structure, states and interactions
+00:36 Make schedules and numbers visible
+00:44 Explore relationships and ideas at a glance
+00:52 The test sample includes an intentional syntax-error example
+00:59 Keep equations, tables and diagrams together
+01:07 Read code with syntax highlighting
+01:15 From GitHub-style content to interactive 3D
+01:22 Zoom and rotate an STL model to inspect it
+01:27 Show GeoJSON locations and routes on a permitted detailed map
+01:31 Play local and permitted internet videos inside the document
+01:41 Write beside the live preview, with synchronized scrolling
+01:46 Detach the preview and move it to a second display
+01:52 Use the full-window preview as a document viewer
+01:57 Bundled Mermaid, Graphviz and math render offline
+02:05 Highlight about 40 code languages; keep colors in PDF and Word
+02:12 Build a contents list from headings; press again to update
+02:16 GitHub-style alerts, front matter and collapsible sections
+02:19 Export the preview directly to PDF
+02:21 Open Word, HTML, email, CSV, JSON, notebooks and images
+02:32 Save HTML, PNG, Word, CSV, JSON, notebooks and text
+02:35 Drag an image into the editor; keep it beside the document
+02:39 Adjust the image to 50% width and center it
+02:47 Save a ZIP containing the document and the files it uses
+02:51 Open Japanese text in Shift_JIS, EUC-JP and UTF-8
+02:56 Safe saving and automatic recovery after an unexpected exit
+02:59 Internet images, video and maps load only with permission
+03:02 No ads, no tracking, no account required
+03:06 Use the keyboard and customize shortcuts
+03:10 Screen-reader support, document reading and dark mode
+03:15 mdEditor: write, explore, refine and share.

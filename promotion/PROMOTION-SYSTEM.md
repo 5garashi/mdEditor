@@ -3,13 +3,13 @@
 概要 / Description: GitHubを核にしたプロモーションの全体図・更新手順・公開台帳 / GitHub-centered promotion guide and publication register
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-17
-版 / Version: 1.11.0
+版 / Version: 1.11.1
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
 # mdEditor プロモーションの全体図と更新台帳
 
-2026-10-20：**[ソース1.0.14の更新動画（確認用）](showcase-1.0.14-revision-1.0.0/README.md)** をローカル作成。3D紹介・サンプルツアー・主要機能に、画像のドロップ・サイズ・中央揃えを追加。以下の既存公開結果は1.0.12の記録で、媒体の差し替えは未実施です。
+2026-10-20：**[ソース1.0.14の更新動画（確認用）](showcase-1.0.14-revision-1.0.1/README.md)** をローカル作成。3D紹介・サンプルツアー・主要機能に、画像のドロップ・サイズ・中央揃えを追加。以下の既存公開結果は1.0.12の記録で、媒体の差し替えは未実施です。
 
 2026-10-18：Redditの **r/windowsapps・r/sideprojects** を全体図・媒体一覧・更新手順・進捗・結果に統合しました。r/sideprojectsはフィルター削除、モデレーターへ確認依頼済みで、承認は未確認です。[Reddit資料](integration/reddit/README.md)・[詳細記録](integration/reddit/SIDEPROJECTS.md)。
 
