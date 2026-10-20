@@ -10,7 +10,7 @@ from pathlib import Path
 import base64, mimetypes, re
 ROOT=Path(__file__).resolve().parents[1]
 VERSION=(ROOT/'VERSION').read_text().strip()
-DATE='2026-10-18'
+DATE='2026-10-20'
 
 def header(file,en=False):
     labels=['File','Description','Author','Created','Version','License'] if en else ['ファイル名 / File','概要 / Description','作成者 / Author','作成日 / Created','版 / Version','ライセンス / License']
