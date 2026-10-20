@@ -1,0 +1,34 @@
+{
+  "index.html": {
+    "source_1.0.14": true,
+    "new_youtube": false
+  },
+  "en.html": {
+    "source_1.0.14": true,
+    "new_youtube": false
+  },
+  "resources.html": {
+    "source_1.0.14": true,
+    "new_youtube": false
+  },
+  "resources-en.html": {
+    "source_1.0.14": true,
+    "new_youtube": false
+  },
+  "office-card-ja.html": {
+    "source_1.0.14": true,
+    "new_youtube": false
+  },
+  "office-card-en.html": {
+    "source_1.0.14": true,
+    "new_youtube": false
+  },
+  "youtube.html": {
+    "source_1.0.14": false,
+    "new_youtube": false
+  },
+  "youtube-en.html": {
+    "source_1.0.14": false,
+    "new_youtube": false
+  }
+}
