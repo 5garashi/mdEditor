@@ -21,7 +21,7 @@ SPDX-License-Identifier: MIT
 
 公開Webは[日本語](https://5garashi.github.io/mdEditor/)・[英語](https://5garashi.github.io/mdEditor/en.html)。ソース版の収録であり、Storeの配信版番号を断定するものではありません。
 
-Webの表示・リンク・公開結果は確認後に公開記録へ追記します。読み上げ・実機のコントラストテーマ・全形式の変換・異常終了からの復元は今回の宣伝更新では網羅的に再試験していません。
+Webの表示・リンク・媒体別の結果は[公開記録](PUBLICATION.md)に記載しました。公開MP4と確認済み原本のSHA-256も一致しています。読み上げ・実機のコントラストテーマ・全形式の変換・異常終了からの復元は今回の宣伝更新では網羅的に再試験していません。
 
 
 デザイン参照 / Design reference: [Design Office Identity 4.20.0](https://5garashi.github.io/5garashi-identity/)（2026-10-20確認）。

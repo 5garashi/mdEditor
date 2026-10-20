@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-20 JST",
+  "pdfs": {
+    "one-page-ja.pdf": {
+      "pages": 1,
+      "text_inside_page": true
+    },
+    "features-ja.pdf": {
+      "pages": 2,
+      "text_inside_page": true
+    },
+    "one-page-en.pdf": {
+      "pages": 1,
+      "text_inside_page": true
+    },
+    "features-en.pdf": {
+      "pages": 2,
+      "text_inside_page": true
+    }
+  },
+  "media": {
+    "ja": {
+      "public_sha256": "b3cbc98881a9b84cb9ad7abdf1e5868cafd844001392462aaefbee454a3239b3",
+      "matches_reviewed_video": true
+    },
+    "en": {
+      "public_sha256": "52fef30919abe12a2b8ff16f7a092b8d948e60d1b78ae9a3e3bbef5b5e0c2b8b",
+      "matches_reviewed_video": true
+    }
+  }
+}
