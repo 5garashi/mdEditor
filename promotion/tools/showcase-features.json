@@ -61,13 +61,13 @@
   },
   {
     "key": "export",
-    "ja": "HTML・PNG・Word・CSV・JSON・Jupyter Notebook・テキストに保存",
-    "en": "Saves as HTML, PNG, Word, CSV, JSON, Jupyter Notebook, or text"
+    "ja": "HTML・PNG・Word・CSV・JSON・Jupyter Notebook・テキストに保存・配布用ZIP",
+    "en": "Saves as HTML, PNG, Word, CSV, JSON, Jupyter Notebook, or text; sharing ZIP"
   },
   {
     "key": "images",
-    "ja": "画像はドロップや貼り付けで、そのまま文書に",
-    "en": "Drop or paste pictures straight into your document"
+    "ja": "画像をドロップ・貼り付け。サイズと中央揃えを調整",
+    "en": "Drop or paste images; adjust their size and centered alignment"
   },
   {
     "key": "recovery",

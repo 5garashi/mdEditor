@@ -636,7 +636,7 @@ A **collapsed** section. Tables and code fit in it too.
 
 ## 21. 3D models, maps, and videos (as on GitHub)
 
-Expected: the front matter (YAML) at the top shows as a card of keys and values at the start of the document, with the tags as labels and name and url inside author. The 3D model is a cream cube on a dark green stage with a raised volt (red) "5" on every face; it turns when dragged and zooms with the wheel. The map shows Tokyo and Osaka as points, a line between them, and a circle around Mt. Fuji, on the outline of Japan, and the notice bar offers Load detailed maps. Pressing it shows an OpenStreetMap map with roads and place names. In 21-3, the first video (in the same folder) starts by itself without sound and loops (with Windows animation effects off, it shows a play button unless autoplay is chosen in Settings > Videos), and the second (on the internet) waits until Load images and videos is pressed.
+Expected: the front matter (YAML) at the top shows as a card of keys and values at the start of the document, with the tags as labels and name and url inside author. The 3D model is a cream cube on a dark green stage with a raised volt (red) "5" on every face; it turns when dragged and zooms with the wheel. The map shows a line across London from the British Museum to the Royal Observatory, Greenwich, on the simple outline of the land (the triangle and circle at its ends are only about 100 to 200 m across, so on this map they are barely more than dots), and the notice bar offers Load detailed maps. Pressing it shows an OpenStreetMap map of London with roads and place names, where the small triangle at the British Museum and the small circle at the Royal Observatory can be seen (OpenStreetMap draws place names in the local language, so here they are in English). In 21-3, the first video (in the same folder) starts by itself without sound and loops (with Windows animation effects off, it shows a play button unless autoplay is chosen in Settings > Videos), and the second (on the internet) waits until Load images and videos is pressed.
 
 ### 21-1. 3D model (STL)
 
@@ -975,16 +975,15 @@ endsolid letters
 
 ### 21-2. Map (GeoJSON)
 
-GeoJSON has no circle type, so the circle around Mt. Fuji is a 48-sided polygon with a radius of about 25 km.
+GeoJSON has no triangle or circle type, so both places are areas (Polygon) drawn as a list of corners that ends where it starts: three corners for the British Museum, ten for the circle at the Royal Observatory. The line runs from one to the other.
 
 ```geojson
 {
   "type": "FeatureCollection",
   "features": [
-    { "type": "Feature", "properties": { "name": "Tokyo" }, "geometry": { "type": "Point", "coordinates": [139.767, 35.681] } },
-    { "type": "Feature", "properties": { "name": "Osaka", "marker-color": "#0969DA" }, "geometry": { "type": "Point", "coordinates": [135.502, 34.693] } },
-    { "type": "Feature", "properties": { "name": "Tokaido" }, "geometry": { "type": "LineString", "coordinates": [[139.767, 35.681], [138.383, 34.976], [136.906, 35.170], [135.502, 34.693]] } },
-    { "type": "Feature", "properties": { "name": "Mt. Fuji", "fill": "#B92613" }, "geometry": { "type": "Polygon", "coordinates": [[[139.0032,35.3606], [139.0008,35.39], [138.9938,35.4188], [138.9822,35.4467], [138.9662,35.4731], [138.9462,35.4976], [138.9224,35.5197], [138.8953,35.5391], [138.8653,35.5555], [138.8329,35.5685], [138.7988,35.5779], [138.7634,35.5837], [138.7274,35.5856], [138.6914,35.5837], [138.656,35.5779], [138.6219,35.5685], [138.5895,35.5555], [138.5595,35.5391], [138.5324,35.5197], [138.5086,35.4976], [138.4886,35.4731], [138.4726,35.4467], [138.461,35.4188], [138.454,35.39], [138.4516,35.3606], [138.454,35.3312], [138.461,35.3024], [138.4726,35.2745], [138.4886,35.2481], [138.5086,35.2236], [138.5324,35.2015], [138.5595,35.1821], [138.5895,35.1657], [138.6219,35.1527], [138.656,35.1433], [138.6914,35.1375], [138.7274,35.1356], [138.7634,35.1375], [138.7988,35.1433], [138.8329,35.1527], [138.8653,35.1657], [138.8953,35.1821], [138.9224,35.2015], [138.9462,35.2236], [138.9662,35.2481], [138.9822,35.2745], [138.9938,35.3024], [139.0008,35.3312], [139.0032,35.3606]]] } }
+    { "type": "Feature", "properties": { "name": "British Museum", "marker": "triangle", "description": "The British Museum" }, "geometry": { "type": "Polygon", "coordinates": [[[-0.1270, 51.5199], [-0.1280, 51.5184], [-0.1260, 51.5184], [-0.1270, 51.5199]]] } },
+    { "type": "Feature", "properties": { "name": "Royal Observatory, Greenwich", "marker": "circle", "description": "Royal Observatory, Greenwich" }, "geometry": { "type": "Polygon", "coordinates": [[[0.0005, 51.4770], [0.0002, 51.4769], [0.0000, 51.4767], [0.0000, 51.4764], [0.0002, 51.4762], [0.0005, 51.4761], [0.0008, 51.4762], [0.0010, 51.4764], [0.0010, 51.4767], [0.0008, 51.4769], [0.0005, 51.4770]]] } },
+    { "type": "Feature", "properties": { "name": "Route", "description": "A line connecting the British Museum and the Royal Observatory, Greenwich" }, "geometry": { "type": "LineString", "coordinates": [[-0.1270, 51.5190], [0.0005, 51.4766]] } }
   ]
 }
 ```
@@ -1001,6 +1000,44 @@ https://www.w3schools.com/html/mov_bbb.mp4
 
 ---
 
+## 22. Image size and position (written as on GitHub)
+
+Expected: the English logotype in 22-1 appears three times, at 25%, 50%, and 100% of the text width. In 22-2 the logotype is centered and the symbol mark sits on the right. In dark mode the logotype switches to its gray reversal. In 22-3 the text flows on the right of the symbol mark (on the left of the second one), and the paragraph after `<br clear="all">` starts below the images. No image is stretched or squeezed.
+
+Put the cursor on an image's line in the editor and press Adjust image (Ctrl+Shift+F), or right-click the image in the preview, to choose its size and position again. Saved as Word, PNG and JPEG images keep the share of the width they are given; the SVG images here become their description (the Japanese version of this document uses a PNG banner in 22-1, which Word keeps as a picture).
+
+The images are official assets of 5garashi.com Design Office (CC BY-ND 4.0), used unmodified.
+
+### 22-1. Size (share of the text width)
+
+<p><picture><source media="(prefers-color-scheme: dark)" srcset="import-test-images/5garashi_logotype_en_reversed_outlined.svg"><img src="import-test-images/5garashi_logotype_en_outlined.svg" alt="5garashi.com Design Office (25% of the text width)" width="25%"></picture></p>
+
+<p><picture><source media="(prefers-color-scheme: dark)" srcset="import-test-images/5garashi_logotype_en_reversed_outlined.svg"><img src="import-test-images/5garashi_logotype_en_outlined.svg" alt="5garashi.com Design Office (50% of the text width)" width="50%"></picture></p>
+
+<p><picture><source media="(prefers-color-scheme: dark)" srcset="import-test-images/5garashi_logotype_en_reversed_outlined.svg"><img src="import-test-images/5garashi_logotype_en_outlined.svg" alt="5garashi.com Design Office (full text width)" width="100%"></picture></p>
+
+### 22-2. Center and right (width in pixels)
+
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="import-test-images/5garashi_logotype_en_reversed_outlined.svg"><img src="import-test-images/5garashi_logotype_en_outlined.svg" alt="5garashi.com Design Office" width="240"></picture></p>
+
+<p align="right"><img src="import-test-images/5garashi_mark_simple.svg" alt="5garashi.com Design Office symbol mark" width="64"></p>
+
+### 22-3. Text flowing around an image
+
+<img src="import-test-images/5garashi_mark_simple.svg" alt="5garashi.com Design Office symbol mark" width="80" align="left" hspace="16" vspace="8">
+
+The symbol mark is a tally of chili peppers: four upright chilis crossed by a fifth. An image with `align="left"` sits on the left, and this paragraph flows on its right. `hspace` and `vspace` keep a margin around the image.
+
+<img src="import-test-images/5garashi_mark_simple.svg" alt="5garashi.com Design Office symbol mark" width="80" align="right" hspace="16" vspace="8">
+
+Count one-two-three-four, then strike through with the fifth: the name "5garashi" drawn as a single mark. An image with `align="right"` sits on the right, and this paragraph flows on its left.
+
+<br clear="all">
+
+`<br clear="all">` ends the flow, so this paragraph starts below the images.
+
+---
+
 ## Checklist
 
 - [ ] Every Mermaid diagram renders as a drawing, not as code
@@ -1014,7 +1051,8 @@ https://www.w3schools.com/html/mov_bbb.mp4
 - [ ] Code blocks with a language (19) are colored, and the one without stays plain
 - [ ] Saving as PDF, PNG, HTML, or Word keeps the diagrams and code colors
 - [ ] The keys at the top form a table, and the GitHub syntax (20) shows as on GitHub. The script does not run and the dangerous link is text only
-- [ ] The front matter shows as a card, the 3D model (21-1) has a "5" on each face and turns, the map (21-2) shows the points, line, and the circle around Mt. Fuji over Japan, and the video (21-3) plays
+- [ ] The front matter shows as a card, the 3D model (21-1) has a "5" on each face and turns, the map (21-2) shows the triangle and circle in London joined by a line, and the video (21-3) plays
+- [ ] The images (22) show at the given size and position without being stretched, the flow ends at `<br clear="all">`, and the logotype switches to its gray reversal in dark mode
 
 ---
 

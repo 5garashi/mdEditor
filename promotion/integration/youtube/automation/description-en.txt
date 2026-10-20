@@ -1,4 +1,4 @@
-Start with a rotating 3D model. Tour diagram-test, then explore twenty main features through the actual app and captions.
+Start with rotating 3D, tour diagram-test, then explore the main features. See image drag-and-drop, 50% width and centered alignment.
 
 - Live preview beside your text, scrolling together
 - Preview on a second display, following the line you edit
@@ -12,8 +12,8 @@ Start with a rotating 3D model. Tour diagram-test, then explore twenty main feat
 - Videos play right in the preview
 - One-click PDF that looks exactly like the preview
 - Opens Word, HTML, e-mail, CSV, JSON, Jupyter Notebooks, and images
-- Saves as HTML, PNG, Word, CSV, JSON, Jupyter Notebook, or text
-- Drop or paste pictures straight into your document
+- Saves as HTML, PNG, Word, CSV, JSON, Jupyter Notebook, or text; sharing ZIP
+- Drop or paste images; adjust their size and centered alignment
 - Safe saving and automatic crash recovery
 - Opens Shift_JIS, EUC-JP, and UTF-8 files correctly
 - Internet images, videos, and maps load only when you allow them
@@ -21,12 +21,11 @@ Start with a rotating 3D model. Tour diagram-test, then explore twenty main feat
 - Everything from the keyboard, with custom shortcuts
 - Screen reader support, read-aloud, and dark mode
 
-Guide, samples and PDFs
 https://5garashi.github.io/mdEditor/en.html
 
-Recorded from updated source build 1.0.12 (8ab7cef). Store build number unverified. Internet media and maps were allowed. The detached-preview segment repeats one stable second cropped to the app windows. This is a feature introduction, not an exhaustive retest. Word import does not preserve layout; notebook export omits execution output.
+Recorded from source build 1.0.14. Internet media and detailed maps were permitted. Word import does not preserve layout; notebook export omits execution outputs.
 
-Music: Light Steps v1 — 5garashi.com Design Office; composition/synthesis: Codex. CC BY 4.0. https://creativecommons.org/licenses/by/4.0/ Excerpt repeated and faded.
-Sample video: Big Buck Bunny © 2008 Blender Foundation, CC BY 3.0. https://peach.blender.org/about/ Short silent screen capture.
-Map: © OpenStreetMap contributors https://www.openstreetmap.org/copyright
-App and samples: MIT. https://github.com/5garashi/mdEditor
+Music: Light Steps — 5garashi.com Design Office / Codex, CC BY 4.0. Excerpt shifted and repeated; ending fade.
+Sample video: Big Buck Bunny © 2008 Blender Foundation, CC BY 3.0. bigbuckbunny.org
+Map: © OpenStreetMap contributors.
+#mdEditor #Markdown #Windows

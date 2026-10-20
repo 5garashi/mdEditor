@@ -1,4 +1,4 @@
-回転する3Dモデルから、mdEditorの表現と使い方を紹介します。diagram-testを上から下へ見たあと、主な20機能を実画面と字幕で紹介。
+3Dを回す冒頭から、diagram-testのツアー、主要機能へ。画像のドロップ・50％サイズ・中央揃えも実演します。
 
 - 書きながら横で仕上がりを確認。スクロールも連動
 - プレビューを 2 台目のディスプレイに。編集中の行を表示
@@ -12,8 +12,8 @@
 - 文書の中の動画をプレビューで再生
 - プレビューと同じ見た目の PDF をワンクリックで
 - Word・HTML・メール・CSV・JSON・Jupyter Notebook・画像を開ける
-- HTML・PNG・Word・CSV・JSON・Jupyter Notebook・テキストに保存
-- 画像はドロップや貼り付けで、そのまま文書に
+- HTML・PNG・Word・CSV・JSON・Jupyter Notebook・テキストに保存・配布用ZIP
+- 画像をドロップ・貼り付け。サイズと中央揃えを調整
 - 安全な保存と、異常終了からの自動復元
 - Shift_JIS・EUC-JP・UTF-8 のファイルを正しく開ける
 - ネット上の画像・動画・地図は、許可したときだけ読み込む
@@ -21,12 +21,11 @@
 - キーボードで全操作。ショートカットも変更できる
 - 画面読み上げ・文書の読み上げ・ダークモードに対応
 
-使い方・サンプル・PDF
 https://5garashi.github.io/mdEditor/
 
-収録は更新済みソース版1.0.12（8ab7cef）のビルド。Store配信版番号は未確認です。インターネット上の画像・動画・地図は許可して収録。別窓の紹介は、背景を除いた安定した実録画1秒を繰り返して編集しています。紹介機能すべての網羅的な再試験ではありません。Wordの色・配置、Notebookの実行結果は再現しません。
+Recorded from source build 1.0.14. Internet media and detailed maps were permitted. Word import does not preserve layout; notebook export omits execution outputs.
 
-Music: Light Steps v1 — 5garashi.com Design Office; composition/synthesis: Codex. CC BY 4.0. https://creativecommons.org/licenses/by/4.0/ Excerpt repeated and faded.
-Sample video: Big Buck Bunny © 2008 Blender Foundation, CC BY 3.0. https://peach.blender.org/about/ Short silent screen capture.
-Map: © OpenStreetMap contributors https://www.openstreetmap.org/copyright
-App and samples: MIT. https://github.com/5garashi/mdEditor
+Music: Light Steps — 5garashi.com Design Office / Codex, CC BY 4.0. Excerpt shifted and repeated; ending fade.
+Sample video: Big Buck Bunny © 2008 Blender Foundation, CC BY 3.0. bigbuckbunny.org
+Map: © OpenStreetMap contributors.
+#mdEditor #Markdown #Windows

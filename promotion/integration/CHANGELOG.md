@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.3.0 — 2026-10-20
+
+- 日英Web・資料・埋め込みカードをソース1.0.14の実演と画像調整へ更新。
+- Update bilingual pages and resources for source 1.0.14.
+
 ## 1.2.0 — 2026-10-18
 
 - Source 1.0.12: visual-first landing, resource links, twenty-feature PDFs and office-site cards.
