@@ -3,11 +3,14 @@
 概要 / Description: Xの初期設定と初回投稿案 / X setup and first-post draft
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-13
-版 / Version: 1.8.0
+版 / Version: 1.12.0
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
 # X初期設定 / X setup
+
+2026-10-20：@5garashi_comから1.0.14の日英動画案内を公開。 [今回の公開記録](../../multichannel/update-2026-10-20/PUBLICATION.md)。
+
 
 2026-10-18：[新版の案内](https://x.com/5garashi_com/status/2111568105919131719)を@5garashi_comで公開。日英実演リンク、日本語画像と代替テキストを確認。 [詳細記録](https://github.com/5garashi/mdEditor/blob/promotion/site-integration/promotion/multichannel/update-2026-10-18/PUBLICATION.md)。
 

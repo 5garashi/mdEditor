@@ -3,11 +3,14 @@
 概要 / Description: Zenn公開記録と記事の更新元 / Zenn publication record and canonical source
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-13
-版 / Version: 1.8.0
+版 / Version: 1.12.0
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
 # Zenn公開記録 / Zenn publication record
+
+2026-10-20：既存記事を1.0.14の動画・画像調整・ZIP共有へ更新。連携元2f470c2、対象1ファイル。 [今回の公開記録](../../multichannel/update-2026-10-20/PUBLICATION.md)。
+
 
 2026-10-18：[既存記事](https://zenn.dev/5garashi_com/articles/mdeditor-diagrams-math-pdf)を1.0.12の3D画面・新動画・主な20機能へ更新。連携元7d19cea、対象記事1ファイルのみ。公開HTMLで反映確認。 [詳細記録](https://github.com/5garashi/mdEditor/blob/promotion/site-integration/promotion/multichannel/update-2026-10-18/PUBLICATION.md)。
 

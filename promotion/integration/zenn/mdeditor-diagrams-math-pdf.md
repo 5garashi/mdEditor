@@ -21,6 +21,10 @@ Markdownファイルの中身をちょっと読みたい。必要なら数行だ
 
 ## 2026-10-20更新：画像をドロップ、サイズと中央揃え
 
+@[youtube](FCAnLgFUx9Q)
+
+[English demo](https://www.youtube.com/watch?v=ELYbCiZKXMc)
+
 まず、文書内のSTL立方体を回転・拡大。そのあと図・数式・地図・動画を一つの文書で確認し、編集と共有へ進みます。5garashi.com設計事務所が開発する無料のWindowsアプリmdEditorの使い方を紹介します。
 
 [ソース1.0.14の実演を見る](https://5garashi.github.io/mdEditor/#demo) · [YouTubeの入口](https://5garashi.github.io/mdEditor/youtube.html)

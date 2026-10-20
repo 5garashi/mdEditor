@@ -3,11 +3,14 @@
 概要 / Description: Redditでの初回試行と公開記録 / Initial Reddit trial and publication record
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-18
-版 / Version: 1.9.4
+版 / Version: 1.12.0
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
 # r/sideprojects — 動画投稿 / Video post
+
+2026-10-20：既存本文にソース1.0.14の新動画リンクと画像調整・ZIPの案内を追記。添付済み動画は旧1.0.12として残しました。[今回の結果](../../multichannel/update-2026-10-20/PUBLICATION.md)。
+
 
 **現在の状態：Redditのフィルターにより削除。2026-10-18、所有者の依頼でモデレーターへ投稿URL付きの確認・承認依頼を送信済み。返信・再掲載は未確認です。** 以下の一覧表示・自動再生の確認は投稿直後の履歴です。
 

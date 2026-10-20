@@ -3,11 +3,14 @@
 概要 / Description: Redditでの初回試行と公開記録 / Initial Reddit trial and publication record
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-18
-版 / Version: 1.9.4
+版 / Version: 1.12.0
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
 # Reddit — r/windowsapps
+
+2026-10-20：既存のr/windowsapps・r/sideprojects本文へ1.0.14動画リンクを追記。添付動画は旧1.0.12を維持。r/sideprojectsのフィルター削除は継続。 [今回の公開記録](../../multichannel/update-2026-10-20/PUBLICATION.md)。
+
 
 2026-10-18：[r/sideprojectsの動画投稿と確認記録](SIDEPROJECTS.md)を追加。一覧での動画表示と自動再生を確認しました。
 

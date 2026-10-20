@@ -3,11 +3,14 @@
 概要 / Description: TikTokプロフィールの設定記録 / TikTok profile setup record
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-13
-版 / Version: 1.8.0
+版 / Version: 1.12.0
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
 # TikTokプロフィール / TikTok profile
+
+2026-10-20：日英の1.0.14動画を投稿し、どちらも「誰でも」で公開確認。 [今回の公開記録](../../multichannel/update-2026-10-20/PUBLICATION.md)。
+
 
 2026-10-18：[日本語動画](https://www.tiktok.com/@5garashi_com/video/7697746476302175504)と[英語動画](https://www.tiktok.com/@5garashi_com/video/7697747556910042375)を@5garashi_comから公開。ソース1.0.12、背景除去済みrevision 1.1.1。誰でも、自社宣伝・AIラベルを確認。 [詳細記録](https://github.com/5garashi/mdEditor/blob/promotion/site-integration/promotion/multichannel/update-2026-10-18/PUBLICATION.md)。
 

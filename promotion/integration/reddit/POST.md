@@ -3,11 +3,14 @@
 概要 / Description: r/windowsapps初回投稿原稿 / Initial r/windowsapps developer post
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-18
-版 / Version: 1.9.4
+版 / Version: 1.12.0
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
 # r/windowsapps 初回投稿 / First post
+
+2026-10-20：既存本文にソース1.0.14の新動画リンクと画像調整・ZIPの案内を追記。添付済み動画は旧1.0.12として残しました。[今回の結果](../../multichannel/update-2026-10-20/PUBLICATION.md)。
+
 
 状態：2026-10-18、u/5garashiから[公開済み](https://www.reddit.com/r/windowsapps/comments/1x8rt4k/i_built_a_free_windows_markdown_editor_with_live/)。固定URLで本文・Developerフレア・動画の再生を確認。
 

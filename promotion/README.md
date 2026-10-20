@@ -10,7 +10,7 @@ SPDX-License-Identifier: MIT
 -->
 # mdEditor 宣伝キット / Promotion kit
 
-2026-10-20：**[ソース1.0.14の公開資料と媒体別記録](multichannel/update-2026-10-20/README.md)** を作成し、全媒体への展開を進めています。画像のドロップ・サイズと中央揃え・ZIP保存を案内。以下の2026-10-18の結果は前回版の履歴です。
+2026-10-20：**[ソース1.0.14の公開資料と媒体別記録](multichannel/update-2026-10-20/README.md)** を公開しました。YouTube・TikTok・X・LinkedIn・ZennとReddit既存本文を更新。事務所サイトの本文変更のみ保留です。画像のドロップ・サイズと中央揃え・ZIP保存を案内。以下の2026-10-18の結果は前回版の履歴です。
 
 2026-10-18：Redditの2投稿を、Storeでも配信中のmdEditor 1.0.12を紹介する指定文へ更新しました。[変更記録](integration/reddit/SIDEPROJECTS.md)。
 

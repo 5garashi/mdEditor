@@ -3,11 +3,14 @@
 概要 / Description: YouTubeチャンネルの画像と設定記録 / YouTube channel branding and configuration
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-13
-版 / Version: 1.1.0
+版 / Version: 1.12.0
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
 # YouTube設定記録 / YouTube configuration
+
+2026-10-20：1.0.14動画を日英とも公開。YouTube管理revision 4.0.0。 [今回の公開記録](../../multichannel/update-2026-10-20/PUBLICATION.md)。
+
 
 チャンネル: https://www.youtube.com/@5garashi_com
 

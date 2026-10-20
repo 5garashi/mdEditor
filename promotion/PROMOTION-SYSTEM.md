@@ -9,7 +9,10 @@ SPDX-License-Identifier: MIT
 -->
 # mdEditor プロモーションの全体図と更新台帳
 
-2026-10-20：**[ソース1.0.14の公開資料と媒体別記録](multichannel/update-2026-10-20/README.md)** を作成し、全媒体への展開を進めています。画像のドロップ・サイズと中央揃え・ZIP保存を案内。以下の2026-10-18の結果は前回版の履歴です。
+2026-10-20：**[ソース1.0.14の公開資料と媒体別記録](multichannel/update-2026-10-20/README.md)** を公開しました。YouTube・TikTok・X・LinkedIn・ZennとReddit既存本文を更新。事務所サイトの本文変更のみ保留です。画像のドロップ・サイズと中央揃え・ZIP保存を案内。以下の2026-10-18の結果は前回版の履歴です。
+
+
+現在の公開対象はソース版1.0.14・動画revision 1.0.1です。[今回の媒体別結果・未完了事項](multichannel/update-2026-10-20/PUBLICATION.md)を確認してください。Redditの添付動画は旧版を残し、新版へのリンクを本文へ追記しました。
 
 2026-10-18：Redditの **r/windowsapps・r/sideprojects** を全体図・媒体一覧・更新手順・進捗・結果に統合しました。r/sideprojectsはフィルター削除、モデレーターへ確認依頼済みで、承認は未確認です。[Reddit資料](integration/reddit/README.md)・[詳細記録](integration/reddit/SIDEPROJECTS.md)。
 
@@ -179,12 +182,12 @@ stateDiagram-v2
 
 | 媒体 | 公開URL | 状態 |
 | --- | --- | --- |
-| YouTube JA | [開く](https://www.youtube.com/watch?v=CAi5q1c0cuo) | 公開確認済み |
-| YouTube EN | [開く](https://www.youtube.com/watch?v=valiuj76iG4) | 公開確認済み |
-| TikTok JA | [開く](https://www.tiktok.com/@5garashi_com/video/7697746476302175504) | 公開確認済み |
-| TikTok EN | [開く](https://www.tiktok.com/@5garashi_com/video/7697747556910042375) | 公開確認済み |
-| X | [開く](https://x.com/5garashi_com/status/2111568105919131719) | 公開確認済み |
-| LinkedIn | [開く](https://www.linkedin.com/feed/update/urn:li:activity:7517332938926256128/) | 公開確認済み |
+| YouTube JA | [開く](https://www.youtube.com/watch?v=FCAnLgFUx9Q) | 公開確認済み |
+| YouTube EN | [開く](https://www.youtube.com/watch?v=ELYbCiZKXMc) | 公開確認済み |
+| TikTok JA | [開く](https://www.tiktok.com/@5garashi_com/video/7698653479656557831) | 公開確認済み |
+| TikTok EN | [開く](https://www.tiktok.com/@5garashi_com/video/7698653923128823047) | 公開確認済み |
+| X | [開く](https://x.com/5garashi_com/status/2112538505989820568) | 公開確認済み |
+| LinkedIn | [開く](https://www.linkedin.com/feed/update/urn:li:activity:7518218531650383872/) | 公開確認済み |
 | Reddit r/windowsapps | [投稿](https://www.reddit.com/r/windowsapps/comments/1x8rt4k/) | 投稿・本文訂正を確認。[原稿・記録](integration/reddit/POST.md)。継続掲載は未監視 |
 | Reddit r/sideprojects | [投稿](https://www.reddit.com/r/sideprojects/comments/1x8shm2/) | フィルター削除。モデレーターへ確認依頼済み、承認・再掲載は未確認。[記録](integration/reddit/SIDEPROJECTS.md) |
 | Zenn | [開く](https://zenn.dev/5garashi_com/articles/mdeditor-diagrams-math-pdf) | 公開確認済み |
