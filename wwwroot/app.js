@@ -8,6 +8,7 @@
 */
 (() => {
   const editorHost = document.getElementById("editor");
+  let applyingHostEdits = false;
   const preview = document.getElementById("preview");
   const documentName = document.getElementById("document-name");
   const saveState = document.getElementById("save-state");
@@ -36,6 +37,9 @@
       sample: "サンプル", sampleHeading: "サンプルを開く",
       sampleIntro: "図と数式を含む文書を、編集欄に入れて試せます。短い例のほかに、使えるすべての図・チャート・数式を確かめる長い文書（日本語・英語）もあります。選んだときだけ入ります。",
       settingsExport: "書き出し",
+      settingsMarkdown: "Markdown の書き方",
+      settingsNearGitHub: "GitHub での表示に近づける（mdEditor 独自の書き方を使わない）",
+      settingsNearGitHubNote: "オンにすると、GitHub にない mdEditor 独自の書き方（x^2^ の上付き、H~2~O の下付き、==強調==、++挿入++、定義リスト、::: の囲み、{#id} などの属性、略語、罫線の表、a. の番号）を、GitHub と同じく書いたとおりの文字で表示し、~文字~ を取り消し線にします。PDF などの書き出しも同じです。表示を GitHub に近づけるための設定で、GitHub と完全に同じにはなりません（図・地図・3D モデル、コードの色分け、数式の描き方などは mdEditor のままです）。",
       settingsHtmlSource: "HTMLに保存するとき、元の Markdown も入れる（mdEditor で開くと元どおりに戻せる）",
       settingsHtmlSourceNote: "HTML の中に、元の文章がそのまま入ります。画面に出ないコメント（<!-- -->）も含まれるので、人に渡す前に確かめてください。入れない場合も、mdEditor で開くと Markdown に変換して開けます（色や配置、図の絵は戻りません）。",
       sampleLoadFailed: "サンプルを読み込めませんでした。mdEditor を入れ直してから、もう一度お試しください。",
@@ -85,6 +89,21 @@
       mapLabel: "地図（GeoJSON）", mapEmpty: "地図に描く図形がありません",
       toc: "目次", tocNoHeadings: "目次にする見出しがありません。「## 見出し」のように見出しを書いてから、もう一度押してください。",
       dropInsert: "カーソルの位置に入れる", dropOpen: "ファイルとして開く",
+      imageButton: "画像の調整", imageHeading: "画像の大きさと位置",
+      imageTarget: (name) => `対象の画像: ${name}`,
+      imageSize: "大きさ", imageSizeOriginal: "元の大きさ（指定しない）", imageSize25: "本文の幅の 25%", imageSize50: "本文の幅の 50%",
+      imageSize75: "本文の幅の 75%", imageSize100: "本文の幅いっぱい（100%）", imageSizePixels: "幅をピクセルで指定", imagePixels: "幅（ピクセル）",
+      imagePosition: "位置", imagePositionNone: "指定しない（左）", imagePositionCenter: "中央", imagePositionRight: "右",
+      imagePositionFloatLeft: "左に置き、右側に文章を回り込ませる", imagePositionFloatRight: "右に置き、左側に文章を回り込ませる",
+      imageAloneNote: "この画像は、同じ行にほかの文字や画像があるため、「中央」と「右」は選べません。選ぶときは、画像だけの行にしてください。",
+      imageApply: "変更する",
+      imageNote: "GitHub と同じ書き方（HTML の <img width=\"50%\"> や <p align=\"center\">）に書き換えます。「元の大きさ」と「指定しない」に戻すと、Markdown の ![説明](ファイル) に戻ります。Ctrl+Z で取り消せます。",
+      imageNone: "画像が見つかりません。編集欄で画像（![説明](ファイル) か <img>）の行にカーソルを置くか、プレビューの画像を右クリックしてから、もう一度お試しください。",
+      imageMoved: "プレビューの画像の場所が、編集欄と合いませんでした。プレビューが新しくなってから、もう一度右クリックしてください。",
+      imagePixelsInvalid: "幅は 1 から 10000 までの数で入れてください。",
+      imageChanged: (size, position) => `画像を「${size}・${position}」にしました。Ctrl+Z で取り消せます。`,
+      imageSizeWords: { original: "元の大きさ", pixels: (px) => `幅 ${px} ピクセル`, percent: (p) => `本文の幅の ${p}%` },
+      imagePositionWords: { none: "位置の指定なし", center: "中央", right: "右", floatLeft: "左に置いて回り込み", floatRight: "右に置いて回り込み" },
       tocUpdated: "目次を新しくしました。", tocInserted: "カーソルの位置に目次を入れました。見出しを変えたら、もう一度「目次」を押すと新しくなります。",
       help: "書き方", helpTitle: "Markdown の書き方 (F1)", helpHeading: "Markdown の簡単な書き方",
       shortcuts: "キー操作", shortcutHeading: "キーボードショートカット",
@@ -133,7 +152,7 @@
         help: "Markdown の書き方", shortcuts: "キー操作の一覧", fullscreenEditor: "編集画面をウィンドウ全体に表示",
         fullscreenPreview: "プレビューをウィンドウ全体に表示", nextPane: "次の欄へ移動", previousPane: "前の欄へ移動",
         windowFullscreen: "ウィンドウの全画面表示", settings: "設定", readAloud: "読み上げ・一時停止", stopReading: "読み上げを停止", html: "HTMLに保存", png: "PNGに保存", docx: "Wordに保存", openUrl: "URLを開く",
-        detachPreview: "プレビューを別ウィンドウで表示・本体に戻す"
+        detachPreview: "プレビューを別ウィンドウで表示・本体に戻す", image: "画像の大きさと位置"
       },
       helpIntro: "左の書き方で入力すると、右のように表示されます。「挿入」を押すと、編集欄のカーソル位置に例を入れます。",
       helpItem: "項目", helpSyntax: "書き方", helpResult: "表示", helpInsert: "挿入",
@@ -171,6 +190,9 @@
       sample: "Samples", sampleHeading: "Open a sample",
       sampleIntro: "Try a document with diagrams and math. Besides the short examples, there are long tests of every supported diagram, chart, and formula (Japanese and English). Nothing is inserted until you choose one.",
       settingsExport: "Export",
+      settingsMarkdown: "Markdown syntax",
+      settingsNearGitHub: "Show documents closer to GitHub (no mdEditor-only syntax)",
+      settingsNearGitHubNote: "When on, mdEditor's own syntax that GitHub does not have (x^2^ superscript, H~2~O subscript, ==highlight==, ++insert++, definition lists, ::: containers, attributes such as {#id}, abbreviations, grid tables, and a. numbering) shows as the plain text you wrote, as on GitHub, and ~text~ is struck through. Exports such as PDF follow it too. This brings the display closer to GitHub but does not make it identical (diagrams, maps, 3D models, code colors, and how math is drawn stay mdEditor's own).",
       settingsHtmlSource: "Keep the original Markdown in saved HTML (opens back exactly in mdEditor)",
       settingsHtmlSourceNote: "The original text goes into the HTML file as it is, including comments (<!-- -->) that are never shown, so check it before you share the file. Without it, mdEditor still opens the HTML by converting it to Markdown (colors, layout, and drawn diagrams do not come back).",
       sampleLoadFailed: "The sample could not be loaded. Reinstall mdEditor, then try again.",
@@ -220,6 +242,21 @@
       mapLabel: "Map (GeoJSON)", mapEmpty: "There are no shapes to draw on the map",
       toc: "Contents", tocNoHeadings: "There are no headings for a table of contents. Write headings such as \"## Heading\", then press it again.",
       dropInsert: "Insert at the cursor", dropOpen: "Open as a file",
+      imageButton: "Adjust image", imageHeading: "Image size and position",
+      imageTarget: (name) => `Image: ${name}`,
+      imageSize: "Size", imageSizeOriginal: "Original size (not set)", imageSize25: "25% of the text width", imageSize50: "50% of the text width",
+      imageSize75: "75% of the text width", imageSize100: "Full text width (100%)", imageSizePixels: "Width in pixels", imagePixels: "Width (pixels)",
+      imagePosition: "Position", imagePositionNone: "Not set (left)", imagePositionCenter: "Center", imagePositionRight: "Right",
+      imagePositionFloatLeft: "Left, with text flowing on its right", imagePositionFloatRight: "Right, with text flowing on its left",
+      imageAloneNote: "Center and Right are not available because this image shares its line with other text or images. Put the image on a line of its own to use them.",
+      imageApply: "Change",
+      imageNote: "The image is rewritten the way GitHub does it (HTML such as <img width=\"50%\"> and <p align=\"center\">). Choosing Original size and Not set turns it back into Markdown, ![description](file). Ctrl+Z undoes the change.",
+      imageNone: "No image was found. Put the cursor on a line with an image (![description](file) or <img>) in the editor, or right-click an image in the preview, then try again.",
+      imageMoved: "The image in the preview no longer matches the editor. Wait for the preview to update, then right-click it again.",
+      imagePixelsInvalid: "Enter a width from 1 to 10000.",
+      imageChanged: (size, position) => `The image is now ${size}, ${position}. Ctrl+Z undoes it.`,
+      imageSizeWords: { original: "original size", pixels: (px) => `${px} pixels wide`, percent: (p) => `${p}% of the text width` },
+      imagePositionWords: { none: "position not set", center: "centered", right: "on the right", floatLeft: "on the left with text flowing", floatRight: "on the right with text flowing" },
       tocUpdated: "The table of contents was updated.", tocInserted: "A table of contents was inserted at the cursor. After changing headings, press Contents again to update it.",
       help: "Syntax", helpTitle: "Markdown syntax (F1)", helpHeading: "Markdown quick reference",
       shortcuts: "Keys", shortcutHeading: "Keyboard shortcuts",
@@ -268,7 +305,7 @@
         help: "Markdown syntax", shortcuts: "Keyboard shortcuts", fullscreenEditor: "Fill window with editor",
         fullscreenPreview: "Fill window with preview", nextPane: "Next pane", previousPane: "Previous pane",
         windowFullscreen: "Window full screen", settings: "Settings", readAloud: "Read aloud / pause", stopReading: "Stop reading", html: "Save as HTML", png: "Save as PNG", docx: "Save as Word", openUrl: "Open URL",
-        detachPreview: "Preview in its own window / return"
+        detachPreview: "Preview in its own window / return", image: "Image size and position"
       },
       helpIntro: "Type the syntax on the left to get the result on the right. Insert puts the example at the cursor in the editor.",
       helpItem: "Item", helpSyntax: "Syntax", helpResult: "Result", helpInsert: "Insert",
@@ -388,9 +425,10 @@
     EditorView.lineWrapping,
     editorAttributes.of(editorAttributeValues()),
     editorExtras.of(editorExtrasFor(displaySettings)),
-    // Every edit goes to the host, which tracks the text and the unsaved state.
+    // Every edit goes to the host, which tracks the text and the unsaved state
+    // (edits the host itself asked for, such as links rewritten on Save As, are marked).
     EditorView.updateListener.of((update) => {
-      if (update.docChanged) post({ type: "change", text: update.state.doc.toString() });
+      if (update.docChanged) post({ type: "change", text: update.state.doc.toString(), host: applyingHostEdits });
     })
   ];
   const view = new EditorView({ parent: editorHost, state: EditorState.create({ doc: "", extensions: editorExtensions() }) });
@@ -621,6 +659,188 @@
     if (!url) return;
     urlDialog.close();
     post({ type: "openUrl", url });
+  });
+
+  // Image size and position, written as GitHub READMEs do it: <img width="50%">,
+  // <img align="left"> to let text flow, and <p align="center"><img></p>. It works on
+  // the image at the cursor, or the one right-clicked in the preview (data-source is
+  // where it starts in the editor). The change is one edit, so Ctrl+Z undoes it.
+  const imageDialog = document.getElementById("image-dialog");
+  const imagePixels = document.getElementById("image-pixels");
+  const imageAloneNote = document.getElementById("image-alone-note");
+  let imageTarget = null;
+  const markdownImagePattern = /!\[((?:\\.|[^\]\\])*)\]\(\s*(<[^>\n]*>|(?:[^\s()\\]|\\.|\((?:[^\s()\\]|\\.)*\))+)(?:\s+("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\((?:\\.|[^)\\])*\)))?\s*\)/g;
+  const htmlImagePattern = /<img\b[^>]*>/gi;
+  const unescapeMarkdown = (text) => text.replace(/\\([!-/:-@[-`{-~])/g, "$1");
+  const escapeAttribute = (text) => text.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const decodeAttribute = (text) => {
+    const area = document.createElement("textarea");
+    area.innerHTML = text;
+    return area.value;
+  };
+  // The attributes of an HTML tag, in order, as [name, value] pairs.
+  const tagAttributes = (tag) => [...tag.replace(/^<[a-z]+/i, "").replace(/\/?>$/, "")
+    .matchAll(/([^\s"'>/=]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+)))?/g)]
+    .map((match) => [match[1].toLowerCase(), decodeAttribute(match[2] ?? match[3] ?? match[4] ?? "")]);
+  const attributeOf = (attributes, name) => attributes.find(([key]) => key === name)?.[1];
+
+  // Images on one editor line: Markdown ![alt](src "title") and HTML <img>.
+  const imagesInLine = (line) => {
+    const found = [];
+    for (const match of line.text.matchAll(markdownImagePattern)) {
+      const destination = match[2].startsWith("<") ? match[2].slice(1, -1) : match[2];
+      const title = match[3] ? unescapeMarkdown(match[3].slice(1, -1)) : "";
+      found.push({
+        from: line.from + match.index, to: line.from + match.index + match[0].length,
+        attributes: [["src", unescapeMarkdown(destination).replace(/ /g, "%20")], ["alt", unescapeMarkdown(match[1])], ...(title ? [["title", title]] : [])]
+      });
+    }
+    for (const match of line.text.matchAll(htmlImagePattern)) {
+      found.push({ from: line.from + match.index, to: line.from + match.index + match[0].length, attributes: tagAttributes(match[0]) });
+    }
+    return found.sort((a, b) => a.from - b.from);
+  };
+
+  // The image at pos (or the only one on its line), and whether it is the whole
+  // line, alone or in <p align>/<div align>: only then can it be centered or put right.
+  const findImage = (pos, startsAt = false) => {
+    const line = view.state.doc.lineAt(pos);
+    const images = imagesInLine(line);
+    const image = startsAt
+      ? images.find((item) => item.from === pos)
+      : images.find((item) => item.from <= pos && pos <= item.to) ?? (images.length === 1 ? images[0] : null);
+    if (!image) return null;
+    const indent = line.text.match(/^\s*/)[0];
+    const rest = line.text.slice(indent.length).trimEnd();
+    const wrapper = rest.match(/^<(p|div)\b[^>]*>\s*(<img\b[^>]*>)\s*<\/\1>$/i);
+    const tag = view.state.sliceDoc(image.from, image.to);
+    const alone = indent.length < 4 && (rest === tag || Boolean(wrapper && wrapper[2] === tag));
+    const wrapperAlign = wrapper && wrapper[2] === tag ? (attributeOf(tagAttributes(rest.match(/^<[^>]*>/)[0]), "align") ?? "").toLowerCase() : "";
+    return { ...image, line, indent, alone, wrapperAlign };
+  };
+
+  const imageSizeOf = (width) => {
+    const value = (width ?? "").trim();
+    if (!value) return { size: "original" };
+    const percent = value.match(/^(25|50|75|100)%$/);
+    if (percent) return { size: percent[1] };
+    const pixels = value.match(/^(\d+)(?:px)?$/);
+    return pixels ? { size: "pixels", pixels: pixels[1] } : { size: "original" };
+  };
+
+  const updateImagePixels = () => {
+    imagePixels.disabled = imageDialog.querySelector("input[name='image-size']:checked")?.value !== "pixels";
+  };
+  for (const input of imageDialog.querySelectorAll("input[name='image-size']")) input.addEventListener("change", updateImagePixels);
+
+  const openImageDialog = (at) => {
+    if (previewWindow) {
+      post({ type: "command", id: "image", at });
+      return;
+    }
+    const fromPreview = Number.isInteger(at);
+    const image = fromPreview
+      ? (at <= view.state.doc.length ? findImage(at, true) : null)
+      : findImage(view.state.selection.main.head);
+    if (!image) {
+      showNoticeMessage(t(fromPreview ? "imageMoved" : "imageNone"));
+      view.focus();
+      return;
+    }
+    imageTarget = image;
+    selectRange(image.from, image.to);
+    const name = attributeOf(image.attributes, "alt") || decodeURIComponent((attributeOf(image.attributes, "src") ?? "").split(/[?#]/)[0].split("/").pop() || "");
+    document.getElementById("image-name").textContent = t("imageTarget")(name);
+    const { size, pixels } = imageSizeOf(attributeOf(image.attributes, "width"));
+    imageDialog.querySelector(`input[name='image-size'][value='${size}']`).checked = true;
+    imagePixels.value = pixels ?? "";
+    updateImagePixels();
+    const align = (attributeOf(image.attributes, "align") ?? "").toLowerCase();
+    const position = image.wrapperAlign === "center" || image.wrapperAlign === "right" ? image.wrapperAlign
+      : align === "left" ? "floatLeft" : align === "right" ? "floatRight" : "none";
+    for (const input of imageDialog.querySelectorAll("input[name='image-position']")) {
+      input.disabled = !image.alone && (input.value === "center" || input.value === "right");
+      input.checked = input.value === position;
+    }
+    imageAloneNote.hidden = image.alone;
+    imageDialog.showModal();
+    imageDialog.querySelector("input[name='image-size']:checked").focus();
+  };
+
+  const applyImage = () => {
+    const image = imageTarget;
+    const size = imageDialog.querySelector("input[name='image-size']:checked").value;
+    const position = imageDialog.querySelector("input[name='image-position']:checked").value;
+    const pixels = Number(imagePixels.value);
+    if (size === "pixels" && !(Number.isInteger(pixels) && pixels >= 1 && pixels <= 10000)) {
+      showNoticeMessage(t("imagePixelsInvalid"));
+      imagePixels.focus();
+      return false;
+    }
+    // The text may have changed under the dialog; the image must still be where it was.
+    if (!image || view.state.sliceDoc(image.from, image.to) !== image.line.text.slice(image.from - image.line.from, image.to - image.line.from)
+        || view.state.doc.lineAt(image.from).text !== image.line.text) {
+      showNoticeMessage(t("imageNone"));
+      return true;
+    }
+
+    let attributes = image.attributes.filter(([name]) => !["width", "align", "data-source"].includes(name));
+    if (size !== "original") {
+      // A new width keeps the picture's proportions, so an old height goes.
+      attributes = attributes.filter(([name]) => name !== "height");
+      attributes.push(["width", size === "pixels" ? String(pixels) : `${size}%`]);
+    }
+    if (position === "floatLeft" || position === "floatRight") attributes.push(["align", position === "floatLeft" ? "left" : "right"]);
+    if (!attributes.some(([name]) => name === "alt")) attributes.splice(1, 0, ["alt", ""]);
+    const wrapped = position === "center" || position === "right";
+    const plain = !wrapped && attributes.every(([name]) => name === "src" || name === "alt" || name === "title");
+    let text;
+    if (plain) {
+      // Nothing GitHub needs HTML for: back to Markdown.
+      const source = attributeOf(attributes, "src") ?? "";
+      const title = attributeOf(attributes, "title");
+      const destination = /[\s()<>]/.test(source) ? `<${source.replace(/[<>]/g, (c) => encodeURIComponent(c))}>` : source;
+      text = `![${(attributeOf(attributes, "alt") ?? "").replace(/[[\]\\]/g, "\\$&")}](${destination}${title ? ` "${title.replace(/["\\]/g, "\\$&")}"` : ""})`;
+    } else {
+      const ordered = [...attributes.filter(([name]) => name === "src"), ...attributes.filter(([name]) => name === "alt"),
+        ...attributes.filter(([name]) => name !== "src" && name !== "alt")];
+      text = `<img ${ordered.map(([name, value]) => `${name}="${escapeAttribute(value)}"`).join(" ")}>`;
+      if (wrapped) text = `<p align="${position}">${text}</p>`;
+    }
+
+    let from = image.from;
+    let to = image.to;
+    if (image.alone) {
+      // The whole line: an HTML block ends at a blank line, so text right below gets one.
+      from = image.line.from + image.indent.length;
+      to = image.line.to;
+      const next = image.line.number < view.state.doc.lines ? view.state.doc.line(image.line.number + 1) : null;
+      if (!plain && next && next.text.trim() !== "") text += "\n";
+    }
+    view.dispatch({ changes: { from, to, insert: text }, selection: EditorSelection.single(from, from + text.length), scrollIntoView: true });
+    const words = t("imageSizeWords");
+    showNoticeMessage(t("imageChanged")(
+      size === "original" ? words.original : size === "pixels" ? words.pixels(pixels) : words.percent(size),
+      t("imagePositionWords")[position]));
+    return true;
+  };
+
+  document.getElementById("image-button").addEventListener("click", () => openImageDialog());
+  document.getElementById("image-close").addEventListener("click", () => imageDialog.close());
+  imageDialog.addEventListener("close", () => {
+    imageTarget = null;
+    if (!previewWindow) view.focus();
+  });
+  document.getElementById("image-form").addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (applyImage()) imageDialog.close();
+  });
+  // Right-click on a picture in the preview opens the same dialog for it.
+  preview.addEventListener("contextmenu", (event) => {
+    const image = event.target instanceof Element ? event.target.closest("img[data-source]") : null;
+    if (!image) return;
+    event.preventDefault();
+    openImageDialog(Number(image.dataset.source));
   });
 
   // Internet images (ask, always, never) belong to the host, which renders the preview.
@@ -878,6 +1098,11 @@
     { ja: ["画像", "![画像の説明](https://example.com/image.png)", "<small>画像が表示されます</small>"],
       en: ["Image", "![image description](https://example.com/image.png)", "<small>The image is shown</small>"] },
     { block: true,
+      ja: ["画像の大きさと位置", '<p align="center"><img src="https://example.com/image.png" alt="画像の説明" width="50%"></p>',
+        "<small>本文の幅の半分の大きさで、中央に表示されます（GitHub と同じ書き方）。画像の行で「画像の調整」を押すか、プレビューの画像を右クリックしても書き換えられます</small>"],
+      en: ["Image size and position", '<p align="center"><img src="https://example.com/image.png" alt="image description" width="50%"></p>',
+        "<small>Shown at half the text width, centered (written as on GitHub). Adjust image on the image's line, or right-clicking the image in the preview, rewrites it for you</small>"] },
+    { block: true,
       ja: ["箇条書き", "- 項目1\n- 項目2\n  - 入れ子の項目", "<ul><li>項目1</li><li>項目2<ul><li>入れ子の項目</li></ul></li></ul>"],
       en: ["Bulleted list", "- Item 1\n- Item 2\n  - Nested item", "<ul><li>Item 1</li><li>Item 2<ul><li>Nested item</li></ul></li></ul>"] },
     { block: true,
@@ -922,6 +1147,12 @@
     { block: true, mermaid: true,
       ja: ["マインドマップ", "```mermaid\nmindmap\n  root((mdEditor))\n    書く\n    見る\n    渡す\n```", ""],
       en: ["Mind map", "```mermaid\nmindmap\n  root((mdEditor))\n    Write\n    View\n    Share\n```", ""] },
+    { block: true, mermaid: true,
+      ja: ["棒グラフ・折れ線グラフ", "```mermaid\nxychart-beta\n  title \"月別の件数\"\n  x-axis [\"1月\", \"2月\", \"3月\", \"4月\"]\n  y-axis \"件数\" 0 --> 40\n  bar [12, 18, 25, 31]\n  line [12, 18, 25, 31]\n```", ""],
+      en: ["Bar and line chart", "```mermaid\nxychart-beta\n  title \"Documents per month\"\n  x-axis [Jan, Feb, Mar, Apr]\n  y-axis \"Count\" 0 --> 40\n  bar [12, 18, 25, 31]\n  line [12, 18, 25, 31]\n```", ""] },
+    { block: true, mermaid: true,
+      ja: ["タイムライン", "```mermaid\ntimeline\n  title 作業の流れ\n  10月1日 : 書き始める\n  10月5日 : 見直す\n          : 図を足す\n  10月10日 : 公開する\n```", ""],
+      en: ["Timeline", "```mermaid\ntimeline\n  title How the work goes\n  Oct 1 : Start writing\n  Oct 5 : Review\n        : Add diagrams\n  Oct 10 : Publish\n```", ""] },
     // Math: the result column renders each example with KaTeX.
     { group: { ja: "数式（KaTeX）", en: "Math (KaTeX)" } },
     { math: "E = mc^2", ja: ["文中の数式", "$E = mc^2$", ""], en: ["Inline math", "$E = mc^2$", ""] },
@@ -941,7 +1172,28 @@
       en: ["Cases", "$$\nf(x) = \\begin{cases} 1 & (x > 0) \\\\ 0 & (x \\le 0) \\end{cases}\n$$", ""] },
     { block: true, math: "\\begin{aligned} y &= (x + 1)^2 \\\\ &= x^2 + 2x + 1 \\end{aligned}", display: true,
       ja: ["複数行の式", "$$\n\\begin{aligned} y &= (x + 1)^2 \\\\ &= x^2 + 2x + 1 \\end{aligned}\n$$", ""],
-      en: ["Aligned equations", "$$\n\\begin{aligned} y &= (x + 1)^2 \\\\ &= x^2 + 2x + 1 \\end{aligned}\n$$", ""] }
+      en: ["Aligned equations", "$$\n\\begin{aligned} y &= (x + 1)^2 \\\\ &= x^2 + 2x + 1 \\end{aligned}\n$$", ""] },
+    // GitHub's own additions (each also in samples/diagram-test, 20).
+    { group: { ja: "GitHub と同じ書き方", en: "Written as on GitHub" } },
+    { block: true,
+      ja: ["注意書き", "> [!NOTE]\n> 補足の情報です。", '<blockquote><strong>Note</strong><br>補足の情報です。</blockquote><small>[!TIP]・[!IMPORTANT]・[!WARNING]・[!CAUTION] もあります</small>'],
+      en: ["Alert", "> [!NOTE]\n> Useful information.", '<blockquote><strong>Note</strong><br>Useful information.</blockquote><small>[!TIP], [!IMPORTANT], [!WARNING], and [!CAUTION] work too</small>'] },
+    { block: true,
+      ja: ["折りたたみ", "<details>\n<summary>クリックで開く</summary>\n\n折りたたまれた本文です。\n\n</details>", "<details><summary>クリックで開く</summary>折りたたまれた本文です。</details>"],
+      en: ["Collapsible section", "<details>\n<summary>Click to open</summary>\n\nThe collapsed text.\n\n</details>", "<details><summary>Click to open</summary>The collapsed text.</details>"] },
+    { ja: ["キーの表示", "<kbd>Ctrl</kbd>+<kbd>S</kbd>", "<kbd>Ctrl</kbd>+<kbd>S</kbd>"],
+      en: ["Keys", "<kbd>Ctrl</kbd>+<kbd>S</kbd>", "<kbd>Ctrl</kbd>+<kbd>S</kbd>"] },
+    { ja: ["絵文字", ":rocket: :memo: :warning:", "🚀 📝 ⚠️"], en: ["Emoji", ":rocket: :memo: :warning:", "🚀 📝 ⚠️"] },
+    // Other drawings and media (samples/diagram-test, 16 and 21).
+    { group: { ja: "そのほかの図と動画", en: "Other drawings and video" } },
+    { block: true,
+      ja: ["Graphviz の図", "```dot\ndigraph {\n  開く -> 編集 -> 保存\n}\n```", "<small>矢印でつないだ図が描かれます（GitHub ではコードのまま）</small>"],
+      en: ["Graphviz diagram", "```dot\ndigraph {\n  Open -> Edit -> Save\n}\n```", "<small>Drawn as boxes joined by arrows (GitHub shows the code)</small>"] },
+    { block: true,
+      ja: ["地図", "```geojson\n{ \"type\": \"Point\", \"coordinates\": [139.767, 35.681] }\n```", "<small>世界地図の上に点が描かれます（経度・緯度の順）</small>"],
+      en: ["Map", "```geojson\n{ \"type\": \"Point\", \"coordinates\": [139.767, 35.681] }\n```", "<small>A point is drawn on a world map (longitude, then latitude)</small>"] },
+    { ja: ["動画", "![動画の説明](clip.mp4)", "<small>文書と同じフォルダーの動画を再生します（.mp4・.webm・.mov など）</small>"],
+      en: ["Video", "![video description](clip.mp4)", "<small>Plays a video beside the document (.mp4, .webm, .mov, and so on)</small>"] }
   ];
   const helpDialog = document.getElementById("help-dialog");
   const helpButton = document.getElementById("help-button");
@@ -1121,6 +1373,9 @@
     });
   }
   backupCheckbox.addEventListener("change", () => post({ type: "setAutoBackup", enabled: backupCheckbox.checked }));
+  // Closer to GitHub changes how the host reads Markdown, so the host keeps it.
+  const nearGitHubCheckbox = document.getElementById("setting-near-github");
+  nearGitHubCheckbox.addEventListener("change", () => post({ type: "setNearGitHub", enabled: nearGitHubCheckbox.checked }));
   document.getElementById("zoom-in").addEventListener("click", () => post({ type: "zoom", action: "in" }));
   document.getElementById("zoom-out").addEventListener("click", () => post({ type: "zoom", action: "out" }));
   document.getElementById("zoom-reset").addEventListener("click", () => post({ type: "zoom", action: "reset" }));
@@ -1294,6 +1549,7 @@
     { id: "encoding", keys: "Ctrl+Shift+E", button: "encoding-button", run: () => openEncodingDialog() },
     { id: "findReplace", keys: "Ctrl+H", button: "replace-button", run: () => openFindBar() },
     { id: "toc", keys: "Ctrl+Shift+J", button: "toc-button", run: () => post({ type: "toc" }) },
+    { id: "image", keys: "Ctrl+Shift+F", button: "image-button", run: (at) => openImageDialog(at) },
     { id: "findNext", keys: "F3", button: "find-next", run: () => (findBar.hidden ? openFindBar() : findText(true)) },
     { id: "findPrev", keys: "Shift+F3", button: "find-prev", run: () => (findBar.hidden ? openFindBar() : findText(false)) },
     { id: "replaceAll", keys: "Ctrl+Shift+H", button: "replace-all", run: () => (findBar.hidden || !findInput.value ? openFindBar() : replaceAll()) },
@@ -2513,6 +2769,7 @@
     for (const element of copy.querySelectorAll("*")) {
       if (element.dataset.anchor) element.id = element.dataset.anchor;
       element.removeAttribute("data-line");
+      element.removeAttribute("data-source");
       element.removeAttribute("data-anchor");
       if (element.getAttribute("tabindex") === "-1") element.removeAttribute("tabindex");
       element.classList.remove("reading", "diagram-rendered", "diagram-pending");
@@ -2650,6 +2907,14 @@
     if (message.type === "tocText") {
       if (message.text) placeToc(message.text);
       else showNoticeMessage(t("tocNoHeadings"));
+    } else if (message.type === "applyEdits") {
+      // One transaction, so Ctrl+Z undoes them together; the cursor keeps its place.
+      applyingHostEdits = true;
+      try {
+        view.dispatch({ changes: message.edits.map(({ from, to, insert }) => ({ from, to, insert })) });
+      } finally {
+        applyingHostEdits = false;
+      }
     } else if (message.type === "discarded") {
       discardedName = message.name ?? null;
       updateRestoreButton();
@@ -2687,7 +2952,7 @@
       if (previewWindow) scrollPreviewToLine(message.line, message.edge);
       else scrollEditorToLine(message.line, message.edge);
     } else if (message.type === "runCommand") {
-      shortcutDefinitions.find((item) => item.id === message.id)?.run();
+      shortcutDefinitions.find((item) => item.id === message.id)?.run(message.at ?? undefined);
     } else if (message.type === "externalImages") {
       externalSelect.value = message.value;
     } else if (message.type === "externalNotice") {
@@ -2708,6 +2973,8 @@
       zoomValue.textContent = `${Math.round(message.factor * 100)}%`;
     } else if (message.type === "autoBackup") {
       backupCheckbox.checked = Boolean(message.enabled);
+    } else if (message.type === "nearGitHub") {
+      nearGitHubCheckbox.checked = Boolean(message.enabled);
     } else if (message.type === "encodingNotice") {
       // No encoding to announce clears the line, but never the held-back image
       // notice: that one changes only with the images (externalNotice).

@@ -565,6 +565,18 @@ body.dragging {
   font-size: 12px;
 }
 
+.help-result kbd {
+  padding: 0 4px;
+  border: 1px solid var(--document-foreground);
+  border-radius: 4px;
+  font-family: Consolas, "Cascadia Mono", monospace;
+  font-size: 0.9em;
+}
+
+.help-result summary {
+  cursor: pointer;
+}
+
 .help-h1,
 .help-h2,
 .help-h3 {
@@ -807,6 +819,59 @@ body.capture-export .preview-content {
   flex-wrap: wrap;
   gap: 8px;
   margin: 12px 16px 0;
+}
+
+/* Image size and position: the encoding dialog's options, in two groups side by side
+   (stacked when the window is narrow). */
+.image-dialog {
+  width: min(800px, calc(100vw - 32px));
+}
+
+.image-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 12px;
+  margin: 0 16px;
+}
+
+.image-groups .encoding-options {
+  margin: 0;
+}
+
+.image-dialog form {
+  margin: 0;
+}
+
+.image-pixels-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0 4px 28px;
+}
+
+.image-pixels-row input {
+  width: 8em;
+  min-height: 44px;
+  padding: 4px 8px;
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  color: var(--ink);
+  background: var(--card);
+  font: inherit;
+}
+
+.image-pixels-row input:disabled {
+  border-style: dashed;
+}
+
+.image-dialog .encoding-option:has(input:disabled) {
+  cursor: default;
+}
+
+.image-note {
+  margin: 4px 0;
+  padding: 0;
 }
 
 .find-bar {

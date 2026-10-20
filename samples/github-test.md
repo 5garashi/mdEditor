@@ -64,6 +64,32 @@ GitHub が表示する書き方を、mdEditor でも同じように表示でき�
 
 ![昼だけ](import-test-images/sample.png#gh-light-mode-only) ![夜だけ](import-test-images/sample.png#gh-dark-mode-only)
 
+## 画像の大きさと位置
+
+編集欄で画像の行にカーソルを置いて「画像の調整」（Ctrl+Shift+F）を押すか、プレビューの画像を右クリックすると、次の書き方に書き換えられます。
+
+<p align="right"><img src="import-test-images/sample.png" alt="本文の幅の 25% で右に置いた画像" width="25%"></p>
+
+<img src="import-test-images/sample.png" alt="左に置き、文章を回り込ませた画像" width="96" align="left">
+
+この段落は、左の画像の右側に回り込みます。GitHub と同じく、`align="left"` の画像は左に寄り、続く文章がその右に並びます。
+
+<img src="import-test-images/sample.png" alt="右に置き、文章を回り込ませた画像" width="96" align="right">
+
+この段落は、右の画像の左側に回り込みます。
+
+<br clear="all">
+
+`<br clear="all">` で回り込みが終わり、この段落は画像の下から始まります。
+
+## メールアドレスと表の中の縦棒
+
+連絡先 info@example.com のようなメールアドレスは、GitHub と同じくリンクになります。
+
+| 書き方 | 意味 |
+| --- | --- |
+| `a \| b` | コードの中の縦棒（`\|` と書く） |
+
 ## 動画
 
 同じフォルダーの動画は、そのまま再生できる（画像の書き方・リンクだけの行・`<video>` のどれでもよい）。インターネット上の動画は、画像と同じく、許可するまで読み込まない。PDF・PNG・Word には動画の名前が、保存した HTML には動画へのリンクが入る。

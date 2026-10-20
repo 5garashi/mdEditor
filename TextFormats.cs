@@ -194,7 +194,7 @@ internal static class PlainTextExport
                     ? FrontMatter.ToText(matter)
                     : string.Join("\n", yamlLines.Where(line => line.Trim() != "---"));
             case HtmlBlock html:
-                return StripHtml(Lines(html));
+                return StripHtml(HtmlImages(Lines(html), context));
             case CodeBlock code:
                 return Lines(code);
             case ThematicBreakBlock:
@@ -282,6 +282,9 @@ internal static class PlainTextExport
                 case HtmlEntityInline entity:
                     text.Append(entity.Transcoded.ToString());
                     break;
+                case HtmlInline html when Regex.IsMatch(html.Tag, @"^<img\b", RegexOptions.IgnoreCase):
+                    text.Append(WebUtility.HtmlDecode(HtmlImages(html.Tag, context)));
+                    break;
                 case HtmlInline html when Regex.IsMatch(html.Tag, @"^<br\b", RegexOptions.IgnoreCase):
                     text.Append('\n');
                     break;
@@ -315,6 +318,15 @@ internal static class PlainTextExport
 
     private static string Lines(LeafBlock block) =>
         string.Join("\n", block.Lines.Lines.Take(block.Lines.Count).Select(line => line.Slice.ToString()));
+
+    // A picture written as HTML (<img alt="...">) reads like a Markdown one: ［説明］.
+    private static string HtmlImages(string html, Context context) =>
+        Regex.Replace(html, @"<img\b[^>]*>", match =>
+        {
+            var alt = Regex.Match(match.Value, @"\salt\s*=\s*(?:""([^""]*)""|'([^']*)')", RegexOptions.IgnoreCase);
+            var text = WebUtility.HtmlDecode(alt.Groups[1].Success ? alt.Groups[1].Value : alt.Groups[2].Value).Trim();
+            return WebUtility.HtmlEncode(context.Japanese ? $"［{(text.Length > 0 ? text : "画像")}］" : $"[{(text.Length > 0 ? text : "Image")}]");
+        }, RegexOptions.IgnoreCase);
 
     public static string? StripHtml(string html)
     {

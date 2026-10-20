@@ -41,10 +41,10 @@ Emoji :smile: :+1: :tada: (the smiley :) stays text)
 Math block:
 
 ```math
-int_0^1 x^2,dx = rac{1}{3}
+\int_0^1 x^2\,dx = \frac{1}{3}
 ```
 
-Inline math $`sqrt{2} approx 1.414`$ here.
+Inline math $`\sqrt{2} \approx 1.414`$ here.
 
 <details>
 <summary>Click to open</summary>
@@ -63,6 +63,32 @@ A **collapsed** section.
 </picture>
 
 ![Day only](import-test-images/sample.png#gh-light-mode-only) ![Night only](import-test-images/sample.png#gh-dark-mode-only)
+
+## Image size and position
+
+Put the cursor on an image's line in the editor and press Adjust image (Ctrl+Shift+F), or right-click the image in the preview, to have it rewritten like these.
+
+<p align="right"><img src="import-test-images/sample.png" alt="An image at 25% of the text width, on the right" width="25%"></p>
+
+<img src="import-test-images/sample.png" alt="An image on the left with text flowing around it" width="96" align="left">
+
+This paragraph flows on the right of the image. As on GitHub, an image with `align="left"` sits on the left and the text after it runs beside it.
+
+<img src="import-test-images/sample.png" alt="An image on the right with text flowing around it" width="96" align="right">
+
+This paragraph flows on the left of the image.
+
+<br clear="all">
+
+`<br clear="all">` ends the flow, so this paragraph starts below the images.
+
+## E-mail addresses and bars in tables
+
+An e-mail address such as info@example.com becomes a link, as on GitHub.
+
+| Syntax | Meaning |
+| --- | --- |
+| `a \| b` | A bar inside code (written `\|`) |
 
 ## Video
 

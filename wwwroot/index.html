@@ -77,6 +77,7 @@
         <h2 id="editor-heading" data-i18n="editorHeading">Markdown を編集</h2>
         <button id="replace-button" type="button" data-i18n="findReplace">検索・置換</button>
         <button id="toc-button" type="button" data-i18n="toc">目次</button>
+        <button id="image-button" type="button" data-i18n="imageButton" aria-haspopup="dialog">画像の調整</button>
         <button id="help-button" type="button" data-i18n="help" aria-haspopup="dialog">書き方</button>
         <button id="shortcuts-button" type="button" data-i18n="shortcuts" aria-haspopup="dialog">キー操作</button>
         <button class="pane-fullscreen-button" type="button" data-fullscreen-mode="editor" aria-pressed="false">編集画面をウィンドウ全体に表示</button>
@@ -248,6 +249,11 @@
       <p class="settings-note" data-i18n="settingsMapTilesNote"></p>
     </fieldset>
     <fieldset class="settings-group">
+      <legend data-i18n="settingsMarkdown">Markdown の書き方</legend>
+      <label class="settings-check"><input id="setting-near-github" type="checkbox"> <span data-i18n="settingsNearGitHub">GitHub での表示に近づける（mdEditor 独自の書き方を使わない）</span></label>
+      <p class="settings-note" data-i18n="settingsNearGitHubNote"></p>
+    </fieldset>
+    <fieldset class="settings-group">
       <legend data-i18n="settingsExport">書き出し</legend>
       <label class="settings-check"><input id="setting-html-source" type="checkbox"> <span data-i18n="settingsHtmlSource">HTMLに保存するとき、元の Markdown も入れる（mdEditor で開くと元どおりに戻せる）</span></label>
       <p class="settings-note" data-i18n="settingsHtmlSourceNote"></p>
@@ -325,6 +331,41 @@
       <div class="encoding-actions">
         <button id="url-open" class="primary" type="submit" data-i18n="urlOpen">開く</button>
       </div>
+    </form>
+  </dialog>
+  <dialog id="image-dialog" class="help-dialog image-dialog" aria-labelledby="image-heading">
+    <form id="image-form" method="dialog">
+      <div class="help-header">
+        <h2 id="image-heading" data-i18n="imageHeading">画像の大きさと位置</h2>
+        <button id="image-close" type="button" data-i18n="close">閉じる</button>
+      </div>
+      <p id="image-name" class="help-intro"></p>
+      <div class="image-groups">
+      <fieldset class="encoding-options">
+        <legend data-i18n="imageSize">大きさ</legend>
+        <label class="encoding-option"><input type="radio" name="image-size" value="original"><span data-i18n="imageSizeOriginal">元の大きさ（指定しない）</span></label>
+        <label class="encoding-option"><input type="radio" name="image-size" value="25"><span data-i18n="imageSize25">本文の幅の 25%</span></label>
+        <label class="encoding-option"><input type="radio" name="image-size" value="50"><span data-i18n="imageSize50">本文の幅の 50%</span></label>
+        <label class="encoding-option"><input type="radio" name="image-size" value="75"><span data-i18n="imageSize75">本文の幅の 75%</span></label>
+        <label class="encoding-option"><input type="radio" name="image-size" value="100"><span data-i18n="imageSize100">本文の幅いっぱい（100%）</span></label>
+        <label class="encoding-option"><input type="radio" name="image-size" value="pixels"><span data-i18n="imageSizePixels">幅をピクセルで指定</span></label>
+        <label class="settings-row image-pixels-row"><span data-i18n="imagePixels">幅（ピクセル）</span>
+          <input id="image-pixels" type="number" min="1" max="10000" step="1" inputmode="numeric"></label>
+      </fieldset>
+      <fieldset class="encoding-options">
+        <legend data-i18n="imagePosition">位置</legend>
+        <p id="image-alone-note" class="help-intro image-note" data-i18n="imageAloneNote" hidden></p>
+        <label class="encoding-option"><input type="radio" name="image-position" value="none"><span data-i18n="imagePositionNone">指定しない（左）</span></label>
+        <label class="encoding-option"><input type="radio" name="image-position" value="center"><span data-i18n="imagePositionCenter">中央</span></label>
+        <label class="encoding-option"><input type="radio" name="image-position" value="right"><span data-i18n="imagePositionRight">右</span></label>
+        <label class="encoding-option"><input type="radio" name="image-position" value="floatLeft"><span data-i18n="imagePositionFloatLeft">左に置き、右側に文章を回り込ませる</span></label>
+        <label class="encoding-option"><input type="radio" name="image-position" value="floatRight"><span data-i18n="imagePositionFloatRight">右に置き、左側に文章を回り込ませる</span></label>
+      </fieldset>
+      </div>
+      <div class="encoding-actions">
+        <button id="image-apply" class="primary" type="submit" data-i18n="imageApply">変更する</button>
+      </div>
+      <p class="help-intro" data-i18n="imageNote"></p>
     </form>
   </dialog>
   <dialog id="about-dialog" class="help-dialog" aria-labelledby="about-heading">

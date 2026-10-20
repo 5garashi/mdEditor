@@ -1,5 +1,5 @@
 # File: .gitignore
-# Description: Excludes mdEditor build and publish output
+# Description: Excludes mdEditor build and publish output, and files kept only on this PC
 # Author: 5garashi.com Design Office
 # Created: 2026-10-10
 # License: MIT
@@ -11,3 +11,7 @@ artifacts/
 # CodeMirror build tooling
 tools/codemirror/node_modules/
 tools/graphics/node_modules/
+
+# Screenshots, exported PDFs, and other working files kept only on this PC
+# (samples/ holds only what is in the repository).
+local/
