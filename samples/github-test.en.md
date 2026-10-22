@@ -19,7 +19,7 @@ options:
 
 # GitHub compatibility test :rocket:
 
-A document to check that what GitHub shows also shows the same way in mdEditor (Japanese: [github-test.md](github-test.md)).
+A document to check that what GitHub shows also shows the same way in mdEditor (Japanese: [github-test.md](github-test.md), Chinese: [github-test.zh-CN.md](github-test.zh-CN.md)).
 
 > [!NOTE]
 > Useful information.

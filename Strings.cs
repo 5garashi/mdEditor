@@ -1,6 +1,6 @@
 /*
   ファイル名 / File: Strings.cs
-  概要 / Description: Japanese and English text for native dialogs and messages
+  概要 / Description: Japanese, English, and Simplified Chinese text for native dialogs and messages
   作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
   作成日 / Created: 2026-10-10
   ライセンス / License: MIT
@@ -8,7 +8,7 @@
 */
 namespace MdEditor;
 
-internal static class Strings
+internal static partial class Strings
 {
     private static readonly Dictionary<string, string> English = new()
     {
@@ -209,14 +209,40 @@ internal static class Strings
     // Set by the --lang command-line option; takes priority over the saved choice.
     public static string? ForcedLanguage { get; set; }
 
+    // "ja", "en", or "zh" (Simplified Chinese), from the Windows display language.
     public static string DefaultLanguage() =>
-        System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ja"
-            ? "ja"
-            : "en";
+        System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName switch
+        {
+            "ja" => "ja",
+            "zh" => "zh",
+            _ => "en"
+        };
 
-    // Source strings are Japanese; English is looked up when the UI language is English.
-    public static string Tr(string japanese) =>
-        Language == "en" && English.TryGetValue(japanese, out var english)
-            ? english
-            : japanese;
+    // The language codes the app accepts (--lang, the page's Language list).
+    public static string? Normalize(string? language) => language?.Trim().ToLowerInvariant() switch
+    {
+        "ja" or "ja-jp" => "ja",
+        "en" or "en-us" => "en",
+        "zh" or "zh-cn" or "zh-hans" => "zh",
+        _ => null
+    };
+
+    // Source strings are Japanese; English or Chinese is looked up for those UI languages.
+    public static string Tr(string japanese) => Language switch
+    {
+        "en" when English.TryGetValue(japanese, out var english) => english,
+        "zh" when Chinese.TryGetValue(japanese, out var chinese) => chinese,
+        _ => japanese
+    };
+
+    // Between sentences joined into one notice: a space in English, nothing in Japanese and Chinese.
+    public static string SentenceJoin => Language == "en" ? " " : string.Empty;
+
+    // Names in a notice: 「a.png」「b.pdf」, "a.png", "b.pdf", or “a.png”“b.pdf”.
+    public static string NameList(IEnumerable<string> names) => Language switch
+    {
+        "en" => string.Join(", ", names.Select(name => $"\"{name}\"")),
+        "zh" => string.Concat(names.Select(name => $"“{name}”")),
+        _ => string.Concat(names.Select(name => $"「{name}」"))
+    };
 }

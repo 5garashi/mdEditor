@@ -36,6 +36,10 @@
   font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Noto Sans", "Yu Gothic UI", "Meiryo", sans-serif;
 }
 
+:root:lang(zh-CN) {
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+}
+
 @media screen and (prefers-color-scheme: dark) {
   :root {
     --document-background: #121314;

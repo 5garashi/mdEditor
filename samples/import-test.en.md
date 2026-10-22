@@ -8,7 +8,7 @@
 -->
 # Open and export tests
 
-These files check every format mdEditor opens and every type in Save As. Open each file with Open or drag and drop, and compare it with the expected result. The Japanese versions are the files without `.en` ([import-test.md](import-test.md)).
+These files check every format mdEditor opens and every type in Save As. Open each file with Open or drag and drop, and compare it with the expected result. The Japanese versions are the files without `.en` ([import-test.md](import-test.md)). The steps in Chinese are in [import-test.zh-CN.md](import-test.zh-CN.md), using the English files.
 
 > The external-image results assume Settings → Internet is set to Ask (the default).
 

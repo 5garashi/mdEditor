@@ -46,12 +46,8 @@ public partial class App : Application
                 continue;
             }
 
-            Strings.ForcedLanguage = value?.Trim().ToLowerInvariant() switch
-            {
-                "en" => "en",
-                "ja" => "ja",
-                _ => Strings.ForcedLanguage
-            };
+            // ja, en, or zh (zh-CN and zh-Hans are accepted too); anything else is ignored.
+            Strings.ForcedLanguage = Strings.Normalize(value) ?? Strings.ForcedLanguage;
         }
 
         MainWindow = new MainWindow(path, anchor);

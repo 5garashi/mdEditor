@@ -12,6 +12,20 @@
 
 The version number lives in [VERSION](./VERSION). Add each new version at the top, with a `## version — date` heading (used as the GitHub Release notes).
 
+## 1.0.15 — 2026-10-21
+
+- 簡体字中国語の表示を足した。ツールバーの言語の切り替えを「Language」の一覧（日本語・English・简体中文）にし、Ctrl+Shift+L では 3 つの言語を順に切り替える。初回は Windows の表示言語に合わせる（中国語なら簡体字中国語）。`--lang zh`（`zh-CN` も可）で起動時に指定できる。
+- 簡体字中国語の画面では、漢字を中国語の書体（Microsoft YaHei）で表示し、ロゴは英語のロゴタイプを使う。記号なしのテキスト・メールの読み込みなどの言葉も中国語にした。
+- 読み上げの言語に「中国語（簡体字）」を足した。自動では、かなを含まず漢字を含む段落を中国語の音声で読む。
+- 「書き方」の例とサンプルに中国語版を足した（samples/diagram-test.zh-CN.md、github-test.zh-CN.md、import-test.zh-CN.md）。
+- README を英語（README.md）・日本語（README.ja.md）・簡体字中国語（README.zh-CN.md）の 3 つに分けた。
+
+- Added Simplified Chinese. The language switch in the toolbar is now a Language list (日本語, English, 简体中文); Ctrl+Shift+L goes through the three languages in turn. On first launch the language follows the Windows display language (Simplified Chinese for Chinese). `--lang zh` (or `zh-CN`) sets it at launch.
+- In Simplified Chinese, Chinese characters use a Chinese typeface (Microsoft YaHei) and the logo is the English logotype. Plain text export, mail import, and other generated words are in Chinese too.
+- Read-aloud has a Chinese (Simplified) language. In Automatic, paragraphs with Chinese characters and no kana are read with a Chinese voice.
+- Chinese versions of the syntax examples and samples (samples/diagram-test.zh-CN.md, github-test.zh-CN.md, import-test.zh-CN.md).
+- The README is split into English (README.md), Japanese (README.ja.md), and Simplified Chinese (README.zh-CN.md).
+
 ## 1.0.14 — 2026-10-20
 
 - 文書に入れる画像・動画・ファイルのフォルダーを「名前-files」から「名前_files」にした（ブラウザーが Web ページを「完全」で保存するときの名前に合わせた）。1.0.13 で作った「名前-files」を使っている文書は、そのまま表示できる。

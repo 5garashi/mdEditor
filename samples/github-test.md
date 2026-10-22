@@ -19,7 +19,7 @@ options:
 
 # GitHub 互換テスト :rocket:
 
-GitHub が表示する書き方を、mdEditor でも同じように表示できるかを確かめる文書です（英語版: [github-test.en.md](github-test.en.md)）。
+GitHub が表示する書き方を、mdEditor でも同じように表示できるかを確かめる文書です（英語版: [github-test.en.md](github-test.en.md)、中国語版: [github-test.zh-CN.md](github-test.zh-CN.md)）。
 
 > [!NOTE]
 > 補足の情報です。

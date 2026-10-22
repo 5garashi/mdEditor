@@ -100,11 +100,23 @@
   font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Noto Sans", "Yu Gothic UI", "Meiryo", sans-serif;
 }
 
+/* Simplified Chinese UI: the OS UI face for Latin, then Windows' Simplified Chinese
+   face, so Chinese characters take Chinese forms rather than Japanese ones.
+   (Identity Art. 6 names faces for Japanese and English only.) */
+:root:lang(zh-CN) {
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+}
+
 /* Settings: BIZ UD Gothic, a Universal Design face shipped with Windows, for
    readers who find it easier. Chosen by the user, so it overrides Art. 6. */
 :root.font-ud,
 :root.font-ud:lang(en) {
   font-family: "BIZ UDPGothic", "BIZ UDGothic", "Yu Gothic UI", "Meiryo", sans-serif;
+}
+
+/* BIZ UD Gothic is a Japanese face; Chinese characters it lacks fall back to the Chinese face. */
+:root.font-ud:lang(zh-CN) {
+  font-family: "BIZ UDPGothic", "BIZ UDGothic", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
 }
 
 * {
@@ -144,6 +156,32 @@ button {
 
 button:hover {
   background: var(--paper);
+}
+
+/* Language: the label stays "Language" in every language, beside a list of the
+   three display languages, each written in itself. Sized like the buttons. */
+.language-picker {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 4px 0 12px;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  color: var(--ink);
+  background: var(--card);
+  font-weight: 700;
+}
+
+.language-picker select {
+  min-height: 36px;
+  padding: 2px 6px;
+  border: 1px solid var(--ink);
+  border-radius: 4px;
+  color: var(--ink);
+  background: var(--card);
+  font: inherit;
+  cursor: pointer;
 }
 
 /* Primary button: head on ink (Art. 7-1, day 6.66:1 and night 6.74:1). */

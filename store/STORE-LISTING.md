@@ -50,7 +50,7 @@ Made for everyone
 - Everything works from the keyboard, and shortcuts can be changed.
 - Works with screen readers and reads your document aloud with the voices on your PC. BIZ UD typeface, adjustable text size and line spacing, contrast themes, and dark mode.
 
-Available in Japanese and English. Made by 5garashi.com Design Office. Open About in the app for the company, support, and privacy policy links.
+Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Design Office. Open About in the app for the company, support, and privacy policy links.
 
 **What's new in this version:**
 - 3D models (text STL) turn with the mouse, and maps (GeoJSON, TopoJSON) are drawn offline. Allow it to load a detailed OpenStreetMap map.
@@ -162,7 +162,7 @@ The app's own logos (Start, taskbar, File Explorer) are in `store/assets/` and a
 - すべての操作をキーボードで行え、ショートカットも変えられます。
 - 画面読み上げに対応し、PC の音声で文書を読み上げます。BIZ UD ゴシック、文字の大きさと行間の調整、コントラスト テーマ、ダークモードにも対応します。
 
-日本語と英語に対応します。5garashi.com Design Office が作りました。会社紹介・サポート・プライバシーポリシーは、アプリの「このアプリについて」から開けます。
+日本語・英語・簡体字中国語に対応します。5garashi.com Design Office が作りました。会社紹介・サポート・プライバシーポリシーは、アプリの「このアプリについて」から開けます。
 
 **このバージョンの新機能:**
 - 3D モデル（テキスト形式の STL）をマウスで回して確かめられ、地図（GeoJSON・TopoJSON）をオフラインで描けます。許可すると、OpenStreetMap の詳しい地図も使えます。
@@ -220,7 +220,7 @@ The app's own logos (Start, taskbar, File Explorer) are in `store/assets/` and a
 
 - Reserve the name in Partner Center and confirm it is available. Use the same spelling ("5garashi.com Design Office") in the Store, the app, and the website.
 - Replace the privacy or support links if the final URLs differ. The company URL in the app is `https://www.5garashi.com/`.
-- "Worldwide" distribution and "all languages" are different settings. The app supports Japanese and English only.
+- "Worldwide" distribution and "all languages" are different settings. The app supports Japanese, English, and Simplified Chinese (1.0.15) only. This listing has no Simplified Chinese (zh-CN) text yet; add one before choosing zh-CN as a listing language.
 - The screenshots are in `docs/images/` (1366 x 768 window). Screenshots 1-4 and 6-8 were taken with 1.0.12 (2026-10-18); screenshot 5 (Save As) was retaken with 1.0.14 (2026-10-19). In 1.0.14 the editor heading also has an Adjust image button, which screenshots 1-4 do not show. Retake them when the screen changes.
 - Screenshot 8 shows OpenStreetMap map tiles. Keep the credit "© OpenStreetMap contributors" visible; do not crop it out.
   スクリーンショット 8 には OpenStreetMap の地図が写っています。右下の「© OpenStreetMap contributors」を切り取らないでください。

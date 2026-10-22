@@ -361,9 +361,8 @@ public partial class MainWindow : Window
             case "ready":
                 _pageReady = true;
                 Strings.Language = Strings.ForcedLanguage
-                    ?? (root.TryGetProperty("lang", out var lang) && lang.GetString() == "en"
-                        ? "en"
-                        : "ja");
+                    ?? (root.TryGetProperty("lang", out var lang) ? Strings.Normalize(lang.GetString()) : null)
+                    ?? "ja";
                 if (Strings.ForcedLanguage is not null)
                 {
                     SendToPage(new { type = "language", lang = Strings.ForcedLanguage });
@@ -445,7 +444,7 @@ public partial class MainWindow : Window
                 SetSaveEncoding(root.GetProperty("encoding").GetString());
                 break;
             case "setLanguage":
-                Strings.Language = root.GetProperty("lang").GetString() == "en" ? "en" : "ja";
+                Strings.Language = Strings.Normalize(root.GetProperty("lang").GetString()) ?? "ja";
                 SendDocumentInfo();
                 SendDiscardedState();
                 UpdatePreviewWindowTitle();
@@ -1216,7 +1215,7 @@ public partial class MainWindow : Window
             notices.Add(string.Format(Strings.Tr("「{0}」フォルダーの外を指すリンク {1} 個は、元のファイルを指すように書き換えました。"), Path.GetFileName(newFiles), outside));
         }
 
-        return notices.Count == 0 ? null : string.Join(Strings.Language == "en" ? " " : string.Empty, notices);
+        return notices.Count == 0 ? null : string.Join(Strings.SentenceJoin, notices);
     }
 
     // BOMs win; otherwise strict UTF-8, falling back to the system ANSI code page
@@ -1551,7 +1550,7 @@ public partial class MainWindow : Window
         var name = Path.GetFileNameWithoutExtension(path);
         var imagesName = name + FilesSuffix;
         var assets = Path.Combine(Path.GetTempPath(), "mdEditor-import-" + Guid.NewGuid().ToString("N"));
-        var result = MailImport.ToMarkdown(path, assets, imagesName, Strings.Language == "ja");
+        var result = MailImport.ToMarkdown(path, assets, imagesName, Strings.Language);
         ApplyImported(result.Markdown, assets, name + ".md", false, Strings.Tr(
             "メールを Markdown に変換して開きました。件名・差出人・宛先・日付と本文を読み込み、添付ファイルは名前だけを載せました。保存すると Markdown ファイルになります（メールのファイルは変わりません）。"));
         _suggestFolder = Path.GetDirectoryName(path);
@@ -1720,6 +1719,7 @@ public partial class MainWindow : Window
             {
                 notices.Add(string.Format(Strings.Tr("「{0}」の中身を入れました。ファイルとして開くときは、編集画面の外にドロップしてください（Ctrl+Z で取り消せます）。"),
                     string.Join(Strings.Language == "en" ? ", " : "、", contents.Keys.Select(Path.GetFileName))));
+                // Japanese and Chinese both list names with 、.
             }
 
             if (filesFolder is not null)
@@ -1739,7 +1739,7 @@ public partial class MainWindow : Window
 
             if (notices.Count > 0)
             {
-                SendToPage(new { type = "notice", text = string.Join(Strings.Language == "en" ? " " : string.Empty, notices) });
+                SendToPage(new { type = "notice", text = string.Join(Strings.SentenceJoin, notices) });
             }
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException)
@@ -1748,10 +1748,7 @@ public partial class MainWindow : Window
         }
     }
 
-    // File names in a notice: 「a.png」「b.pdf」 in Japanese, "a.png", "b.pdf" in English.
-    private static string NameList(IEnumerable<string> names) => Strings.Language == "en"
-        ? string.Join(", ", names.Select(name => $"\"{name}\""))
-        : string.Concat(names.Select(name => $"「{name}」"));
+    private static string NameList(IEnumerable<string> names) => Strings.NameList(names);
 
     private static bool IsInside(string path, string folder) =>
         path.StartsWith(folder.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase);
@@ -1834,7 +1831,7 @@ public partial class MainWindow : Window
         if (extension == ".eml")
         {
             var assets = NewImportFolder();
-            return (MailImport.ToMarkdown(path, assets, imagesName, Strings.Language == "ja").Markdown, [assets, folder]);
+            return (MailImport.ToMarkdown(path, assets, imagesName, Strings.Language).Markdown, [assets, folder]);
         }
 
         var text = DecodeDocument(await File.ReadAllBytesAsync(path)).Text;
@@ -3017,7 +3014,7 @@ public partial class MainWindow : Window
     {
         try
         {
-            var text = PlainTextExport.Convert(_text, _markdownPipeline, Strings.Language == "ja");
+            var text = PlainTextExport.Convert(_text, _markdownPipeline, Strings.Language);
             await WriteAtomicallyAsync(path, Utf8NoBom.GetBytes(text));
             MessageBox.Show($"{Strings.Tr("記号なしのテキストを保存しました。")}\n\n{path}", Strings.Tr("テキストの書き出し"),
                 MessageBoxButton.OK, MessageBoxImage.Information);
@@ -3034,7 +3031,7 @@ public partial class MainWindow : Window
     private async Task ExportTablesAsync(string path, string format)
     {
         var title = Strings.Tr(format switch { ".tsv" => "TSVの書き出し", ".json" => "JSONの書き出し", _ => "CSVの書き出し" });
-        var tables = TableFiles.Tables(_text, _markdownPipeline, Strings.Language == "ja");
+        var tables = TableFiles.Tables(_text, _markdownPipeline, Strings.Language);
         if (tables.Count == 0)
         {
             MessageBox.Show(Strings.Tr("この文書には表がありません。表（| で区切った行）のある文書で保存してください。"), title,
@@ -4276,7 +4273,7 @@ public partial class MainWindow : Window
 
     private void ShowFileError(string title, Exception ex)
     {
-        var stop = Strings.Language == "en" ? "." : "。";
+        var stop = Strings.Language == "en" ? "." : "。"; // Chinese ends sentences with 。 as Japanese does
         MessageBox.Show(
             $"{Strings.Tr(title)}{stop}\n\n{ex.Message}",
             "mdEditor",

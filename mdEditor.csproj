@@ -36,7 +36,7 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </None>
     <!-- The rendering tests in samples/ also open from the Samples dialog. -->
-    <Content Include="samples\diagram-test.md;samples\diagram-test.en.md">
+    <Content Include="samples\diagram-test.md;samples\diagram-test.en.md;samples\diagram-test.zh-CN.md">
       <Link>wwwroot\samples\%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
