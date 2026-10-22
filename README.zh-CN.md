@@ -658,7 +658,7 @@ endsolid letters
 }
 ```
 
-[“5”立方体旋转的视频](samples/import-test-images/cube5.mp4)
+[“5”立方体旋转的视频](samples/import-test_files/cube5.mp4)
 
 ## 无障碍检查记录
 
@@ -686,7 +686,7 @@ Identity 第 7-7 条规定的发布前检查记录。
 
 ## 设计和官方素材
 
-界面设计遵循 5garashi.com Design Office Identity v4.20.0（2026-10-17）。工具栏中的“主题”按钮按“自动”（跟随 Windows 的应用模式）、“白天”、“夜间”的顺序切换，选择会在下次启动时继续使用。夜间使用第 4-2 条的夜间配色（深色模式），徽标切换为第 3-7 条的灰色反白版本（右上角的标志在夜间也保持红色，这是第 3-7 条 (5) 允许的）。编辑区、预览、图表和窗口标题栏也会跟随。打印和 PDF 始终使用白天配色。官方徽标（日文版和英文版，各自带有深色模式的反白版本，根据显示语言选择；简体中文界面使用英文版）和简易标志，从 [5garashi/5garashi-identity](https://github.com/5garashi/5garashi-identity) 的 SVG 素材原样随附，未作修改。简易标志用于窗口、可执行文件和 Markdown 文件关联的图标。各 SVG 文件中写明的作者、版权和 CC BY-ND 4.0 许可证均予保留。samples/diagram-test 中图像大小和位置的示例（第 22 节）在 samples/import-test-images 中使用同样未经修改的官方素材（标志、徽标及其反白版本，以及横幅 og_image.png；CC BY-ND 4.0）。
+界面设计遵循 5garashi.com Design Office Identity v4.20.0（2026-10-17）。工具栏中的“主题”按钮按“自动”（跟随 Windows 的应用模式）、“白天”、“夜间”的顺序切换，选择会在下次启动时继续使用。夜间使用第 4-2 条的夜间配色（深色模式），徽标切换为第 3-7 条的灰色反白版本（右上角的标志在夜间也保持红色，这是第 3-7 条 (5) 允许的）。编辑区、预览、图表和窗口标题栏也会跟随。打印和 PDF 始终使用白天配色。官方徽标（日文版和英文版，各自带有深色模式的反白版本，根据显示语言选择；简体中文界面使用英文版）和简易标志，从 [5garashi/5garashi-identity](https://github.com/5garashi/5garashi-identity) 的 SVG 素材原样随附，未作修改。简易标志用于窗口、可执行文件和 Markdown 文件关联的图标。各 SVG 文件中写明的作者、版权和 CC BY-ND 4.0 许可证均予保留。samples/diagram-test 中图像大小和位置的示例（第 22 节）在 samples/import-test_files 中使用同样未经修改的官方素材（标志、徽标及其反白版本，以及横幅 og_image.png；CC BY-ND 4.0）。
 
 Identity 中没有关于中文的规定。简体中文界面的正式名称使用英文名称“5garashi.com Design Office”，字体使用 Windows 标准的简体中文字体（Microsoft YaHei）。
 

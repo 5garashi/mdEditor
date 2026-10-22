@@ -55,26 +55,26 @@ options:
 
 按 <kbd>Ctrl</kbd>+<kbd>S</kbd> 保存。H<sub>2</sub>O 和 2<sup>10</sup>。<mark>强调</mark>
 
-<p align="center"><img src="import-test-images/sample.png" width="120" alt="居中的图像"></p>
+<p align="center"><img src="import-test_files/sample.png" width="120" alt="居中的图像"></p>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="import-test-images/sample.png">
-  <img src="import-test-images/sample.png" width="80" alt="昼夜切换的图像">
+  <source media="(prefers-color-scheme: dark)" srcset="import-test_files/sample.png">
+  <img src="import-test_files/sample.png" width="80" alt="昼夜切换的图像">
 </picture>
 
-![仅白天](import-test-images/sample.png#gh-light-mode-only) ![仅夜间](import-test-images/sample.png#gh-dark-mode-only)
+![仅白天](import-test_files/sample.png#gh-light-mode-only) ![仅夜间](import-test_files/sample.png#gh-dark-mode-only)
 
 ## 图像的大小和位置
 
 在编辑区中把光标放在图像所在的行并按“调整图像”（Ctrl+Shift+F），或在预览中右键单击图像，可以改写成下面这样的写法。
 
-<p align="right"><img src="import-test-images/sample.png" alt="以正文宽度的 25% 放在右边的图像" width="25%"></p>
+<p align="right"><img src="import-test_files/sample.png" alt="以正文宽度的 25% 放在右边的图像" width="25%"></p>
 
-<img src="import-test-images/sample.png" alt="放在左边并环绕文字的图像" width="96" align="left">
+<img src="import-test_files/sample.png" alt="放在左边并环绕文字的图像" width="96" align="left">
 
 这一段文字环绕在左边图像的右侧。与 GitHub 相同，`align="left"` 的图像靠左，后面的文字排在它的右边。
 
-<img src="import-test-images/sample.png" alt="放在右边并环绕文字的图像" width="96" align="right">
+<img src="import-test_files/sample.png" alt="放在右边并环绕文字的图像" width="96" align="right">
 
 这一段文字环绕在右边图像的左侧。
 
@@ -94,9 +94,9 @@ options:
 
 与文档在同一文件夹中的视频可以直接播放（无论写成图像、只有链接的一行，还是 `<video>`）。网络上的视频与图像一样，获得允许之前不加载。PDF、PNG 和 Word 中放入视频的名称，保存的 HTML 中放入指向视频的链接。
 
-![示例视频](import-test-images/cube5.mp4)
+![示例视频](import-test_files/cube5.mp4)
 
-<video src="import-test-images/cube5.mp4" width="240"></video>
+<video src="import-test_files/cube5.mp4" width="240"></video>
 
 https://www.w3schools.com/html/mov_bbb.mp4
 
@@ -107,7 +107,7 @@ https://www.w3schools.com/html/mov_bbb.mp4
 <script>document.title = "hacked"</script>
 <style>body { background: red; }</style>
 <iframe src="https://example.com"></iframe>
-<img src="import-test-images/sample.png" onerror="alert(1)" alt="带有 onerror" width="40">
+<img src="import-test_files/sample.png" onerror="alert(1)" alt="带有 onerror" width="40">
 <a href="javascript:alert(1)">危险的链接</a>
 <form action="https://example.com"><input type="text" value="输入框"></form>
 <img src="https://github.githubassets.com/favicons/favicon.png" width="32" alt="网络上的图像（GitHub 的图标）">

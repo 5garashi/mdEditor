@@ -44,8 +44,8 @@
     </Content>
     <!-- The video that diagram-test plays (21-3) and the official 5garashi.com assets its
          image size and position examples use (22), unmodified, beside it as in samples/. -->
-    <Content Include="samples\import-test-images\cube5.mp4;samples\import-test-images\5garashi_*.svg;samples\import-test-images\5garashi_*.png">
-      <Link>wwwroot\samples\import-test-images\%(Filename)%(Extension)</Link>
+    <Content Include="samples\import-test_files\cube5.mp4;samples\import-test_files\5garashi_*.svg;samples\import-test_files\5garashi_*.png">
+      <Link>wwwroot\samples\import-test_files\%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>

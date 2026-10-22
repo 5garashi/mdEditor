@@ -27,7 +27,7 @@
 | [json-config-test.en.json](json-config-test.en.json) | JSON（设置等） | 代码块、注释和末尾的逗号 |
 | [xml-test.en.xml](xml-test.en.xml) | XML | 代码块、含有“```”的值 |
 | [notebook-test.en.ipynb](notebook-test.en.ipynb) | Jupyter Notebook | 单元格、运行结果（文本、表格、图片、错误）、单元格中的图片、保存回去 |
-| [import-test-images/sample.png](import-test-images/sample.png) | 图像 | 打开图像、插入到编辑区；HTML 文件也会用到 |
+| [import-test_files/sample.png](import-test_files/sample.png) | 图像 | 打开图像、插入到编辑区；HTML 文件也会用到 |
 
 ## 2. 打开
 
@@ -122,7 +122,7 @@
 - 通知栏说明已将 XML 放入代码块中打开。
 - 内容按原样放入代码块。值中的“```”不会提前结束代码块（代码块使用四个反引号）。
 
-### 2.11 import-test-images/sample.png（打开图像）
+### 2.11 import-test_files/sample.png（打开图像）
 
 预期结果：
 

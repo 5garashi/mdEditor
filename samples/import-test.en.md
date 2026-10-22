@@ -27,7 +27,7 @@ These files check every format mdEditor opens and every type in Save As. Open ea
 | [json-config-test.en.json](json-config-test.en.json) | JSON (settings and such) | A code block, comments and trailing commas |
 | [xml-test.en.xml](xml-test.en.xml) | XML | A code block, a value containing "```" |
 | [notebook-test.en.ipynb](notebook-test.en.ipynb) | Jupyter Notebook | Cells, outputs (text, table, picture, error), pictures in cells, saving back |
-| [import-test-images/sample.png](import-test-images/sample.png) | Image | Opening an image and inserting it into the editor; also used by the HTML file |
+| [import-test_files/sample.png](import-test_files/sample.png) | Image | Opening an image and inserting it into the editor; also used by the HTML file |
 
 ## 2. Open
 
@@ -63,8 +63,8 @@ Expected:
 
 - The notice says the Word document was converted, and the file name becomes word-test.en.md.
 - Headings 1 to 3, bold, italic, the link, both lists, the table, and the image become Markdown.
-- The image shows in the preview and points to `word-test.en-images/image1.png` in the editor.
-- Saving as Markdown with Save As creates a word-test.en-images folder with the image beside the file.
+- The image shows in the preview and points to `word-test.en_files/image1.png` in the editor.
+- Saving as Markdown with Save As creates a word-test.en_files folder with the image beside the file.
 
 ### 2.4 mail-test.en.eml
 
@@ -74,7 +74,7 @@ Expected:
 - The first line is the subject "[Test] Opening e-mail in mdEditor" as a heading.
 - From (Sam Sender <sato@example.com>), To, Cc, Date (09:30 Japan time, shown in this PC's time zone), and Attachments (note.txt) are listed.
 - The bold text, link, list, and table in the body become Markdown.
-- The picture inside the mail (cid) shows and points to `mail-test.en-images/image1.png`.
+- The picture inside the mail (cid) shows and points to `mail-test.en_files/image1.png`.
 - The internet image (a 1-pixel tracker, as an example) does not load, and Load images appears in the notice bar.
 - No script remains, and the attachment is not extracted.
 
@@ -122,7 +122,7 @@ Expected:
 - The notice says the XML was opened in a code block.
 - The content goes into the code block as it is. The "```" in a value does not close the block early (the block uses four backticks).
 
-### 2.11 import-test-images/sample.png (opening an image)
+### 2.11 import-test_files/sample.png (opening an image)
 
 Expected:
 
@@ -138,8 +138,8 @@ Expected:
 
 Expected:
 
-- `![sample](name-images/sample.png)` is inserted where it was dropped, and the image is copied into a "name-images" folder beside the document.
-- `![](name-images/image-date-time.png)` is inserted where it was pasted.
+- `![sample](name_files/sample.png)` is inserted where it was dropped, and the image is copied into a "name_files" folder beside the document.
+- `![](name_files/image-date-time.png)` is inserted where it was pasted.
 - A new document that has not been saved asks where to save first.
 - An image dropped anywhere other than the editor (such as the toolbar) opens as an image document, as in 2.11.
 

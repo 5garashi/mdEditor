@@ -656,7 +656,7 @@ endsolid letters
 }
 ```
 
-[A video of the "5" cube turning](samples/import-test-images/cube5.mp4)
+[A video of the "5" cube turning](samples/import-test_files/cube5.mp4)
 
 ## Accessibility check record
 
@@ -684,7 +684,7 @@ Also confirmed: read-aloud can use voices on the PC (such as Microsoft Ayumi), t
 
 ## Design and official assets
 
-The screen design follows the 5garashi.com Design Office Identity v4.20.0 (2026-10-17). The "Theme" button in the toolbar cycles the theme through Auto (follows the Windows app mode), Light, and Dark, and the choice is remembered for the next launch. In Dark, the app uses the night palette (dark mode) of Art. 4-2, and the logotype switches to the gray reversal of Art. 3-7 (the symbol mark at the top right stays red in Dark too, as Art. 3-7 (5) allows). The editor, preview, diagrams, and window title bar follow as well. Printing and PDFs always use the day palette. The official logotype (Japanese and English versions, each with its dark-mode reversal, chosen by the display language; the Simplified Chinese interface uses the English version) and simple symbol mark are bundled unmodified from the SVG assets of [5garashi/5garashi-identity](https://github.com/5garashi/5garashi-identity). The simple mark is used for the window, the executable, and the Markdown file association icons. The author, copyright, and CC BY-ND 4.0 license stated in each SVG file are preserved. The image size and position examples in samples/diagram-test (section 22) use the same official assets, unmodified (the symbol mark, the logotypes and their reversals, and the banner og_image.png; CC BY-ND 4.0), in samples/import-test-images.
+The screen design follows the 5garashi.com Design Office Identity v4.20.0 (2026-10-17). The "Theme" button in the toolbar cycles the theme through Auto (follows the Windows app mode), Light, and Dark, and the choice is remembered for the next launch. In Dark, the app uses the night palette (dark mode) of Art. 4-2, and the logotype switches to the gray reversal of Art. 3-7 (the symbol mark at the top right stays red in Dark too, as Art. 3-7 (5) allows). The editor, preview, diagrams, and window title bar follow as well. Printing and PDFs always use the day palette. The official logotype (Japanese and English versions, each with its dark-mode reversal, chosen by the display language; the Simplified Chinese interface uses the English version) and simple symbol mark are bundled unmodified from the SVG assets of [5garashi/5garashi-identity](https://github.com/5garashi/5garashi-identity). The simple mark is used for the window, the executable, and the Markdown file association icons. The author, copyright, and CC BY-ND 4.0 license stated in each SVG file are preserved. The image size and position examples in samples/diagram-test (section 22) use the same official assets, unmodified (the symbol mark, the logotypes and their reversals, and the banner og_image.png; CC BY-ND 4.0), in samples/import-test_files.
 
 ## License
 

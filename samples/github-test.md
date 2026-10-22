@@ -55,26 +55,26 @@ GitHub が表示する書き方を、mdEditor でも同じように表示でき�
 
 <kbd>Ctrl</kbd>+<kbd>S</kbd> で保存。H<sub>2</sub>O と 2<sup>10</sup>。<mark>強調</mark>
 
-<p align="center"><img src="import-test-images/sample.png" width="120" alt="中央の画像"></p>
+<p align="center"><img src="import-test_files/sample.png" width="120" alt="中央の画像"></p>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="import-test-images/sample.png">
-  <img src="import-test-images/sample.png" width="80" alt="昼夜で切り替わる画像">
+  <source media="(prefers-color-scheme: dark)" srcset="import-test_files/sample.png">
+  <img src="import-test_files/sample.png" width="80" alt="昼夜で切り替わる画像">
 </picture>
 
-![昼だけ](import-test-images/sample.png#gh-light-mode-only) ![夜だけ](import-test-images/sample.png#gh-dark-mode-only)
+![昼だけ](import-test_files/sample.png#gh-light-mode-only) ![夜だけ](import-test_files/sample.png#gh-dark-mode-only)
 
 ## 画像の大きさと位置
 
 編集欄で画像の行にカーソルを置いて「画像の調整」（Ctrl+Shift+F）を押すか、プレビューの画像を右クリックすると、次の書き方に書き換えられます。
 
-<p align="right"><img src="import-test-images/sample.png" alt="本文の幅の 25% で右に置いた画像" width="25%"></p>
+<p align="right"><img src="import-test_files/sample.png" alt="本文の幅の 25% で右に置いた画像" width="25%"></p>
 
-<img src="import-test-images/sample.png" alt="左に置き、文章を回り込ませた画像" width="96" align="left">
+<img src="import-test_files/sample.png" alt="左に置き、文章を回り込ませた画像" width="96" align="left">
 
 この段落は、左の画像の右側に回り込みます。GitHub と同じく、`align="left"` の画像は左に寄り、続く文章がその右に並びます。
 
-<img src="import-test-images/sample.png" alt="右に置き、文章を回り込ませた画像" width="96" align="right">
+<img src="import-test_files/sample.png" alt="右に置き、文章を回り込ませた画像" width="96" align="right">
 
 この段落は、右の画像の左側に回り込みます。
 
@@ -94,9 +94,9 @@ GitHub が表示する書き方を、mdEditor でも同じように表示でき�
 
 同じフォルダーの動画は、そのまま再生できる（画像の書き方・リンクだけの行・`<video>` のどれでもよい）。インターネット上の動画は、画像と同じく、許可するまで読み込まない。PDF・PNG・Word には動画の名前が、保存した HTML には動画へのリンクが入る。
 
-![サンプル動画](import-test-images/cube5.mp4)
+![サンプル動画](import-test_files/cube5.mp4)
 
-<video src="import-test-images/cube5.mp4" width="240"></video>
+<video src="import-test_files/cube5.mp4" width="240"></video>
 
 https://www.w3schools.com/html/mov_bbb.mp4
 
@@ -107,7 +107,7 @@ GitHub と同じく、次の HTML は取り除かれます（スクリプトは�
 <script>document.title = "hacked"</script>
 <style>body { background: red; }</style>
 <iframe src="https://example.com"></iframe>
-<img src="import-test-images/sample.png" onerror="alert(1)" alt="onerror付き" width="40">
+<img src="import-test_files/sample.png" onerror="alert(1)" alt="onerror付き" width="40">
 <a href="javascript:alert(1)">危ないリンク</a>
 <form action="https://example.com"><input type="text" value="入力欄"></form>
 <img src="https://github.githubassets.com/favicons/favicon.png" width="32" alt="外部画像（GitHub のアイコン）">

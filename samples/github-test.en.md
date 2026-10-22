@@ -55,26 +55,26 @@ A **collapsed** section.
 
 <kbd>Ctrl</kbd>+<kbd>S</kbd> saves. H<sub>2</sub>O and 2<sup>10</sup>. <mark>Highlighted</mark>
 
-<p align="center"><img src="import-test-images/sample.png" width="120" alt="A centered image"></p>
+<p align="center"><img src="import-test_files/sample.png" width="120" alt="A centered image"></p>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="import-test-images/sample.png">
-  <img src="import-test-images/sample.png" width="80" alt="A picture that switches between day and night">
+  <source media="(prefers-color-scheme: dark)" srcset="import-test_files/sample.png">
+  <img src="import-test_files/sample.png" width="80" alt="A picture that switches between day and night">
 </picture>
 
-![Day only](import-test-images/sample.png#gh-light-mode-only) ![Night only](import-test-images/sample.png#gh-dark-mode-only)
+![Day only](import-test_files/sample.png#gh-light-mode-only) ![Night only](import-test_files/sample.png#gh-dark-mode-only)
 
 ## Image size and position
 
 Put the cursor on an image's line in the editor and press Adjust image (Ctrl+Shift+F), or right-click the image in the preview, to have it rewritten like these.
 
-<p align="right"><img src="import-test-images/sample.png" alt="An image at 25% of the text width, on the right" width="25%"></p>
+<p align="right"><img src="import-test_files/sample.png" alt="An image at 25% of the text width, on the right" width="25%"></p>
 
-<img src="import-test-images/sample.png" alt="An image on the left with text flowing around it" width="96" align="left">
+<img src="import-test_files/sample.png" alt="An image on the left with text flowing around it" width="96" align="left">
 
 This paragraph flows on the right of the image. As on GitHub, an image with `align="left"` sits on the left and the text after it runs beside it.
 
-<img src="import-test-images/sample.png" alt="An image on the right with text flowing around it" width="96" align="right">
+<img src="import-test_files/sample.png" alt="An image on the right with text flowing around it" width="96" align="right">
 
 This paragraph flows on the left of the image.
 
@@ -94,9 +94,9 @@ An e-mail address such as info@example.com becomes a link, as on GitHub.
 
 A video beside the document plays as it is (written as an image, as a lone link, or as `<video>`). A video on the internet waits for permission, like an image. PDF, PNG, and Word get the video's name, and saved HTML a link to it.
 
-![Sample video](import-test-images/cube5.mp4)
+![Sample video](import-test_files/cube5.mp4)
 
-<video src="import-test-images/cube5.mp4" width="240"></video>
+<video src="import-test_files/cube5.mp4" width="240"></video>
 
 https://www.w3schools.com/html/mov_bbb.mp4
 
@@ -107,7 +107,7 @@ As on GitHub, the HTML below is removed (no script runs, the page does not turn 
 <script>document.title = "hacked"</script>
 <style>body { background: red; }</style>
 <iframe src="https://example.com"></iframe>
-<img src="import-test-images/sample.png" onerror="alert(1)" alt="with onerror" width="40">
+<img src="import-test_files/sample.png" onerror="alert(1)" alt="with onerror" width="40">
 <a href="javascript:alert(1)">Dangerous link</a>
 <form action="https://example.com"><input type="text" value="input box"></form>
 <img src="https://github.githubassets.com/favicons/favicon.png" width="32" alt="An internet image (the GitHub icon)">

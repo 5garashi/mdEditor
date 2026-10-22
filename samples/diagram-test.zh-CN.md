@@ -993,7 +993,7 @@ endsolid letters
 
 同一文件夹中的视频（只有链接的一行。在 GitHub 上显示为链接）：
 
-[“5”立方体旋转的视频](import-test-images/cube5.mp4)
+[“5”立方体旋转的视频](import-test_files/cube5.mp4)
 
 网络上的视频（只有链接的一行。获得允许之前不加载）：
 
@@ -1011,25 +1011,25 @@ https://www.w3schools.com/html/mov_bbb.mp4
 
 ### 22-1. 大小（相对于正文宽度的比例）
 
-<p><picture><source media="(prefers-color-scheme: dark)" srcset="import-test-images/5garashi_logotype_en_reversed_outlined.svg"><img src="import-test-images/5garashi_logotype_en_outlined.svg" alt="5garashi.com Design Office（正文宽度的 25%）" width="25%"></picture></p>
+<p><picture><source media="(prefers-color-scheme: dark)" srcset="import-test_files/5garashi_logotype_en_reversed_outlined.svg"><img src="import-test_files/5garashi_logotype_en_outlined.svg" alt="5garashi.com Design Office（正文宽度的 25%）" width="25%"></picture></p>
 
-<p><picture><source media="(prefers-color-scheme: dark)" srcset="import-test-images/5garashi_logotype_en_reversed_outlined.svg"><img src="import-test-images/5garashi_logotype_en_outlined.svg" alt="5garashi.com Design Office（正文宽度的 50%）" width="50%"></picture></p>
+<p><picture><source media="(prefers-color-scheme: dark)" srcset="import-test_files/5garashi_logotype_en_reversed_outlined.svg"><img src="import-test_files/5garashi_logotype_en_outlined.svg" alt="5garashi.com Design Office（正文宽度的 50%）" width="50%"></picture></p>
 
-<p><picture><source media="(prefers-color-scheme: dark)" srcset="import-test-images/5garashi_logotype_en_reversed_outlined.svg"><img src="import-test-images/5garashi_logotype_en_outlined.svg" alt="5garashi.com Design Office（正文全宽）" width="100%"></picture></p>
+<p><picture><source media="(prefers-color-scheme: dark)" srcset="import-test_files/5garashi_logotype_en_reversed_outlined.svg"><img src="import-test_files/5garashi_logotype_en_outlined.svg" alt="5garashi.com Design Office（正文全宽）" width="100%"></picture></p>
 
 ### 22-2. 居中和靠右（以像素指定宽度）
 
-<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="import-test-images/5garashi_logotype_en_reversed_outlined.svg"><img src="import-test-images/5garashi_logotype_en_outlined.svg" alt="5garashi.com Design Office" width="240"></picture></p>
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="import-test_files/5garashi_logotype_en_reversed_outlined.svg"><img src="import-test_files/5garashi_logotype_en_outlined.svg" alt="5garashi.com Design Office" width="240"></picture></p>
 
-<p align="right"><img src="import-test-images/5garashi_mark_simple.svg" alt="5garashi.com Design Office 标志" width="64"></p>
+<p align="right"><img src="import-test_files/5garashi_mark_simple.svg" alt="5garashi.com Design Office 标志" width="64"></p>
 
 ### 22-3. 文字环绕
 
-<img src="import-test-images/5garashi_mark_simple.svg" alt="5garashi.com Design Office 标志" width="80" align="left" hspace="16" vspace="8">
+<img src="import-test_files/5garashi_mark_simple.svg" alt="5garashi.com Design Office 标志" width="80" align="left" hspace="16" vspace="8">
 
 这个标志是辣椒的计数符号（画线计数法）：四根竖立的辣椒被第五根辣椒横向贯穿。`align="left"` 的图像靠左，这一段文字环绕在它的右侧。`hspace` 和 `vspace` 在图像周围留出了空白。
 
-<img src="import-test-images/5garashi_mark_simple.svg" alt="5garashi.com Design Office 标志" width="80" align="right" hspace="16" vspace="8">
+<img src="import-test_files/5garashi_mark_simple.svg" alt="5garashi.com Design Office 标志" width="80" align="right" hspace="16" vspace="8">
 
 数“1、2、3、4”，用第五根收尾——把“5（go）garashi”这个名字直接画成了一个标志。`align="right"` 的图像靠右，这一段文字环绕在它的左侧。
 
