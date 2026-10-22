@@ -92,7 +92,7 @@ options:
 
 ## 视频
 
-与文档在同一文件夹中的视频可以直接播放（无论写成图像、只有链接的一行，还是 `<video>`）。网络上的视频与图像一样，获得允许之前不加载。PDF、PNG 和 Word 中放入视频的名称，保存的 HTML 中放入指向视频的链接。
+与文档在同一文件夹中的视频可以直接播放（无论写成图像、只有链接的一行，还是 `<video>`）。网络上的视频与图像一样，未经你同意不会加载。PDF、PNG 和 Word 中放入视频的名称，保存的 HTML 中放入指向视频的链接。
 
 ![示例视频](import-test_files/cube5.mp4)
 
@@ -102,7 +102,7 @@ https://www.w3schools.com/html/mov_bbb.mp4
 
 ## 被移除的内容
 
-与 GitHub 相同，下面的 HTML 会被移除（脚本不会运行，页面不会变红，也不会出现输入框）。危险的链接只保留文字，网络上的图像在获得允许之前不加载。
+与 GitHub 相同，下面的 HTML 会被移除（脚本不会运行，页面不会变红，也不会出现输入框）。危险的链接只保留文字，网络上的图像未经你同意不会加载。
 
 <script>document.title = "hacked"</script>
 <style>body { background: red; }</style>

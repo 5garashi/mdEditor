@@ -17,7 +17,7 @@ license: MIT
 # 图表显示测试
 
 > [!NOTE]
-> 本文档以在 mdEditor 中显示为前提。在 GitHub 上打开时，Graphviz（` ```dot `）和 PlantUML 的图会按代码原样显示，同一文件夹中的视频会显示为链接。请在 mdEditor 中检查显示效果（Identity 8-9 (8)）。
+> 本文档专为在 mdEditor 中查看而编写。在 GitHub 上打开时，Graphviz（` ```dot `）和 PlantUML 的图会按代码原样显示，同一文件夹中的视频会显示为链接。请在 mdEditor 中检查显示效果（Identity 8-9 (8)）。
 
 这是用来检查 mdEditor 的预览能否正确显示各种图表的测试文档。
 请对照每一节的“预期显示”和实际的预览。
@@ -995,7 +995,7 @@ endsolid letters
 
 [“5”立方体旋转的视频](import-test_files/cube5.mp4)
 
-网络上的视频（只有链接的一行。获得允许之前不加载）：
+网络上的视频（只有链接的一行。未经你同意不会加载）：
 
 https://www.w3schools.com/html/mov_bbb.mp4
 
