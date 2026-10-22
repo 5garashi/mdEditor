@@ -12,7 +12,7 @@
 
 The version number lives in [VERSION](./VERSION). Add each new version at the top, with a `## version — date` heading (used as the GitHub Release notes).
 
-## 1.0.15 — 2026-10-21
+## 1.0.15 — 2026-10-23
 
 - 簡体字中国語の表示を足した。ツールバーの言語の切り替えを「Language」の一覧（日本語・English・简体中文）にし、Ctrl+Shift+L では 3 つの言語を順に切り替える。初回は Windows の表示言語に合わせる（中国語なら簡体字中国語）。`--lang zh`（`zh-CN` も可）で起動時に指定できる。
 - 簡体字中国語の画面では、漢字を中国語の書体（Microsoft YaHei）で表示し、ロゴは英語のロゴタイプを使う。記号なしのテキスト・メールの読み込みなどの言葉も中国語にした。
@@ -20,6 +20,11 @@ The version number lives in [VERSION](./VERSION). Add each new version at the to
 - 「書き方」の例とサンプルに中国語版を足した（samples/diagram-test.zh-CN.md、github-test.zh-CN.md、import-test.zh-CN.md）。
 - README を英語（README.md）・日本語（README.ja.md）・簡体字中国語（README.zh-CN.md）の 3 つに分けた。
 - サンプルの画像・動画のフォルダーを「import-test-images」から、アプリが使う名前に合わせて「import-test_files」にした。samples/import-test（日本語・英語）の説明に残っていた「名前-images」も「名前_files」に直した。
+- 「設定」に「クリップボードから新規作成」を足した。起動するキー（Ctrl+Alt と英字・数字）を選ぶと、確認のうえ、そのキーを割り当てたショートカットをデスクトップに作る。ほかのアプリでテキスト・画像・ファイルをコピーしてからそのキーを押すと、mdEditor が起動して新しい文書に入れる。書式付きの内容（HTML）は Markdown にし、画像とファイルは編集画面にドロップしたときと同じく「名前_files」フォルダーに置く。同じキーを使うほかのショートカットがあれば知らせる。「なし」にするとショートカットを削除する。起動オプション `--paste` でも同じことができる。Microsoft Store 版でも使えるよう、パッケージに起動用の別名（mdEditor.exe）を足した。
+- 起動を速くした（この PC で、起動してから使えるようになるまで約 4.3〜4.8 秒 → 約 2.1〜2.2 秒）。画面の中の表示（アプリ自身のファイルだけを読む `mdeditor.local`）を Microsoft Defender SmartScreen に確かめさせるのをやめた（毎回約 2 秒待っていた。Web のリンクはこれまでどおりブラウザーで開く）。Mermaid と KaTeX は、図や数式のある文書を初めて表示するときに読み込む。発行するアプリは事前にコンパイルする（ReadyToRun。アプリのファイルは大きくなる）。
+- 編集欄の見出しの「Markdown を編集」を画面から外し（読み上げソフトには伝える）、ボタンを左に寄せて 1 行に収まりやすくした。
+- 画面全体の表示倍率の初期値を 90% にした。「初期値（90%）に戻す」と Ctrl + 0 も 90% に戻す。倍率を変えて保存している場合は、その倍率のまま。
+- 「このアプリについて」の「作品・ほかのアプリ」のリンクを表示しないようにした。
 
 - Added Simplified Chinese. The language switch in the toolbar is now a Language list (日本語, English, 简体中文); Ctrl+Shift+L goes through the three languages in turn. On first launch the language follows the Windows display language (Simplified Chinese for Chinese). `--lang zh` (or `zh-CN`) sets it at launch.
 - In Simplified Chinese, Chinese characters use a Chinese typeface (Microsoft YaHei) and the logo is the English logotype. Plain text export, mail import, and other generated words are in Chinese too.
@@ -27,6 +32,11 @@ The version number lives in [VERSION](./VERSION). Add each new version at the to
 - Chinese versions of the syntax examples and samples (samples/diagram-test.zh-CN.md, github-test.zh-CN.md, import-test.zh-CN.md).
 - The README is split into English (README.md), Japanese (README.ja.md), and Simplified Chinese (README.zh-CN.md).
 - The samples' image and video folder is now "import-test_files" (was "import-test-images"), the name the app itself uses. samples/import-test (Japanese and English) no longer describes the old "name-images" folders; it says "name_files".
+- New in Settings: New from clipboard. Choose a start key (Ctrl+Alt with a letter or digit), and after you confirm, mdEditor creates a desktop shortcut with that key. Copy text, a picture, or files in any app, then press the key: mdEditor starts and puts them in a new document. Formatted content (HTML) becomes Markdown; pictures and files go in the "name_files" folder as when dropped on the editor. Other shortcuts using the same key are pointed out. None deletes the shortcut. The `--paste` option does the same. The Store package has an execution alias (mdEditor.exe) so the shortcut works there too.
+- Faster startup (on this PC, from launch to ready: about 4.3-4.8 s to about 2.1-2.2 s). The app's own page (`mdeditor.local`, which reads only the app's files) is no longer checked by Microsoft Defender SmartScreen, which held up every launch by about 2 seconds; web links still open in the browser. Mermaid and KaTeX load the first time a document with a diagram or math is shown. Published builds are compiled ahead of time (ReadyToRun; the app files are larger).
+- The editor heading no longer shows "Edit Markdown" on screen (screen readers still get it), and its buttons start at the left, so they fit on one line more often.
+- The whole window now starts at 90% zoom. Reset to default (90%) and Ctrl + 0 go back to 90%. A zoom level you saved before stays as it is.
+- About no longer shows the Works and other apps link.
 
 ## 1.0.14 — 2026-10-20
 

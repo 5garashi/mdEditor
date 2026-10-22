@@ -115,7 +115,7 @@
       settingsFontUd: "BIZ UD ゴシック（読みやすさ重視）", settingsSize: "文字の大きさ", settingsSize100: "標準",
       settingsSize125: "大きい（125%）", settingsSize150: "とても大きい（150%）", settingsSize200: "最大（200%）",
       settingsSpacing: "行間", settingsSpacingNormal: "標準", settingsSpacingWide: "広め", settingsSpacingWider: "とても広い",
-      settingsZoom: "画面全体の表示倍率", zoomOut: "縮小", zoomIn: "拡大", zoomReset: "100% に戻す",
+      settingsZoom: "画面全体の表示倍率", zoomOut: "縮小", zoomIn: "拡大", zoomReset: "初期値（90%）に戻す",
       zoomNote: "Ctrl + マウスホイール、Ctrl + プラス／マイナス、Ctrl + 0 でも変えられます。倍率は次回の起動でも使います。",
       settingsFullWidth: "プレビューの本文の幅を制限しない（広い画面で1行を長くする）",
       settingsEditor: "編集欄", settingsActiveLine: "いまの行を強調する", settingsThickCaret: "カーソルを太くする",
@@ -130,6 +130,10 @@
       settingsBackup: "自動バックアップ", settingsBackupOn: "作業中の文書を自動でバックアップし、異常終了したときに復元する",
       settingsBackupNote: "保存していない変更を、この PC の中（%LOCALAPPDATA%\\mdEditor\\Recovery）に15秒ごとに控えます。元のファイルは書き換えません。保存するか、正常に終了すると控えは消えます。",
       settingsReset: "表示の設定を初期設定に戻す",
+      settingsPasteKey: "クリップボードから新規作成", pasteKeyLabel: "起動するキー", pasteKeyNone: "なし",
+      pasteKeyNote: "キーを選ぶと、確認のうえデスクトップにショートカットを作ります。テキストや画像をコピーしてからそのキーを押すと、mdEditor が起動して新しい文書に入れます。",
+      pasteKeyReady: (key) => `${key} で使えます（デスクトップのショートカット）。テキストや画像をコピーしてから押してください。「なし」にするとショートカットを削除します。`,
+      pasteKeyMissing: (key) => `前に作ったショートカット（${key}）がデスクトップに見つかりません。キーを選び直すと作り直します。`,
       shortcutIntro: "すべての操作はキーボードで行えます。キーは「変更」で好きな組み合わせに変えられ、「なし」で外せます。割り当てられるのは Ctrl と英字・数字の組み合わせ、または F キーです。",
       shortcutEnabled: "キーボードショートカットを使う", shortcutAction: "操作", shortcutKeys: "キー",
       shortcutChange: "変更", shortcutRemove: "なし", shortcutNone: "（なし）",
@@ -268,7 +272,7 @@
       settingsFontUd: "BIZ UD Gothic（注重易读性）", settingsSize: "文字大小", settingsSize100: "标准",
       settingsSize125: "大（125%）", settingsSize150: "很大（150%）", settingsSize200: "最大（200%）",
       settingsSpacing: "行距", settingsSpacingNormal: "标准", settingsSpacingWide: "较宽", settingsSpacingWider: "很宽",
-      settingsZoom: "整个画面的缩放比例", zoomOut: "缩小", zoomIn: "放大", zoomReset: "恢复为 100%",
+      settingsZoom: "整个画面的缩放比例", zoomOut: "缩小", zoomIn: "放大", zoomReset: "恢复为默认值（90%）",
       zoomNote: "也可以用 Ctrl + 鼠标滚轮、Ctrl + 加号／减号、Ctrl + 0 更改。下次启动时会保留缩放比例。",
       settingsFullWidth: "不限制预览正文的宽度（在宽屏上每行更长）",
       settingsEditor: "编辑区", settingsActiveLine: "突出显示当前行", settingsThickCaret: "加粗光标",
@@ -283,7 +287,11 @@
       settingsBackup: "自动备份", settingsBackupOn: "自动备份正在编辑的文档，异常退出时恢复",
       settingsBackupNote: "每 15 秒将未保存的更改备份到这台电脑中（%LOCALAPPDATA%\\mdEditor\\Recovery）。不会改写原文件。保存或正常退出后，备份会被删除。",
       settingsReset: "将显示设置恢复为默认",
-      shortcutIntro: "所有操作都可以用键盘完成。可以用“更改”把按键改为喜欢的组合，用“无”取消。可以分配的是 Ctrl 加字母或数字的组合，或 F 键。",
+      settingsPasteKey: "从剪贴板新建", pasteKeyLabel: "启动按键", pasteKeyNone: "无",
+      pasteKeyNote: "选择按键后，经你确认会在桌面上创建快捷方式。复制文本或图像后按该键，mdEditor 会启动并把内容放入新文档。",
+      pasteKeyReady: (key) => `可以使用 ${key}（桌面快捷方式）。请先复制文本或图像，再按该键。选择“无”会删除快捷方式。`,
+      pasteKeyMissing: (key) => `在桌面上找不到之前创建的快捷方式（${key}）。重新选择按键即可重新创建。`,
+      shortcutIntro:"所有操作都可以用键盘完成。可以用“更改”把按键改为喜欢的组合，用“无”取消。可以分配的是 Ctrl 加字母或数字的组合，或 F 键。",
       shortcutEnabled: "使用键盘快捷键", shortcutAction: "操作", shortcutKeys: "按键",
       shortcutChange: "更改", shortcutRemove: "无", shortcutNone: "（无）",
       shortcutPress: "请按下按键", shortcutReset: "恢复默认",
@@ -421,7 +429,7 @@
       settingsFontUd: "BIZ UD Gothic (designed for legibility)", settingsSize: "Text size", settingsSize100: "Standard",
       settingsSize125: "Large (125%)", settingsSize150: "Larger (150%)", settingsSize200: "Largest (200%)",
       settingsSpacing: "Line spacing", settingsSpacingNormal: "Standard", settingsSpacingWide: "Wide", settingsSpacingWider: "Wider",
-      settingsZoom: "Zoom (whole window)", zoomOut: "Zoom out", zoomIn: "Zoom in", zoomReset: "Reset to 100%",
+      settingsZoom: "Zoom (whole window)", zoomOut: "Zoom out", zoomIn: "Zoom in", zoomReset: "Reset to default (90%)",
       zoomNote: "Ctrl + mouse wheel, Ctrl + plus/minus, and Ctrl + 0 also work. The zoom level is remembered.",
       settingsFullWidth: "Don't limit the preview text width (longer lines on wide screens)",
       settingsEditor: "Editor", settingsActiveLine: "Highlight the current line", settingsThickCaret: "Use a thick cursor",
@@ -436,7 +444,11 @@
       settingsBackup: "Automatic backup", settingsBackupOn: "Back up the open document automatically and restore it after a crash",
       settingsBackupNote: "Unsaved changes are copied every 15 seconds to this PC (%LOCALAPPDATA%\\mdEditor\\Recovery). The original file is never changed. The copy is removed when you save or close normally.",
       settingsReset: "Restore display defaults",
-      shortcutIntro: "Every command can be used from the keyboard. Change a key with Change, or remove it with None. Keys can be Ctrl with a letter or digit, or an F key.",
+      settingsPasteKey: "New from clipboard", pasteKeyLabel: "Start key", pasteKeyNone: "None",
+      pasteKeyNote: "Choosing a key creates a desktop shortcut once you confirm. Copy text or a picture, then press the key: mdEditor starts and puts it in a new document.",
+      pasteKeyReady: (key) => `${key} is ready (desktop shortcut). Copy text or a picture first, then press it. Choosing None deletes the shortcut.`,
+      pasteKeyMissing: (key) => `The shortcut made earlier (${key}) is no longer on the desktop. Choose a key again to make it again.`,
+      shortcutIntro:"Every command can be used from the keyboard. Change a key with Change, or remove it with None. Keys can be Ctrl with a letter or digit, or an F key.",
       shortcutEnabled: "Use keyboard shortcuts", shortcutAction: "Command", shortcutKeys: "Key",
       shortcutChange: "Change", shortcutRemove: "None", shortcutNone: "(none)",
       shortcutPress: "Press a key", shortcutReset: "Restore defaults",
@@ -1404,7 +1416,15 @@
   // The diagram examples are drawn after the table is built (Mermaid renders asynchronously).
   let helpDiagramCounter = 0;
   const renderHelpDiagrams = async (pending) => {
-    if (!window.mermaid) return;
+    if (!pending.length) return;
+    if (!window.mermaid) {
+      try {
+        await loadMermaid();
+      } catch {
+        for (const { cell } of pending) cell.textContent = t("diagramError");
+        return;
+      }
+    }
     useMermaidTheme(false);
     for (const { cell, source } of pending) {
       try {
@@ -1418,9 +1438,24 @@
     }
   };
 
+  const renderHelpMath = async (pending) => {
+    if (!pending.length) return;
+    if (!window.katex) {
+      try {
+        await loadKatex();
+      } catch {
+        return;
+      }
+    }
+    for (const { cell, item } of pending) {
+      window.katex.render(item.math, cell, { throwOnError: false, displayMode: Boolean(item.display) });
+    }
+  };
+
   const renderHelp = () => {
     helpRows.replaceChildren();
     const diagrams = [];
+    const formulas = [];
     for (const item of helpItems) {
       if (item.group) {
         const row = document.createElement("tr");
@@ -1446,8 +1481,10 @@
       syntaxCell.appendChild(pre);
       const resultCell = document.createElement("td");
       resultCell.className = "help-result";
-      if (item.math && window.katex) {
-        window.katex.render(item.math, resultCell, { throwOnError: false, displayMode: Boolean(item.display) });
+      if (item.math) {
+        // The TeX shows until KaTeX has loaded.
+        resultCell.textContent = item.math;
+        formulas.push({ cell: resultCell, item });
       } else if (item.mermaid) {
         resultCell.classList.add("help-diagram");
         diagrams.push({ cell: resultCell, source: syntax.replace(/^```mermaid\n/, "").replace(/\n```$/, "") });
@@ -1465,6 +1502,7 @@
       row.append(nameCell, syntaxCell, resultCell, insertCell);
       helpRows.appendChild(row);
     }
+    renderHelpMath(formulas);
     renderHelpDiagrams(diagrams);
   };
 
@@ -1581,10 +1619,32 @@
     post({ type: "zoom", action: "reset" });
   });
 
+  // Settings > New from clipboard: Ctrl+Alt+letter or digit, given to a desktop shortcut
+  // the host makes (after asking) to start mdEditor with --paste.
+  const pasteKeySelect = document.getElementById("setting-paste-key");
+  const pasteKeyNote = document.getElementById("paste-key-note");
+  let pasteKey = { key: "", exists: false };
+  for (const character of "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789") {
+    const option = document.createElement("option");
+    option.value = character;
+    option.textContent = `Ctrl+Alt+${character}`;
+    pasteKeySelect.appendChild(option);
+  }
+  const showPasteKey = () => {
+    // A shortcut the user deleted shows as None, with a note, so choosing the key again remakes it.
+    pasteKeySelect.value = pasteKey.exists ? pasteKey.key : "";
+    const key = `Ctrl+Alt+${pasteKey.key}`;
+    pasteKeyNote.textContent = pasteKey.exists ? t("pasteKeyReady")(key)
+      : pasteKey.key ? t("pasteKeyMissing")(key) : t("pasteKeyNote");
+  };
+  pasteKeySelect.addEventListener("change", () => post({ type: "setPasteHotkey", key: pasteKeySelect.value }));
+
   const openSettings = () => {
     fillVoiceOptions();
     fillSettingControls();
     updateVoiceNote();
+    showPasteKey();
+    post({ type: "getPasteHotkey" });
     settingsDialog.showModal();
   };
   document.getElementById("settings-button").addEventListener("click", openSettings);
@@ -2016,6 +2076,14 @@
     applyShortcutHints();
   });
 
+  // Ctrl + 0 goes back to the app's default zoom (90%) instead of the browser's 100%.
+  document.addEventListener("keydown", (event) => {
+    if (event.ctrlKey && !event.altKey && !event.shiftKey && (event.code === "Digit0" || event.code === "Numpad0")) {
+      event.preventDefault();
+      post({ type: "zoom", action: "reset" });
+    }
+  }, true);
+
   document.addEventListener("keydown", (event) => {
     // The open dialog handles Esc itself; preventing it here would keep it open.
     if (document.querySelector("dialog[open]")) return;
@@ -2188,20 +2256,37 @@
   let diagramCounter = 0;
   let renderGeneration = 0;
   let mermaidConfig = null;
+  let mermaidWanted = null;
   let lastPreviewHtml = null;
   const darkScheme = window.matchMedia("(prefers-color-scheme: dark)");
 
-  // PDF export always uses the day palette, so print renders use the light theme.
-  // Diagrams use the same typeface as the UI language (styles.css :root and
-  // :root:lang(en)), so drawings made in one language are not reused in the other.
-  const useMermaidTheme = (forPrint) => {
-    const theme = !forPrint && darkScheme.matches ? "dark" : "default";
-    const fontFamily = getComputedStyle(document.documentElement).fontFamily;
-    if (mermaidConfig?.fontFamily !== fontFamily) {
-      for (const cache of Object.values(diagramCaches)) cache.clear();
-    }
+  // Mermaid (about 3.5 MB) and KaTeX are loaded the first time a document (or the
+  // Syntax list) needs them, so a launch does not wait for them.
+  const loadLibrary = (src) => new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = src;
+    script.onload = resolve;
+    script.onerror = () => reject(new Error(src));
+    document.head.appendChild(script);
+  });
+  let mermaidLoading = null;
+  let katexLoading = null;
+  const loadMermaid = () => mermaidLoading ??= loadLibrary("lib/mermaid/mermaid.min.js")
+    .then(() => applyMermaidConfig())
+    .catch((error) => {
+      mermaidLoading = null;
+      throw error;
+    });
+  const loadKatex = () => katexLoading ??= loadLibrary("lib/katex/katex.min.js").catch((error) => {
+    katexLoading = null;
+    throw error;
+  });
+
+  const applyMermaidConfig = () => {
+    if (!window.mermaid || !mermaidWanted) return;
+    const { theme, fontFamily } = mermaidWanted;
     if (mermaidConfig?.theme !== theme || mermaidConfig?.fontFamily !== fontFamily) {
-      window.mermaid?.initialize({
+      window.mermaid.initialize({
         startOnLoad: false,
         securityLevel: "strict",
         theme,
@@ -2209,6 +2294,19 @@
       });
       mermaidConfig = { theme, fontFamily };
     }
+  };
+
+  // PDF export always uses the day palette, so print renders use the light theme.
+  // Diagrams use the same typeface as the UI language (styles.css :root and
+  // :root:lang(en)), so drawings made in one language are not reused in the other.
+  const useMermaidTheme = (forPrint) => {
+    const theme = !forPrint && darkScheme.matches ? "dark" : "default";
+    const fontFamily = getComputedStyle(document.documentElement).fontFamily;
+    if (mermaidWanted?.fontFamily !== fontFamily) {
+      for (const cache of Object.values(diagramCaches)) cache.clear();
+    }
+    mermaidWanted = { theme, fontFamily };
+    applyMermaidConfig();
     return diagramCaches[theme];
   };
 
@@ -2224,8 +2322,16 @@
     }
   };
 
-  const renderMath = () => {
-    if (!window.katex) return;
+  const renderMath = async (generation) => {
+    if (!preview.querySelector(".math")) return;
+    if (!window.katex) {
+      try {
+        await loadKatex();
+      } catch {
+        return;
+      }
+      if (generation !== renderGeneration) return;
+    }
     for (const element of preview.querySelectorAll(".math")) {
       const source = element.textContent.trim()
         .replace(/^\\[([]/, "")
@@ -2434,6 +2540,15 @@
       }
     });
 
+    if (pending.length && !window.mermaid) {
+      try {
+        await loadMermaid();
+      } catch {
+        // Shown below as "diagrams unavailable".
+      }
+      if (generation !== renderGeneration) return;
+      applyMermaidConfig();
+    }
     for (const { element, source } of pending) {
       if (generation !== renderGeneration) return;
       if (!window.mermaid) {
@@ -2916,7 +3031,8 @@
     const models = takeFences(["stl"], "stl");
     const maps = takeFences(["geojson", "topojson"], "geo-map");
     convertMathFences();
-    renderMath();
+    await renderMath(generation);
+    if (generation !== renderGeneration) return;
     highlightCode();
     const keepPlace = () => {
       if (previewWindow) scrollPreviewToLine(lastSyncedLine.line, lastSyncedLine.edge);
@@ -3154,6 +3270,9 @@
       else scrollEditorToLine(message.line, message.edge);
     } else if (message.type === "runCommand") {
       shortcutDefinitions.find((item) => item.id === message.id)?.run(message.at ?? undefined);
+    } else if (message.type === "pasteHotkey") {
+      pasteKey = { key: message.key ?? "", exists: Boolean(message.exists) };
+      showPasteKey();
     } else if (message.type === "externalImages") {
       externalSelect.value = message.value;
     } else if (message.type === "externalNotice") {

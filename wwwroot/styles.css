@@ -441,6 +441,11 @@ body.dragging {
   background: var(--paper);
 }
 
+/* The editor's heading is read by screen readers only, so its buttons start at the left. */
+.editor-pane .pane-heading {
+  justify-content: flex-start;
+}
+
 .pane-heading h2 {
   margin: 0;
   font-size: 16px;
@@ -456,7 +461,6 @@ body.dragging {
 
 #replace-button {
   min-height: 44px;
-  margin-left: auto;
   padding: 4px 10px;
   font-size: 13px;
 }

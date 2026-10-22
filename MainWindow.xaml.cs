@@ -19,6 +19,7 @@ using System.Text.Json;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Ganss.Xss;
 using Markdig;
@@ -37,6 +38,8 @@ public partial class MainWindow : Window
 {
     private readonly string? _initialPath;
     private readonly string? _initialAnchor;
+    // Started with --paste: the clipboard goes into the new document.
+    private readonly bool _initialPaste;
     // "Closer to GitHub" (Settings > Markdown) leaves out mdEditor's own syntax.
     private bool _nearGitHub = LoadSetting("NearGitHub") == "on";
     private MarkdownPipeline _markdownPipeline = MarkdownPipelines.Build(LoadSetting("NearGitHub") == "on");
@@ -227,11 +230,12 @@ public partial class MainWindow : Window
     [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
     private static extern int SHFileOperation(ref ShFileOperationInfo operation);
 
-    public MainWindow(string? initialPath, string? initialAnchor = null)
+    public MainWindow(string? initialPath, string? initialAnchor = null, bool paste = false)
     {
         InitializeComponent();
         _initialPath = initialPath;
         _initialAnchor = initialAnchor;
+        _initialPaste = paste;
         ApplyTheme();
         SourceInitialized += (_, _) => ApplyTheme();
         SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
@@ -330,6 +334,10 @@ public partial class MainWindow : Window
         }
 
         EditorWebView.CoreWebView2.Settings.AreDevToolsEnabled = false;
+        // The page only ever loads the app's own files (mdeditor.local): web links open in
+        // the browser and internet images go through the app's own client. The SmartScreen
+        // check of that address held up every launch by about 2 seconds.
+        EditorWebView.CoreWebView2.Settings.IsReputationCheckingRequired = false;
         // Zoom (Ctrl + wheel, Ctrl + plus/minus, or the settings dialog) is kept between launches.
         EditorWebView.ZoomFactor = LoadZoom();
         EditorWebView.ZoomFactorChanged += (_, _) => OnZoomChanged();
@@ -395,6 +403,10 @@ public partial class MainWindow : Window
                 {
                     SendDocumentInfo();
                     SendPreview();
+                    if (_initialPaste)
+                    {
+                        await PasteClipboardAsync();
+                    }
                 }
 
                 if (LoadSetting("PreviewDetached") == "on")
@@ -461,6 +473,12 @@ public partial class MainWindow : Window
             case "openSample":
                 await OpenSampleAsync(root.GetProperty("text").GetString(),
                     root.TryGetProperty("name", out var sampleName) ? sampleName.GetString() : null);
+                break;
+            case "getPasteHotkey":
+                SendPasteHotkey();
+                break;
+            case "setPasteHotkey":
+                SetPasteHotkey(root.TryGetProperty("key", out var pasteKey) ? pasteKey.GetString() : null);
                 break;
             case "pasteImage":
                 var pastedType = root.TryGetProperty("mime", out var mime) ? mime.GetString() : null;
@@ -1306,11 +1324,14 @@ public partial class MainWindow : Window
         ?? typeof(MainWindow).Assembly.GetName().Version?.ToString(3)
         ?? string.Empty;
 
+    // The whole window starts at 90%, which fits more of the toolbar and the document.
+    private const double DefaultZoom = 0.9;
+
     private static double LoadZoom(string name = "Zoom") =>
         double.TryParse(LoadSetting(name), System.Globalization.NumberStyles.Float,
                 System.Globalization.CultureInfo.InvariantCulture, out var zoom) && zoom >= 0.25 && zoom <= 5
             ? zoom
-            : 1.0;
+            : DefaultZoom;
 
     private void OnZoomChanged()
     {
@@ -1335,7 +1356,7 @@ public partial class MainWindow : Window
         {
             "in" => ZoomSteps.FirstOrDefault(step => step > current + 0.001, ZoomSteps[^1]),
             "out" => ZoomSteps.LastOrDefault(step => step < current - 0.001, ZoomSteps[0]),
-            _ => 1.0
+            _ => DefaultZoom
         };
         // Setting ZoomFactor from code does not raise ZoomFactorChanged.
         OnZoomChanged();
@@ -2001,6 +2022,201 @@ public partial class MainWindow : Window
     // never writes over its source.
     // A sample from the Samples dialog opens the same way: a new, unsaved
     // document under the sample's own name, never written over the open file.
+    // --- New document from the clipboard (--paste) ---
+
+    // Started from the desktop shortcut made in Settings: what the user copied goes into
+    // the new document. Files and pictures are placed as a drop on the editor places them;
+    // formatted content (HTML from a web page or Word) becomes Markdown as "Open" does.
+    private async Task PasteClipboardAsync()
+    {
+        try
+        {
+            if (Clipboard.ContainsFileDropList())
+            {
+                var files = Clipboard.GetFileDropList().Cast<string>().Where(File.Exists).ToList();
+                if (files.Count > 0)
+                {
+                    await InsertFilesAsync(files, null);
+                    return;
+                }
+            }
+
+            var html = Clipboard.ContainsText(TextDataFormat.Html) ? Clipboard.GetText(TextDataFormat.Html) : null;
+            var picture = ClipboardPicture();
+            if (html is not null)
+            {
+                var (fragment, source) = ReadClipboardHtml(html);
+                var document = new AngleSharp.Html.Parser.HtmlParser().ParseDocument(fragment);
+                var onlyPictures = string.IsNullOrWhiteSpace(document.Body?.TextContent)
+                    && document.QuerySelector("img") is not null;
+                // "Copy image" in a browser puts both the picture and an <img> pointing at
+                // the internet; the picture itself is what the user copied.
+                if (!(onlyPictures && picture is not null)
+                    && document.QuerySelector("h1, h2, h3, h4, h5, h6, table, ul, ol, a[href], img, strong, b, em, i, pre, blockquote") is not null)
+                {
+                    var markdown = HtmlImport.ToMarkdown(fragment, source, null).Markdown.Trim('\n');
+                    if (markdown.Length > 0)
+                    {
+                        SendToPage(new { type = "insertText", text = markdown + "\n", block = true });
+                        SendToPage(new { type = "notice", text = Strings.Tr("クリップボードの書式付きの内容（HTML）を Markdown にして、新しい文書に入れました。見出し・表・リンクなどは残り、色や配置は残りません。") });
+                        return;
+                    }
+                }
+            }
+
+            if (picture is not null && !Clipboard.ContainsText())
+            {
+                await InsertFilesAsync([], picture, ".png");
+                return;
+            }
+
+            if (Clipboard.ContainsText())
+            {
+                var text = Clipboard.GetText().Replace("\r\n", "\n");
+                SendToPage(new { type = "insertText", text = text.EndsWith('\n') ? text : text + "\n", block = false });
+                SendToPage(new { type = "notice", text = Strings.Tr("クリップボードのテキストを新しい文書に入れました。") });
+                return;
+            }
+
+            if (picture is not null)
+            {
+                await InsertFilesAsync([], picture, ".png");
+                return;
+            }
+
+            SendToPage(new { type = "notice", text = Strings.Tr("クリップボードに、文書に入れられるもの（テキスト・画像・ファイル）がありません。コピーしてから、もう一度お試しください。") });
+        }
+        catch (Exception ex) when (ex is COMException or ExternalException or InvalidOperationException)
+        {
+            SendToPage(new { type = "notice", text = Strings.Tr("クリップボードを読み込めませんでした。少し待ってから、もう一度お試しください。") });
+        }
+    }
+
+    // A copied picture as PNG: the "PNG" format keeps transparency; other apps only
+    // put a bitmap.
+    private static byte[]? ClipboardPicture()
+    {
+        if (Clipboard.GetData("PNG") is MemoryStream png && png.Length > 0)
+        {
+            return png.ToArray();
+        }
+
+        if (!Clipboard.ContainsImage() || Clipboard.GetImage() is not { } bitmap)
+        {
+            return null;
+        }
+
+        var encoder = new PngBitmapEncoder();
+        encoder.Frames.Add(BitmapFrame.Create(bitmap));
+        using var stream = new MemoryStream();
+        encoder.Save(stream);
+        return stream.ToArray();
+    }
+
+    // CF_HTML: a header (Version, StartHTML, ..., SourceURL) and the copied part
+    // between <!--StartFragment--> and <!--EndFragment-->.
+    private static (string Html, Uri? Source) ReadClipboardHtml(string data)
+    {
+        Uri? source = null;
+        foreach (var line in data.Split('\n').TakeWhile(line => !line.TrimStart().StartsWith('<')))
+        {
+            if (line.StartsWith("SourceURL:", StringComparison.OrdinalIgnoreCase)
+                && Uri.TryCreate(line["SourceURL:".Length..].Trim(), UriKind.Absolute, out var url)
+                && url.Scheme is "https" or "http")
+            {
+                source = url;
+            }
+        }
+
+        const string startMarker = "<!--StartFragment-->";
+        var start = data.IndexOf(startMarker, StringComparison.Ordinal);
+        var end = data.IndexOf("<!--EndFragment-->", StringComparison.Ordinal);
+        var html = start >= 0 && end > start
+            ? data[(start + startMarker.Length)..end]
+            : data[Math.Max(0, data.IndexOf('<'))..];
+        return (html, source);
+    }
+
+    // Settings > New from clipboard: the key is given to a desktop shortcut that starts
+    // mdEditor with --paste, made only after the user agrees.
+    private void SendPasteHotkey()
+    {
+        var letter = LoadSetting("PasteHotkey") ?? string.Empty;
+        var exists = letter.Length == 1 && PasteShortcut.Exists(LoadSetting("PasteShortcut"), letter);
+        SendToPage(new { type = "pasteHotkey", key = letter, exists });
+    }
+
+    private void SetPasteHotkey(string? letter)
+    {
+        letter = (letter ?? string.Empty).Trim().ToUpperInvariant();
+        var oldPath = LoadSetting("PasteShortcut");
+        var oldExists = !string.IsNullOrEmpty(oldPath) && File.Exists(oldPath);
+        try
+        {
+            if (letter.Length == 0)
+            {
+                if (oldExists)
+                {
+                    var name = Path.GetFileNameWithoutExtension(oldPath!);
+                    if (MessageBox.Show(string.Format(Strings.Tr("デスクトップのショートカット「{0}」を削除しますか？"), name),
+                            "mdEditor", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                    {
+                        SendPasteHotkey();
+                        return;
+                    }
+
+                    File.Delete(oldPath!);
+                    SendToPage(new { type = "notice", text = string.Format(Strings.Tr("デスクトップのショートカット「{0}」を削除しました。"), name) });
+                }
+
+                SaveSetting("PasteHotkey", string.Empty);
+                SaveSetting("PasteShortcut", string.Empty);
+                SendPasteHotkey();
+                return;
+            }
+
+            if (letter.Length != 1 || !char.IsAsciiLetterOrDigit(letter[0]))
+            {
+                SendPasteHotkey();
+                return;
+            }
+
+            var path = PasteShortcut.NewPath();
+            var shortcutName = Path.GetFileNameWithoutExtension(path);
+            var key = PasteShortcut.Hotkey(letter);
+            var message = string.Format(Strings.Tr("デスクトップに「{0}」のショートカットを作り、{1} を割り当てます。Windows では、このキーはデスクトップかスタートメニューのショートカットにしか割り当てられません。作ってもいいですか？"), shortcutName, key);
+            var others = PasteShortcut.OthersUsing(letter, oldPath);
+            if (others.Count > 0)
+            {
+                message += "\n\n" + string.Format(Strings.Tr("{0} は、ほかのショートカット（{1}）でも使われています。Windows がどちらを起動するかは決まっていないため、別のキーを選ぶことをお勧めします。"), key, NameList(others));
+            }
+
+            message += "\n\n" + Strings.Tr("mdEditor を削除（アンインストール）する前に、このキーを「なし」に戻してください。ショートカットは自動では消えません。");
+            if (MessageBox.Show(message, "mdEditor", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+            {
+                SendPasteHotkey();
+                return;
+            }
+
+            if (oldExists && !string.Equals(oldPath, path, StringComparison.OrdinalIgnoreCase))
+            {
+                File.Delete(oldPath!);
+            }
+
+            PasteShortcut.Create(path, letter);
+            SaveSetting("PasteHotkey", letter);
+            SaveSetting("PasteShortcut", path);
+            SendPasteHotkey();
+            SendToPage(new { type = "notice", text = string.Format(Strings.Tr("デスクトップに「{0}」を作りました。テキストや画像をコピーしてから {1} を押すと、mdEditor の新しい文書に入ります。"), shortcutName, key) });
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or COMException or Microsoft.CSharp.RuntimeBinder.RuntimeBinderException)
+        {
+            SendPasteHotkey();
+            MessageBox.Show($"{Strings.Tr("デスクトップのショートカットを作れませんでした。")}\n\n{ex.Message}",
+                "mdEditor", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+    }
+
     private async Task OpenSampleAsync(string? text, string? name)
     {
         if (text is null || !await ConfirmSaveChangesAsync())
@@ -4157,6 +4373,7 @@ public partial class MainWindow : Window
 
         var core = window.WebView.CoreWebView2;
         core.Settings.AreDevToolsEnabled = false;
+        core.Settings.IsReputationCheckingRequired = false;
         window.WebView.ZoomFactor = LoadZoom("PreviewZoom");
         window.WebView.ZoomFactorChanged += (_, _) => SaveSetting(
             "PreviewZoom",
@@ -4214,6 +4431,11 @@ public partial class MainWindow : Window
                 break;
             case "attachPreview":
                 window.Close();
+                break;
+            case "zoom":
+                // Ctrl + 0 in the preview window goes back to the default zoom, as in this window.
+                window.WebView.ZoomFactor = DefaultZoom;
+                SaveSetting("PreviewZoom", DefaultZoom.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture));
                 break;
             case "externalLink":
                 OpenExternalLink(root.GetProperty("url").GetString());

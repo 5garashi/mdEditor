@@ -20,6 +20,9 @@
     <!-- The version is kept only in the VERSION file at the repository root. -->
     <Version>$([System.IO.File]::ReadAllText('$(MSBuildProjectDirectory)\VERSION').Trim())</Version>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <!-- Published copies (setup.ps1, store\build-msix.ps1) are compiled ahead of time, so less
+         code is compiled while the window opens. -->
+    <PublishReadyToRun>true</PublishReadyToRun>
   </PropertyGroup>
   <ItemGroup>
     <!-- WebView2 serves these from a real folder, so keep them beside the single-file exe. -->

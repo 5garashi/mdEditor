@@ -10,8 +10,10 @@
 <Package
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
-  IgnorableNamespaces="uap rescap">
+  IgnorableNamespaces="uap uap3 desktop rescap">
   <Identity Name="@IDENTITY_NAME@" Publisher="@PUBLISHER@" Version="@VERSION@" ProcessorArchitecture="x64" />
   <Properties>
     <DisplayName>@DISPLAY_NAME@</DisplayName>
@@ -39,6 +41,14 @@
           Square310x310Logo="Assets\Square310x310Logo.png" />
       </uap:VisualElements>
       <Extensions>
+        <!-- mdEditor.exe in %LOCALAPPDATA%\Microsoft\WindowsApps starts the app with its
+             arguments. The desktop shortcut made in Settings (New from clipboard) points
+             here with the paste option, since the installed exe cannot be started directly. -->
+        <uap3:Extension Category="windows.appExecutionAlias" Executable="mdEditor.exe" EntryPoint="Windows.FullTrustApplication">
+          <uap3:AppExecutionAlias>
+            <desktop:ExecutionAlias Alias="mdEditor.exe" />
+          </uap3:AppExecutionAlias>
+        </uap3:Extension>
         <!-- Every type mdEditor opens is listed, so it appears in "Open with". Windows never
              changes an existing default app. Markdown and text open as they are; the
              others open as a new Markdown document and the file itself is never written.

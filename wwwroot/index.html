@@ -21,8 +21,8 @@
   <link rel="icon" href="assets/5garashi_mark_simple.svg" type="image/svg+xml">
   <link rel="stylesheet" href="lib/katex/katex.min.css">
   <link rel="stylesheet" href="styles.css">
-  <script src="lib/katex/katex.min.js" defer></script>
-  <script src="lib/mermaid/mermaid.min.js" defer></script>
+  <!-- KaTeX (lib/katex/katex.min.js) and Mermaid (lib/mermaid/mermaid.min.js) are loaded by
+       app.js the first time a document has math or a diagram, so they do not slow down startup. -->
   <script src="lib/codemirror/codemirror.min.js" defer></script>
   <script src="lib/highlight/highlight.min.js" defer></script>
   <script src="lib/highlight/languages/powershell.min.js" defer></script>
@@ -79,7 +79,8 @@
   <main class="workspace">
     <section class="pane editor-pane" aria-labelledby="editor-heading">
       <div class="pane-heading">
-        <h2 id="editor-heading" data-i18n="editorHeading">Markdown を編集</h2>
+        <!-- Kept for screen readers (it names the pane); hidden so the buttons fit on one line. -->
+        <h2 id="editor-heading" class="visually-hidden" data-i18n="editorHeading">Markdown を編集</h2>
         <button id="replace-button" type="button" data-i18n="findReplace">検索・置換</button>
         <button id="toc-button" type="button" data-i18n="toc">目次</button>
         <button id="image-button" type="button" data-i18n="imageButton" aria-haspopup="dialog">画像の調整</button>
@@ -187,9 +188,9 @@
       <legend data-i18n="settingsZoom">画面全体の表示倍率</legend>
       <div class="settings-row zoom-row">
         <button id="zoom-out" type="button" data-i18n="zoomOut">縮小</button>
-        <output id="zoom-value" aria-live="polite">100%</output>
+        <output id="zoom-value" aria-live="polite">90%</output>
         <button id="zoom-in" type="button" data-i18n="zoomIn">拡大</button>
-        <button id="zoom-reset" type="button" data-i18n="zoomReset">100% に戻す</button>
+        <button id="zoom-reset" type="button" data-i18n="zoomReset">初期値（90%）に戻す</button>
       </div>
       <p class="settings-note" data-i18n="zoomNote"></p>
     </fieldset>
@@ -263,6 +264,14 @@
       <legend data-i18n="settingsExport">書き出し</legend>
       <label class="settings-check"><input id="setting-html-source" type="checkbox"> <span data-i18n="settingsHtmlSource">HTMLに保存するとき、元の Markdown も入れる（mdEditor で開くと元どおりに戻せる）</span></label>
       <p class="settings-note" data-i18n="settingsHtmlSourceNote"></p>
+    </fieldset>
+    <fieldset class="settings-group">
+      <legend data-i18n="settingsPasteKey">クリップボードから新規作成</legend>
+      <label class="settings-row"><span data-i18n="pasteKeyLabel">起動するキー</span>
+        <select id="setting-paste-key">
+          <option value="" data-i18n="pasteKeyNone">なし</option>
+        </select></label>
+      <p id="paste-key-note" class="settings-note" aria-live="polite"></p>
     </fieldset>
     <fieldset class="settings-group">
       <legend data-i18n="settingsBackup">自動バックアップ</legend>
@@ -383,7 +392,7 @@
     <p class="help-intro"><span data-i18n="aboutVersion">バージョン</span> <span id="app-version"></span></p>
     <ul class="about-links">
       <li><a href="https://www.5garashi.com/" data-i18n="aboutCompany">5garashi.com Design Office の紹介</a></li>
-      <li><a href="https://github.com/5garashi" data-i18n="aboutWorks">作品・ほかのアプリ</a></li>
+      <li hidden><a href="https://github.com/5garashi" data-i18n="aboutWorks">作品・ほかのアプリ</a></li>
       <li><a href="https://github.com/5garashi/mdEditor/issues" data-i18n="aboutSupport">サポート・お問い合わせ</a></li>
       <li><a href="https://github.com/5garashi/mdEditor/blob/main/PRIVACY.md" data-i18n="aboutPrivacy">プライバシーポリシー</a></li>
     </ul>
