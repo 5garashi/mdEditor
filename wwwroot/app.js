@@ -59,6 +59,7 @@
       dividerLabel: "編集画面とプレビューの幅",
       dividerTitle: "ドラッグまたは矢印キーで左右の幅を調整します",
       fullscreenEditor: "編集画面をウィンドウ全体に表示", fullscreenPreview: "プレビューをウィンドウ全体に表示",
+      fullscreenShort: "ウィンドウ全体に表示",
       fullscreenExit: "元の表示に戻す", saved: "保存済み", unsaved: "未保存の変更",
       settingsReaderLang: "言語", readerLangAuto: "自動（段落ごとに判定）", readerLangJa: "日本語", readerLangEn: "英語", readerLangZh: "中国語（簡体字）",
       settingsReaderVoice: "音声", readerVoiceAuto: "自動（最初に見つかった音声）",
@@ -216,6 +217,7 @@
       dividerLabel: "编辑区和预览的宽度",
       dividerTitle: "拖动或按方向键调整左右宽度",
       fullscreenEditor: "编辑区填满窗口", fullscreenPreview: "预览填满窗口",
+      fullscreenShort: "填满窗口",
       fullscreenExit: "恢复原来的布局", saved: "已保存", unsaved: "有未保存的更改",
       settingsReaderLang: "语言", readerLangAuto: "自动（按段落判断）", readerLangJa: "日语", readerLangEn: "英语", readerLangZh: "中文（简体）",
       settingsReaderVoice: "语音", readerVoiceAuto: "自动（最先找到的语音）",
@@ -373,6 +375,7 @@
       dividerLabel: "Width of the editor and preview",
       dividerTitle: "Drag or use the arrow keys to resize",
       fullscreenEditor: "Fill window with editor", fullscreenPreview: "Fill window with preview",
+      fullscreenShort: "Fill window",
       fullscreenExit: "Restore layout", saved: "Saved", unsaved: "Unsaved changes",
       settingsReaderLang: "Language", readerLangAuto: "Automatic (per paragraph)", readerLangJa: "Japanese", readerLangEn: "English", readerLangZh: "Chinese (Simplified)",
       settingsReaderVoice: "Voice", readerVoiceAuto: "Automatic (first voice found)",
@@ -651,11 +654,14 @@
     for (const button of fullscreenButtons) {
       const buttonMode = button.dataset.fullscreenMode;
       const active = mode === buttonMode;
-      button.textContent = active
-        ? t("fullscreenExit")
-        : buttonMode === "editor"
-          ? t("fullscreenEditor")
-          : t("fullscreenPreview");
+      // The two buttons show the same short text (their pane tells them apart); screen
+      // readers get the full name, which contains the shown text (WCAG 2.5.3).
+      button.textContent = active ? t("fullscreenExit") : t("fullscreenShort");
+      if (active) {
+        button.removeAttribute("aria-label");
+      } else {
+        button.setAttribute("aria-label", buttonMode === "editor" ? t("fullscreenEditor") : t("fullscreenPreview"));
+      }
       button.setAttribute("aria-pressed", String(active));
     }
   };
