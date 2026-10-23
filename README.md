@@ -49,9 +49,9 @@ An editor that shows the formatted result right beside the Markdown you are writ
 
 ## Screenshots
 
-**See the result as you write** — Write Markdown on the left and the preview on the right updates as you type, with diagrams, tables, and math.
+**See the result as you write** — Write Markdown on the left and the preview on the right updates as you type, with diagrams, tables, math, and 3D models you turn by dragging.
 
-![Write Markdown on the left and the preview on the right updates as you type, with diagrams, tables, and math.](docs/images/1-main.en.png)
+![Write Markdown on the left and the preview on the right updates as you type, with diagrams, tables, math, and 3D models you turn by dragging.](docs/images/1-main.en.png)
 
 **Dark mode** — Follows the Windows setting, or choose day or night with the Theme button in Settings (or Ctrl+Shift+T). Printing and PDF always use a white page.
 

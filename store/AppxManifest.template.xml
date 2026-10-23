@@ -26,6 +26,7 @@
   <Resources>
     <Resource Language="ja-JP" />
     <Resource Language="en-US" />
+    <Resource Language="zh-CN" />
   </Resources>
   <Applications>
     <Application Id="mdEditor" Executable="mdEditor.exe" EntryPoint="Windows.FullTrustApplication">

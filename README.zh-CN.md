@@ -49,39 +49,37 @@ tags: [markdown, windows, wpf, webview2]
 
 ## 截图
 
-以下截图为英文界面。界面语言为简体中文时，按钮和对话框的文字为中文。
+**边写边看结果** — 在左边写 Markdown，右边的预览会随输入更新，包括图表、表格、公式和可以拖动旋转的 3D 模型。
 
-**边写边看结果** — 在左边写 Markdown，右边的预览会随输入更新，包括图表、表格和公式。
-
-![在左边写 Markdown，右边的预览会随输入更新，包括图表、表格和公式。](docs/images/1-main.en.png)
+![在左边写 Markdown，右边的预览会随输入更新，包括图表、表格、公式和可以拖动旋转的 3D 模型。](docs/images/1-main.zh-CN.png)
 
 **深色模式** — 跟随 Windows 的设置，也可以用“设置”中的“显示”按钮（或 Ctrl+Shift+T）选择白天或夜间。打印和 PDF 始终使用白色页面。
 
-![跟随 Windows 的设置，也可以用“设置”中的“显示”按钮（或 Ctrl+Shift+T）选择白天或夜间。打印和 PDF 始终使用白色页面。](docs/images/2-dark.en.png)
+![跟随 Windows 的设置，也可以用“设置”中的“显示”按钮（或 Ctrl+Shift+T）选择白天或夜间。打印和 PDF 始终使用白色页面。](docs/images/2-dark.zh-CN.png)
 
 **在单独窗口中显示预览** — 把预览放到第二个显示器上，写作和阅读分开进行。预览会跟随编辑滚动。
 
-![把预览放到第二个显示器上，写作和阅读分开进行。预览会跟随编辑滚动。](docs/images/3-preview-window.en.png)
+![把预览放到第二个显示器上，写作和阅读分开进行。预览会跟随编辑滚动。](docs/images/3-preview-window.zh-CN.png)
 
 **Markdown 写法一目了然** — Markdown 简明写法（F1）。按“插入”会把示例放到光标位置。
 
-![Markdown 简明写法（F1）。按“插入”会把示例放到光标位置。](docs/images/4-syntax.en.png)
+![Markdown 简明写法（F1）。按“插入”会把示例放到光标位置。](docs/images/4-syntax.zh-CN.png)
 
 **保存为多种格式** — “另存为”可以保存为 Markdown、文本、PDF、HTML、PNG、Word、CSV、TSV、JSON、Jupyter Notebook，或用于分发的 ZIP（文档和“名称_files”文件夹）。也可以打开 Word、HTML、CSV、电子邮件、Jupyter Notebook 等文件。
 
-![“另存为”可以保存为 Markdown、文本、PDF、HTML、PNG、Word、CSV、TSV、JSON、Jupyter Notebook，或用于分发的 ZIP（文档和“名称_files”文件夹）。也可以打开 Word、HTML、CSV、电子邮件、Jupyter Notebook 等文件。](docs/images/5-save-as.en.png)
+![“另存为”可以保存为 Markdown、文本、PDF、HTML、PNG、Word、CSV、TSV、JSON、Jupyter Notebook，或用于分发的 ZIP（文档和“名称_files”文件夹）。也可以打开 Word、HTML、CSV、电子邮件、Jupyter Notebook 等文件。](docs/images/5-save-as.zh-CN.png)
 
 **代码着色和目录** — 写了语言名的代码会着色显示。“目录”会根据标题生成目录。
 
-![写了语言名的代码会着色显示。“目录”会根据标题生成目录。](docs/images/6-code-toc.en.png)
+![写了语言名的代码会着色显示。“目录”会根据标题生成目录。](docs/images/6-code-toc.zh-CN.png)
 
 **3D 模型** — 用 STL 写的 3D 模型可以拖动旋转。不需要连接互联网也能显示。
 
-![用 STL 写的 3D 模型可以拖动旋转。不需要连接互联网也能显示。](docs/images/7-3d-model.en.png)
+![用 STL 写的 3D 模型可以拖动旋转。不需要连接互联网也能显示。](docs/images/7-3d-model.zh-CN.png)
 
 **地图和前置元数据** — 经你同意后，GeoJSON 地图会绘制在 OpenStreetMap 的详细地图上。开头的 YAML 前置元数据显示为项目名和值的列表。
 
-![经你同意后，GeoJSON 地图会绘制在 OpenStreetMap 的详细地图上。开头的 YAML 前置元数据显示为项目名和值的列表。](docs/images/8-map.en.png)
+![经你同意后，GeoJSON 地图会绘制在 OpenStreetMap 的详细地图上。开头的 YAML 前置元数据显示为项目名和值的列表。](docs/images/8-map.zh-CN.png)
 
 ## 安装
 

@@ -24,6 +24,7 @@ The version number lives in [VERSION](./VERSION). Add each new version at the to
 - 起動を速くした（この PC で、起動してから使えるようになるまで約 4.3〜4.8 秒 → 約 2.1〜2.2 秒）。画面の中の表示（アプリ自身のファイルだけを読む `mdeditor.local`）を Microsoft Defender SmartScreen に確かめさせるのをやめた（毎回約 2 秒待っていた。Web のリンクはこれまでどおりブラウザーで開く）。Mermaid と KaTeX は、図や数式のある文書を初めて表示するときに読み込む。発行するアプリは事前にコンパイルする（ReadyToRun。アプリのファイルは大きくなる）。
 - 編集欄の見出しの「Markdown を編集」を画面から外し（読み上げソフトには伝える）、ボタンを左に寄せて 1 行に収まりやすくした。「編集画面をウィンドウ全体に表示」「プレビューをウィンドウ全体に表示」のボタンの文字を「ウィンドウ全体に表示」に短くした（読み上げソフトには、どちらの欄かを含めた元の名前を伝える）。
 - 画面上部を詰めた。文書名・保存の状態・文字コードを、ロゴの段（ロゴタイプとシンボルマークの間。どちらからも十分に離す）に移した。「表示」（表示テーマ）と「用紙」のボタンは「設定」の中の「表示テーマと PDF の用紙」に移した（Ctrl+Shift+T と Ctrl+Shift+A はこれまでどおり）。幅 1262 px（倍率 90%）の画面で、ボタンが 1 行に収まる。狭い画面では、文書名はロゴの段の 2 行目に回る。
+- Microsoft Store のパッケージに簡体字中国語（zh-CN）を足し、Store の掲載文に中国語の節を足した。スクリーンショット（`docs/images`）を今の画面で撮り直し、中国語版（`.zh-CN.png`）を足した。1 枚目は 3D モデルの画面にした。
 - 画面全体の表示倍率の初期値を 90% にした。「初期値（90%）に戻す」と Ctrl + 0 も 90% に戻す。倍率を変えて保存している場合は、その倍率のまま。
 - 「このアプリについて」の「作品・ほかのアプリ」のリンクを表示しないようにした。
 
@@ -37,6 +38,7 @@ The version number lives in [VERSION](./VERSION). Add each new version at the to
 - Faster startup (on this PC, from launch to ready: about 4.3-4.8 s to about 2.1-2.2 s). The app's own page (`mdeditor.local`, which reads only the app's files) is no longer checked by Microsoft Defender SmartScreen, which held up every launch by about 2 seconds; web links still open in the browser. Mermaid and KaTeX load the first time a document with a diagram or math is shown. Published builds are compiled ahead of time (ReadyToRun; the app files are larger).
 - The editor heading no longer shows "Edit Markdown" on screen (screen readers still get it), and its buttons start at the left, so they fit on one line more often. The "Fill window with editor" and "Fill window with preview" buttons now read just "Fill window" (screen readers still get the full name, with the pane).
 - A slimmer top of the window. The file name, save state, and text encoding moved into the header, between the logotype and the symbol mark (well clear of both). The Theme and Paper buttons moved into Settings under "Theme and PDF paper" (Ctrl+Shift+T and Ctrl+Shift+A work as before). At 1262 px (90% zoom) the toolbar fits on one line; on narrow screens the file name takes a second line in the header.
+- The Microsoft Store package declares Simplified Chinese (zh-CN), and the Store listing has a Chinese section. The screenshots (`docs/images`) were retaken on the current screen, with Chinese versions added (`.zh-CN.png`); the first one now shows a 3D model.
 - The whole window now starts at 90% zoom. Reset to default (90%) and Ctrl + 0 go back to 90%. A zoom level you saved before stays as it is.
 - About no longer shows the Works and other apps link.
 
