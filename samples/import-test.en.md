@@ -182,7 +182,7 @@ A PDF modelled on an official guideline: Times body text, and numbered headings 
 
 Expected results:
 
-- Contents lines stand alone, such as "1. Introduction …… 2", and are not headings.
+- The contents become a list nested as the PDF indents it (`- 1\. Introduction …… 2`, under it `  - 2.1 Definitions …… 2`, and under that `    - (1) First condition …… 3`). Contents lines are not headings.
 - "1. Introduction" and "2. Requirements" become `##` headings, "2.1 Definitions" `###`, and "(1) First condition" and "(2) Second condition" `####`.
 - The cover title, the date, and "Contents" become `#`. "1 April 2026" is not a numbered heading, as its number has no period.
 - The line whose "•" is set apart from its text becomes the list item `- A definition item, …`.

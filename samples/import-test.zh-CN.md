@@ -182,7 +182,7 @@
 
 期待的结果：
 
-- 目录的行每行单独保留，如“1. Introduction …… 2”，不会成为标题。
+- 目录按 PDF 的缩进成为嵌套的列表（`- 1\. Introduction …… 2`，其下为 `  - 2.1 Definitions …… 2`，再下为 `    - (1) First condition …… 3`）。目录的行不会成为标题。
 - “1. Introduction”“2. Requirements”成为 `##` 标题，“2.1 Definitions”成为 `###`，“(1) First condition”“(2) Second condition”成为 `####`。
 - 封面的标题、日期和“Contents”成为 `#`。“1 April 2026”的数字后面没有点，不会成为带编号的标题。
 - “•”与文字分开的行成为列表项 `- A definition item, …`。

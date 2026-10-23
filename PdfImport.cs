@@ -30,9 +30,9 @@ internal static partial class PdfImport
 
     public sealed record Result(string Markdown, int Images, int Pages, int ReadPages, bool HasText, int Headings);
 
-    private sealed record Line(string Text, double Size, bool Bold, double Top, double Right, bool MathFont, string Family);
+    private sealed record Line(string Text, double Size, bool Bold, double Top, double Right, bool MathFont, string Family, double Left = 0);
 
-    private sealed record Item(string Text, double Size, bool Bold, ItemKind Kind, double Top, int Page, bool Math = false, string Family = "", bool Toc = false);
+    private sealed record Item(string Text, double Size, bool Bold, ItemKind Kind, double Top, int Page, bool Math = false, string Family = "", bool Toc = false, double Left = 0);
 
     private enum ItemKind { Paragraph, Bullet, Numbered, Image }
 
@@ -57,6 +57,24 @@ internal static partial class PdfImport
             // table's figures) stay.
             var margin = page.Height * 0.08;
             pageItems.RemoveAll(item => IsPageNumber(item.Text) && (item.Top > page.Height - margin || item.Top < margin));
+
+            // A long contents entry wraps: its first line has no leader dots and comes out as
+            // a paragraph right above, starting at the same place. It is joined to its entry.
+            for (var i = pageItems.Count - 1; i > 0; i--)
+            {
+                var entry = pageItems[i];
+                var above = pageItems[i - 1];
+                if (entry.Toc && !above.Toc && above.Kind == ItemKind.Paragraph && !above.Math
+                    && Math.Abs(above.Left - entry.Left) <= 4
+                    && above.Top - entry.Top > 0 && above.Top - entry.Top < Math.Max(entry.Size, 1) * 2.6)
+                {
+                    var cut = entry.Text.LastIndexOf(" …… ", StringComparison.Ordinal);
+                    var title = JoinLines(new[] { above.Text, entry.Text[..cut] }.Where(part => part.Trim().Length > 0)).Trim();
+                    pageItems[i] = entry with { Text = title + entry.Text[cut..], Top = above.Top, Left = above.Left };
+                    pageItems.RemoveAt(i - 1);
+                    i--;
+                }
+            }
 
             // A bullet set apart from its text can land in a block of its own; it goes back to
             // the paragraph that starts on the same line, which becomes a list item.
@@ -104,16 +122,28 @@ internal static partial class PdfImport
             headingOf[text[i]] = levels[i];
         }
 
+        var tocDepth = TocDepths(items);
         var markdown = new StringBuilder();
         ItemKind? previous = null;
+        var previousToc = false;
         foreach (var item in items)
         {
             var level = headingOf.GetValueOrDefault(item);
             var kind = level > 0 ? ItemKind.Paragraph : item.Kind;
-            var listContinues = (previous is ItemKind.Bullet or ItemKind.Numbered) && kind == previous;
+            var listContinues = ((previous is ItemKind.Bullet or ItemKind.Numbered) && kind == previous) || (item.Toc && previousToc);
             if (markdown.Length > 0)
             {
                 markdown.Append(listContinues ? "\n" : "\n\n");
+            }
+
+            previousToc = item.Toc;
+            if (item.Toc)
+            {
+                // A table of contents is one list, nested as the PDF indents it. "1." is
+                // written "1\." so Markdown keeps it as text, not as a numbered list.
+                markdown.Append(new string(' ', 2 * tocDepth[item])).Append("- ").Append(EscapeListNumber(item.Text));
+                previous = ItemKind.Paragraph;
+                continue;
             }
 
             switch (kind)
@@ -179,6 +209,7 @@ internal static partial class PdfImport
         double firstSize = 0, firstTop = 0;
         var firstBold = false;
         var firstFamily = string.Empty;
+        double firstLeft = 0;
 
         IEnumerable<Item> Flush()
         {
@@ -190,7 +221,7 @@ internal static partial class PdfImport
             var text = JoinLines(current.Select(line => line.Text));
             var mathInItem = current.Any(line => line.MathFont);
             current.Clear();
-            yield return new Item(text, firstSize, firstBold, kind, firstTop, page, mathInItem, firstFamily);
+            yield return new Item(text, firstSize, firstBold, kind, firstTop, page, mathInItem, firstFamily, Left: firstLeft);
         }
 
         foreach (var line in lines)
@@ -203,7 +234,7 @@ internal static partial class PdfImport
             {
                 foreach (var item in Flush()) yield return item;
                 var entry = line.Text[..leader.Index].TrimEnd() + " …… " + leader.Groups[1].Value;
-                yield return new Item(entry, line.Size, line.Bold, ItemKind.Paragraph, line.Top, page, Family: line.Family, Toc: true);
+                yield return new Item(entry, line.Size, line.Bold, ItemKind.Paragraph, line.Top, page, Family: line.Family, Toc: true, Left: line.Left);
                 previousLine = null;
                 continue;
             }
@@ -226,6 +257,7 @@ internal static partial class PdfImport
                 firstBold = line.Bold;
                 firstTop = line.Top;
                 firstFamily = line.Family;
+                firstLeft = line.Left;
             }
 
             current.Add(line with { Text = lineKind == ItemKind.Bullet ? rest : line.Text });
@@ -295,7 +327,8 @@ internal static partial class PdfImport
             || (letter.FontName ?? string.Empty).Contains("Math", StringComparison.OrdinalIgnoreCase));
         var family = letters.Count == 0 ? string.Empty : letters.GroupBy(letter => Family(letter.FontName))
             .OrderByDescending(group => group.Count()).First().Key;
-        return new Line(Normalize(builder.ToString()), size, bold, words.Max(word => word.BoundingBox.Top), words.Max(word => word.BoundingBox.Right), mathFont, family);
+        return new Line(Normalize(builder.ToString()), size, bold, words.Max(word => word.BoundingBox.Top), words.Max(word => word.BoundingBox.Right), mathFont, family,
+            words.Min(word => word.BoundingBox.Left));
     }
 
     // A typeface without its subset prefix ("ABCDEF+") and weight or style ("-Bold",
@@ -397,6 +430,53 @@ internal static partial class PdfImport
     // A line that is only a page number ("3", "- 3 -", "3 / 10") is left out.
     private static bool IsPageNumber(string text) => PageNumberPattern().IsMatch(text);
 
+    // The depth of each table-of-contents line within its run of consecutive lines: the
+    // leftmost lines are 0, and each further step to the right one more (positions within
+    // 4 points count as the same step).
+    private static Dictionary<Item, int> TocDepths(List<Item> items)
+    {
+        var depths = new Dictionary<Item, int>(ReferenceEqualityComparer.Instance);
+        for (var start = 0; start < items.Count; start++)
+        {
+            if (!items[start].Toc)
+            {
+                continue;
+            }
+
+            var end = start;
+            while (end + 1 < items.Count && items[end + 1].Toc)
+            {
+                end++;
+            }
+
+            var run = items.GetRange(start, end - start + 1);
+            var steps = new List<double>();
+            foreach (var left in run.Select(item => item.Left).OrderBy(left => left))
+            {
+                if (steps.Count == 0 || left - steps[^1] > 4)
+                {
+                    steps.Add(left);
+                }
+            }
+
+            foreach (var item in run)
+            {
+                depths[item] = Math.Max(0, steps.FindLastIndex(step => item.Left >= step - 4));
+            }
+
+            start = end;
+        }
+
+        return depths;
+    }
+
+    // "1. Introduction" would start a numbered list; "1\." keeps the number as text.
+    private static string EscapeListNumber(string text)
+    {
+        var match = ListNumberPattern().Match(text);
+        return match.Success ? text[..(match.Length - 1)] + "\\" + text[(match.Length - 1)..] : Escape(text);
+    }
+
     // Markdown would read these at the start of a line as syntax.
     private static string Escape(string text) =>
         text.Length > 0 && "#>-+*|".Contains(text[0]) ? "\\" + text : text;
@@ -436,6 +516,10 @@ internal static partial class PdfImport
 
     [GeneratedRegex(@"^[\s\-–—]*\d{1,4}(\s*/\s*\d{1,4})?[\s\-–—]*$")]
     private static partial Regex PageNumberPattern();
+
+    // A number, a period or parenthesis, and a space: Markdown's numbered-list marker.
+    [GeneratedRegex(@"^[0-9]{1,9}[.)](?=\s)")]
+    private static partial Regex ListNumberPattern();
 
     [GeneratedRegex(@"^\s*[•●○◦▪■□・·‣⁃]\s*$")]
     private static partial Regex LoneBulletPattern();

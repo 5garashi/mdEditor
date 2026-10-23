@@ -184,7 +184,7 @@ mdEditor で開ける形式と、「名前を付けて保存」で選べる形�
 
 期待する結果:
 
-- 目次の行は「1. Introduction …… 2」のように 1 行ずつになり、見出しにならない。
+- 目次は、PDF の字下げのとおりに入れ子にした箇条書きになる（`- 1\. Introduction …… 2`、その下に `  - 2.1 Definitions …… 2`、さらに下に `    - (1) First condition …… 3`）。目次の行は見出しにならない。
 - 「1. Introduction」「2. Requirements」が `##`、「2.1 Definitions」が `###`、「(1) First condition」「(2) Second condition」が `####` の見出しになる。
 - 表紙の題・日付・「Contents」は `#` になる。「1 April 2026」は、番号の後に点がないので番号付きの見出しにならない。
 - 本文と離れた「•」の行は、`- A definition item, …` の箇条書きになる。
