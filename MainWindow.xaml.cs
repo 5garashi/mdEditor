@@ -2099,7 +2099,8 @@ public partial class MainWindow : Window
     // --- New document from the clipboard (--paste) ---
 
     // Started from the desktop shortcut made in Settings: what the user copied goes into
-    // the new document. Files and pictures are placed as a drop on the editor places them;
+    // the new document. One copied file that mdEditor opens is opened (as a drop outside
+    // the editor); other files and pictures are placed as a drop on the editor places them;
     // formatted content (HTML from a web page or Word) becomes Markdown as "Open" does.
     private async Task PasteClipboardAsync()
     {
@@ -2108,6 +2109,15 @@ public partial class MainWindow : Window
             if (Clipboard.ContainsFileDropList())
             {
                 var files = Clipboard.GetFileDropList().Cast<string>().Where(File.Exists).ToList();
+                // One file mdEditor opens is opened, as when dropped outside the editor;
+                // several files (or one it cannot open) go into the new document as a drop
+                // on the editor puts them.
+                if (files.Count == 1 && (IsDocumentPath(files[0]) || IsMediaPath(files[0])))
+                {
+                    await LoadDocumentAsync(files[0]);
+                    return;
+                }
+
                 if (files.Count > 0)
                 {
                     await InsertFilesAsync(files, null);

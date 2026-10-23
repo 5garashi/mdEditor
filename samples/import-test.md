@@ -21,6 +21,7 @@ mdEditor で開ける形式と、「名前を付けて保存」で選べる形�
 | [word-test.docx](word-test.docx) | Word | Markdown への変換、画像の取り出し |
 | [word-headings-test.docx](word-headings-test.docx) | Word（見出しのスタイルなし） | 文字の大きさから見出しを推し量る |
 | [pdf-test.pdf](pdf-test.pdf) | PDF | Markdown への変換、見出しの推測、画像の取り出し |
+| [pdf-toc-test.en.pdf](pdf-toc-test.en.pdf) | PDF（目次・番号付きの見出し） | 目次の行、別の書体の番号付き見出し、離れた「・」 |
 | [mail-test.eml](mail-test.eml) | メール（HTML） | 件名などの情報、メールの中の画像、添付ファイル、外部の画像 |
 | [mail-text-test.eml](mail-text-test.eml) | メール（文字だけ・ISO-2022-JP） | 文字コード、改行 |
 | [table-test.csv](table-test.csv) | CSV（Shift_JIS） | 表への変換、特別な文字を含むセル |
@@ -174,8 +175,20 @@ mdEditor で開ける形式と、「名前を付けて保存」で選べる形�
 - 「PDF を開く試験」が `#`、「見出しと段落」「画像」「表」が `##`、「小見出し」が `###` の見出しになる。
 - 「長い段落は、…」の段落は、PDF での折り返しに関係なく 1 つの段落になる。
 - サンプル画像はプレビューに表示され、編集画面では `pdf-test_files/image1.png` を指している。
-- 表は表の形には戻らず、マス目の文字（「項目」「金額」「試作」「120」…）が 1 行ずつ並ぶ。
+- 表は表の形には戻らず、マス目の文字（「項目」「金額」「試作」「120」…）が文字として残る（行ごと、またはマス目ごとに並ぶ）。
 - 編集画面に pdf-test.pdf をドロップすると、中身ではなく、「名前_files」フォルダーに写した PDF へのリンクが入る。
+
+### 2.16 pdf-toc-test.en.pdf（目次と番号付きの見出し）
+
+本文は Times、番号付きの見出しは同じ大きさの Helvetica で書いた、公的なガイドラインに似せた PDF です。
+
+期待する結果:
+
+- 目次の行は「1. Introduction …… 2」のように 1 行ずつになり、見出しにならない。
+- 「1. Introduction」「2. Requirements」が `##`、「2.1 Definitions」が `###`、「(1) First condition」「(2) Second condition」が `####` の見出しになる。
+- 表紙の題・日付・「Contents」は `#` になる。「1 April 2026」は、番号の後に点がないので番号付きの見出しにならない。
+- 本文と離れた「•」の行は、`- A definition item, …` の箇条書きになる。
+- エクスプローラーでこのファイルをコピーし、「クリップボードから新規作成」のキーを押すと、このファイルが開く。
 
 ## 3. 名前を付けて保存
 

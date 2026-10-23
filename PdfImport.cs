@@ -30,9 +30,9 @@ internal static partial class PdfImport
 
     public sealed record Result(string Markdown, int Images, int Pages, int ReadPages, bool HasText, int Headings);
 
-    private sealed record Line(string Text, double Size, bool Bold, double Top, double Right, bool MathFont);
+    private sealed record Line(string Text, double Size, bool Bold, double Top, double Right, bool MathFont, string Family);
 
-    private sealed record Item(string Text, double Size, bool Bold, ItemKind Kind, double Top, int Page, bool Math = false);
+    private sealed record Item(string Text, double Size, bool Bold, ItemKind Kind, double Top, int Page, bool Math = false, string Family = "", bool Toc = false);
 
     private enum ItemKind { Paragraph, Bullet, Numbered, Image }
 
@@ -58,6 +58,20 @@ internal static partial class PdfImport
             var margin = page.Height * 0.08;
             pageItems.RemoveAll(item => IsPageNumber(item.Text) && (item.Top > page.Height - margin || item.Top < margin));
 
+            // A bullet set apart from its text can land in a block of its own; it goes back to
+            // the paragraph that starts on the same line, which becomes a list item.
+            foreach (var bullet in pageItems.Where(item => LoneBulletPattern().IsMatch(item.Text)).ToList())
+            {
+                var owner = pageItems.FindIndex(item => item.Kind == ItemKind.Paragraph && !item.Toc && !ReferenceEquals(item, bullet)
+                    && !LoneBulletPattern().IsMatch(item.Text) && Math.Abs(item.Top - bullet.Top) < Math.Max(bullet.Size, 1) * 0.6);
+                if (owner >= 0)
+                {
+                    pageItems[owner] = pageItems[owner] with { Kind = ItemKind.Bullet };
+                }
+
+                pageItems.Remove(bullet);
+            }
+
             foreach (var image in page.GetImages())
             {
                 if (SaveImage(image, assets, imagesName, images + 1) is { } file)
@@ -75,8 +89,15 @@ internal static partial class PdfImport
         }
 
         var text = items.Where(item => item.Kind != ItemKind.Image).ToList();
-        var levels = HeadingGuess.Levels(text.Select(item =>
-            new SizedParagraph(item.Text, item.Size, item.Bold, item.Kind != ItemKind.Paragraph || item.Math)).ToList());
+        // The body typeface is the one most of the text is set in; a heading set in another
+        // (Gothic over Mincho, for example) stands out even at the body size.
+        var bodyFamily = text.GroupBy(item => item.Family)
+            .OrderByDescending(group => group.Sum(item => item.Text.Length))
+            .Select(group => group.Key).FirstOrDefault() ?? string.Empty;
+        var levels = HeadingGuess.Levels(text.Select(item => new SizedParagraph(
+            item.Text, item.Size, item.Bold,
+            item.Kind == ItemKind.Bullet || item.Math || item.Toc,
+            item.Family.Length > 0 && item.Family != bodyFamily)).ToList());
         var headingOf = new Dictionary<Item, int>(ReferenceEqualityComparer.Instance);
         for (var i = 0; i < text.Count; i++)
         {
@@ -87,13 +108,15 @@ internal static partial class PdfImport
         ItemKind? previous = null;
         foreach (var item in items)
         {
-            var listContinues = (previous is ItemKind.Bullet or ItemKind.Numbered) && item.Kind == previous;
+            var level = headingOf.GetValueOrDefault(item);
+            var kind = level > 0 ? ItemKind.Paragraph : item.Kind;
+            var listContinues = (previous is ItemKind.Bullet or ItemKind.Numbered) && kind == previous;
             if (markdown.Length > 0)
             {
                 markdown.Append(listContinues ? "\n" : "\n\n");
             }
 
-            switch (item.Kind)
+            switch (kind)
             {
                 case ItemKind.Image:
                     markdown.Append($"![]({Uri.EscapeDataString(imagesName)}/{item.Text})");
@@ -105,12 +128,11 @@ internal static partial class PdfImport
                     markdown.Append(item.Text);
                     break;
                 default:
-                    var level = headingOf.GetValueOrDefault(item);
                     markdown.Append(level > 0 ? new string('#', level) + " " + item.Text : Escape(item.Text));
                     break;
             }
 
-            previous = item.Kind;
+            previous = kind;
         }
 
         var headings = levels.Count(level => level > 0);
@@ -138,7 +160,7 @@ internal static partial class PdfImport
     // every line stands alone. Wrapped lines are joined.
     private static IEnumerable<Item> Paragraphs(TextBlock block, int page, double textWidth)
     {
-        var lines = block.TextLines.Select(ReadLine).Where(line => line.Text.Length > 0).ToList();
+        var lines = SplitLines(block).Select(ReadLine).Where(line => line.Text.Length > 0).ToList();
         var blockRight = block.BoundingBox.Right;
         var shortLine = block.BoundingBox.Width < textWidth * 0.5 ? -1 : block.BoundingBox.Width * 0.2;
         Line? previousLine = null;
@@ -156,6 +178,7 @@ internal static partial class PdfImport
         var kind = ItemKind.Paragraph;
         double firstSize = 0, firstTop = 0;
         var firstBold = false;
+        var firstFamily = string.Empty;
 
         IEnumerable<Item> Flush()
         {
@@ -167,15 +190,29 @@ internal static partial class PdfImport
             var text = JoinLines(current.Select(line => line.Text));
             var mathInItem = current.Any(line => line.MathFont);
             current.Clear();
-            yield return new Item(text, firstSize, firstBold, kind, firstTop, page, mathInItem);
+            yield return new Item(text, firstSize, firstBold, kind, firstTop, page, mathInItem, firstFamily);
         }
 
         foreach (var line in lines)
         {
+            // A table-of-contents line ("3.1 Definitions ........ 6") reaches the right edge
+            // because of its leader dots, so it would look wrapped; it stands alone, with the
+            // dots shortened, and is never a heading.
+            var leader = LeaderPattern().Match(line.Text);
+            if (leader.Success)
+            {
+                foreach (var item in Flush()) yield return item;
+                var entry = line.Text[..leader.Index].TrimEnd() + " …… " + leader.Groups[1].Value;
+                yield return new Item(entry, line.Size, line.Bold, ItemKind.Paragraph, line.Top, page, Family: line.Family, Toc: true);
+                previousLine = null;
+                continue;
+            }
+
             var (lineKind, rest) = ListMarker(line.Text);
             var sizeChanged = current.Count > 0 && Math.Abs(line.Size - firstSize) > firstSize * 0.1;
+            var fontChanged = current.Count > 0 && line.Family != firstFamily;
             var endedEarly = previousLine is not null && blockRight - previousLine.Right > shortLine;
-            if (current.Count > 0 && (sizeChanged || endedEarly || lineKind != ItemKind.Paragraph))
+            if (current.Count > 0 && (sizeChanged || fontChanged || endedEarly || lineKind != ItemKind.Paragraph))
             {
                 foreach (var item in Flush()) yield return item;
             }
@@ -188,6 +225,7 @@ internal static partial class PdfImport
                 firstSize = line.Size;
                 firstBold = line.Bold;
                 firstTop = line.Top;
+                firstFamily = line.Family;
             }
 
             current.Add(line with { Text = lineKind == ItemKind.Bullet ? rest : line.Text });
@@ -196,11 +234,42 @@ internal static partial class PdfImport
         foreach (var item in Flush()) yield return item;
     }
 
-    private static Line ReadLine(TextLine line)
+    // The lines of a block, from its words: words whose baselines are within half a line
+    // height of each other share a line, read left to right. PdfPig's own text lines can
+    // run a heading and the lines below it together in Japanese, where each character
+    // may count as a word.
+    private static List<List<Word>> SplitLines(TextBlock block)
+    {
+        var lines = new List<List<Word>>();
+        foreach (var word in block.TextLines.SelectMany(line => line.Words)
+                     .Where(word => word.Text.Trim().Length > 0)
+                     .OrderByDescending(word => word.BoundingBox.Bottom))
+        {
+            var height = Math.Max(word.BoundingBox.Height, 1);
+            var line = lines.LastOrDefault();
+            if (line is not null && Math.Abs(line[0].BoundingBox.Bottom - word.BoundingBox.Bottom) < height * 0.5)
+            {
+                line.Add(word);
+            }
+            else
+            {
+                lines.Add([word]);
+            }
+        }
+
+        foreach (var line in lines)
+        {
+            line.Sort((a, b) => a.BoundingBox.Left.CompareTo(b.BoundingBox.Left));
+        }
+
+        return lines;
+    }
+
+    private static Line ReadLine(List<Word> words)
     {
         var builder = new StringBuilder();
         string? last = null;
-        foreach (var word in line.Words)
+        foreach (var word in words)
         {
             var text = word.Text.Trim();
             if (text.Length == 0)
@@ -219,12 +288,25 @@ internal static partial class PdfImport
             last = text;
         }
 
-        var letters = line.Words.SelectMany(word => word.Letters).Where(letter => !string.IsNullOrWhiteSpace(letter.Value)).ToList();
+        var letters = words.SelectMany(word => word.Letters).Where(letter => !string.IsNullOrWhiteSpace(letter.Value)).ToList();
         var size = letters.Count == 0 ? 0 : letters.Select(letter => letter.PointSize).OrderBy(value => value).ElementAt(letters.Count / 2);
         var bold = letters.Count > 0 && letters.Count(IsBold) * 2 > letters.Count;
         var mathFont = letters.Any(letter => (letter.FontName ?? string.Empty).Contains("KaTeX", StringComparison.OrdinalIgnoreCase)
             || (letter.FontName ?? string.Empty).Contains("Math", StringComparison.OrdinalIgnoreCase));
-        return new Line(Normalize(builder.ToString()), size, bold, line.BoundingBox.Top, line.BoundingBox.Right, mathFont);
+        var family = letters.Count == 0 ? string.Empty : letters.GroupBy(letter => Family(letter.FontName))
+            .OrderByDescending(group => group.Count()).First().Key;
+        return new Line(Normalize(builder.ToString()), size, bold, words.Max(word => word.BoundingBox.Top), words.Max(word => word.BoundingBox.Right), mathFont, family);
+    }
+
+    // A typeface without its subset prefix ("ABCDEF+") and weight or style ("-Bold",
+    // ",Italic", "MT"), so "Arial-BoldMT" and "ArialMT" are both "arial".
+    private static string Family(string? fontName)
+    {
+        var name = fontName ?? string.Empty;
+        var plus = name.IndexOf('+');
+        if (plus is > 0 and <= 7) name = name[(plus + 1)..];
+        name = FontStylePattern().Replace(name, string.Empty);
+        return name.ToLowerInvariant();
     }
 
     private static bool IsBold(Letter letter) =>
@@ -354,4 +436,14 @@ internal static partial class PdfImport
 
     [GeneratedRegex(@"^[\s\-–—]*\d{1,4}(\s*/\s*\d{1,4})?[\s\-–—]*$")]
     private static partial Regex PageNumberPattern();
+
+    [GeneratedRegex(@"^\s*[•●○◦▪■□・·‣⁃]\s*$")]
+    private static partial Regex LoneBulletPattern();
+
+    // Leader dots (or ・ ‥ …) and a page number at the end of a table-of-contents line.
+    [GeneratedRegex(@"\s*(?:[.．・‥…]\s*){4,}([0-9０-９]{1,4})\s*$")]
+    private static partial Regex LeaderPattern();
+
+    [GeneratedRegex(@"([-,]?(Bold|Italic|Oblique|Regular|Medium|Light|Semibold|SemiBold|Black|Heavy|Book|Roman)|PSMT|MT|PS)+$", RegexOptions.IgnoreCase)]
+    private static partial Regex FontStylePattern();
 }

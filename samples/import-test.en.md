@@ -21,6 +21,7 @@ These files check every format mdEditor opens and every type in Save As. Open ea
 | [word-test.en.docx](word-test.en.docx) | Word | Conversion to Markdown, images taken out |
 | [word-headings-test.en.docx](word-headings-test.en.docx) | Word (no heading styles) | Headings guessed from text size |
 | [pdf-test.en.pdf](pdf-test.en.pdf) | PDF | Conversion to Markdown, headings guessed, images taken out |
+| [pdf-toc-test.en.pdf](pdf-toc-test.en.pdf) | PDF (contents, numbered headings) | Contents lines, numbered headings in another typeface, a bullet set apart |
 | [mail-test.en.eml](mail-test.en.eml) | E-mail (HTML) | Subject and other fields, a picture in the mail, an attachment, an external image |
 | [mail-text-test.en.eml](mail-text-test.en.eml) | E-mail (text only) | Line breaks |
 | [table-test.en.csv](table-test.en.csv) | CSV (UTF-8) | Conversion to a table, cells with special characters |
@@ -172,8 +173,20 @@ Expected results:
 - "Opening a PDF" becomes a `#` heading, "Headings and paragraphs", "Image", and "Table" `##`, and "A smaller heading" `###`.
 - The paragraph starting "A long paragraph" comes back as one paragraph, whatever the line breaks in the PDF, with no space before the periods.
 - The sample image shows in the preview and points to `pdf-test.en_files/image1.png` in the editor.
-- The table does not come back as a table; the text of its cells ("Item", "Cost", "Prototype", "120", …) is listed one per line.
+- The table does not come back as a table; the text of its cells ("Item", "Cost", "Prototype", "120", …) remains, by row or by cell.
 - Dropping pdf-test.en.pdf on the editor inserts a link to the PDF copied into the "name_files" folder, not its content.
+
+### 2.16 pdf-toc-test.en.pdf (contents and numbered headings)
+
+A PDF modelled on an official guideline: Times body text, and numbered headings in Helvetica at the same size.
+
+Expected results:
+
+- Contents lines stand alone, such as "1. Introduction …… 2", and are not headings.
+- "1. Introduction" and "2. Requirements" become `##` headings, "2.1 Definitions" `###`, and "(1) First condition" and "(2) Second condition" `####`.
+- The cover title, the date, and "Contents" become `#`. "1 April 2026" is not a numbered heading, as its number has no period.
+- The line whose "•" is set apart from its text becomes the list item `- A definition item, …`.
+- Copying this file in File Explorer and pressing the New from clipboard key opens it.
 
 ## 3. Save As
 

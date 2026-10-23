@@ -21,6 +21,7 @@
 | [word-test.en.docx](word-test.en.docx) | Word | 转换为 Markdown、取出图像 |
 | [word-headings-test.en.docx](word-headings-test.en.docx) | Word（没有标题样式） | 根据文字大小推测标题 |
 | [pdf-test.en.pdf](pdf-test.en.pdf) | PDF | 转换为 Markdown、推测标题、取出图像 |
+| [pdf-toc-test.en.pdf](pdf-toc-test.en.pdf) | PDF（目录、带编号的标题） | 目录的行、字体不同的带编号标题、分开的“•” |
 | [mail-test.en.eml](mail-test.en.eml) | 电子邮件（HTML） | 主题等项目、邮件中的图片、附件、外部图像 |
 | [mail-text-test.en.eml](mail-text-test.en.eml) | 电子邮件（仅文本） | 换行 |
 | [table-test.en.csv](table-test.en.csv) | CSV（UTF-8） | 转换为表格、含有特殊字符的单元格 |
@@ -172,8 +173,20 @@
 - “Opening a PDF”成为 `#` 标题，“Headings and paragraphs”“Image”“Table”成为 `##`，“A smaller heading”成为 `###`。
 - 以“A long paragraph”开头的段落，无论在 PDF 中怎样折行，都会合成一个段落，句号前没有空格。
 - 示例图像显示在预览中，编辑区中指向 `pdf-test.en_files/image1.png`。
-- 表格不会恢复为表格，单元格的文字（“Item”“Cost”“Prototype”“120”…）每行一个。
+- 表格不会恢复为表格，单元格的文字（“Item”“Cost”“Prototype”“120”…）会保留（按行或按单元格排列）。
 - 把 pdf-test.en.pdf 拖放到编辑区时，插入的是复制到“名称_files”文件夹中的 PDF 的链接，而不是其内容。
+
+### 2.16 pdf-toc-test.en.pdf（目录和带编号的标题）
+
+仿照官方指南制作的 PDF：正文为 Times，带编号的标题为同样大小的 Helvetica。
+
+期待的结果：
+
+- 目录的行每行单独保留，如“1. Introduction …… 2”，不会成为标题。
+- “1. Introduction”“2. Requirements”成为 `##` 标题，“2.1 Definitions”成为 `###`，“(1) First condition”“(2) Second condition”成为 `####`。
+- 封面的标题、日期和“Contents”成为 `#`。“1 April 2026”的数字后面没有点，不会成为带编号的标题。
+- “•”与文字分开的行成为列表项 `- A definition item, …`。
+- 在文件资源管理器中复制此文件，然后按“从剪贴板新建”的按键，会打开此文件。
 
 ## 3. 另存为
 
