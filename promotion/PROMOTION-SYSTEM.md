@@ -3,11 +3,14 @@
 概要 / Description: GitHubを核にしたプロモーションの全体図・更新手順・公開台帳 / GitHub-centered promotion guide and publication register
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-17
-版 / Version: 1.12.0
+版 / Version: 1.13.0
 ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
 # mdEditor プロモーションの全体図と更新台帳
+
+2026-10-23：**[ソース1.0.15・日英中の公開記録](multichannel/update-2026-10-23/PUBLICATION.md)**。簡体字中国語・クリップボード新規作成・起動改善と、ライブプレビュー・図・3D・PDFを案内。媒体別の公開状態は今回の記録を優先します。
+
 
 2026-10-20：**[ソース1.0.14の公開資料と媒体別記録](multichannel/update-2026-10-20/README.md)** を公開しました。YouTube・TikTok・X・LinkedIn・ZennとReddit既存本文を更新。事務所サイトの本文変更のみ保留です。画像のドロップ・サイズと中央揃え・ZIP保存を案内。以下の2026-10-18の結果は前回版の履歴です。
 

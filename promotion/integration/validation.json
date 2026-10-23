@@ -1,6 +1,6 @@
 {
-  "integration_version": "1.3.0",
-  "date": "2026-10-20 JST",
+  "integration_version": "1.4.0",
+  "date": "2026-10-23 JST",
   "local_references": "pass",
   "cases": [
     {
@@ -428,6 +428,150 @@
     },
     {
       "page": "case-study-en.html",
+      "theme": "dark",
+      "width": 320,
+      "text_px": 32,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "zh-CN.html",
+      "theme": "light",
+      "width": 1280,
+      "text_px": 16,
+      "scrollWidth": 1265,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "zh-CN.html",
+      "theme": "light",
+      "width": 320,
+      "text_px": 16,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "zh-CN.html",
+      "theme": "light",
+      "width": 640,
+      "text_px": 16,
+      "scrollWidth": 625,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "zh-CN.html",
+      "theme": "light",
+      "width": 320,
+      "text_px": 32,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "zh-CN.html",
+      "theme": "dark",
+      "width": 1280,
+      "text_px": 16,
+      "scrollWidth": 1265,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "zh-CN.html",
+      "theme": "dark",
+      "width": 320,
+      "text_px": 16,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "zh-CN.html",
+      "theme": "dark",
+      "width": 640,
+      "text_px": 16,
+      "scrollWidth": 625,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "zh-CN.html",
+      "theme": "dark",
+      "width": 320,
+      "text_px": 32,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "resources-zh-CN.html",
+      "theme": "light",
+      "width": 1280,
+      "text_px": 16,
+      "scrollWidth": 1265,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "resources-zh-CN.html",
+      "theme": "light",
+      "width": 320,
+      "text_px": 16,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "resources-zh-CN.html",
+      "theme": "light",
+      "width": 640,
+      "text_px": 16,
+      "scrollWidth": 625,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "resources-zh-CN.html",
+      "theme": "light",
+      "width": 320,
+      "text_px": 32,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "resources-zh-CN.html",
+      "theme": "dark",
+      "width": 1280,
+      "text_px": 16,
+      "scrollWidth": 1265,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "resources-zh-CN.html",
+      "theme": "dark",
+      "width": 320,
+      "text_px": 16,
+      "scrollWidth": 305,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "resources-zh-CN.html",
+      "theme": "dark",
+      "width": 640,
+      "text_px": 16,
+      "scrollWidth": 625,
+      "broken": 0,
+      "small": 0
+    },
+    {
+      "page": "resources-zh-CN.html",
       "theme": "dark",
       "width": 320,
       "text_px": 32,

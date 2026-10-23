@@ -185,6 +185,19 @@ class SyncTests(unittest.TestCase):
             sync.sync(self.config, self.store, self.api, 'publish')
         self.assertEqual(self.store.data['latest'], {})
 
+    def test_simplified_chinese_latest_page(self):
+        import latest_pages,json
+        with tempfile.TemporaryDirectory() as directory:
+            p=Path(directory)
+            (p/'zh-CN.html').write_text('<header><nav></nav></header>',encoding='utf-8')
+            state=p/'state.json'
+            state.write_text(json.dumps({'latest':{'zh-CN':{'id':'AbCdEf12345','title':'中文演示','revision':'5.0.0'}}}),encoding='utf-8')
+            latest_pages.generate_latest(p,state)
+            page=(p/'youtube-zh-CN.html').read_text(encoding='utf-8')
+            self.assertIn('lang="zh-CN"',page)
+            self.assertIn('使用方法与示例',page)
+            self.assertIn('youtube-zh-CN.html',(p/'zh-CN.html').read_text(encoding='utf-8'))
+
 
 if __name__ == '__main__':
     unittest.main()

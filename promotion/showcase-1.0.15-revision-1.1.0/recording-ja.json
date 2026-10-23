@@ -1,0 +1,311 @@
+{
+  "version": "1.0.15",
+  "source_commit": "local-1.0.15-2026-10-23-snapshot",
+  "language": "ja",
+  "events": [
+    {
+      "seconds": 0.0,
+      "key": "intro",
+      "ja": "mdEditor：書く・読む・図にする、Windowsアプリ",
+      "en": "mdEditor: write, read and visualize on Windows",
+      "zh-CN": "mdEditor：在 Windows 上编写、阅读，让文档更直观"
+    },
+    {
+      "seconds": 6.707,
+      "key": "intro-more",
+      "ja": "仕上がりを見ながら編集。3Dも、文書の中で。",
+      "en": "Edit beside a live preview. Explore 3D inside your document.",
+      "zh-CN": "简体中文界面。实时预览，文档内也能查看 3D"
+    },
+    {
+      "seconds": 21.359,
+      "key": "consent",
+      "ja": "この収録では、画像・動画・詳細地図の読み込みを許可",
+      "en": "Allow internet media and detailed maps for this recording",
+      "zh-CN": "本次录制已允许加载网络图片、视频和详细地图"
+    },
+    {
+      "seconds": 25.407,
+      "key": "tour",
+      "ja": "diagram-test.mdを上から下へ。多彩な表現を一望",
+      "en": "A top-to-bottom tour of diagram-test.en.md",
+      "zh-CN": "从上到下浏览 diagram-test.zh-CN.md 的丰富内容"
+    },
+    {
+      "seconds": 87.615,
+      "key": "3d",
+      "ja": "STLを拡大・回転して、立体を確かめる",
+      "en": "Zoom and rotate an STL model to inspect it",
+      "zh-CN": "缩放并旋转 STL 模型，从不同角度检查细节"
+    },
+    {
+      "seconds": 92.131,
+      "key": "maps",
+      "ja": "GeoJSONの地点・経路を、許可した詳細地図に表示",
+      "en": "Show GeoJSON locations and routes on a permitted detailed map",
+      "zh-CN": "在已允许加载的详细地图上查看 GeoJSON 地点和路线"
+    },
+    {
+      "seconds": 96.942,
+      "key": "video",
+      "ja": "ローカルとネット上の動画を、文書内で再生",
+      "en": "Play local and permitted internet videos inside the document",
+      "zh-CN": "直接在文档中播放本地视频和已允许加载的网络视频"
+    },
+    {
+      "seconds": 112.563,
+      "key": "edit",
+      "ja": "書きながら横で仕上がりを確認。スクロールも連動",
+      "en": "Write beside the live preview, with synchronized scrolling",
+      "zh-CN": "一边编写，一边查看效果；两侧滚动保持同步"
+    },
+    {
+      "seconds": 116.783,
+      "key": "detach",
+      "ja": "プレビューを別ウィンドウに。2台目の画面へ移動できる",
+      "en": "Detach the preview and move it to a second display",
+      "zh-CN": "将预览放入独立窗口，也可移到第二台显示器"
+    },
+    {
+      "seconds": 122.952,
+      "key": "viewer",
+      "ja": "ビューアーとして、プレビューをウィンドウいっぱいに",
+      "en": "Use the full-window preview as a document viewer",
+      "zh-CN": "将预览铺满窗口，作为文档阅读器使用"
+    },
+    {
+      "seconds": 127.689,
+      "key": "offline",
+      "ja": "Mermaid・Graphvizの図と数式を、オフラインで表示",
+      "en": "Bundled Mermaid, Graphviz and math render offline",
+      "zh-CN": "离线显示 Mermaid、Graphviz 图表和数学公式"
+    },
+    {
+      "seconds": 136.097,
+      "key": "code",
+      "ja": "約40言語を色分け。PDF・Wordにも色を残す",
+      "en": "Highlight about 40 code languages; keep colors in PDF and Word",
+      "zh-CN": "约 40 种代码语言的语法高亮，导出 PDF、Word 也能保留"
+    },
+    {
+      "seconds": 142.863,
+      "key": "toc",
+      "ja": "見出しから目次を作成。もう一度押すと更新",
+      "en": "Build a contents list from headings; press again to update",
+      "zh-CN": "根据标题生成目录，再按一次即可更新"
+    },
+    {
+      "seconds": 146.955,
+      "key": "github",
+      "ja": "GitHub形式の注意書き・フロントマター・折りたたみ",
+      "en": "GitHub-style alerts, front matter and collapsible sections",
+      "zh-CN": "支持 GitHub 风格的提示框、前置元数据和折叠内容"
+    },
+    {
+      "seconds": 150.765,
+      "key": "pdf",
+      "ja": "プレビューの見た目を、PDFへすぐ書き出し",
+      "en": "Export the preview directly to PDF",
+      "zh-CN": "一键导出 PDF，保留预览中的排版、图表和公式"
+    },
+    {
+      "seconds": 160.015,
+      "key": "import",
+      "ja": "Word・HTML・メール・CSV・JSON・Notebook・画像を開ける",
+      "en": "Open Word, HTML, email, CSV, JSON, notebooks and images",
+      "zh-CN": "打开 Word、HTML、邮件、CSV、JSON、Notebook 和图片"
+    },
+    {
+      "seconds": 213.385,
+      "key": "export",
+      "ja": "HTML・PNG・Word・CSV・JSON・Notebook・テキストに保存",
+      "en": "Save HTML, PNG, Word, CSV, JSON, notebooks and text",
+      "zh-CN": "另存为 HTML、PNG、Word、CSV、JSON、Notebook 或文本"
+    },
+    {
+      "seconds": 222.644,
+      "key": "images",
+      "ja": "画像を編集欄へドラッグ＆ドロップ。文書の横に自動保存",
+      "en": "Drag an image into the editor; keep it beside the document",
+      "zh-CN": "将图片拖放到编辑区，图片会保存在文档旁边"
+    },
+    {
+      "seconds": 226.697,
+      "key": "image-adjust",
+      "ja": "画像の調整で、サイズを50％にして中央へ",
+      "en": "Adjust the image to 50% width and center it",
+      "zh-CN": "调整图片：宽度设为 50%，位置选择居中"
+    },
+    {
+      "seconds": 234.034,
+      "key": "share",
+      "ja": "文書と使った画像をまとめて渡せる、ZIP保存にも対応",
+      "en": "Save a ZIP containing the document and the files it uses",
+      "zh-CN": "保存为分享用 ZIP，打包文档及其使用的文件"
+    },
+    {
+      "seconds": 244.664,
+      "key": "recovery",
+      "ja": "安全な保存と、異常終了からの自動復元",
+      "en": "Safe saving and automatic recovery after an unexpected exit",
+      "zh-CN": "安全保存；意外退出后可恢复自动备份"
+    },
+    {
+      "seconds": 247.86,
+      "key": "internet",
+      "ja": "ネット上の画像・動画・地図は、許可して読み込む",
+      "en": "Internet images, video and maps load only with permission",
+      "zh-CN": "网络图片、视频和详细地图，仅在允许后加载"
+    },
+    {
+      "seconds": 251.026,
+      "key": "privacy",
+      "ja": "広告なし、計測なし、アカウント不要",
+      "en": "No ads, no tracking, no account required",
+      "zh-CN": "无广告，无跟踪，无需账号"
+    },
+    {
+      "seconds": 255.028,
+      "key": "keyboard",
+      "ja": "キーボードで全操作。ショートカットも変更できる",
+      "en": "Use the keyboard and customize shortcuts",
+      "zh-CN": "支持键盘操作，也可自定义快捷键"
+    },
+    {
+      "seconds": 259.184,
+      "key": "accessibility",
+      "ja": "画面読み上げ・文書の読み上げ・ダークモードに対応",
+      "en": "Screen-reader support, document reading and dark mode",
+      "zh-CN": "支持屏幕阅读器、文档朗读和深色模式"
+    },
+    {
+      "seconds": 264.518,
+      "key": "outro",
+      "ja": "mdEditor：書く。見る。整えて、渡す。",
+      "en": "mdEditor: write, explore, refine and share.",
+      "zh-CN": "mdEditor：编写、查看、整理，然后分享。"
+    }
+  ],
+  "remove_intervals": [
+    [
+      11.6875876999693,
+      17.725417600013316
+    ],
+    [
+      106.83995839999989,
+      112.56146370002534
+    ],
+    [
+      150.51569989998825,
+      158.01361660007387
+    ],
+    [
+      159.76698960002977,
+      165.92531620000955
+    ],
+    [
+      167.3796753999777,
+      173.30557069997303
+    ],
+    [
+      174.91448709997348,
+      181.23842160007916
+    ],
+    [
+      182.69632480002474,
+      188.49617389997002
+    ],
+    [
+      189.95377420005389,
+      195.9599802000448
+    ],
+    [
+      197.42848070000764,
+      203.88287440000568
+    ],
+    [
+      205.33717179996893,
+      211.67728740000166
+    ],
+    [
+      217.1361674000509,
+      222.55966240004636
+    ],
+    [
+      237.78517529997043,
+      242.90707159996964
+    ]
+  ],
+  "checks": {
+    "intro_rotated": true,
+    "videos": [
+      {
+        "ready": 4,
+        "playing": true,
+        "muted": true
+      },
+      {
+        "ready": 4,
+        "playing": true,
+        "muted": true
+      }
+    ],
+    "detached_window": true,
+    "offline_figures": {
+      "mermaid": true,
+      "graphviz": true,
+      "math": true
+    },
+    "toc": true,
+    "pdf_export": true,
+    "imports": [
+      {
+        "file": "word-test.docx",
+        "name": "word-test.md",
+        "textLength": 284
+      },
+      {
+        "file": "html-test.html",
+        "name": "html-test.md",
+        "textLength": 572
+      },
+      {
+        "file": "mail-test.eml",
+        "name": "mail-test.md",
+        "textLength": 464
+      },
+      {
+        "file": "table-test.csv",
+        "name": "table-test.md",
+        "textLength": 189
+      },
+      {
+        "file": "json-list-test.json",
+        "name": "json-list-test.md",
+        "textLength": 304
+      },
+      {
+        "file": "notebook-test.ipynb",
+        "name": "notebook-test.md",
+        "textLength": 883
+      },
+      {
+        "file": "import-test_files/sample.png",
+        "name": "sample.md",
+        "textLength": 23
+      }
+    ],
+    "image_drop": "# 引き継ぎメモ\n\n書きながら、すぐ横で仕上がりを確認します。\n\n## 確認手順\n\n```mermaid\nflowchart LR\n A[書く] --> B[確認] --> C[共有]\n```\n\n$$P=\\frac{V^2}{R}=1\\,\\mathrm{W}$$\n\n## 構成\n\n```dot\ndigraph G { rankdir=LR; node [style=filled,fillcolor=\"#FFF3D6\",fontname=\"Meiryo\"]; Document -> Preview -> PDF; }\n```\n\n## コード\n\n```python\ndef total(items):\n    return sum(item[\"cost\"] for item in items)\n\nprint(total([{\"cost\": 120}, {\"cost\": 45}]))\n```\n\n## お知らせ\n\n> [!NOTE]\n> 編集できる原本も残してください。\n\n<details>\n<summary>詳しい情報</summary>\n\n文書の一部を折りたたんで表示できます。\n\n</details>\n\n## 次の作業\n\n- [ ] Review\n- [ ] Share\n\n![sample](main-features_files/sample.png)\n",
+    "image_adjust": "# 引き継ぎメモ\n\n書きながら、すぐ横で仕上がりを確認します。\n\n## 確認手順\n\n```mermaid\nflowchart LR\n A[書く] --> B[確認] --> C[共有]\n```\n\n$$P=\\frac{V^2}{R}=1\\,\\mathrm{W}$$\n\n## 構成\n\n```dot\ndigraph G { rankdir=LR; node [style=filled,fillcolor=\"#FFF3D6\",fontname=\"Meiryo\"]; Document -> Preview -> PDF; }\n```\n\n## コード\n\n```python\ndef total(items):\n    return sum(item[\"cost\"] for item in items)\n\nprint(total([{\"cost\": 120}, {\"cost\": 45}]))\n```\n\n## お知らせ\n\n> [!NOTE]\n> 編集できる原本も残してください。\n\n<details>\n<summary>詳しい情報</summary>\n\n文書の一部を折りたたんで表示できます。\n\n</details>\n\n## 次の作業\n\n- [ ] Review\n- [ ] Share\n\n<p align=\"center\"><img src=\"main-features_files/sample.png\" alt=\"sample\" width=\"50%\"></p>\n",
+    "image_render": {
+      "width": 307,
+      "natural": 240,
+      "align": "center",
+      "src": "https://document.mdeditor.local/main-features_files/sample.png"
+    },
+    "localized_background": "# 引き継ぎメモ\n\n書きながら、すぐ横で仕上がりを確認します。\n\n## 確認手順\n\n```mermaid\nflowchart LR\n A[書く] --> B[確認] --> C[共有]\n```\n\n$$P=\\frac{V^2}{R}=1\\,\\mathrm{W}$$\n\n## 構成\n\n```dot\ndigraph G { rankdir=LR; node [style=filled,fillcolor=\"#FFF3D6\",fontname=\"Meiryo\"]; Document -> Preview -> PDF; }\n```\n\n## コード\n\n```python\ndef total(items):\n    return sum(item[\"cost\"] for item in items)\n\nprint(total([{\"cost\": 120}, {\"cost\": 45}]))\n```\n\n## お知らせ\n\n> [!NOTE]\n> 編集できる原本も残してください。\n\n<details>\n<summary>詳しい情報</summary>\n\n文書の一部を折りたたんで表示できます。\n\n</details>\n\n## 次の作業\n\n- [ ] Review\n- [ ] Share\n"
+  },
+  "opening_reference": "docs/images/7-3d-model.ja.png",
+  "duration": 268.694,
+  "no_colored_masks": true
+}

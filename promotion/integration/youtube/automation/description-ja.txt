@@ -1,4 +1,8 @@
-3Dを回す冒頭から、diagram-testのツアー、主要機能へ。画像のドロップ・50％サイズ・中央揃えも実演します。
+簡体字中国語に対応。クリップボードから新規作成。起動処理も改善。
+
+書きながら横で確認。Mermaid・Graphviz・数式をオフラインで表示。3Dを回し、画像を調整し、PDF・Word・ZIPで共有。
+
+回転する3Dから始まり、diagram-testを上から下へ閲覧し、主要機能を実演。画像のドロップ・50％幅・中央揃えも紹介します。
 
 - 書きながら横で仕上がりを確認。スクロールも連動
 - プレビューを 2 台目のディスプレイに。編集中の行を表示
@@ -15,7 +19,7 @@
 - HTML・PNG・Word・CSV・JSON・Jupyter Notebook・テキストに保存・配布用ZIP
 - 画像をドロップ・貼り付け。サイズと中央揃えを調整
 - 安全な保存と、異常終了からの自動復元
-- Shift_JIS・EUC-JP・UTF-8 のファイルを正しく開ける
+- コピーしたテキスト・画像・ファイルから、新しい文書を作成
 - ネット上の画像・動画・地図は、許可したときだけ読み込む
 - 広告なし、計測なし、アカウント不要
 - キーボードで全操作。ショートカットも変更できる
@@ -23,9 +27,10 @@
 
 https://5garashi.github.io/mdEditor/
 
-Recorded from source build 1.0.14. Internet media and detailed maps were permitted. Word import does not preserve layout; notebook export omits execution outputs.
+Windows用。Wordの取り込みでは色・配置を保持しません。ネット画像・動画・詳細地図は許可後に読み込みます。収録はソースビルド1.0.15です。
 
-Music: Light Steps — 5garashi.com Design Office / Codex, CC BY 4.0. Excerpt shifted and repeated; ending fade.
-Sample video: Big Buck Bunny © 2008 Blender Foundation, CC BY 3.0. bigbuckbunny.org
-Map: © OpenStreetMap contributors.
-#mdEditor #Markdown #Windows
+Clipboard shortcut: optional; created only after confirmation in Settings. Startup performance depends on your PC.
+
+Music: Light Steps — 5garashi.com Design Office / Codex, CC BY 4.0 (excerpt repeated, ending fade).
+Sample film: Big Buck Bunny © 2008 Blender Foundation, CC BY 3.0. https://bigbuckbunny.org/
+Maps: © OpenStreetMap contributors.

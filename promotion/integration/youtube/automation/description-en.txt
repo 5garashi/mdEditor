@@ -1,4 +1,8 @@
-Start with rotating 3D, tour diagram-test, then explore the main features. See image drag-and-drop, 50% width and centered alignment.
+Now in Simplified Chinese. Create a new document from the clipboard. Improved startup.
+
+Write beside a live preview. Render Mermaid, Graphviz and math offline. Rotate 3D, adjust images, and share PDF, Word or ZIP.
+
+Start with rotating 3D, tour diagram-test from top to bottom, then explore the main features, including image drag-and-drop, 50% width and centered alignment.
 
 - Live preview beside your text, scrolling together
 - Preview on a second display, following the line you edit
@@ -15,7 +19,7 @@ Start with rotating 3D, tour diagram-test, then explore the main features. See i
 - Saves as HTML, PNG, Word, CSV, JSON, Jupyter Notebook, or text; sharing ZIP
 - Drop or paste images; adjust their size and centered alignment
 - Safe saving and automatic crash recovery
-- Opens Shift_JIS, EUC-JP, and UTF-8 files correctly
+- Create a new document from copied text, pictures or files
 - Internet images, videos, and maps load only when you allow them
 - No ads, no tracking, no account
 - Everything from the keyboard, with custom shortcuts
@@ -23,9 +27,10 @@ Start with rotating 3D, tour diagram-test, then explore the main features. See i
 
 https://5garashi.github.io/mdEditor/en.html
 
-Recorded from source build 1.0.14. Internet media and detailed maps were permitted. Word import does not preserve layout; notebook export omits execution outputs.
+Windows only. Word import does not preserve colors or layout. Internet images, videos and detailed maps load only with permission. Recorded from source build 1.0.15.
 
-Music: Light Steps — 5garashi.com Design Office / Codex, CC BY 4.0. Excerpt shifted and repeated; ending fade.
-Sample video: Big Buck Bunny © 2008 Blender Foundation, CC BY 3.0. bigbuckbunny.org
-Map: © OpenStreetMap contributors.
-#mdEditor #Markdown #Windows
+Clipboard shortcut: optional; created only after confirmation in Settings. Startup performance depends on your PC.
+
+Music: Light Steps — 5garashi.com Design Office / Codex, CC BY 4.0 (excerpt repeated, ending fade).
+Sample film: Big Buck Bunny © 2008 Blender Foundation, CC BY 3.0. https://bigbuckbunny.org/
+Maps: © OpenStreetMap contributors.

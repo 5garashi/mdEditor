@@ -3,12 +3,16 @@
 概要 / Description: mdEditor紹介資料 / mdEditor promotion material
 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
 作成日 / Created: 2026-10-12
-版 / Version: 1.12.0
+版 / Version: 1.13.0
 ライセンス / License: MIT
 最終更新 / Last updated: 2026-10-20
 SPDX-License-Identifier: MIT
 -->
 # 変更履歴 / Changelog
+
+## 1.13.0 — 2026-10-23
+
+- 日英中動画・簡体字中国語ページ・クリップボード新規作成と従来機能を全媒体へ展開。 / Trilingual video release, Chinese pages and new clipboard capture alongside established strengths.
 
 ## 1.12.0 — 2026-10-20
 

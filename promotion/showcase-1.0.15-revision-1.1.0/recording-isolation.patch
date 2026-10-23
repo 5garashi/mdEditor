@@ -1,0 +1,29 @@
+--- original/MainWindow.xaml.cs
++++ recording-copy/MainWindow.xaml.cs
+@@ -169,7 +169,7 @@
+     private string? _lastSyncEdge = "top";
+ 
+     private const int DwmwaUseImmersiveDarkMode = 20;
+-    private const string SettingsKeyPath = @"Software\mdEditor";
++    private const string SettingsKeyPath = @"Software\mdEditorPromotion-video-2026-10-23";
+     // "auto", "light", or "dark". Kept in the registry so it applies before the page paints.
+     private string _theme = NormalizeTheme(LoadSetting("Theme"));
+     // PDF paper: "auto" (A4, or Letter where the region uses US customary units), "a4", or "letter".
+@@ -190,7 +190,7 @@
+     // restarts until it is replaced or used): closed with "No" to saving, its
+     // unsaved text; left without changes, only its file, which is opened again.
+     private static readonly string DiscardedFile = Path.Combine(
+-        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "mdEditor", "Recovery", "discarded.json");
++        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "mdEditorPromotion-video-2026-10-23", "Recovery", "discarded.json");
+ 
+     private sealed record DiscardedRecord(
+         string? Path, string Encoding, string Text, string? ImportFolder, string? ImportName,
+@@ -201,7 +201,7 @@
+     private string? _leavingClean;
+ 
+     private static readonly string RecoveryFolder = Path.Combine(
+-        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "mdEditor", "Recovery");
++        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "mdEditorPromotion-video-2026-10-23", "Recovery");
+     private static readonly long ProcessStartTicks = Process.GetCurrentProcess().StartTime.ToUniversalTime().Ticks;
+     private readonly string _recoveryFile = Path.Combine(RecoveryFolder, $"recovery-{Environment.ProcessId}.json");
+     private readonly DispatcherTimer _backupTimer = new() { Interval = TimeSpan.FromSeconds(15) };

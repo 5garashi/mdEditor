@@ -992,7 +992,7 @@ GeoJSON has no triangle or circle type, so both places are areas (Polygon) drawn
 
 A video in the same folder (a lone link; GitHub shows it as a link):
 
-[A video of the "5" cube turning](import-test-images/cube5.mp4)
+[A video of the "5" cube turning](import-test_files/cube5.mp4)
 
 A video on the internet (a lone link; it waits for permission):
 
@@ -1010,25 +1010,25 @@ The images are official assets of 5garashi.com Design Office (CC BY-ND 4.0), use
 
 ### 22-1. Size (share of the text width)
 
-<p><picture><source media="(prefers-color-scheme: dark)" srcset="import-test-images/5garashi_logotype_en_reversed_outlined.svg"><img src="import-test-images/5garashi_logotype_en_outlined.svg" alt="5garashi.com Design Office (25% of the text width)" width="25%"></picture></p>
+<p><picture><source media="(prefers-color-scheme: dark)" srcset="import-test_files/5garashi_logotype_en_reversed_outlined.svg"><img src="import-test_files/5garashi_logotype_en_outlined.svg" alt="5garashi.com Design Office (25% of the text width)" width="25%"></picture></p>
 
-<p><picture><source media="(prefers-color-scheme: dark)" srcset="import-test-images/5garashi_logotype_en_reversed_outlined.svg"><img src="import-test-images/5garashi_logotype_en_outlined.svg" alt="5garashi.com Design Office (50% of the text width)" width="50%"></picture></p>
+<p><picture><source media="(prefers-color-scheme: dark)" srcset="import-test_files/5garashi_logotype_en_reversed_outlined.svg"><img src="import-test_files/5garashi_logotype_en_outlined.svg" alt="5garashi.com Design Office (50% of the text width)" width="50%"></picture></p>
 
-<p><picture><source media="(prefers-color-scheme: dark)" srcset="import-test-images/5garashi_logotype_en_reversed_outlined.svg"><img src="import-test-images/5garashi_logotype_en_outlined.svg" alt="5garashi.com Design Office (full text width)" width="100%"></picture></p>
+<p><picture><source media="(prefers-color-scheme: dark)" srcset="import-test_files/5garashi_logotype_en_reversed_outlined.svg"><img src="import-test_files/5garashi_logotype_en_outlined.svg" alt="5garashi.com Design Office (full text width)" width="100%"></picture></p>
 
 ### 22-2. Center and right (width in pixels)
 
-<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="import-test-images/5garashi_logotype_en_reversed_outlined.svg"><img src="import-test-images/5garashi_logotype_en_outlined.svg" alt="5garashi.com Design Office" width="240"></picture></p>
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="import-test_files/5garashi_logotype_en_reversed_outlined.svg"><img src="import-test_files/5garashi_logotype_en_outlined.svg" alt="5garashi.com Design Office" width="240"></picture></p>
 
-<p align="right"><img src="import-test-images/5garashi_mark_simple.svg" alt="5garashi.com Design Office symbol mark" width="64"></p>
+<p align="right"><img src="import-test_files/5garashi_mark_simple.svg" alt="5garashi.com Design Office symbol mark" width="64"></p>
 
 ### 22-3. Text flowing around an image
 
-<img src="import-test-images/5garashi_mark_simple.svg" alt="5garashi.com Design Office symbol mark" width="80" align="left" hspace="16" vspace="8">
+<img src="import-test_files/5garashi_mark_simple.svg" alt="5garashi.com Design Office symbol mark" width="80" align="left" hspace="16" vspace="8">
 
 The symbol mark is a tally of chili peppers: four upright chilis crossed by a fifth. An image with `align="left"` sits on the left, and this paragraph flows on its right. `hspace` and `vspace` keep a margin around the image.
 
-<img src="import-test-images/5garashi_mark_simple.svg" alt="5garashi.com Design Office symbol mark" width="80" align="right" hspace="16" vspace="8">
+<img src="import-test_files/5garashi_mark_simple.svg" alt="5garashi.com Design Office symbol mark" width="80" align="right" hspace="16" vspace="8">
 
 Count one-two-three-four, then strike through with the fifth: the name "5garashi" drawn as a single mark. An image with `align="right"` sits on the right, and this paragraph flows on its left.
 

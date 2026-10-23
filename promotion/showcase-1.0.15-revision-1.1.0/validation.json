@@ -1,0 +1,67 @@
+{
+  "date": "2026-10-23 JST",
+  "app": "1.0.15",
+  "revision": "1.1.0",
+  "exports": {
+    "mdEditor-showcase-ja.mp4": {
+      "duration": "195.650000",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "initial_audio_dbfs": -12.19,
+      "decode": "passed by encoder",
+      "sha256": "e76abb5ace79d19b3912a8628fbc8171670f358645f92aa2a3695cb64fb96bf2"
+    },
+    "mdEditor-showcase-vertical-ja.mp4": {
+      "duration": "195.650000",
+      "dimensions": [
+        1080,
+        1920
+      ],
+      "initial_audio_dbfs": -12.19,
+      "decode": "passed by encoder",
+      "sha256": "0fc96f8ad79e5d3d64538872f00af418a6187b145940789531e8c8528f36c836"
+    },
+    "mdEditor-showcase-en.mp4": {
+      "duration": "200.100000",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "initial_audio_dbfs": -12.19,
+      "decode": "passed by encoder",
+      "sha256": "9aa3d4bf3eba8fe60066543294b34c1513e31e57b0fac19ddfe17384c12b227b"
+    },
+    "mdEditor-showcase-vertical-en.mp4": {
+      "duration": "200.100000",
+      "dimensions": [
+        1080,
+        1920
+      ],
+      "initial_audio_dbfs": -12.19,
+      "decode": "passed by encoder",
+      "sha256": "74b299fee3bf04abc193c952ada39a3505b9e62952ca23aa45c5e0eb5d52c723"
+    },
+    "mdEditor-showcase-zh-CN.mp4": {
+      "duration": "201.700000",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "initial_audio_dbfs": -12.19,
+      "decode": "passed by encoder",
+      "sha256": "cd1839e15a6ddd655731d5d94dac524d0695cdcabd872747de7746dcb8934cf3"
+    },
+    "mdEditor-showcase-vertical-zh-CN.mp4": {
+      "duration": "201.700000",
+      "dimensions": [
+        1080,
+        1920
+      ],
+      "initial_audio_dbfs": -12.19,
+      "decode": "passed by encoder",
+      "sha256": "e5d03a0a562b811211815c4c31ee080dd897f9dc1d84c93b3b1de486d5aaa1bb"
+    }
+  }
+}

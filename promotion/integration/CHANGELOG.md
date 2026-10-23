@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.0 — 2026-10-23
+
+- 日英中の紹介・資料・YouTube導線を追加更新。 / Update trilingual presentation and publication links.
+
 ## 1.3.0 — 2026-10-20
 
 - 日英Web・資料・埋め込みカードをソース1.0.14の実演と画像調整へ更新。

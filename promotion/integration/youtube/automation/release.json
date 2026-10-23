@@ -1,18 +1,18 @@
 {
   "enabled": true,
   "operation": "sync",
-  "request_id": "2026-10-20-source-1.0.14-4.0.0-sync",
+  "request_id": "2026-10-23-source-1.0.15-5.0.0-sync",
   "channel_id": "UCI_NiKGav2fQZu0IRMxQUeg",
   "videos": [
     {
       "key": "demo-en",
-      "revision": "4.0.0",
-      "media": "promotion/assets/mdEditor-demo-1.0.14-en.mp4",
+      "revision": "5.0.0",
+      "media": "promotion/assets/mdEditor-demo-1.0.15-en.mp4",
       "language": "en",
-      "title": "mdEditor 1.0.14 — Drop, Resize & Center Images — From 3D to Sharing",
+      "title": "mdEditor 1.0.15 — Chinese UI & Clipboard Capture, with Diagrams, 3D and PDF",
       "description_file": "promotion/integration/youtube/automation/description-en.txt",
-      "thumbnail": "promotion/assets/youtube-1.0.14-en.png",
-      "captions": "promotion/assets/demo-1.0.14-en.vtt",
+      "thumbnail": "promotion/assets/youtube-1.0.15-en.png",
+      "captions": "promotion/assets/demo-1.0.15-en.vtt",
       "category_id": "28",
       "tags": [
         "Markdown",
@@ -25,13 +25,32 @@
     },
     {
       "key": "demo-ja",
-      "revision": "4.0.0",
-      "media": "promotion/assets/mdEditor-demo-1.0.14-ja.mp4",
+      "revision": "5.0.0",
+      "media": "promotion/assets/mdEditor-demo-1.0.15-ja.mp4",
       "language": "ja",
-      "title": "mdEditor 1.0.14 — 画像をドロップ、サイズと中央揃え。3Dから共有まで",
+      "title": "mdEditor 1.0.15 — 中国語対応・コピーから文書へ。図・3D・PDFまで",
       "description_file": "promotion/integration/youtube/automation/description-ja.txt",
-      "thumbnail": "promotion/assets/youtube-1.0.14-ja.png",
-      "captions": "promotion/assets/demo-1.0.14-ja.vtt",
+      "thumbnail": "promotion/assets/youtube-1.0.15-ja.png",
+      "captions": "promotion/assets/demo-1.0.15-ja.vtt",
+      "category_id": "28",
+      "tags": [
+        "Markdown",
+        "Windows",
+        "Mermaid",
+        "KaTeX",
+        "mdEditor"
+      ],
+      "target_privacy": "public"
+    },
+    {
+      "key": "demo-zh-cn",
+      "revision": "5.0.0",
+      "media": "promotion/assets/mdEditor-demo-1.0.15-zh-CN.mp4",
+      "language": "zh-CN",
+      "title": "mdEditor 1.0.15 — 简体中文与剪贴板新建，图表、3D 和 PDF",
+      "description_file": "promotion/integration/youtube/automation/description-zh-CN.txt",
+      "thumbnail": "promotion/assets/youtube-1.0.15-zh-CN.png",
+      "captions": "promotion/assets/demo-1.0.15-zh-CN.vtt",
       "category_id": "28",
       "tags": [
         "Markdown",

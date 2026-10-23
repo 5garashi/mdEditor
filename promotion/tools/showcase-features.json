@@ -2,101 +2,121 @@
   {
     "key": "edit",
     "ja": "書きながら横で仕上がりを確認。スクロールも連動",
-    "en": "Live preview beside your text, scrolling together"
+    "en": "Live preview beside your text, scrolling together",
+    "zh-CN": "一边编写一边预览，两侧同步滚动"
   },
   {
     "key": "detach",
     "ja": "プレビューを 2 台目のディスプレイに。編集中の行を表示",
-    "en": "Preview on a second display, following the line you edit"
+    "en": "Preview on a second display, following the line you edit",
+    "zh-CN": "独立预览窗口，可移到第二台显示器"
   },
   {
     "key": "viewer",
     "ja": "ビューアーとしても。プレビューをウィンドウいっぱいに",
-    "en": "Also a viewer: the preview fills the window"
+    "en": "Also a viewer: the preview fills the window",
+    "zh-CN": "预览铺满窗口，作为阅读器使用"
   },
   {
     "key": "offline",
     "ja": "Mermaid・Graphviz の図と数式をオフラインで表示",
-    "en": "Mermaid and Graphviz diagrams and math, offline"
+    "en": "Mermaid and Graphviz diagrams and math, offline",
+    "zh-CN": "离线显示 Mermaid、Graphviz 图表和公式"
   },
   {
     "key": "3d",
     "ja": "3D モデル（STL）をマウスで回して確認",
-    "en": "3D models (STL) you turn with the mouse"
+    "en": "3D models (STL) you turn with the mouse",
+    "zh-CN": "用鼠标旋转 STL 3D 模型"
   },
   {
     "key": "maps",
     "ja": "地図（GeoJSON）。許可すると OpenStreetMap の地図も",
-    "en": "Maps (GeoJSON), with OpenStreetMap when you allow it"
+    "en": "Maps (GeoJSON), with OpenStreetMap when you allow it",
+    "zh-CN": "GeoJSON 地图；允许后加载 OpenStreetMap"
   },
   {
     "key": "code",
     "ja": "約 40 の言語のコードを色分け。PDF・Word にも色が残る",
-    "en": "Colored code for about 40 languages, kept in PDF and Word"
+    "en": "Colored code for about 40 languages, kept in PDF and Word",
+    "zh-CN": "约 40 种代码语言高亮，PDF、Word 保留颜色"
   },
   {
     "key": "toc",
     "ja": "見出しから目次を作り、ボタン 1 つで新しくする",
-    "en": "Table of contents from your headings, updated with one press"
+    "en": "Table of contents from your headings, updated with one press",
+    "zh-CN": "从标题生成目录，再按一次即可更新"
   },
   {
     "key": "github",
     "ja": "GitHub と同じ注意書き・フロントマター・折りたたみ",
-    "en": "GitHub-style alerts, front matter, and collapsible sections"
+    "en": "GitHub-style alerts, front matter, and collapsible sections",
+    "zh-CN": "GitHub 风格提示、前置元数据和折叠内容"
   },
   {
     "key": "video",
     "ja": "文書の中の動画をプレビューで再生",
-    "en": "Videos play right in the preview"
+    "en": "Videos play right in the preview",
+    "zh-CN": "在预览中直接播放文档视频"
   },
   {
     "key": "pdf",
     "ja": "プレビューと同じ見た目の PDF をワンクリックで",
-    "en": "One-click PDF that looks exactly like the preview"
+    "en": "One-click PDF that looks exactly like the preview",
+    "zh-CN": "导出与预览效果一致的 PDF"
   },
   {
     "key": "import",
     "ja": "Word・HTML・メール・CSV・JSON・Jupyter Notebook・画像を開ける",
-    "en": "Opens Word, HTML, e-mail, CSV, JSON, Jupyter Notebooks, and images"
+    "en": "Opens Word, HTML, e-mail, CSV, JSON, Jupyter Notebooks, and images",
+    "zh-CN": "打开 Word、HTML、邮件、CSV、JSON、Notebook 和图片"
   },
   {
     "key": "export",
     "ja": "HTML・PNG・Word・CSV・JSON・Jupyter Notebook・テキストに保存・配布用ZIP",
-    "en": "Saves as HTML, PNG, Word, CSV, JSON, Jupyter Notebook, or text; sharing ZIP"
+    "en": "Saves as HTML, PNG, Word, CSV, JSON, Jupyter Notebook, or text; sharing ZIP",
+    "zh-CN": "保存为 HTML、PNG、Word、CSV、JSON、Notebook、文本或分享 ZIP"
   },
   {
     "key": "images",
     "ja": "画像をドロップ・貼り付け。サイズと中央揃えを調整",
-    "en": "Drop or paste images; adjust their size and centered alignment"
+    "en": "Drop or paste images; adjust their size and centered alignment",
+    "zh-CN": "拖放或粘贴图片，调整大小和居中位置"
   },
   {
     "key": "recovery",
     "ja": "安全な保存と、異常終了からの自動復元",
-    "en": "Safe saving and automatic crash recovery"
+    "en": "Safe saving and automatic crash recovery",
+    "zh-CN": "安全保存，意外退出后恢复自动备份"
   },
   {
-    "key": "encoding",
-    "ja": "Shift_JIS・EUC-JP・UTF-8 のファイルを正しく開ける",
-    "en": "Opens Shift_JIS, EUC-JP, and UTF-8 files correctly"
+    "key": "clipboard",
+    "ja": "コピーしたテキスト・画像・ファイルから、新しい文書を作成",
+    "en": "Create a new document from copied text, pictures or files",
+    "zh-CN": "从复制的文字、图片或文件新建文档"
   },
   {
     "key": "internet",
     "ja": "ネット上の画像・動画・地図は、許可したときだけ読み込む",
-    "en": "Internet images, videos, and maps load only when you allow them"
+    "en": "Internet images, videos, and maps load only when you allow them",
+    "zh-CN": "网络图片、视频和地图仅在允许后加载"
   },
   {
     "key": "privacy",
     "ja": "広告なし、計測なし、アカウント不要",
-    "en": "No ads, no tracking, no account"
+    "en": "No ads, no tracking, no account",
+    "zh-CN": "无广告、无跟踪、无需账号"
   },
   {
     "key": "keyboard",
     "ja": "キーボードで全操作。ショートカットも変更できる",
-    "en": "Everything from the keyboard, with custom shortcuts"
+    "en": "Everything from the keyboard, with custom shortcuts",
+    "zh-CN": "支持键盘操作，自定义快捷键"
   },
   {
     "key": "accessibility",
     "ja": "画面読み上げ・文書の読み上げ・ダークモードに対応",
-    "en": "Screen reader support, read-aloud, and dark mode"
+    "en": "Screen reader support, read-aloud, and dark mode",
+    "zh-CN": "屏幕阅读器、文档朗读和深色模式"
   }
 ]
