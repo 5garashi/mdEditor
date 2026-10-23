@@ -1,6 +1,6 @@
 /*
   ファイル名 / File: Strings.cs
-  概要 / Description: Japanese and English text for native dialogs and messages
+  概要 / Description: Japanese, English, and Simplified Chinese text for native dialogs and messages
   作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
   作成日 / Created: 2026-10-10
   ライセンス / License: MIT
@@ -8,7 +8,7 @@
 */
 namespace MdEditor;
 
-internal static class Strings
+internal static partial class Strings
 {
     private static readonly Dictionary<string, string> English = new()
     {
@@ -201,7 +201,26 @@ internal static class Strings
         ["未保存の変更を破棄して、選んだ文字コードで開き直しますか？"] =
             "Discard unsaved changes and reopen the file in the selected encoding?",
         ["この文書には、選んだ文字コードで読めなかった文字（�）が含まれています。上書きすると、元のファイルのその部分は失われます。上書き保存しますか？"] =
-            "This document contains characters that could not be read in the selected encoding (�). Overwriting the file loses those parts of the original. Overwrite anyway?"
+            "This document contains characters that could not be read in the selected encoding (�). Overwriting the file loses those parts of the original. Overwrite anyway?",
+        ["mdEditor（クリップボードから新規作成）"] = "mdEditor (new from clipboard)",
+        ["コピーしたテキストや画像を、mdEditor の新しい文書に入れます。"] = "Puts copied text or pictures in a new mdEditor document.",
+        ["デスクトップのショートカット「{0}」を削除しますか？"] = "Delete the desktop shortcut \"{0}\"?",
+        ["デスクトップのショートカット「{0}」を削除しました。"] = "Deleted the desktop shortcut \"{0}\".",
+        ["デスクトップに「{0}」のショートカットを作り、{1} を割り当てます。Windows では、このキーはデスクトップかスタートメニューのショートカットにしか割り当てられません。作ってもいいですか？"] =
+            "mdEditor will create the shortcut \"{0}\" on the desktop and give it {1}. Windows lets such keys start only shortcuts on the desktop or in the Start menu. Create it?",
+        ["{0} は、ほかのショートカット（{1}）でも使われています。Windows がどちらを起動するかは決まっていないため、別のキーを選ぶことをお勧めします。"] =
+            "{0} is also used by other shortcuts ({1}). Windows may start either one, so choosing another key is recommended.",
+        ["mdEditor を削除（アンインストール）する前に、このキーを「なし」に戻してください。ショートカットは自動では消えません。"] =
+            "Before removing (uninstalling) mdEditor, set this key back to None. The shortcut is not removed automatically.",
+        ["デスクトップに「{0}」を作りました。テキストや画像をコピーしてから {1} を押すと、mdEditor の新しい文書に入ります。"] =
+            "Created \"{0}\" on the desktop. Copy text or a picture, then press {1} to put it in a new mdEditor document.",
+        ["デスクトップのショートカットを作れませんでした。"] = "Could not create the desktop shortcut.",
+        ["クリップボードのテキストを新しい文書に入れました。"] = "Put the text from the clipboard in a new document.",
+        ["クリップボードの書式付きの内容（HTML）を Markdown にして、新しい文書に入れました。見出し・表・リンクなどは残り、色や配置は残りません。"] =
+            "Converted the formatted content on the clipboard (HTML) to Markdown and put it in a new document. Headings, tables, and links stay; colors and layout do not.",
+        ["クリップボードに、文書に入れられるもの（テキスト・画像・ファイル）がありません。コピーしてから、もう一度お試しください。"] =
+            "The clipboard has nothing that can go into a document (text, a picture, or files). Copy something, then try again.",
+        ["クリップボードを読み込めませんでした。少し待ってから、もう一度お試しください。"] = "Could not read the clipboard. Wait a moment and try again."
     };
 
     public static string Language { get; set; } = DefaultLanguage();
@@ -209,14 +228,40 @@ internal static class Strings
     // Set by the --lang command-line option; takes priority over the saved choice.
     public static string? ForcedLanguage { get; set; }
 
+    // "ja", "en", or "zh" (Simplified Chinese), from the Windows display language.
     public static string DefaultLanguage() =>
-        System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ja"
-            ? "ja"
-            : "en";
+        System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName switch
+        {
+            "ja" => "ja",
+            "zh" => "zh",
+            _ => "en"
+        };
 
-    // Source strings are Japanese; English is looked up when the UI language is English.
-    public static string Tr(string japanese) =>
-        Language == "en" && English.TryGetValue(japanese, out var english)
-            ? english
-            : japanese;
+    // The language codes the app accepts (--lang, the page's Language list).
+    public static string? Normalize(string? language) => language?.Trim().ToLowerInvariant() switch
+    {
+        "ja" or "ja-jp" => "ja",
+        "en" or "en-us" => "en",
+        "zh" or "zh-cn" or "zh-hans" => "zh",
+        _ => null
+    };
+
+    // Source strings are Japanese; English or Chinese is looked up for those UI languages.
+    public static string Tr(string japanese) => Language switch
+    {
+        "en" when English.TryGetValue(japanese, out var english) => english,
+        "zh" when Chinese.TryGetValue(japanese, out var chinese) => chinese,
+        _ => japanese
+    };
+
+    // Between sentences joined into one notice: a space in English, nothing in Japanese and Chinese.
+    public static string SentenceJoin => Language == "en" ? " " : string.Empty;
+
+    // Names in a notice: 「a.png」「b.pdf」, "a.png", "b.pdf", or “a.png”“b.pdf”.
+    public static string NameList(IEnumerable<string> names) => Language switch
+    {
+        "en" => string.Join(", ", names.Select(name => $"\"{name}\"")),
+        "zh" => string.Concat(names.Select(name => $"“{name}”")),
+        _ => string.Concat(names.Select(name => $"「{name}」"))
+    };
 }

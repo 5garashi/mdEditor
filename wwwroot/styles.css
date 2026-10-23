@@ -100,11 +100,23 @@
   font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Noto Sans", "Yu Gothic UI", "Meiryo", sans-serif;
 }
 
+/* Simplified Chinese UI: the OS UI face for Latin, then Windows' Simplified Chinese
+   face, so Chinese characters take Chinese forms rather than Japanese ones.
+   (Identity Art. 6 names faces for Japanese and English only.) */
+:root:lang(zh-CN) {
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+}
+
 /* Settings: BIZ UD Gothic, a Universal Design face shipped with Windows, for
    readers who find it easier. Chosen by the user, so it overrides Art. 6. */
 :root.font-ud,
 :root.font-ud:lang(en) {
   font-family: "BIZ UDPGothic", "BIZ UDGothic", "Yu Gothic UI", "Meiryo", sans-serif;
+}
+
+/* BIZ UD Gothic is a Japanese face; Chinese characters it lacks fall back to the Chinese face. */
+:root.font-ud:lang(zh-CN) {
+  font-family: "BIZ UDPGothic", "BIZ UDGothic", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
 }
 
 * {
@@ -146,6 +158,32 @@ button:hover {
   background: var(--paper);
 }
 
+/* Language: the label stays "Language" in every language, beside a list of the
+   three display languages, each written in itself. Sized like the buttons. */
+.language-picker {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 4px 0 12px;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  color: var(--ink);
+  background: var(--card);
+  font-weight: 700;
+}
+
+.language-picker select {
+  min-height: 36px;
+  padding: 2px 6px;
+  border: 1px solid var(--ink);
+  border-radius: 4px;
+  color: var(--ink);
+  background: var(--card);
+  font: inherit;
+  cursor: pointer;
+}
+
 /* Primary button: head on ink (Art. 7-1, day 6.66:1 and night 6.74:1). */
 button.primary {
   color: var(--head);
@@ -164,7 +202,9 @@ button.primary:hover {
 
 .brand-bar {
   display: flex;
-  flex: 0 0 72px;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  min-height: 72px;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
@@ -329,10 +369,28 @@ body.dragging {
   justify-content: flex-end;
 }
 
-/* Keep room for the file name; the buttons wrap to the next row first. */
-.document-status {
-  flex: 1 1 380px;
+/* The open document sits in the header between the logotype and the mark. The
+   margins keep well clear of both (Identity 3-5 asks for at least one chili of the
+   mark around them); a long name is shortened, with the full name in its tooltip. */
+.brand-bar .document-status {
+  flex: 1 1 0;
+  margin-inline: 24px;
+}
+
+.brand-bar #document-name {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+/* Settings > Theme and PDF paper: the two switches side by side. */
+.theme-paper-row {
+  display: flex;
   flex-wrap: wrap;
+  gap: 10px;
+}
+
+.theme-paper-row button {
+  min-height: 44px;
 }
 
 .workspace {
@@ -403,6 +461,11 @@ body.dragging {
   background: var(--paper);
 }
 
+/* The editor's heading is read by screen readers only, so its buttons start at the left. */
+.editor-pane .pane-heading {
+  justify-content: flex-start;
+}
+
 .pane-heading h2 {
   margin: 0;
   font-size: 16px;
@@ -418,7 +481,6 @@ body.dragging {
 
 #replace-button {
   min-height: 44px;
-  margin-left: auto;
   padding: 4px 10px;
   font-size: 13px;
 }
@@ -1425,11 +1487,13 @@ body.capture-export .preview-content {
     flex-direction: column;
   }
 
-  /* Narrow screens wrap the status row so the full file name stays readable.
-     The toolbar is a column here, so the 380px basis would become a height. */
-  .document-status {
+  /* Narrow screens give the open document a row of its own under the logotype and
+     mark, and wrap it so the full file name stays readable. */
+  .brand-bar .document-status {
     flex: 0 0 auto;
+    order: 3;
     width: 100%;
+    margin-inline: 0;
     flex-wrap: wrap;
   }
 
@@ -1460,7 +1524,7 @@ body.capture-export .preview-content {
   }
 
   .brand-bar {
-    flex-basis: 64px;
+    min-height: 64px;
   }
 
   .brand-logo {

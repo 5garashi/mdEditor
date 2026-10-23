@@ -165,16 +165,21 @@ internal static class DiagramFences
 // tab-separated rows, and links keep their address in parentheses.
 internal static class PlainTextExport
 {
-    public static string Convert(string markdown, MarkdownPipeline pipeline, bool japanese)
+    public static string Convert(string markdown, MarkdownPipeline pipeline, string language)
     {
-        var context = new Context(japanese);
+        var context = new Context(language);
         var parts = Markdown.Parse(markdown, pipeline)
             .Select(block => Block(block, context))
             .Where(text => !string.IsNullOrWhiteSpace(text));
         return string.Join("\r\n\r\n", parts).Replace("\r\n", "\n").Replace("\n", "\r\n") + "\r\n";
     }
 
-    private sealed record Context(bool Japanese);
+    // The UI language (ja, en, or zh) picks the words the text uses for pictures and lists.
+    private sealed record Context(string Language)
+    {
+        public bool Japanese => Language == "ja";
+        public string Pick(string ja, string en, string zh) => Language switch { "en" => en, "zh" => zh, _ => ja };
+    }
 
     private static string? Block(Block block, Context context)
     {
@@ -187,7 +192,7 @@ internal static class PlainTextExport
             case MathBlock math:
                 return Lines(math);
             case FencedCodeBlock fenced when DiagramFences.IsDiagram(fenced.Info):
-                return context.Japanese ? "［図］" : "[Figure]";
+                return context.Pick("［図］", "[Figure]", "［图］");
             case Markdig.Extensions.Yaml.YamlFrontMatterBlock yaml:
                 var yamlLines = yaml.Lines.Lines.Take(yaml.Lines.Count).Select(line => line.Slice.ToString()).ToList();
                 return FrontMatter.Read(yamlLines) is { } matter
@@ -225,7 +230,7 @@ internal static class PlainTextExport
         var items = new List<string>();
         foreach (var item in list.OfType<ListItemBlock>())
         {
-            var marker = list.IsOrdered ? $"{number++}{list.OrderedDelimiter} " : context.Japanese ? "・" : "• ";
+            var marker = list.IsOrdered ? $"{number++}{list.OrderedDelimiter} " : context.Pick("・", "• ", "・");
             var body = Children(item, context, list.IsLoose ? "\n\n" : "\n");
             items.Add(Indent(body, marker, new string(' ', list.IsOrdered ? marker.Length : 2)));
         }
@@ -234,7 +239,7 @@ internal static class PlainTextExport
     }
 
     // Every row of a table as plain cells, the header first (for CSV and TSV too).
-    public static List<List<string>> Rows(MdTable table, bool japanese) => Rows(table, new Context(japanese));
+    public static List<List<string>> Rows(MdTable table, string language) => Rows(table, new Context(language));
 
     private static List<List<string>> Rows(MdTable table, Context context) =>
         table.OfType<MdTableRow>()
@@ -271,7 +276,7 @@ internal static class PlainTextExport
                     break;
                 case LinkInline { IsImage: true } image:
                     var alt = Inlines(image, context);
-                    text.Append(context.Japanese ? $"［{(alt.Length > 0 ? alt : "画像")}］" : $"[{(alt.Length > 0 ? alt : "Image")}]");
+                    text.Append(context.Pick($"［{(alt.Length > 0 ? alt : "画像")}］", $"[{(alt.Length > 0 ? alt : "Image")}]", $"［{(alt.Length > 0 ? alt : "图像")}］"));
                     break;
                 case LinkInline link:
                     text.Append(LinkText(Inlines(link, context), link.Url, context));
@@ -313,7 +318,7 @@ internal static class PlainTextExport
             return address;
         }
 
-        return context.Japanese ? $"{text}（{address}）" : $"{text} ({address})";
+        return context.Pick($"{text}（{address}）", $"{text} ({address})", $"{text}（{address}）");
     }
 
     private static string Lines(LeafBlock block) =>
@@ -325,7 +330,7 @@ internal static class PlainTextExport
         {
             var alt = Regex.Match(match.Value, @"\salt\s*=\s*(?:""([^""]*)""|'([^']*)')", RegexOptions.IgnoreCase);
             var text = WebUtility.HtmlDecode(alt.Groups[1].Success ? alt.Groups[1].Value : alt.Groups[2].Value).Trim();
-            return WebUtility.HtmlEncode(context.Japanese ? $"［{(text.Length > 0 ? text : "画像")}］" : $"[{(text.Length > 0 ? text : "Image")}]");
+            return WebUtility.HtmlEncode(context.Pick($"［{(text.Length > 0 ? text : "画像")}］", $"[{(text.Length > 0 ? text : "Image")}]", $"［{(text.Length > 0 ? text : "图像")}］"));
         }, RegexOptions.IgnoreCase);
 
     public static string? StripHtml(string html)
@@ -440,9 +445,9 @@ internal static class TableFiles
         return rows.Where(r => r.Any(value => value.Length > 0)).ToList();
     }
 
-    public static List<List<List<string>>> Tables(string markdown, MarkdownPipeline pipeline, bool japanese) =>
+    public static List<List<List<string>>> Tables(string markdown, MarkdownPipeline pipeline, string language) =>
         Markdown.Parse(markdown, pipeline).Descendants<MdTable>()
-            .Select(table => PlainTextExport.Rows(table, japanese))
+            .Select(table => PlainTextExport.Rows(table, language))
             .ToList();
 
     public static string Write(List<List<string>> rows, char separator)
@@ -583,31 +588,31 @@ internal static class MailImport
 {
     public sealed record Result(string Markdown, int Images);
 
-    public static Result ToMarkdown(string path, string assets, string imagesName, bool japanese)
+    public static Result ToMarkdown(string path, string assets, string imagesName, string language)
     {
         using var stream = File.OpenRead(path);
         var message = MimeMessage.Load(stream);
         var text = new StringBuilder();
-        var subject = string.IsNullOrWhiteSpace(message.Subject) ? (japanese ? "（件名なし）" : "(No subject)") : message.Subject.Trim();
+        var subject = string.IsNullOrWhiteSpace(message.Subject) ? (language switch { "en" => "(No subject)", "zh" => "（无主题）", _ => "（件名なし）" }) : message.Subject.Trim();
         text.Append("# ").Append(Escape(subject)).Append("\n\n");
 
-        void Field(string ja, string en, string? value)
+        void Field(string ja, string en, string zh, string? value)
         {
             if (!string.IsNullOrWhiteSpace(value))
             {
-                text.Append("- ").Append(japanese ? ja : en).Append(": ").Append(Escape(value.Trim())).Append('\n');
+                text.Append("- ").Append(language switch { "en" => en, "zh" => zh, _ => ja }).Append(": ").Append(Escape(value.Trim())).Append('\n');
             }
         }
 
-        Field("差出人", "From", Addresses(message.From));
-        Field("宛先", "To", Addresses(message.To));
-        Field("CC", "Cc", Addresses(message.Cc));
-        Field("日付", "Date", message.Date == DateTimeOffset.MinValue ? null : message.Date.ToLocalTime().ToString("yyyy-MM-dd HH:mm"));
+        Field("差出人", "From", "发件人", Addresses(message.From));
+        Field("宛先", "To", "收件人", Addresses(message.To));
+        Field("CC", "Cc", "抄送", Addresses(message.Cc));
+        Field("日付", "Date", "日期", message.Date == DateTimeOffset.MinValue ? null : message.Date.ToLocalTime().ToString("yyyy-MM-dd HH:mm"));
         var attachments = message.Attachments
             .Select(part => part is MimePart mime ? mime.FileName : part is MessagePart rfc ? rfc.Message?.Subject + ".eml" : null)
             .Where(name => !string.IsNullOrWhiteSpace(name))
             .ToList();
-        Field("添付", "Attachments", attachments.Count > 0 ? string.Join(", ", attachments) : null);
+        Field("添付", "Attachments", "附件", attachments.Count > 0 ? string.Join(", ", attachments) : null);
         text.Append('\n');
 
         var images = 0;

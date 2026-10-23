@@ -993,7 +993,7 @@ endsolid letters
 
 同じフォルダーの動画（リンクだけの行。GitHub ではリンクになる）:
 
-[立方体の「5」が回る動画](import-test-images/cube5.mp4)
+[立方体の「5」が回る動画](import-test_files/cube5.mp4)
 
 インターネット上の動画（リンクだけの行。許可するまで読み込まない）:
 
@@ -1011,25 +1011,25 @@ https://www.w3schools.com/html/mov_bbb.mp4
 
 ### 22-1. 大きさ（本文の幅に対する割合）
 
-<p><img src="import-test-images/5garashi_og_image.png" alt="5garashi.com設計事務所 Design Office Identity の紹介画像（本文の幅の 25%）" width="25%"></p>
+<p><img src="import-test_files/5garashi_og_image.png" alt="5garashi.com設計事務所 Design Office Identity の紹介画像（本文の幅の 25%）" width="25%"></p>
 
-<p><img src="import-test-images/5garashi_og_image.png" alt="5garashi.com設計事務所 Design Office Identity の紹介画像（本文の幅の 50%）" width="50%"></p>
+<p><img src="import-test_files/5garashi_og_image.png" alt="5garashi.com設計事務所 Design Office Identity の紹介画像（本文の幅の 50%）" width="50%"></p>
 
-<p><img src="import-test-images/5garashi_og_image.png" alt="5garashi.com設計事務所 Design Office Identity の紹介画像（本文の幅いっぱい）" width="100%"></p>
+<p><img src="import-test_files/5garashi_og_image.png" alt="5garashi.com設計事務所 Design Office Identity の紹介画像（本文の幅いっぱい）" width="100%"></p>
 
 ### 22-2. 中央・右（ピクセルの幅）
 
-<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="import-test-images/5garashi_logotype_reversed_outlined.svg"><img src="import-test-images/5garashi_logotype_outlined.svg" alt="5garashi.com設計事務所" width="240"></picture></p>
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="import-test_files/5garashi_logotype_reversed_outlined.svg"><img src="import-test_files/5garashi_logotype_outlined.svg" alt="5garashi.com設計事務所" width="240"></picture></p>
 
-<p align="right"><img src="import-test-images/5garashi_mark_simple.svg" alt="5garashi.com設計事務所シンボルマーク" width="64"></p>
+<p align="right"><img src="import-test_files/5garashi_mark_simple.svg" alt="5garashi.com設計事務所シンボルマーク" width="64"></p>
 
 ### 22-3. 文章の回り込み
 
-<img src="import-test-images/5garashi_mark_simple.svg" alt="5garashi.com設計事務所シンボルマーク" width="80" align="left" hspace="16" vspace="8">
+<img src="import-test_files/5garashi_mark_simple.svg" alt="5garashi.com設計事務所シンボルマーク" width="80" align="left" hspace="16" vspace="8">
 
 シンボルマークは唐辛子のタリーマーク（画線法）です。縦 4 本の唐辛子を、5 本目の唐辛子が横に貫きます。`align="left"` の画像は左に寄り、この段落はその右側に回り込みます。`hspace` と `vspace` で、画像の周りに余白を取っています。
 
-<img src="import-test-images/5garashi_mark_simple.svg" alt="5garashi.com設計事務所シンボルマーク" width="80" align="right" hspace="16" vspace="8">
+<img src="import-test_files/5garashi_mark_simple.svg" alt="5garashi.com設計事務所シンボルマーク" width="80" align="right" hspace="16" vspace="8">
 
 「1・2・3・4」と数えて、5 本目で締める——「5（ご）がらし」の名をそのまま図にした印です。`align="right"` の画像は右に寄り、この段落はその左側に回り込みます。
 

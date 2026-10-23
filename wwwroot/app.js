@@ -12,7 +12,7 @@
   const preview = document.getElementById("preview");
   const documentName = document.getElementById("document-name");
   const saveState = document.getElementById("save-state");
-  const languageButton = document.getElementById("language-button");
+  const languageSelect = document.getElementById("language-select");
   const themeButton = document.getElementById("theme-button");
   const workspace = document.querySelector(".workspace");
   const divider = document.getElementById("pane-divider");
@@ -35,7 +35,7 @@
     ja: {
       toolbar: "文書操作",
       sample: "サンプル", sampleHeading: "サンプルを開く",
-      sampleIntro: "図と数式を含む文書を、編集欄に入れて試せます。短い例のほかに、使えるすべての図・チャート・数式を確かめる長い文書（日本語・英語）もあります。選んだときだけ入ります。",
+      sampleIntro: "図と数式を含む文書を、編集欄に入れて試せます。短い例のほかに、使えるすべての図・チャート・数式を確かめる長い文書（日本語・英語・中国語）もあります。選んだときだけ入ります。",
       settingsExport: "書き出し",
       settingsMarkdown: "Markdown の書き方",
       settingsNearGitHub: "GitHub での表示に近づける（mdEditor 独自の書き方を使わない）",
@@ -53,16 +53,17 @@
       restoreDiscarded: "前の文書に戻す",
       restoreDiscardedTitle: (name) => `前の文書「${name}」に戻します。保存しなかった変更があったときは、閉じたときの状態に戻します`,
       saveAs: "名前を付けて保存",
-      languageToggle: "English", languageLabel: "表示言語を English に切り替える",
+      languageToggle: "Language", languageLabel: "表示言語",
       editorHeading: "Markdown を編集", editorLabel: "Markdown テキスト",
       previewHeading: "プレビュー", previewLabel: "Markdown の表示結果",
       dividerLabel: "編集画面とプレビューの幅",
       dividerTitle: "ドラッグまたは矢印キーで左右の幅を調整します",
       fullscreenEditor: "編集画面をウィンドウ全体に表示", fullscreenPreview: "プレビューをウィンドウ全体に表示",
+      fullscreenShort: "ウィンドウ全体に表示",
       fullscreenExit: "元の表示に戻す", saved: "保存済み", unsaved: "未保存の変更",
-      settingsReaderLang: "言語", readerLangAuto: "自動（段落ごとに判定）", readerLangJa: "日本語", readerLangEn: "英語",
+      settingsReaderLang: "言語", readerLangAuto: "自動（段落ごとに判定）", readerLangJa: "日本語", readerLangEn: "英語", readerLangZh: "中国語（簡体字）",
       settingsReaderVoice: "音声", readerVoiceAuto: "自動（最初に見つかった音声）",
-      readerNoVoiceFor: (lang) => `${lang === "ja" ? "日本語" : "英語"}の読み上げに使える音声がこの PC にありません。Windows の「設定」→「時刻と言語」→「音声」で音声を追加してください。`,
+      readerNoVoiceFor: (lang) => `${{ ja: "日本語", en: "英語", zh: "中国語" }[lang] ?? ""}の読み上げに使える音声がこの PC にありません。Windows の「設定」→「時刻と言語」→「音声」で音声を追加してください。`,
       openUrl: "URLを開く", urlHeading: "URLを開く",
       urlIntro: "https:// で始まる Web ページを、Markdown に変換して開きます。スクリプトは実行せず、文書の内容をどこかへ送ることもありません。ページの画像は、そのページから読み込みます。",
       urlLabel: "アドレス", urlOpen: "開く",
@@ -115,7 +116,9 @@
       settingsFontUd: "BIZ UD ゴシック（読みやすさ重視）", settingsSize: "文字の大きさ", settingsSize100: "標準",
       settingsSize125: "大きい（125%）", settingsSize150: "とても大きい（150%）", settingsSize200: "最大（200%）",
       settingsSpacing: "行間", settingsSpacingNormal: "標準", settingsSpacingWide: "広め", settingsSpacingWider: "とても広い",
-      settingsZoom: "画面全体の表示倍率", zoomOut: "縮小", zoomIn: "拡大", zoomReset: "100% に戻す",
+      settingsThemePaper: "表示テーマと PDF の用紙",
+      settingsThemePaperNote: "押すたびに切り替わります。表示テーマは 自動（Windows に合わせる）→ ライト → ダーク、用紙は 自動 → A4 → Letter の順です。Ctrl+Shift+T と Ctrl+Shift+A でも、設定を開かずに切り替えられます。",
+      settingsZoom: "画面全体の表示倍率",zoomOut: "縮小", zoomIn: "拡大", zoomReset: "初期値（90%）に戻す",
       zoomNote: "Ctrl + マウスホイール、Ctrl + プラス／マイナス、Ctrl + 0 でも変えられます。倍率は次回の起動でも使います。",
       settingsFullWidth: "プレビューの本文の幅を制限しない（広い画面で1行を長くする）",
       settingsEditor: "編集欄", settingsActiveLine: "いまの行を強調する", settingsThickCaret: "カーソルを太くする",
@@ -123,13 +126,17 @@
       settingsReaderRate: "速さ", rateSlow: "ゆっくり", rateSlower: "少しゆっくり", rateNormal: "ふつう",
       rateFaster: "少し速い", rateFast: "速い", settingsReaderPause: "段落の間", pauseNone: "間を空けない",
       pauseShort: "0.5 秒", pauseMedium: "1 秒", pauseLong: "2 秒",
-      readerVoices: (ja, en) => `この PC の音声で読み上げます（日本語: ${ja}、英語: ${en}）。文章を外部に送ることはありません。`,
+      readerVoices: (ja, en, zh) => `この PC の音声で読み上げます（日本語: ${ja}、英語: ${en}、中国語: ${zh}）。文章を外部に送ることはありません。`,
       readerNoVoiceShort: "なし",
       readerNoVoice: "読み上げに使える音声がこの PC にありません。Windows の「設定」→「時刻と言語」→「音声」で音声を追加してください。",
       readerPlay: "読み上げ", readerPause: "一時停止", readerResume: "再開", readerStop: "停止",
       settingsBackup: "自動バックアップ", settingsBackupOn: "作業中の文書を自動でバックアップし、異常終了したときに復元する",
       settingsBackupNote: "保存していない変更を、この PC の中（%LOCALAPPDATA%\\mdEditor\\Recovery）に15秒ごとに控えます。元のファイルは書き換えません。保存するか、正常に終了すると控えは消えます。",
       settingsReset: "表示の設定を初期設定に戻す",
+      settingsPasteKey: "クリップボードから新規作成", pasteKeyLabel: "起動するキー", pasteKeyNone: "なし",
+      pasteKeyNote: "キーを選ぶと、確認のうえデスクトップにショートカットを作ります。テキストや画像をコピーしてからそのキーを押すと、mdEditor が起動して新しい文書に入れます。",
+      pasteKeyReady: (key) => `${key} で使えます（デスクトップのショートカット）。テキストや画像をコピーしてから押してください。「なし」にするとショートカットを削除します。`,
+      pasteKeyMissing: (key) => `前に作ったショートカット（${key}）がデスクトップに見つかりません。キーを選び直すと作り直します。`,
       shortcutIntro: "すべての操作はキーボードで行えます。キーは「変更」で好きな組み合わせに変えられ、「なし」で外せます。割り当てられるのは Ctrl と英字・数字の組み合わせ、または F キーです。",
       shortcutEnabled: "キーボードショートカットを使う", shortcutAction: "操作", shortcutKeys: "キー",
       shortcutChange: "変更", shortcutRemove: "なし", shortcutNone: "（なし）",
@@ -185,10 +192,170 @@
       diagramError: "図を表示できません", diagramUnavailable: "図の表示機能を読み込めませんでした",
       ratio: (e, p) => `編集画面 ${e}%、プレビュー ${p}%`
     },
+    zh: {
+      toolbar: "文档操作",
+      sample: "示例", sampleHeading: "打开示例",
+      sampleIntro: "可以把包含图表和公式的文档放入编辑区试用。除了简短的示例，还有用来检查所有图表、图形和公式的长文档（日语、英语、中文）。只有选择时才会放入。",
+      settingsExport: "导出",
+      settingsMarkdown: "Markdown 写法",
+      settingsNearGitHub: "显示效果接近 GitHub（不使用 mdEditor 独有的写法）",
+      settingsNearGitHubNote: "开启后，GitHub 没有的 mdEditor 独有写法（x^2^ 上标、H~2~O 下标、==强调==、++插入++、定义列表、::: 容器、{#id} 等属性、缩写、网格表格、a. 编号）会像在 GitHub 上一样按原文显示，~文字~ 显示为删除线。导出 PDF 等时也一样。此设置只是让显示接近 GitHub，并不会与 GitHub 完全相同（图表、地图、3D 模型、代码着色和公式的绘制方式仍是 mdEditor 的方式）。",
+      settingsHtmlSource: "保存为 HTML 时，同时放入原来的 Markdown（用 mdEditor 打开时可以恢复原样）",
+      settingsHtmlSourceNote: "原文会原样放入 HTML 中，其中也包括不在画面上显示的注释（<!-- -->），交给别人之前请先检查。不放入时，用 mdEditor 打开也能转换为 Markdown（颜色、排版和图表的图形不会恢复）。",
+      sampleLoadFailed: "无法加载示例。请重新安装 mdEditor 后再试。",
+      sampleOpen: "打开", sampleOpenLabel: (name) => `将示例“${name}”作为新文档打开`,
+      about: "关于此应用", aboutHeading: "关于此应用", aboutVersion: "版本",
+      aboutIntro: "mdEditor 是 5garashi.com Design Office 开发的应用，用于编辑和预览 Markdown 并导出 PDF。",
+      aboutCompany: "5garashi.com Design Office 简介", aboutWorks: "作品和其他应用",
+      aboutSupport: "支持和联系", aboutPrivacy: "隐私政策",
+      aboutNote: "只有在选择链接时才会用浏览器打开。启动时不显示广告，也不会在 PDF 中插入宣传内容。",
+      open: "打开", openTitle: "打开 (Ctrl+O)", save: "保存", saveTitle: "保存 (Ctrl+S)",
+      restoreDiscarded: "返回上一个文档",
+      restoreDiscardedTitle: (name) => `返回上一个文档“${name}”。如果有未保存的更改，会恢复到关闭时的状态`,
+      saveAs: "另存为",
+      languageToggle: "Language", languageLabel: "显示语言",
+      editorHeading: "编辑 Markdown", editorLabel: "Markdown 文本",
+      previewHeading: "预览", previewLabel: "Markdown 的显示效果",
+      dividerLabel: "编辑区和预览的宽度",
+      dividerTitle: "拖动或按方向键调整左右宽度",
+      fullscreenEditor: "编辑区填满窗口", fullscreenPreview: "预览填满窗口",
+      fullscreenShort: "填满窗口",
+      fullscreenExit: "恢复原来的布局", saved: "已保存", unsaved: "有未保存的更改",
+      settingsReaderLang: "语言", readerLangAuto: "自动（按段落判断）", readerLangJa: "日语", readerLangEn: "英语", readerLangZh: "中文（简体）",
+      settingsReaderVoice: "语音", readerVoiceAuto: "自动（最先找到的语音）",
+      readerNoVoiceFor: (lang) => `这台电脑上没有可用于朗读${{ ja: "日语", en: "英语", zh: "中文" }[lang] ?? ""}的语音。请在 Windows 的“设置”→“时间和语言”→“语音”中添加语音。`,
+      openUrl: "打开 URL", urlHeading: "打开 URL",
+      urlIntro: "将以 https:// 开头的网页转换为 Markdown 打开。不执行脚本，也不会把文档内容发送到任何地方。页面中的图像从该页面加载。",
+      urlLabel: "地址", urlOpen: "打开",
+      loadExternal: "加载图像和视频",
+      noticeExternal: (count) => `此文档中有 ${count} 个网络上的图像或视频。加载后，这些服务器会得知你的 IP 地址等信息。`,
+      externalVideo: (name, host) => `［外部视频${name ? `：${name}` : ""}（${host}），未加载］`,
+      videoLabel: (name) => `视频：${name}`, videoStill: (name) => `▶ 视频：${name}`,
+      externalImage: (alt, host) => `［外部图像${alt ? `：${alt}` : ""}（${host}），未加载］`,
+      settingsInternet: "互联网", settingsExternal: "网络上的图像",
+      externalAsk: "确认后再加载（默认）", externalAlways: "始终加载", externalNever: "不加载",
+      settingsExternalNote: "是否加载文档中网络上的图像（仅限 https）。加载后，该图像的服务器会得知你的 IP 地址和时间。不执行脚本，也不会发送文档内容。",
+      detachPreview: "在单独窗口中显示", attachPreview: "返回主窗口", attachPreviewMain: "将预览返回主窗口",
+      pdfStarting: "正在开始导出 PDF",
+      findReplace: "查找和替换", findReplaceTitle: "查找和替换 (Ctrl+H)",
+      settingsVideo: "视频", settingsVideoAutoplay: "自动播放",
+      videoAutoplayAuto: "跟随 Windows 的动画设置（默认）", videoAutoplayAlways: "始终自动播放", videoAutoplayNever: "不自动播放",
+      settingsVideoNote: "文档中的视频会静音自动播放并循环（声音和暂停用视频的按钮控制）。默认情况下，当 Windows 的“动画效果”关闭时，不自动播放，而是显示第一帧和播放按钮。",
+      settingsMapTiles: "详细地图（OpenStreetMap）",
+      mapTilesAsk: "确认后再加载（默认）", mapTilesAlways: "始终加载", mapTilesNever: "不加载（仅简单的世界地图）",
+      settingsMapTilesNote: "```geojson 和 ```topojson 的地图会先绘制在电脑中的简单世界地图上。带有道路和地名的详细地图需要从 OpenStreetMap 通过互联网加载，此时地图服务器会得知显示的地点和你的 IP 地址。保存的 HTML 中不包含详细地图。",
+      noticeMaps: (count) => `此文档中有 ${count} 个地图。加载详细地图（OpenStreetMap）后，地图服务器会得知显示的地点和你的 IP 地址等信息。`,
+      loadMaps: "加载详细地图",
+      modelLabel: "3D 模型（STL）。拖动旋转，滚轮缩放", modelEmpty: "没有三角形",
+      mapLabel: "地图（GeoJSON）", mapEmpty: "没有可绘制在地图上的图形",
+      toc: "目录", tocNoHeadings: "没有可以作为目录的标题。请先写出“## 标题”这样的标题，然后再按一次。",
+      dropInsert: "插入到光标位置", dropOpen: "作为文件打开",
+      imageButton: "调整图像", imageHeading: "图像的大小和位置",
+      imageTarget: (name) => `目标图像：${name}`,
+      imageSize: "大小", imageSizeOriginal: "原始大小（不指定）", imageSize25: "正文宽度的 25%", imageSize50: "正文宽度的 50%",
+      imageSize75: "正文宽度的 75%", imageSize100: "正文全宽（100%）", imageSizePixels: "按像素指定宽度", imagePixels: "宽度（像素）",
+      imagePosition: "位置", imagePositionNone: "不指定（左）", imagePositionCenter: "居中", imagePositionRight: "右",
+      imagePositionFloatLeft: "放在左边，文字环绕在右侧", imagePositionFloatRight: "放在右边，文字环绕在左侧",
+      imageAloneNote: "此图像所在的行还有其他文字或图像，因此不能选择“居中”和“右”。需要时，请让图像单独占一行。",
+      imageApply: "更改",
+      imageNote: "将改写为与 GitHub 相同的写法（HTML 的 <img width=\"50%\"> 或 <p align=\"center\">）。恢复为“原始大小”和“不指定”时，会变回 Markdown 的 ![说明](文件)。可以用 Ctrl+Z 撤销。",
+      imageNone: "找不到图像。请在编辑区中把光标放在图像（![说明](文件) 或 <img>）所在的行，或在预览中右键单击图像，然后再试。",
+      imageMoved: "预览中图像的位置与编辑区不一致。请等预览更新后，再右键单击一次。",
+      imagePixelsInvalid: "请输入 1 到 10000 之间的宽度。",
+      imageChanged: (size, position) => `已将图像设为“${size}、${position}”。可以用 Ctrl+Z 撤销。`,
+      imageSizeWords: { original: "原始大小", pixels: (px) => `宽 ${px} 像素`, percent: (p) => `正文宽度的 ${p}%` },
+      imagePositionWords: { none: "不指定位置", center: "居中", right: "右", floatLeft: "放在左边并环绕文字", floatRight: "放在右边并环绕文字" },
+      tocUpdated: "已更新目录。", tocInserted: "已在光标位置插入目录。更改标题后，再按一次“目录”即可更新。",
+      help: "写法", helpTitle: "Markdown 写法 (F1)", helpHeading: "Markdown 简明写法",
+      shortcuts: "按键操作", shortcutHeading: "键盘快捷键",
+      brandLogo: "assets/5garashi_logotype_en_outlined.svg", brandLogoDark: "assets/5garashi_logotype_en_reversed_outlined.svg",
+      brandLogoAlt: "5garashi.com Design Office",
+      settings: "设置", settingsHeading: "设置",
+      settingsIntro: "可以根据使用者调整易读性和易用性。下次启动时会保留这些设置。",
+      settingsText: "文字（编辑区和预览）", settingsFont: "字体", settingsFontStandard: "标准",
+      settingsFontUd: "BIZ UD Gothic（注重易读性）", settingsSize: "文字大小", settingsSize100: "标准",
+      settingsSize125: "大（125%）", settingsSize150: "很大（150%）", settingsSize200: "最大（200%）",
+      settingsSpacing: "行距", settingsSpacingNormal: "标准", settingsSpacingWide: "较宽", settingsSpacingWider: "很宽",
+      settingsThemePaper: "显示主题和 PDF 纸张",
+      settingsThemePaperNote: "每按一次切换一次。显示主题按 自动（跟随 Windows）→ 白天 → 夜间 的顺序，纸张按 自动 → A4 → Letter 的顺序切换。也可以不打开设置，用 Ctrl+Shift+T 和 Ctrl+Shift+A 切换。",
+      settingsZoom: "整个画面的缩放比例",zoomOut: "缩小", zoomIn: "放大", zoomReset: "恢复为默认值（90%）",
+      zoomNote: "也可以用 Ctrl + 鼠标滚轮、Ctrl + 加号／减号、Ctrl + 0 更改。下次启动时会保留缩放比例。",
+      settingsFullWidth: "不限制预览正文的宽度（在宽屏上每行更长）",
+      settingsEditor: "编辑区", settingsActiveLine: "突出显示当前行", settingsThickCaret: "加粗光标",
+      settingsReader: "朗读", settingsReaderOn: "使用朗读功能（在预览的标题栏显示操作按钮）",
+      settingsReaderRate: "速度", rateSlow: "慢", rateSlower: "稍慢", rateNormal: "正常",
+      rateFaster: "稍快", rateFast: "快", settingsReaderPause: "段落间隔", pauseNone: "不停顿",
+      pauseShort: "0.5 秒", pauseMedium: "1 秒", pauseLong: "2 秒",
+      readerVoices: (ja, en, zh) => `使用这台电脑的语音朗读（日语：${ja}，英语：${en}，中文：${zh}）。不会把文字发送到外部。`,
+      readerNoVoiceShort: "无",
+      readerNoVoice: "这台电脑上没有可用于朗读的语音。请在 Windows 的“设置”→“时间和语言”→“语音”中添加语音。",
+      readerPlay: "朗读", readerPause: "暂停", readerResume: "继续", readerStop: "停止",
+      settingsBackup: "自动备份", settingsBackupOn: "自动备份正在编辑的文档，异常退出时恢复",
+      settingsBackupNote: "每 15 秒将未保存的更改备份到这台电脑中（%LOCALAPPDATA%\\mdEditor\\Recovery）。不会改写原文件。保存或正常退出后，备份会被删除。",
+      settingsReset: "将显示设置恢复为默认",
+      settingsPasteKey: "从剪贴板新建", pasteKeyLabel: "启动按键", pasteKeyNone: "无",
+      pasteKeyNote: "选择按键后，经你确认会在桌面上创建快捷方式。复制文本或图像后按该键，mdEditor 会启动并把内容放入新文档。",
+      pasteKeyReady: (key) => `可以使用 ${key}（桌面快捷方式）。请先复制文本或图像，再按该键。选择“无”会删除快捷方式。`,
+      pasteKeyMissing: (key) => `在桌面上找不到之前创建的快捷方式（${key}）。重新选择按键即可重新创建。`,
+      shortcutIntro:"所有操作都可以用键盘完成。可以用“更改”把按键改为喜欢的组合，用“无”取消。可以分配的是 Ctrl 加字母或数字的组合，或 F 键。",
+      shortcutEnabled: "使用键盘快捷键", shortcutAction: "操作", shortcutKeys: "按键",
+      shortcutChange: "更改", shortcutRemove: "无", shortcutNone: "（无）",
+      shortcutPress: "请按下按键", shortcutReset: "恢复默认",
+      shortcutChangeLabel: (name) => `更改“${name}”的按键`,
+      shortcutRemoveLabel: (name) => `取消“${name}”的按键`,
+      shortcutPressFor: (name) => `请按下要分配给“${name}”的按键。按 Esc 取消。`,
+      shortcutCancelled: "已取消更改。",
+      shortcutInvalid: "请按 Ctrl 加字母或数字的组合，或 F 键（不能使用 Ctrl+Alt）。",
+      shortcutReserved: (keys) => `${keys} 用于编辑文字或查找，不能分配。`,
+      shortcutConflict: (keys, name) => `${keys} 已用于“${name}”。请先更改那一项。`,
+      shortcutSaved: (name, keys) => `已将“${name}”设为 ${keys}。`,
+      shortcutRemoved: (name) => `已取消“${name}”的按键。`,
+      shortcutTurnedOn: "已启用键盘快捷键。", shortcutTurnedOff: "已停用键盘快捷键（Esc 和对话框中的操作仍可使用）。",
+      shortcutResetDone: "已将所有按键恢复为默认。",
+      shortcutNames: {
+        open: "打开", restoreDiscarded: "返回上一个文档", save: "保存", saveAs: "另存为", pdf: "保存为 PDF", paper: "切换纸张",
+        theme: "切换显示主题", language: "切换显示语言", encoding: "编码",
+        toc: "插入或更新目录", findReplace: "查找和替换", findNext: "查找下一个", findPrev: "查找上一个", replaceAll: "全部替换",
+        help: "Markdown 写法", shortcuts: "按键操作一览", fullscreenEditor: "编辑区填满窗口",
+        fullscreenPreview: "预览填满窗口", nextPane: "移到下一个区域", previousPane: "移到上一个区域",
+        windowFullscreen: "窗口全屏显示", settings: "设置", readAloud: "朗读／暂停", stopReading: "停止朗读", html: "保存为 HTML", png: "保存为 PNG", docx: "保存为 Word", openUrl: "打开 URL",
+        detachPreview: "在单独窗口中显示预览／返回主窗口", image: "图像的大小和位置"
+      },
+      helpIntro: "按左边的写法输入，就会显示为右边的样子。按“插入”可以把示例放到编辑区的光标位置。",
+      helpItem: "项目", helpSyntax: "写法", helpResult: "显示", helpInsert: "插入",
+      helpInsertLabel: (name) => `插入“${name}”的示例`,
+      findPlaceholder: "要查找的文字", replacePlaceholder: "替换为",
+      findLabel: "查找", replaceLabel: "替换",
+      findPrev: "上一个", findNext: "下一个", replaceOne: "替换", replaceAll: "全部替换",
+      matchCase: "区分大小写", close: "关闭",
+      notFound: "找不到", replacedCount: (n) => `已替换 ${n} 处`,
+      themeLabels: { auto: "显示：自动", light: "显示：浅色", dark: "显示：深色" },
+      themeTitle: "切换显示主题（自动 → 浅色 → 深色）",
+      paperLabels: (paper, auto) => paper === "auto"
+        ? `纸张：自动（${auto === "letter" ? "Letter" : "A4"}）`
+        : `纸张：${paper === "letter" ? "Letter" : "A4"}`,
+      paperTitle: "切换 PDF 的纸张大小（自动 → A4 → Letter）。自动时跟随 Windows 的区域设置",
+      encodingLabels: {
+        "utf-8": "UTF-8", "utf-8-bom": "UTF-8（带 BOM）", "utf-16le": "UTF-16 LE", "utf-16be": "UTF-16 BE",
+        "shift_jis": "Shift_JIS", "euc-jp": "EUC-JP", "iso-2022-jp": "ISO-2022-JP（JIS）", "windows-1252": "Windows-1252（西欧）"
+      },
+      encodingGuessed: (label) => `${label}（推测）`,
+      encodingButtonLabel: (label) => `编码：${label}。按下可以选择编码`,
+      encodingButtonTitle: "查看或更改编码",
+      encodingHeading: "编码", encodingLegend: "选择编码",
+      encodingCurrent: (label) => `当前编码：${label}`,
+      encodingReopen: "用此编码重新打开", encodingSave: "从下次保存起使用此编码",
+      encodingHelp: "出现乱码时，请选择“用此编码重新打开”。只想改变保存格式而不改变内容时，请选择“从下次保存起使用此编码”。",
+      noticeGuessed: (label) => `此文档不是 UTF-8，因此推测为 ${label} 打开。如果出现乱码，请在保存前重新选择编码。`,
+      noticeLossy: (label) => `有用 ${label} 无法读取的字符，已显示为“�”。保存前，请选择正确的编码重新打开。`,
+      noticeChoose: "选择编码",
+      diagramError: "无法显示图表", diagramUnavailable: "无法加载图表显示功能",
+      ratio: (e, p) => `编辑区 ${e}%，预览 ${p}%`
+    },
     en: {
       toolbar: "Document actions",
       sample: "Samples", sampleHeading: "Open a sample",
-      sampleIntro: "Try a document with diagrams and math. Besides the short examples, there are long tests of every supported diagram, chart, and formula (Japanese and English). Nothing is inserted until you choose one.",
+      sampleIntro: "Try a document with diagrams and math. Besides the short examples, there are long tests of every supported diagram, chart, and formula (Japanese, English, and Chinese). Nothing is inserted until you choose one.",
       settingsExport: "Export",
       settingsMarkdown: "Markdown syntax",
       settingsNearGitHub: "Show documents closer to GitHub (no mdEditor-only syntax)",
@@ -206,16 +373,17 @@
       restoreDiscarded: "Back to previous document",
       restoreDiscardedTitle: (name) => `Goes back to the previous document, ${name}. Changes it had that were not saved come back as they were`,
       saveAs: "Save As",
-      languageToggle: "日本語", languageLabel: "Switch the display language to Japanese",
+      languageToggle: "Language", languageLabel: "Display language",
       editorHeading: "Edit Markdown", editorLabel: "Markdown text",
       previewHeading: "Preview", previewLabel: "Rendered Markdown",
       dividerLabel: "Width of the editor and preview",
       dividerTitle: "Drag or use the arrow keys to resize",
       fullscreenEditor: "Fill window with editor", fullscreenPreview: "Fill window with preview",
+      fullscreenShort: "Fill window",
       fullscreenExit: "Restore layout", saved: "Saved", unsaved: "Unsaved changes",
-      settingsReaderLang: "Language", readerLangAuto: "Automatic (per paragraph)", readerLangJa: "Japanese", readerLangEn: "English",
+      settingsReaderLang: "Language", readerLangAuto: "Automatic (per paragraph)", readerLangJa: "Japanese", readerLangEn: "English", readerLangZh: "Chinese (Simplified)",
       settingsReaderVoice: "Voice", readerVoiceAuto: "Automatic (first voice found)",
-      readerNoVoiceFor: (lang) => `No ${lang === "ja" ? "Japanese" : "English"} voice for read-aloud is installed on this PC. Add one in Windows Settings > Time & language > Speech.`,
+      readerNoVoiceFor: (lang) => `No ${{ ja: "Japanese", en: "English", zh: "Chinese" }[lang] ?? ""} voice for read-aloud is installed on this PC. Add one in Windows Settings > Time & language > Speech.`,
       openUrl: "Open URL", urlHeading: "Open a URL",
       urlIntro: "Opens a web page that starts with https:// as Markdown. Scripts do not run, and nothing about the document is sent anywhere. Images on the page load from that page.",
       urlLabel: "Address", urlOpen: "Open",
@@ -268,7 +436,9 @@
       settingsFontUd: "BIZ UD Gothic (designed for legibility)", settingsSize: "Text size", settingsSize100: "Standard",
       settingsSize125: "Large (125%)", settingsSize150: "Larger (150%)", settingsSize200: "Largest (200%)",
       settingsSpacing: "Line spacing", settingsSpacingNormal: "Standard", settingsSpacingWide: "Wide", settingsSpacingWider: "Wider",
-      settingsZoom: "Zoom (whole window)", zoomOut: "Zoom out", zoomIn: "Zoom in", zoomReset: "Reset to 100%",
+      settingsThemePaper: "Theme and PDF paper",
+      settingsThemePaperNote: "Each press switches to the next choice: the theme goes Auto (follows Windows), Light, Dark, and the paper Auto, A4, Letter. Ctrl+Shift+T and Ctrl+Shift+A switch them without opening Settings.",
+      settingsZoom: "Zoom (whole window)",zoomOut: "Zoom out", zoomIn: "Zoom in", zoomReset: "Reset to default (90%)",
       zoomNote: "Ctrl + mouse wheel, Ctrl + plus/minus, and Ctrl + 0 also work. The zoom level is remembered.",
       settingsFullWidth: "Don't limit the preview text width (longer lines on wide screens)",
       settingsEditor: "Editor", settingsActiveLine: "Highlight the current line", settingsThickCaret: "Use a thick cursor",
@@ -276,14 +446,18 @@
       settingsReaderRate: "Speed", rateSlow: "Slow", rateSlower: "A little slow", rateNormal: "Normal",
       rateFaster: "A little fast", rateFast: "Fast", settingsReaderPause: "Pause between paragraphs", pauseNone: "No pause",
       pauseShort: "0.5 seconds", pauseMedium: "1 second", pauseLong: "2 seconds",
-      readerVoices: (ja, en) => `Reads with voices on this PC (Japanese: ${ja}, English: ${en}). Text is never sent anywhere.`,
+      readerVoices: (ja, en, zh) => `Reads with voices on this PC (Japanese: ${ja}, English: ${en}, Chinese: ${zh}). Text is never sent anywhere.`,
       readerNoVoiceShort: "none",
       readerNoVoice: "No voice for read-aloud is installed on this PC. Add one in Windows Settings > Time & language > Speech.",
       readerPlay: "Read aloud", readerPause: "Pause", readerResume: "Resume", readerStop: "Stop",
       settingsBackup: "Automatic backup", settingsBackupOn: "Back up the open document automatically and restore it after a crash",
       settingsBackupNote: "Unsaved changes are copied every 15 seconds to this PC (%LOCALAPPDATA%\\mdEditor\\Recovery). The original file is never changed. The copy is removed when you save or close normally.",
       settingsReset: "Restore display defaults",
-      shortcutIntro: "Every command can be used from the keyboard. Change a key with Change, or remove it with None. Keys can be Ctrl with a letter or digit, or an F key.",
+      settingsPasteKey: "New from clipboard", pasteKeyLabel: "Start key", pasteKeyNone: "None",
+      pasteKeyNote: "Choosing a key creates a desktop shortcut once you confirm. Copy text or a picture, then press the key: mdEditor starts and puts it in a new document.",
+      pasteKeyReady: (key) => `${key} is ready (desktop shortcut). Copy text or a picture first, then press it. Choosing None deletes the shortcut.`,
+      pasteKeyMissing: (key) => `The shortcut made earlier (${key}) is no longer on the desktop. Choose a key again to make it again.`,
+      shortcutIntro:"Every command can be used from the keyboard. Change a key with Change, or remove it with None. Keys can be Ctrl with a letter or digit, or an F key.",
       shortcutEnabled: "Use keyboard shortcuts", shortcutAction: "Command", shortcutKeys: "Key",
       shortcutChange: "Change", shortcutRemove: "None", shortcutNone: "(none)",
       shortcutPress: "Press a key", shortcutReset: "Restore defaults",
@@ -339,10 +513,16 @@
       ratio: (e, p) => `Editor ${e}%, preview ${p}%`
     }
   };
-  const storedLanguage = localStorage.getItem("mdeditor-language");
-  let language = storedLanguage === "en" || storedLanguage === "ja"
-    ? storedLanguage
-    : (navigator.language || "").toLowerCase().startsWith("ja") ? "ja" : "en";
+  // The display languages, in the order of the Language list. "zh" is Simplified
+  // Chinese; the page's lang attribute is zh-CN so Chinese typefaces are used.
+  const languages = ["ja", "en", "zh"];
+  const htmlLang = { ja: "ja", en: "en", zh: "zh-CN" };
+  const normalizeLanguage = (value) => {
+    const code = (value || "").toLowerCase();
+    return code.startsWith("ja") ? "ja" : code.startsWith("zh") ? "zh" : code.startsWith("en") ? "en" : null;
+  };
+  let language = normalizeLanguage(localStorage.getItem("mdeditor-language"))
+    ?? (normalizeLanguage(navigator.language) || "en");
   const t = (key) => messages[language][key];
 
   // "auto" follows the Windows app mode; the host applies the choice to WebView2,
@@ -356,7 +536,7 @@
   const statusText = () => (documentDirty ? t("unsaved") : t("saved"));
 
   const applyLanguage = () => {
-    document.documentElement.lang = language;
+    document.documentElement.lang = htmlLang[language];
     for (const element of document.querySelectorAll("[data-i18n]")) {
       element.textContent = t(element.dataset.i18n);
     }
@@ -366,7 +546,7 @@
         element.setAttribute(attribute, t(key));
       }
     }
-    languageButton.lang = language === "ja" ? "en" : "ja";
+    languageSelect.value = language;
     updateThemeButton();
     view.dispatch({ effects: editorAttributes.reconfigure(editorAttributeValues()) });
     applyShortcutHints();
@@ -480,11 +660,14 @@
     for (const button of fullscreenButtons) {
       const buttonMode = button.dataset.fullscreenMode;
       const active = mode === buttonMode;
-      button.textContent = active
-        ? t("fullscreenExit")
-        : buttonMode === "editor"
-          ? t("fullscreenEditor")
-          : t("fullscreenPreview");
+      // The two buttons show the same short text (their pane tells them apart); screen
+      // readers get the full name, which contains the shown text (WCAG 2.5.3).
+      button.textContent = active ? t("fullscreenExit") : t("fullscreenShort");
+      if (active) {
+        button.removeAttribute("aria-label");
+      } else {
+        button.setAttribute("aria-label", buttonMode === "editor" ? t("fullscreenEditor") : t("fullscreenPreview"));
+      }
       button.setAttribute("aria-pressed", String(active));
     }
   };
@@ -597,9 +780,10 @@
       : noticeState.kind === "message"
         ? noticeState.text
         : noticeState.kind === "external"
-          ? [noticeState.prefix, t("noticeExternal")(noticeState.count)].filter(Boolean).join(" ")
+          ? [noticeState.prefix, t("noticeExternal")(noticeState.count)].filter(Boolean).join(language === "en" ? " " : "")
           : t(noticeState.kind === "lossy" ? "noticeLossy" : "noticeGuessed")(encodingLabel(noticeState.encoding));
-    noticeText.textContent = [main, askMaps ? t("noticeMaps")(mapsWaiting) : ""].filter(Boolean).join(" ");
+    // Sentences are joined with a space in English only (Japanese and Chinese end with 。).
+    noticeText.textContent = [main, askMaps ? t("noticeMaps")(mapsWaiting) : ""].filter(Boolean).join(language === "en" ? " " : "");
     document.getElementById("notice-encoding").hidden = !noticeState || noticeState.kind === "message" || noticeState.kind === "external";
     document.getElementById("notice-action").hidden = noticeState?.kind !== "external";
     notice.classList.toggle("notice-strong", noticeState?.kind === "lossy");
@@ -889,12 +1073,13 @@
     updateThemeButton();
     post({ type: "setTheme", theme });
   });
-  languageButton.addEventListener("click", () => {
-    language = language === "ja" ? "en" : "ja";
-    localStorage.setItem("mdeditor-language", language);
+  const setLanguage = (value) => {
+    language = normalizeLanguage(value) ?? language;
+    try { localStorage.setItem("mdeditor-language", language); } catch { /* kept for this session */ }
     applyLanguage();
     post({ type: "setLanguage", lang: language });
-  });
+  };
+  languageSelect.addEventListener("change", () => setLanguage(languageSelect.value));
   fullscreenButtons.forEach((button) => {
     button.addEventListener("click", () => {
       const mode = button.dataset.fullscreenMode;
@@ -1079,121 +1264,154 @@
 
   // Markdown quick reference. Results are fixed markup written here, not user input.
   const helpItems = [
-    { group: { ja: "基本", en: "Basics" } },
+    { group: { ja: "基本", en: "Basics", zh: "基本" } },
     { block: true,
       ja: ["見出し", "# 見出し1\n## 見出し2\n### 見出し3", '<span class="help-h1">見出し1</span><span class="help-h2">見出し2</span><span class="help-h3">見出し3</span>'],
-      en: ["Headings", "# Heading 1\n## Heading 2\n### Heading 3", '<span class="help-h1">Heading 1</span><span class="help-h2">Heading 2</span><span class="help-h3">Heading 3</span>'] },
+      en: ["Headings", "# Heading 1\n## Heading 2\n### Heading 3", '<span class="help-h1">Heading 1</span><span class="help-h2">Heading 2</span><span class="help-h3">Heading 3</span>'],
+      zh: ["标题", "# 标题1\n## 标题2\n### 标题3", '<span class="help-h1">标题1</span><span class="help-h2">标题2</span><span class="help-h3">标题3</span>'] },
     { block: true,
       ja: ["段落", "1つ目の段落\n\n2つ目の段落", "<p>1つ目の段落</p><p>2つ目の段落</p><small>空行で段落が分かれます</small>"],
-      en: ["Paragraphs", "First paragraph\n\nSecond paragraph", "<p>First paragraph</p><p>Second paragraph</p><small>A blank line starts a new paragraph</small>"] },
+      en: ["Paragraphs", "First paragraph\n\nSecond paragraph", "<p>First paragraph</p><p>Second paragraph</p><small>A blank line starts a new paragraph</small>"],
+      zh: ["段落", "第一段\n\n第二段", "<p>第一段</p><p>第二段</p><small>空一行即分成新的段落</small>"] },
     { block: true,
       ja: ["改行", "1行目\\\n2行目", "<p>1行目<br>2行目</p><small>行末に \\ を付けるか、半角スペースを2つ入れると改行します。何も付けずに改行すると、前の行に続けて表示されます</small>"],
-      en: ["Line break", "First line\\\nSecond line", "<p>First line<br>Second line</p><small>End a line with \\ or two spaces to break it. A plain line break joins the lines in the output</small>"] },
-    { ja: ["太字", "**太字**", "<strong>太字</strong>"], en: ["Bold", "**bold**", "<strong>bold</strong>"] },
-    { ja: ["斜体", "*斜体*", "<em>斜体</em>"], en: ["Italic", "*italic*", "<em>italic</em>"] },
-    { ja: ["取り消し線", "~~取り消し線~~", "<del>取り消し線</del>"], en: ["Strikethrough", "~~strikethrough~~", "<del>strikethrough</del>"] },
-    { ja: ["コード（文中）", "`コード`", "<code>コード</code>"], en: ["Inline code", "`code`", "<code>code</code>"] },
+      en: ["Line break", "First line\\\nSecond line", "<p>First line<br>Second line</p><small>End a line with \\ or two spaces to break it. A plain line break joins the lines in the output</small>"],
+      zh: ["换行", "第一行\\\n第二行", "<p>第一行<br>第二行</p><small>在行末加 \\ 或两个半角空格即可换行。不加任何东西直接换行时，会接在上一行后面显示</small>"] },
+    { ja: ["太字", "**太字**", "<strong>太字</strong>"], en: ["Bold", "**bold**", "<strong>bold</strong>"], zh: ["粗体", "**粗体**", "<strong>粗体</strong>"] },
+    { ja: ["斜体", "*斜体*", "<em>斜体</em>"], en: ["Italic", "*italic*", "<em>italic</em>"], zh: ["斜体", "*斜体*", "<em>斜体</em>"] },
+    { ja: ["取り消し線", "~~取り消し線~~", "<del>取り消し線</del>"], en: ["Strikethrough", "~~strikethrough~~", "<del>strikethrough</del>"], zh: ["删除线", "~~删除线~~", "<del>删除线</del>"] },
+    { ja: ["コード（文中）", "`コード`", "<code>コード</code>"], en: ["Inline code", "`code`", "<code>code</code>"], zh: ["行内代码", "`代码`", "<code>代码</code>"] },
     { ja: ["リンク", "[リンクの文字](https://example.com)", '<span class="help-link">リンクの文字</span>'],
-      en: ["Link", "[link text](https://example.com)", '<span class="help-link">link text</span>'] },
+      en: ["Link", "[link text](https://example.com)", '<span class="help-link">link text</span>'],
+      zh: ["链接", "[链接文字](https://example.com)", '<span class="help-link">链接文字</span>'] },
     { ja: ["画像", "![画像の説明](https://example.com/image.png)", "<small>画像が表示されます</small>"],
-      en: ["Image", "![image description](https://example.com/image.png)", "<small>The image is shown</small>"] },
+      en: ["Image", "![image description](https://example.com/image.png)", "<small>The image is shown</small>"],
+      zh: ["图像", "![图像说明](https://example.com/image.png)", "<small>会显示图像</small>"] },
     { block: true,
       ja: ["画像の大きさと位置", '<p align="center"><img src="https://example.com/image.png" alt="画像の説明" width="50%"></p>',
         "<small>本文の幅の半分の大きさで、中央に表示されます（GitHub と同じ書き方）。画像の行で「画像の調整」を押すか、プレビューの画像を右クリックしても書き換えられます</small>"],
       en: ["Image size and position", '<p align="center"><img src="https://example.com/image.png" alt="image description" width="50%"></p>',
-        "<small>Shown at half the text width, centered (written as on GitHub). Adjust image on the image's line, or right-clicking the image in the preview, rewrites it for you</small>"] },
+        "<small>Shown at half the text width, centered (written as on GitHub). Adjust image on the image's line, or right-clicking the image in the preview, rewrites it for you</small>"],
+      zh: ["图像的大小和位置", '<p align="center"><img src="https://example.com/image.png" alt="图像说明" width="50%"></p>',
+        "<small>以正文宽度的一半居中显示（与 GitHub 相同的写法）。在图像所在行按“调整图像”，或在预览中右键单击图像，也可以改写</small>"] },
     { block: true,
       ja: ["箇条書き", "- 項目1\n- 項目2\n  - 入れ子の項目", "<ul><li>項目1</li><li>項目2<ul><li>入れ子の項目</li></ul></li></ul>"],
-      en: ["Bulleted list", "- Item 1\n- Item 2\n  - Nested item", "<ul><li>Item 1</li><li>Item 2<ul><li>Nested item</li></ul></li></ul>"] },
+      en: ["Bulleted list", "- Item 1\n- Item 2\n  - Nested item", "<ul><li>Item 1</li><li>Item 2<ul><li>Nested item</li></ul></li></ul>"],
+      zh: ["无序列表", "- 项目1\n- 项目2\n  - 嵌套项目", "<ul><li>项目1</li><li>项目2<ul><li>嵌套项目</li></ul></li></ul>"] },
     { block: true,
       ja: ["番号付きリスト", "1. 手順1\n2. 手順2", "<ol><li>手順1</li><li>手順2</li></ol>"],
-      en: ["Numbered list", "1. Step 1\n2. Step 2", "<ol><li>Step 1</li><li>Step 2</li></ol>"] },
+      en: ["Numbered list", "1. Step 1\n2. Step 2", "<ol><li>Step 1</li><li>Step 2</li></ol>"],
+      zh: ["有序列表", "1. 步骤1\n2. 步骤2", "<ol><li>步骤1</li><li>步骤2</li></ol>"] },
     { block: true,
       ja: ["引用", "> 引用文", "<blockquote>引用文</blockquote>"],
-      en: ["Quote", "> Quoted text", "<blockquote>Quoted text</blockquote>"] },
+      en: ["Quote", "> Quoted text", "<blockquote>Quoted text</blockquote>"],
+      zh: ["引用", "> 引用的文字", "<blockquote>引用的文字</blockquote>"] },
     { block: true,
       ja: ["コードブロック", "```js\nconsole.log(\"hello\");\n```", "<pre><code>console.log(\"hello\");</code></pre>"],
-      en: ["Code block", "```js\nconsole.log(\"hello\");\n```", "<pre><code>console.log(\"hello\");</code></pre>"] },
+      en: ["Code block", "```js\nconsole.log(\"hello\");\n```", "<pre><code>console.log(\"hello\");</code></pre>"],
+      zh: ["代码块", "```js\nconsole.log(\"hello\");\n```", "<pre><code>console.log(\"hello\");</code></pre>"] },
     { block: true,
       ja: ["表", "| 名前 | 数 |\n| --- | ---: |\n| りんご | 3 |", '<table><thead><tr><th>名前</th><th class="help-right">数</th></tr></thead><tbody><tr><td>りんご</td><td class="help-right">3</td></tr></tbody></table>'],
-      en: ["Table", "| Name | Qty |\n| --- | ---: |\n| Apple | 3 |", '<table><thead><tr><th>Name</th><th class="help-right">Qty</th></tr></thead><tbody><tr><td>Apple</td><td class="help-right">3</td></tr></tbody></table>'] },
-    { block: true, ja: ["区切り線", "---", "<hr>"], en: ["Horizontal rule", "---", "<hr>"] },
+      en: ["Table", "| Name | Qty |\n| --- | ---: |\n| Apple | 3 |", '<table><thead><tr><th>Name</th><th class="help-right">Qty</th></tr></thead><tbody><tr><td>Apple</td><td class="help-right">3</td></tr></tbody></table>'],
+      zh: ["表格", "| 名称 | 数量 |\n| --- | ---: |\n| 苹果 | 3 |", '<table><thead><tr><th>名称</th><th class="help-right">数量</th></tr></thead><tbody><tr><td>苹果</td><td class="help-right">3</td></tr></tbody></table>'] },
+    { block: true, ja: ["区切り線", "---", "<hr>"], en: ["Horizontal rule", "---", "<hr>"], zh: ["分隔线", "---", "<hr>"] },
     { block: true,
       ja: ["チェックリスト", "- [x] 済んだこと\n- [ ] これからのこと", '<ul class="help-tasks"><li>☑ 済んだこと</li><li>☐ これからのこと</li></ul>'],
-      en: ["Checklist", "- [x] Done\n- [ ] To do", '<ul class="help-tasks"><li>☑ Done</li><li>☐ To do</li></ul>'] },
+      en: ["Checklist", "- [x] Done\n- [ ] To do", '<ul class="help-tasks"><li>☑ Done</li><li>☐ To do</li></ul>'],
+      zh: ["任务列表", "- [x] 已完成\n- [ ] 待完成", '<ul class="help-tasks"><li>☑ 已完成</li><li>☐ 待完成</li></ul>'] },
     // Diagrams: the result column draws each example with Mermaid.
-    { group: { ja: "図（Mermaid）", en: "Diagrams (Mermaid)" } },
+    { group: { ja: "図（Mermaid）", en: "Diagrams (Mermaid)", zh: "图表（Mermaid）" } },
     { block: true, mermaid: true,
       ja: ["フローチャート", "```mermaid\nflowchart TD\n  A[開始] --> B{条件}\n  B -->|はい| C[処理する]\n  B -->|いいえ| D[終了]\n```", ""],
-      en: ["Flowchart", "```mermaid\nflowchart TD\n  A[Start] --> B{Condition}\n  B -->|Yes| C[Process]\n  B -->|No| D[End]\n```", ""] },
+      en: ["Flowchart", "```mermaid\nflowchart TD\n  A[Start] --> B{Condition}\n  B -->|Yes| C[Process]\n  B -->|No| D[End]\n```", ""],
+      zh: ["流程图", "```mermaid\nflowchart TD\n  A[开始] --> B{条件}\n  B -->|是| C[处理]\n  B -->|否| D[结束]\n```", ""] },
     { block: true, mermaid: true,
       ja: ["シーケンス図", "```mermaid\nsequenceDiagram\n  participant U as 利用者\n  participant A as アプリ\n  U->>A: 保存する\n  A-->>U: 保存しました\n```", ""],
-      en: ["Sequence diagram", "```mermaid\nsequenceDiagram\n  participant U as User\n  participant A as App\n  U->>A: Save\n  A-->>U: Saved\n```", ""] },
+      en: ["Sequence diagram", "```mermaid\nsequenceDiagram\n  participant U as User\n  participant A as App\n  U->>A: Save\n  A-->>U: Saved\n```", ""],
+      zh: ["时序图", "```mermaid\nsequenceDiagram\n  participant U as 用户\n  participant A as 应用\n  U->>A: 保存\n  A-->>U: 已保存\n```", ""] },
     { block: true, mermaid: true,
       ja: ["ガントチャート", "```mermaid\ngantt\n  dateFormat YYYY-MM-DD\n  section 準備\n  設計 :a1, 2026-01-05, 5d\n  section 作業\n  開発 :after a1, 7d\n```", ""],
-      en: ["Gantt chart", "```mermaid\ngantt\n  dateFormat YYYY-MM-DD\n  section Plan\n  Design :a1, 2026-01-05, 5d\n  section Build\n  Develop :after a1, 7d\n```", ""] },
+      en: ["Gantt chart", "```mermaid\ngantt\n  dateFormat YYYY-MM-DD\n  section Plan\n  Design :a1, 2026-01-05, 5d\n  section Build\n  Develop :after a1, 7d\n```", ""],
+      zh: ["甘特图", "```mermaid\ngantt\n  dateFormat YYYY-MM-DD\n  section 准备\n  设计 :a1, 2026-01-05, 5d\n  section 实施\n  开发 :after a1, 7d\n```", ""] },
     { block: true, mermaid: true,
       ja: ["円グラフ", "```mermaid\npie title 時間の使い方\n  \"書く\" : 60\n  \"見直す\" : 40\n```", ""],
-      en: ["Pie chart", "```mermaid\npie title How time is spent\n  \"Writing\" : 60\n  \"Reviewing\" : 40\n```", ""] },
+      en: ["Pie chart", "```mermaid\npie title How time is spent\n  \"Writing\" : 60\n  \"Reviewing\" : 40\n```", ""],
+      zh: ["饼图", "```mermaid\npie title 时间分配\n  \"写作\" : 60\n  \"校对\" : 40\n```", ""] },
     { block: true, mermaid: true,
       ja: ["クラス図", "```mermaid\nclassDiagram\n  class Document {\n    +title\n    +save()\n  }\n  Document <|-- Report\n```", ""],
-      en: ["Class diagram", "```mermaid\nclassDiagram\n  class Document {\n    +title\n    +save()\n  }\n  Document <|-- Report\n```", ""] },
+      en: ["Class diagram", "```mermaid\nclassDiagram\n  class Document {\n    +title\n    +save()\n  }\n  Document <|-- Report\n```", ""],
+      zh: ["类图", "```mermaid\nclassDiagram\n  class Document {\n    +title\n    +save()\n  }\n  Document <|-- Report\n```", ""] },
     { block: true, mermaid: true,
       ja: ["状態遷移図", "```mermaid\nstateDiagram-v2\n  state \"編集中\" as Editing\n  state \"保存済み\" as Saved\n  [*] --> Editing\n  Editing --> Saved: 保存\n  Saved --> Editing: 書き直す\n```", ""],
-      en: ["State diagram", "```mermaid\nstateDiagram-v2\n  [*] --> Editing\n  Editing --> Saved: save\n  Saved --> Editing: edit\n```", ""] },
+      en: ["State diagram", "```mermaid\nstateDiagram-v2\n  [*] --> Editing\n  Editing --> Saved: save\n  Saved --> Editing: edit\n```", ""],
+      zh: ["状态图", "```mermaid\nstateDiagram-v2\n  state \"编辑中\" as Editing\n  state \"已保存\" as Saved\n  [*] --> Editing\n  Editing --> Saved: 保存\n  Saved --> Editing: 修改\n```", ""] },
     { block: true, mermaid: true,
       ja: ["ER図", "```mermaid\nerDiagram\n  CUSTOMER ||--o{ ORDER : places\n  ORDER ||--|{ ITEM : contains\n```", ""],
-      en: ["ER diagram", "```mermaid\nerDiagram\n  CUSTOMER ||--o{ ORDER : places\n  ORDER ||--|{ ITEM : contains\n```", ""] },
+      en: ["ER diagram", "```mermaid\nerDiagram\n  CUSTOMER ||--o{ ORDER : places\n  ORDER ||--|{ ITEM : contains\n```", ""],
+      zh: ["ER 图", "```mermaid\nerDiagram\n  CUSTOMER ||--o{ ORDER : places\n  ORDER ||--|{ ITEM : contains\n```", ""] },
     { block: true, mermaid: true,
       ja: ["マインドマップ", "```mermaid\nmindmap\n  root((mdEditor))\n    書く\n    見る\n    渡す\n```", ""],
-      en: ["Mind map", "```mermaid\nmindmap\n  root((mdEditor))\n    Write\n    View\n    Share\n```", ""] },
+      en: ["Mind map", "```mermaid\nmindmap\n  root((mdEditor))\n    Write\n    View\n    Share\n```", ""],
+      zh: ["思维导图", "```mermaid\nmindmap\n  root((mdEditor))\n    写\n    看\n    分享\n```", ""] },
     { block: true, mermaid: true,
       ja: ["棒グラフ・折れ線グラフ", "```mermaid\nxychart-beta\n  title \"月別の件数\"\n  x-axis [\"1月\", \"2月\", \"3月\", \"4月\"]\n  y-axis \"件数\" 0 --> 40\n  bar [12, 18, 25, 31]\n  line [12, 18, 25, 31]\n```", ""],
-      en: ["Bar and line chart", "```mermaid\nxychart-beta\n  title \"Documents per month\"\n  x-axis [Jan, Feb, Mar, Apr]\n  y-axis \"Count\" 0 --> 40\n  bar [12, 18, 25, 31]\n  line [12, 18, 25, 31]\n```", ""] },
+      en: ["Bar and line chart", "```mermaid\nxychart-beta\n  title \"Documents per month\"\n  x-axis [Jan, Feb, Mar, Apr]\n  y-axis \"Count\" 0 --> 40\n  bar [12, 18, 25, 31]\n  line [12, 18, 25, 31]\n```", ""],
+      zh: ["柱状图和折线图", "```mermaid\nxychart-beta\n  title \"每月文档数\"\n  x-axis [\"1月\", \"2月\", \"3月\", \"4月\"]\n  y-axis \"件数\" 0 --> 40\n  bar [12, 18, 25, 31]\n  line [12, 18, 25, 31]\n```", ""] },
     { block: true, mermaid: true,
       ja: ["タイムライン", "```mermaid\ntimeline\n  title 作業の流れ\n  10月1日 : 書き始める\n  10月5日 : 見直す\n          : 図を足す\n  10月10日 : 公開する\n```", ""],
-      en: ["Timeline", "```mermaid\ntimeline\n  title How the work goes\n  Oct 1 : Start writing\n  Oct 5 : Review\n        : Add diagrams\n  Oct 10 : Publish\n```", ""] },
+      en: ["Timeline", "```mermaid\ntimeline\n  title How the work goes\n  Oct 1 : Start writing\n  Oct 5 : Review\n        : Add diagrams\n  Oct 10 : Publish\n```", ""],
+      zh: ["时间线", "```mermaid\ntimeline\n  title 工作流程\n  10月1日 : 开始写作\n  10月5日 : 校对\n          : 添加图表\n  10月10日 : 发布\n```", ""] },
     // Math: the result column renders each example with KaTeX.
-    { group: { ja: "数式（KaTeX）", en: "Math (KaTeX)" } },
-    { math: "E = mc^2", ja: ["文中の数式", "$E = mc^2$", ""], en: ["Inline math", "$E = mc^2$", ""] },
+    { group: { ja: "数式（KaTeX）", en: "Math (KaTeX)", zh: "公式（KaTeX）" } },
+    { math: "E = mc^2", ja: ["文中の数式", "$E = mc^2$", ""], en: ["Inline math", "$E = mc^2$", ""], zh: ["行内公式", "$E = mc^2$", ""] },
     { block: true, math: "\\int_0^1 x^2\\,dx = \\frac{1}{3}", display: true,
       ja: ["別の行の数式", "$$\n\\int_0^1 x^2\\,dx = \\frac{1}{3}\n$$", ""],
-      en: ["Display math", "$$\n\\int_0^1 x^2\\,dx = \\frac{1}{3}\n$$", ""] },
-    { math: "\\frac{a}{b}", ja: ["分数", "$\\frac{a}{b}$", ""], en: ["Fraction", "$\\frac{a}{b}$", ""] },
-    { math: "\\sqrt{x^2 + 1}", ja: ["平方根", "$\\sqrt{x^2 + 1}$", ""], en: ["Square root", "$\\sqrt{x^2 + 1}$", ""] },
-    { math: "x_i^2", ja: ["上付き・下付き", "$x_i^2$", ""], en: ["Superscript and subscript", "$x_i^2$", ""] },
-    { math: "\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}", ja: ["総和", "$\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}$", ""], en: ["Sum", "$\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}$", ""] },
-    { math: "\\alpha,\\ \\beta,\\ \\pi,\\ \\theta", ja: ["ギリシャ文字", "$\\alpha,\\ \\beta,\\ \\pi,\\ \\theta$", ""], en: ["Greek letters", "$\\alpha,\\ \\beta,\\ \\pi,\\ \\theta$", ""] },
+      en: ["Display math", "$$\n\\int_0^1 x^2\\,dx = \\frac{1}{3}\n$$", ""],
+      zh: ["独立公式", "$$\n\\int_0^1 x^2\\,dx = \\frac{1}{3}\n$$", ""] },
+    { math: "\\frac{a}{b}", ja: ["分数", "$\\frac{a}{b}$", ""], en: ["Fraction", "$\\frac{a}{b}$", ""], zh: ["分数", "$\\frac{a}{b}$", ""] },
+    { math: "\\sqrt{x^2 + 1}", ja: ["平方根", "$\\sqrt{x^2 + 1}$", ""], en: ["Square root", "$\\sqrt{x^2 + 1}$", ""], zh: ["平方根", "$\\sqrt{x^2 + 1}$", ""] },
+    { math: "x_i^2", ja: ["上付き・下付き", "$x_i^2$", ""], en: ["Superscript and subscript", "$x_i^2$", ""], zh: ["上标和下标", "$x_i^2$", ""] },
+    { math: "\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}", ja: ["総和", "$\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}$", ""], en: ["Sum", "$\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}$", ""], zh: ["求和", "$\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}$", ""] },
+    { math: "\\alpha,\\ \\beta,\\ \\pi,\\ \\theta", ja: ["ギリシャ文字", "$\\alpha,\\ \\beta,\\ \\pi,\\ \\theta$", ""], en: ["Greek letters", "$\\alpha,\\ \\beta,\\ \\pi,\\ \\theta$", ""], zh: ["希腊字母", "$\\alpha,\\ \\beta,\\ \\pi,\\ \\theta$", ""] },
     { block: true, math: "\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}", display: true,
       ja: ["行列", "$$\n\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}\n$$", ""],
-      en: ["Matrix", "$$\n\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}\n$$", ""] },
+      en: ["Matrix", "$$\n\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}\n$$", ""],
+      zh: ["矩阵", "$$\n\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}\n$$", ""] },
     { block: true, math: "f(x) = \\begin{cases} 1 & (x > 0) \\\\ 0 & (x \\le 0) \\end{cases}", display: true,
       ja: ["場合分け", "$$\nf(x) = \\begin{cases} 1 & (x > 0) \\\\ 0 & (x \\le 0) \\end{cases}\n$$", ""],
-      en: ["Cases", "$$\nf(x) = \\begin{cases} 1 & (x > 0) \\\\ 0 & (x \\le 0) \\end{cases}\n$$", ""] },
+      en: ["Cases", "$$\nf(x) = \\begin{cases} 1 & (x > 0) \\\\ 0 & (x \\le 0) \\end{cases}\n$$", ""],
+      zh: ["分段函数", "$$\nf(x) = \\begin{cases} 1 & (x > 0) \\\\ 0 & (x \\le 0) \\end{cases}\n$$", ""] },
     { block: true, math: "\\begin{aligned} y &= (x + 1)^2 \\\\ &= x^2 + 2x + 1 \\end{aligned}", display: true,
       ja: ["複数行の式", "$$\n\\begin{aligned} y &= (x + 1)^2 \\\\ &= x^2 + 2x + 1 \\end{aligned}\n$$", ""],
-      en: ["Aligned equations", "$$\n\\begin{aligned} y &= (x + 1)^2 \\\\ &= x^2 + 2x + 1 \\end{aligned}\n$$", ""] },
+      en: ["Aligned equations", "$$\n\\begin{aligned} y &= (x + 1)^2 \\\\ &= x^2 + 2x + 1 \\end{aligned}\n$$", ""],
+      zh: ["多行公式", "$$\n\\begin{aligned} y &= (x + 1)^2 \\\\ &= x^2 + 2x + 1 \\end{aligned}\n$$", ""] },
     // GitHub's own additions (each also in samples/diagram-test, 20).
-    { group: { ja: "GitHub と同じ書き方", en: "Written as on GitHub" } },
+    { group: { ja: "GitHub と同じ書き方", en: "Written as on GitHub", zh: "与 GitHub 相同的写法" } },
     { block: true,
       ja: ["注意書き", "> [!NOTE]\n> 補足の情報です。", '<blockquote><strong>Note</strong><br>補足の情報です。</blockquote><small>[!TIP]・[!IMPORTANT]・[!WARNING]・[!CAUTION] もあります</small>'],
-      en: ["Alert", "> [!NOTE]\n> Useful information.", '<blockquote><strong>Note</strong><br>Useful information.</blockquote><small>[!TIP], [!IMPORTANT], [!WARNING], and [!CAUTION] work too</small>'] },
+      en: ["Alert", "> [!NOTE]\n> Useful information.", '<blockquote><strong>Note</strong><br>Useful information.</blockquote><small>[!TIP], [!IMPORTANT], [!WARNING], and [!CAUTION] work too</small>'],
+      zh: ["提示框", "> [!NOTE]\n> 补充信息。", '<blockquote><strong>Note</strong><br>补充信息。</blockquote><small>还有 [!TIP]、[!IMPORTANT]、[!WARNING]、[!CAUTION]</small>'] },
     { block: true,
       ja: ["折りたたみ", "<details>\n<summary>クリックで開く</summary>\n\n折りたたまれた本文です。\n\n</details>", "<details><summary>クリックで開く</summary>折りたたまれた本文です。</details>"],
-      en: ["Collapsible section", "<details>\n<summary>Click to open</summary>\n\nThe collapsed text.\n\n</details>", "<details><summary>Click to open</summary>The collapsed text.</details>"] },
+      en: ["Collapsible section", "<details>\n<summary>Click to open</summary>\n\nThe collapsed text.\n\n</details>", "<details><summary>Click to open</summary>The collapsed text.</details>"],
+      zh: ["折叠", "<details>\n<summary>点击展开</summary>\n\n折叠的正文。\n\n</details>", "<details><summary>点击展开</summary>折叠的正文。</details>"] },
     { ja: ["キーの表示", "<kbd>Ctrl</kbd>+<kbd>S</kbd>", "<kbd>Ctrl</kbd>+<kbd>S</kbd>"],
-      en: ["Keys", "<kbd>Ctrl</kbd>+<kbd>S</kbd>", "<kbd>Ctrl</kbd>+<kbd>S</kbd>"] },
-    { ja: ["絵文字", ":rocket: :memo: :warning:", "🚀 📝 ⚠️"], en: ["Emoji", ":rocket: :memo: :warning:", "🚀 📝 ⚠️"] },
+      en: ["Keys", "<kbd>Ctrl</kbd>+<kbd>S</kbd>", "<kbd>Ctrl</kbd>+<kbd>S</kbd>"],
+      zh: ["按键", "<kbd>Ctrl</kbd>+<kbd>S</kbd>", "<kbd>Ctrl</kbd>+<kbd>S</kbd>"] },
+    { ja: ["絵文字", ":rocket: :memo: :warning:", "🚀 📝 ⚠️"], en: ["Emoji", ":rocket: :memo: :warning:", "🚀 📝 ⚠️"], zh: ["表情符号", ":rocket: :memo: :warning:", "🚀 📝 ⚠️"] },
     // Other drawings and media (samples/diagram-test, 16 and 21).
-    { group: { ja: "そのほかの図と動画", en: "Other drawings and video" } },
+    { group: { ja: "そのほかの図と動画", en: "Other drawings and video", zh: "其他图表和视频" } },
     { block: true,
       ja: ["Graphviz の図", "```dot\ndigraph {\n  開く -> 編集 -> 保存\n}\n```", "<small>矢印でつないだ図が描かれます（GitHub ではコードのまま）</small>"],
-      en: ["Graphviz diagram", "```dot\ndigraph {\n  Open -> Edit -> Save\n}\n```", "<small>Drawn as boxes joined by arrows (GitHub shows the code)</small>"] },
+      en: ["Graphviz diagram", "```dot\ndigraph {\n  Open -> Edit -> Save\n}\n```", "<small>Drawn as boxes joined by arrows (GitHub shows the code)</small>"],
+      zh: ["Graphviz 图", "```dot\ndigraph {\n  打开 -> 编辑 -> 保存\n}\n```", "<small>绘制为用箭头连接的图（在 GitHub 上显示为代码）</small>"] },
     { block: true,
       ja: ["地図", "```geojson\n{ \"type\": \"Point\", \"coordinates\": [139.767, 35.681] }\n```", "<small>世界地図の上に点が描かれます（経度・緯度の順）</small>"],
-      en: ["Map", "```geojson\n{ \"type\": \"Point\", \"coordinates\": [139.767, 35.681] }\n```", "<small>A point is drawn on a world map (longitude, then latitude)</small>"] },
+      en: ["Map", "```geojson\n{ \"type\": \"Point\", \"coordinates\": [139.767, 35.681] }\n```", "<small>A point is drawn on a world map (longitude, then latitude)</small>"],
+      zh: ["地图", "```geojson\n{ \"type\": \"Point\", \"coordinates\": [116.397, 39.908] }\n```", "<small>在世界地图上绘制一个点（顺序为经度、纬度）</small>"] },
     { ja: ["動画", "![動画の説明](clip.mp4)", "<small>文書と同じフォルダーの動画を再生します（.mp4・.webm・.mov など）</small>"],
-      en: ["Video", "![video description](clip.mp4)", "<small>Plays a video beside the document (.mp4, .webm, .mov, and so on)</small>"] }
+      en: ["Video", "![video description](clip.mp4)", "<small>Plays a video beside the document (.mp4, .webm, .mov, and so on)</small>"],
+      zh: ["视频", "![视频说明](clip.mp4)", "<small>播放与文档在同一文件夹中的视频（.mp4、.webm、.mov 等）</small>"] }
   ];
   const helpDialog = document.getElementById("help-dialog");
   const helpButton = document.getElementById("help-button");
@@ -1210,7 +1428,15 @@
   // The diagram examples are drawn after the table is built (Mermaid renders asynchronously).
   let helpDiagramCounter = 0;
   const renderHelpDiagrams = async (pending) => {
-    if (!window.mermaid) return;
+    if (!pending.length) return;
+    if (!window.mermaid) {
+      try {
+        await loadMermaid();
+      } catch {
+        for (const { cell } of pending) cell.textContent = t("diagramError");
+        return;
+      }
+    }
     useMermaidTheme(false);
     for (const { cell, source } of pending) {
       try {
@@ -1224,9 +1450,24 @@
     }
   };
 
+  const renderHelpMath = async (pending) => {
+    if (!pending.length) return;
+    if (!window.katex) {
+      try {
+        await loadKatex();
+      } catch {
+        return;
+      }
+    }
+    for (const { cell, item } of pending) {
+      window.katex.render(item.math, cell, { throwOnError: false, displayMode: Boolean(item.display) });
+    }
+  };
+
   const renderHelp = () => {
     helpRows.replaceChildren();
     const diagrams = [];
+    const formulas = [];
     for (const item of helpItems) {
       if (item.group) {
         const row = document.createElement("tr");
@@ -1252,8 +1493,10 @@
       syntaxCell.appendChild(pre);
       const resultCell = document.createElement("td");
       resultCell.className = "help-result";
-      if (item.math && window.katex) {
-        window.katex.render(item.math, resultCell, { throwOnError: false, displayMode: Boolean(item.display) });
+      if (item.math) {
+        // The TeX shows until KaTeX has loaded.
+        resultCell.textContent = item.math;
+        formulas.push({ cell: resultCell, item });
       } else if (item.mermaid) {
         resultCell.classList.add("help-diagram");
         diagrams.push({ cell: resultCell, source: syntax.replace(/^```mermaid\n/, "").replace(/\n```$/, "") });
@@ -1271,6 +1514,7 @@
       row.append(nameCell, syntaxCell, resultCell, insertCell);
       helpRows.appendChild(row);
     }
+    renderHelpMath(formulas);
     renderHelpDiagrams(diagrams);
   };
 
@@ -1387,10 +1631,32 @@
     post({ type: "zoom", action: "reset" });
   });
 
+  // Settings > New from clipboard: Ctrl+Alt+letter or digit, given to a desktop shortcut
+  // the host makes (after asking) to start mdEditor with --paste.
+  const pasteKeySelect = document.getElementById("setting-paste-key");
+  const pasteKeyNote = document.getElementById("paste-key-note");
+  let pasteKey = { key: "", exists: false };
+  for (const character of "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789") {
+    const option = document.createElement("option");
+    option.value = character;
+    option.textContent = `Ctrl+Alt+${character}`;
+    pasteKeySelect.appendChild(option);
+  }
+  const showPasteKey = () => {
+    // A shortcut the user deleted shows as None, with a note, so choosing the key again remakes it.
+    pasteKeySelect.value = pasteKey.exists ? pasteKey.key : "";
+    const key = `Ctrl+Alt+${pasteKey.key}`;
+    pasteKeyNote.textContent = pasteKey.exists ? t("pasteKeyReady")(key)
+      : pasteKey.key ? t("pasteKeyMissing")(key) : t("pasteKeyNote");
+  };
+  pasteKeySelect.addEventListener("change", () => post({ type: "setPasteHotkey", key: pasteKeySelect.value }));
+
   const openSettings = () => {
     fillVoiceOptions();
     fillSettingControls();
     updateVoiceNote();
+    showPasteKey();
+    post({ type: "getPasteHotkey" });
     settingsDialog.showModal();
   };
   document.getElementById("settings-button").addEventListener("click", openSettings);
@@ -1404,15 +1670,16 @@
   // Only voices installed on this PC are used, so the text never leaves it.
   const readableSelector = "h1, h2, h3, h4, h5, h6, p, li, blockquote, pre, th, td";
   let reader = null;
-  const hasJapanese = (text) => /[぀-ヿ㐀-鿿]/.test(text);
+  // Kana means Japanese; Han characters without kana are read as Chinese.
+  const textLanguage = (text) => /[぀-ヿ]/.test(text) ? "ja" : /[㐀-鿿]/.test(text) ? "zh" : "en";
   const localVoices = (lang) => speechSynthesis.getVoices()
     .filter((voice) => voice.localService && voice.lang.toLowerCase().startsWith(lang));
   const localVoice = (lang) => localVoices(lang)[0];
   // The voice for a paragraph: the chosen language (or the paragraph's own in
   // Automatic), and the chosen voice when it is installed for that language.
   const voiceFor = (text) => {
-    const fixed = displaySettings.readerLang === "ja" || displaySettings.readerLang === "en";
-    const lang = fixed ? displaySettings.readerLang : hasJapanese(text) ? "ja" : "en";
+    const fixed = languages.includes(displaySettings.readerLang);
+    const lang = fixed ? displaySettings.readerLang : textLanguage(text);
     const voices = localVoices(lang);
     const voice = voices.find((item) => item.name === displaySettings.readerVoice) ?? voices[0];
     return { lang, voice: voice ?? (fixed ? undefined : localVoice(language)) };
@@ -1420,7 +1687,7 @@
   const readerVoiceSelect = document.getElementById("setting-reader-voice");
   const fillVoiceOptions = () => {
     const lang = displaySettings.readerLang;
-    const voices = lang === "ja" || lang === "en" ? localVoices(lang) : [...localVoices("ja"), ...localVoices("en")];
+    const voices = languages.includes(lang) ? localVoices(lang) : languages.flatMap((code) => localVoices(code));
     readerVoiceSelect.replaceChildren();
     const automatic = document.createElement("option");
     automatic.value = "";
@@ -1444,8 +1711,9 @@
   const updateVoiceNote = () => {
     const ja = localVoice("ja");
     const en = localVoice("en");
-    readerVoiceNote.textContent = ja || en
-      ? t("readerVoices")(ja?.name ?? t("readerNoVoiceShort"), en?.name ?? t("readerNoVoiceShort"))
+    const zh = localVoice("zh");
+    readerVoiceNote.textContent = ja || en || zh
+      ? t("readerVoices")(ja?.name ?? t("readerNoVoiceShort"), en?.name ?? t("readerNoVoiceShort"), zh?.name ?? t("readerNoVoiceShort"))
       : t("readerNoVoice");
   };
   speechSynthesis.addEventListener("voiceschanged", updateVoiceNote);
@@ -1545,7 +1813,8 @@
     { id: "docx", keys: "Ctrl+Shift+D", run: () => post({ type: "exportDocx" }) },
     { id: "paper", keys: "Ctrl+Shift+A", button: "paper-button", run: () => paperButton.click() },
     { id: "theme", keys: "Ctrl+Shift+T", button: "theme-button", run: () => themeButton.click() },
-    { id: "language", keys: "Ctrl+Shift+L", button: "language-button", run: () => languageButton.click() },
+    // Ctrl+Shift+L moves to the next language in the list (Japanese, English, Chinese).
+    { id: "language", keys: "Ctrl+Shift+L", button: "language-select", run: () => setLanguage(languages[(languages.indexOf(language) + 1) % languages.length]) },
     { id: "encoding", keys: "Ctrl+Shift+E", button: "encoding-button", run: () => openEncodingDialog() },
     { id: "findReplace", keys: "Ctrl+H", button: "replace-button", run: () => openFindBar() },
     { id: "toc", keys: "Ctrl+Shift+J", button: "toc-button", run: () => post({ type: "toc" }) },
@@ -1721,17 +1990,20 @@
   }, true);
 
   const samples = [
-    { ja: "図と数式", en: "Diagrams and math",
+    { ja: "図と数式", en: "Diagrams and math", zh: "图表和公式",
       text: {
         ja: "# 図と数式のサンプル\n\nMarkdown を書くと、右のプレビューにすぐ反映されます。\n\n## 図（Mermaid）\n\n```mermaid\nflowchart LR\n  A[書く] --> B[確認する]\n  B --> C[PDFに保存]\n```\n\n## 数式（KaTeX）\n\n円の面積は $S = \\pi r^2$ です。\n\n$$\\int_0^1 x^2\\,dx = \\frac{1}{3}$$\n\n## 表とチェックリスト\n\n| 名前 | 数 |\n| --- | ---: |\n| りんご | 3 |\n| みかん | 5 |\n\n- [x] 図を見る\n- [ ] PDFに保存する\n",
-        en: "# Diagrams and math sample\n\nWhat you type appears in the preview on the right right away.\n\n## Diagram (Mermaid)\n\n```mermaid\nflowchart LR\n  A[Write] --> B[Check]\n  B --> C[Save as PDF]\n```\n\n## Math (KaTeX)\n\nThe area of a circle is $S = \\pi r^2$.\n\n$$\\int_0^1 x^2\\,dx = \\frac{1}{3}$$\n\n## Table and checklist\n\n| Name | Qty |\n| --- | ---: |\n| Apple | 3 |\n| Orange | 5 |\n\n- [x] See the diagram\n- [ ] Save as PDF\n" } },
-    { ja: "基本の書き方", en: "Basic writing",
+        en: "# Diagrams and math sample\n\nWhat you type appears in the preview on the right right away.\n\n## Diagram (Mermaid)\n\n```mermaid\nflowchart LR\n  A[Write] --> B[Check]\n  B --> C[Save as PDF]\n```\n\n## Math (KaTeX)\n\nThe area of a circle is $S = \\pi r^2$.\n\n$$\\int_0^1 x^2\\,dx = \\frac{1}{3}$$\n\n## Table and checklist\n\n| Name | Qty |\n| --- | ---: |\n| Apple | 3 |\n| Orange | 5 |\n\n- [x] See the diagram\n- [ ] Save as PDF\n",
+        zh: "# 图表和公式示例\n\n写下 Markdown，右边的预览会立即更新。\n\n## 图表（Mermaid）\n\n```mermaid\nflowchart LR\n  A[写作] --> B[检查]\n  B --> C[保存为 PDF]\n```\n\n## 公式（KaTeX）\n\n圆的面积是 $S = \\pi r^2$。\n\n$$\\int_0^1 x^2\\,dx = \\frac{1}{3}$$\n\n## 表格和任务列表\n\n| 名称 | 数量 |\n| --- | ---: |\n| 苹果 | 3 |\n| 橘子 | 5 |\n\n- [x] 查看图表\n- [ ] 保存为 PDF\n" } },
+    { ja: "基本の書き方", en: "Basic writing", zh: "基本写法",
       text: {
         ja: "# はじめての Markdown\n\n**太字**、*斜体*、[リンク](https://example.com) が使えます。\n\n1. 見出し\n2. リスト\n3. 引用\n\n> 引用はこのように書きます。\n\n```\nコードはこのように書きます。\n```\n",
-        en: "# Your first Markdown\n\nYou can use **bold**, *italic*, and [links](https://example.com).\n\n1. Headings\n2. Lists\n3. Quotes\n\n> Quotes look like this.\n\n```\nCode looks like this.\n```\n" } },
+        en: "# Your first Markdown\n\nYou can use **bold**, *italic*, and [links](https://example.com).\n\n1. Headings\n2. Lists\n3. Quotes\n\n> Quotes look like this.\n\n```\nCode looks like this.\n```\n",
+        zh: "# 第一次使用 Markdown\n\n可以使用**粗体**、*斜体*和[链接](https://example.com)。\n\n1. 标题\n2. 列表\n3. 引用\n\n> 引用这样写。\n\n```\n代码这样写。\n```\n" } },
     // The full rendering tests from samples/ (bundled with the app as wwwroot/samples/).
-    { ja: "図・チャート表示テスト（すべての種類・日本語）", en: "Diagram and chart test (every type, Japanese)", file: "samples/diagram-test.md" },
-    { ja: "図・チャート表示テスト（すべての種類・英語）", en: "Diagram and chart test (every type, English)", file: "samples/diagram-test.en.md" }
+    { ja: "図・チャート表示テスト（すべての種類・日本語）", en: "Diagram and chart test (every type, Japanese)", zh: "图表显示测试（所有类型，日语）", file: "samples/diagram-test.md" },
+    { ja: "図・チャート表示テスト（すべての種類・英語）", en: "Diagram and chart test (every type, English)", zh: "图表显示测试（所有类型，英语）", file: "samples/diagram-test.en.md" },
+    { ja: "図・チャート表示テスト（すべての種類・中国語）", en: "Diagram and chart test (every type, Chinese)", zh: "图表显示测试（所有类型，中文）", file: "samples/diagram-test.zh-CN.md" }
   ];
   const sampleDialog = document.getElementById("sample-dialog");
   const sampleList = document.getElementById("sample-list");
@@ -1746,6 +2018,7 @@
       button.type = "button";
       button.textContent = t("sampleOpen");
       button.setAttribute("aria-label", t("sampleOpenLabel")(name));
+      if (sample.file) button.dataset.file = sample.file;
       button.addEventListener("click", async () => {
         sampleDialog.close();
         let text = sample.text?.[language];
@@ -1814,6 +2087,14 @@
     renderShortcutRows();
     applyShortcutHints();
   });
+
+  // Ctrl + 0 goes back to the app's default zoom (90%) instead of the browser's 100%.
+  document.addEventListener("keydown", (event) => {
+    if (event.ctrlKey && !event.altKey && !event.shiftKey && (event.code === "Digit0" || event.code === "Numpad0")) {
+      event.preventDefault();
+      post({ type: "zoom", action: "reset" });
+    }
+  }, true);
 
   document.addEventListener("keydown", (event) => {
     // The open dialog handles Esc itself; preventing it here would keep it open.
@@ -1987,20 +2268,37 @@
   let diagramCounter = 0;
   let renderGeneration = 0;
   let mermaidConfig = null;
+  let mermaidWanted = null;
   let lastPreviewHtml = null;
   const darkScheme = window.matchMedia("(prefers-color-scheme: dark)");
 
-  // PDF export always uses the day palette, so print renders use the light theme.
-  // Diagrams use the same typeface as the UI language (styles.css :root and
-  // :root:lang(en)), so drawings made in one language are not reused in the other.
-  const useMermaidTheme = (forPrint) => {
-    const theme = !forPrint && darkScheme.matches ? "dark" : "default";
-    const fontFamily = getComputedStyle(document.documentElement).fontFamily;
-    if (mermaidConfig?.fontFamily !== fontFamily) {
-      for (const cache of Object.values(diagramCaches)) cache.clear();
-    }
+  // Mermaid (about 3.5 MB) and KaTeX are loaded the first time a document (or the
+  // Syntax list) needs them, so a launch does not wait for them.
+  const loadLibrary = (src) => new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = src;
+    script.onload = resolve;
+    script.onerror = () => reject(new Error(src));
+    document.head.appendChild(script);
+  });
+  let mermaidLoading = null;
+  let katexLoading = null;
+  const loadMermaid = () => mermaidLoading ??= loadLibrary("lib/mermaid/mermaid.min.js")
+    .then(() => applyMermaidConfig())
+    .catch((error) => {
+      mermaidLoading = null;
+      throw error;
+    });
+  const loadKatex = () => katexLoading ??= loadLibrary("lib/katex/katex.min.js").catch((error) => {
+    katexLoading = null;
+    throw error;
+  });
+
+  const applyMermaidConfig = () => {
+    if (!window.mermaid || !mermaidWanted) return;
+    const { theme, fontFamily } = mermaidWanted;
     if (mermaidConfig?.theme !== theme || mermaidConfig?.fontFamily !== fontFamily) {
-      window.mermaid?.initialize({
+      window.mermaid.initialize({
         startOnLoad: false,
         securityLevel: "strict",
         theme,
@@ -2008,6 +2306,19 @@
       });
       mermaidConfig = { theme, fontFamily };
     }
+  };
+
+  // PDF export always uses the day palette, so print renders use the light theme.
+  // Diagrams use the same typeface as the UI language (styles.css :root and
+  // :root:lang(en)), so drawings made in one language are not reused in the other.
+  const useMermaidTheme = (forPrint) => {
+    const theme = !forPrint && darkScheme.matches ? "dark" : "default";
+    const fontFamily = getComputedStyle(document.documentElement).fontFamily;
+    if (mermaidWanted?.fontFamily !== fontFamily) {
+      for (const cache of Object.values(diagramCaches)) cache.clear();
+    }
+    mermaidWanted = { theme, fontFamily };
+    applyMermaidConfig();
     return diagramCaches[theme];
   };
 
@@ -2023,8 +2334,16 @@
     }
   };
 
-  const renderMath = () => {
-    if (!window.katex) return;
+  const renderMath = async (generation) => {
+    if (!preview.querySelector(".math")) return;
+    if (!window.katex) {
+      try {
+        await loadKatex();
+      } catch {
+        return;
+      }
+      if (generation !== renderGeneration) return;
+    }
     for (const element of preview.querySelectorAll(".math")) {
       const source = element.textContent.trim()
         .replace(/^\\[([]/, "")
@@ -2233,6 +2552,15 @@
       }
     });
 
+    if (pending.length && !window.mermaid) {
+      try {
+        await loadMermaid();
+      } catch {
+        // Shown below as "diagrams unavailable".
+      }
+      if (generation !== renderGeneration) return;
+      applyMermaidConfig();
+    }
     for (const { element, source } of pending) {
       if (generation !== renderGeneration) return;
       if (!window.mermaid) {
@@ -2715,7 +3043,8 @@
     const models = takeFences(["stl"], "stl");
     const maps = takeFences(["geojson", "topojson"], "geo-map");
     convertMathFences();
-    renderMath();
+    await renderMath(generation);
+    if (generation !== renderGeneration) return;
     highlightCode();
     const keepPlace = () => {
       if (previewWindow) scrollPreviewToLine(lastSyncedLine.line, lastSyncedLine.edge);
@@ -2943,7 +3272,7 @@
       pdfStarting = false;
       saveState.textContent = statusText();
     } else if (message.type === "language") {
-      language = message.lang === "en" ? "en" : "ja";
+      language = normalizeLanguage(message.lang) ?? language;
       applyLanguage();
     } else if (message.type === "previewDetached") {
       setPreviewDetached(Boolean(message.detached));
@@ -2953,6 +3282,9 @@
       else scrollEditorToLine(message.line, message.edge);
     } else if (message.type === "runCommand") {
       shortcutDefinitions.find((item) => item.id === message.id)?.run(message.at ?? undefined);
+    } else if (message.type === "pasteHotkey") {
+      pasteKey = { key: message.key ?? "", exists: Boolean(message.exists) };
+      showPasteKey();
     } else if (message.type === "externalImages") {
       externalSelect.value = message.value;
     } else if (message.type === "externalNotice") {
@@ -3014,8 +3346,8 @@
         return;
       }
       applyDisplaySettings();
-    } else if (event.key === "mdeditor-language" && (event.newValue === "ja" || event.newValue === "en")) {
-      language = event.newValue;
+    } else if (event.key === "mdeditor-language" && normalizeLanguage(event.newValue)) {
+      language = normalizeLanguage(event.newValue);
       applyLanguage();
     } else if (event.key === shortcutStorageKey) {
       shortcutSettings = loadShortcutSettings();

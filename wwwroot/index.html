@@ -21,8 +21,8 @@
   <link rel="icon" href="assets/5garashi_mark_simple.svg" type="image/svg+xml">
   <link rel="stylesheet" href="lib/katex/katex.min.css">
   <link rel="stylesheet" href="styles.css">
-  <script src="lib/katex/katex.min.js" defer></script>
-  <script src="lib/mermaid/mermaid.min.js" defer></script>
+  <!-- KaTeX (lib/katex/katex.min.js) and Mermaid (lib/mermaid/mermaid.min.js) are loaded by
+       app.js the first time a document has math or a diagram, so they do not slow down startup. -->
   <script src="lib/codemirror/codemirror.min.js" defer></script>
   <script src="lib/highlight/highlight.min.js" defer></script>
   <script src="lib/highlight/languages/powershell.min.js" defer></script>
@@ -39,28 +39,35 @@
       </picture>
       <h1>mdEditor</h1>
     </div>
+    <!-- The open document sits in the header between the logotype and the mark, clear of
+         both (Identity 3-5, 9-1), so the toolbar below has a whole row for its buttons. -->
+    <div class="document-status" aria-live="polite">
+      <span id="document-name">新しい文書.md</span>
+      <span id="save-state">保存済み</span>
+      <button id="encoding-button" class="status-button" type="button" aria-haspopup="dialog">UTF-8</button>
+    </div>
     <!-- The symbol mark stays red (volt) in dark mode too, by the owner's choice. -->
     <picture>
       <img class="brand-mark" src="assets/5garashi_mark_simple.svg" alt="" aria-hidden="true">
     </picture>
   </header>
   <section class="toolbar" data-i18n-attr="aria-label:toolbar">
-    <div class="document-status" aria-live="polite">
-      <span id="document-name">新しい文書.md</span>
-      <span id="save-state">保存済み</span>
-      <button id="encoding-button" class="status-button" type="button" aria-haspopup="dialog">UTF-8</button>
-    </div>
     <div class="actions">
       <button id="open-button" type="button" data-i18n="open">開く</button>
       <button id="restore-button" type="button" data-i18n="restoreDiscarded" hidden>前の文書に戻す</button>
       <button id="url-button" type="button" data-i18n="openUrl" aria-haspopup="dialog">URLを開く</button>
       <button id="save-button" class="primary" type="button" data-i18n="save">保存</button>
-      <button id="save-as-button" type="button" data-i18n="saveAs">名前を付けて保存</button>      <button id="paper-button" type="button">用紙: 自動（A4）</button>
-      <button id="theme-button" type="button">表示: 自動</button>
+      <button id="save-as-button" type="button" data-i18n="saveAs">名前を付けて保存</button>
+      <!-- Theme and paper are in Settings (Ctrl+Shift+T / Ctrl+Shift+A switch them anywhere). -->
       <button id="settings-button" type="button" data-i18n="settings" aria-haspopup="dialog">設定</button>
       <button id="sample-button" type="button" data-i18n="sample" aria-haspopup="dialog">サンプル</button>
       <button id="about-button" type="button" data-i18n="about" aria-haspopup="dialog">このアプリについて</button>
-      <button id="language-button" type="button" lang="en" data-i18n="languageToggle" data-i18n-attr="aria-label:languageLabel">English</button>
+      <label class="language-picker"><span lang="en">Language</span>
+        <select id="language-select">
+          <option value="ja" lang="ja">日本語</option>
+          <option value="en" lang="en">English</option>
+          <option value="zh" lang="zh-CN">简体中文</option>
+        </select></label>
     </div>
   </section>
   <div id="notice" class="notice" role="status" hidden>
@@ -74,13 +81,14 @@
   <main class="workspace">
     <section class="pane editor-pane" aria-labelledby="editor-heading">
       <div class="pane-heading">
-        <h2 id="editor-heading" data-i18n="editorHeading">Markdown を編集</h2>
+        <!-- Kept for screen readers (it names the pane); hidden so the buttons fit on one line. -->
+        <h2 id="editor-heading" class="visually-hidden" data-i18n="editorHeading">Markdown を編集</h2>
         <button id="replace-button" type="button" data-i18n="findReplace">検索・置換</button>
         <button id="toc-button" type="button" data-i18n="toc">目次</button>
         <button id="image-button" type="button" data-i18n="imageButton" aria-haspopup="dialog">画像の調整</button>
         <button id="help-button" type="button" data-i18n="help" aria-haspopup="dialog">書き方</button>
         <button id="shortcuts-button" type="button" data-i18n="shortcuts" aria-haspopup="dialog">キー操作</button>
-        <button class="pane-fullscreen-button" type="button" data-fullscreen-mode="editor" aria-pressed="false">編集画面をウィンドウ全体に表示</button>
+        <button class="pane-fullscreen-button" type="button" data-fullscreen-mode="editor" aria-pressed="false" aria-label="編集画面をウィンドウ全体に表示">ウィンドウ全体に表示</button>
         <button type="button" data-detach="editor" hidden>プレビューを本体に戻す</button>
       </div>
       <div id="find-bar" class="find-bar" role="search" hidden>
@@ -124,7 +132,7 @@
           <button id="reader-stop" type="button" data-i18n="readerStop" disabled>停止</button>
         </div>
         <button type="button" data-detach="preview">別ウィンドウで表示</button>
-        <button class="pane-fullscreen-button" type="button" data-fullscreen-mode="preview" aria-pressed="false">プレビューをウィンドウ全体に表示</button>
+        <button class="pane-fullscreen-button" type="button" data-fullscreen-mode="preview" aria-pressed="false" aria-label="プレビューをウィンドウ全体に表示">ウィンドウ全体に表示</button>
       </div>
       <!-- tabindex lets keyboard users focus and scroll a long preview (Identity 7-3 (2)). -->
       <article id="preview"
@@ -179,12 +187,20 @@
       <label class="settings-check"><input id="setting-full-width" type="checkbox"> <span data-i18n="settingsFullWidth">プレビューの本文の幅を制限しない（広い画面で1行を長くする）</span></label>
     </fieldset>
     <fieldset class="settings-group">
+      <legend data-i18n="settingsThemePaper">表示テーマと PDF の用紙</legend>
+      <div class="settings-row theme-paper-row">
+        <button id="theme-button" type="button">表示: 自動</button>
+        <button id="paper-button" type="button">用紙: 自動（A4）</button>
+      </div>
+      <p class="settings-note" data-i18n="settingsThemePaperNote"></p>
+    </fieldset>
+    <fieldset class="settings-group">
       <legend data-i18n="settingsZoom">画面全体の表示倍率</legend>
       <div class="settings-row zoom-row">
         <button id="zoom-out" type="button" data-i18n="zoomOut">縮小</button>
-        <output id="zoom-value" aria-live="polite">100%</output>
+        <output id="zoom-value" aria-live="polite">90%</output>
         <button id="zoom-in" type="button" data-i18n="zoomIn">拡大</button>
-        <button id="zoom-reset" type="button" data-i18n="zoomReset">100% に戻す</button>
+        <button id="zoom-reset" type="button" data-i18n="zoomReset">初期値（90%）に戻す</button>
       </div>
       <p class="settings-note" data-i18n="zoomNote"></p>
     </fieldset>
@@ -216,6 +232,7 @@
           <option value="auto" data-i18n="readerLangAuto">自動（段落ごとに判定）</option>
           <option value="ja" data-i18n="readerLangJa">日本語</option>
           <option value="en" data-i18n="readerLangEn">英語</option>
+          <option value="zh" data-i18n="readerLangZh">中国語（簡体字）</option>
         </select></label>
       <label class="settings-row"><span data-i18n="settingsReaderVoice">音声</span>
         <select id="setting-reader-voice"></select></label>
@@ -257,6 +274,14 @@
       <legend data-i18n="settingsExport">書き出し</legend>
       <label class="settings-check"><input id="setting-html-source" type="checkbox"> <span data-i18n="settingsHtmlSource">HTMLに保存するとき、元の Markdown も入れる（mdEditor で開くと元どおりに戻せる）</span></label>
       <p class="settings-note" data-i18n="settingsHtmlSourceNote"></p>
+    </fieldset>
+    <fieldset class="settings-group">
+      <legend data-i18n="settingsPasteKey">クリップボードから新規作成</legend>
+      <label class="settings-row"><span data-i18n="pasteKeyLabel">起動するキー</span>
+        <select id="setting-paste-key">
+          <option value="" data-i18n="pasteKeyNone">なし</option>
+        </select></label>
+      <p id="paste-key-note" class="settings-note" aria-live="polite"></p>
     </fieldset>
     <fieldset class="settings-group">
       <legend data-i18n="settingsBackup">自動バックアップ</legend>
@@ -377,7 +402,7 @@
     <p class="help-intro"><span data-i18n="aboutVersion">バージョン</span> <span id="app-version"></span></p>
     <ul class="about-links">
       <li><a href="https://www.5garashi.com/" data-i18n="aboutCompany">5garashi.com Design Office の紹介</a></li>
-      <li><a href="https://github.com/5garashi" data-i18n="aboutWorks">作品・ほかのアプリ</a></li>
+      <li hidden><a href="https://github.com/5garashi" data-i18n="aboutWorks">作品・ほかのアプリ</a></li>
       <li><a href="https://github.com/5garashi/mdEditor/issues" data-i18n="aboutSupport">サポート・お問い合わせ</a></li>
       <li><a href="https://github.com/5garashi/mdEditor/blob/main/PRIVACY.md" data-i18n="aboutPrivacy">プライバシーポリシー</a></li>
     </ul>
