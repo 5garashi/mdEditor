@@ -8,7 +8,7 @@
 -->
 # mdEditor プライバシーポリシー / Privacy Policy
 
-最終更新 / Last updated: 2026-10-23
+最終更新 / Last updated: 2026-10-24
 
 [日本語](#日本語) / [English](#english)
 
@@ -19,7 +19,7 @@ mdEditor（以下「本アプリ」）は、5garashi.com設計事務所が提供
 ### 文書の扱い
 
 - 開いた文書は、利用者の PC の上だけで読み込み、表示し、保存します。文書の内容を5garashi.com設計事務所や第三者に送ることはありません。
-- Word 文書（.docx）を開いたときは、中の画像を PC の一時フォルダー（`%TEMP%` の `mdEditor-import-…`）に取り出してプレビューに使い、保存するときに Markdown ファイルの横へ写します。
+- Word 文書（.docx）と PDF（.pdf）を開いたときは、中の画像を PC の一時フォルダー（`%TEMP%` の `mdEditor-import-…`）に取り出してプレビューに使い、保存するときに Markdown ファイルの横へ写します。
 - メール（.eml）を開いたときも、本文の中の画像を同じ一時フォルダーに取り出します。メールの中のインターネット上の画像は、下の「通信が発生する場合」のとおり、確認するまで読み込みません。
 - PDF・HTML・PNG・Word・テキスト・CSV の書き出しも PC の中で行います。書き出した HTML は、開いても外部に通信しません（文書の中のネット上の画像だけは、その画像のサーバーから読み込みます）。
 - 自動バックアップ（設定でオフにできます）は、保存していない変更を15秒ごとに `%LOCALAPPDATA%\mdEditor\Recovery` に控えます。控えは保存するか正常に終了すると消え、異常終了したときだけ次の起動で復元に使います。
@@ -61,7 +61,7 @@ mdEditor (the "app") is a Markdown editor for Windows provided by 5garashi.com D
 ### Your documents
 
 - Documents you open are read, displayed, and saved only on your PC. Their contents are never sent to 5garashi.com Design Office or to any third party.
-- When you open a Word document (.docx), its images are taken out into a temporary folder on your PC (`mdEditor-import-…` in `%TEMP%`) for the preview, and copied beside the Markdown file when you save it.
+- When you open a Word document (.docx) or a PDF (.pdf), its images are taken out into a temporary folder on your PC (`mdEditor-import-…` in `%TEMP%`) for the preview, and copied beside the Markdown file when you save it.
 - When you open an e-mail (.eml), pictures in its body go to the same temporary folder. Internet images in a mail do not load until you allow them, as described under "When network connections happen".
 - PDF, HTML, PNG, Word, text, and CSV export also happen entirely on your PC. A saved HTML file makes no connections when opened, except that web images in the document load from their servers.
 - Automatic backup (can be turned off in Settings) copies unsaved changes every 15 seconds to `%LOCALAPPDATA%\mdEditor\Recovery`. The copy is removed when you save or close normally, and is used only to restore your work after an abnormal exit.

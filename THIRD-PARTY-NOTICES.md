@@ -28,6 +28,7 @@ The 5garashi.com logotype and symbol mark in `wwwroot/assets/` are not covered b
 | YamlDotNet | 18.1.0 | MIT | Copyright (c) Antoine Aubry and contributors | https://github.com/aaubry/YamlDotNet |
 | Mammoth (.NET) | 1.13.0 | BSD-2-Clause | Copyright 2015 - 2016 Michael Williamson | https://github.com/mwilliamson/dotnet-mammoth |
 | DocumentFormat.OpenXml (Open XML SDK) | 3.5.1 | MIT | Copyright (c) Microsoft Corporation | https://github.com/dotnet/Open-XML-SDK |
+| PdfPig (opening PDFs; includes the Adobe Glyph List and Zapf Dingbats Glyph List) | 0.1.16 | Apache-2.0 (glyph lists: BSD-3-Clause) | Copyright (c) 2002-2007, www.pdfbox.org; Adobe Systems Incorporated (glyph lists) | https://github.com/UglyToad/PdfPig |
 | Microsoft.Web.WebView2 (SDK) | 1.0.4258.31 | BSD-3-Clause (Microsoft) | Copyright (C) Microsoft Corporation | https://www.nuget.org/packages/Microsoft.Web.WebView2 |
 | Mermaid | 11.17.2 | MIT | Copyright (c) 2014 - 2022 Knut Sveidqvist | https://github.com/mermaid-js/mermaid |
 | KaTeX (including fonts) | 0.18.9 | MIT | Copyright (c) 2013-2020 Khan Academy and other contributors | https://github.com/KaTeX/KaTeX |
@@ -348,7 +349,60 @@ TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
 THIS SOFTWARE.
 ```
 
-## Apache License 2.0 (DOMPurify, chevrotain)
+## PdfPig NOTICES
+
+The NOTICES.txt of PdfPig (https://github.com/UglyToad/PdfPig), reproduced as it is:
+
+```text
+This product is derived from software developed at
+The Apache Software Foundation (http://www.apache.org/).
+
+Based on source code originally developed in the PDFBox and
+FontBox projects.
+
+Copyright (c) 2002-2007, www.pdfbox.org
+
+Includes the Adobe Glyph List
+Copyright 1997, 1998, 2002, 2007, 2010 Adobe Systems Incorporated.
+
+Includes the Zapf Dingbats Glyph List
+Copyright 2002, 2010 Adobe Systems Incorporated.
+```
+
+## BSD 3-Clause License (Adobe Glyph List and Zapf Dingbats Glyph List, inside PdfPig)
+
+Copyright 1997, 1998, 2002, 2007, 2010 Adobe Systems Incorporated (Adobe Glyph List); Copyright 2002, 2010 Adobe Systems Incorporated (Zapf Dingbats Glyph List). License text from https://github.com/adobe-type-tools/agl-aglfn:
+
+```text
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+Redistributions of source code must retain the above copyright notice,
+this list of conditions and the following disclaimer.
+
+Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+Neither the name of Adobe nor the names of its contributors may be
+used to endorse or promote products derived from this software without
+specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+```
+
+## Apache License 2.0 (DOMPurify, chevrotain, PdfPig)
 
 ```text
 Apache License

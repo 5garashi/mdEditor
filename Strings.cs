@@ -59,8 +59,8 @@ internal static partial class Strings
         ["Word 文書を書き込めません。同じ名前の文書を Word で開いている場合は閉じるか、別の名前で保存してください"] =
             "The Word document cannot be written. If Word has a document with this name open, close it there, or save under another name",
         ["Word 文書を書き出せません。少し待ってから、もう一度お試しください"] = "The Word document cannot be exported. Wait a moment, then try again",
-        ["開けるファイル|*.md;*.markdown;*.txt;*.html;*.htm;*.docx;*.eml;*.csv;*.tsv;*.json;*.xml;*.ipynb;*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp;*.mp4;*.m4v;*.webm;*.ogv;*.mov|Markdown ファイル (*.md;*.markdown)|*.md;*.markdown|テキスト ファイル (*.txt)|*.txt|HTML ファイル (*.html;*.htm)|*.html;*.htm|Word 文書 (*.docx)|*.docx|メール (*.eml)|*.eml|CSV / TSV (*.csv;*.tsv)|*.csv;*.tsv|JSON / XML (*.json;*.xml)|*.json;*.xml|Jupyter Notebook (*.ipynb)|*.ipynb|画像 (*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp)|*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp|動画 (*.mp4;*.m4v;*.webm;*.ogv;*.mov)|*.mp4;*.m4v;*.webm;*.ogv;*.mov|すべてのファイル (*.*)|*.*"] =
-            "Files mdEditor can open|*.md;*.markdown;*.txt;*.html;*.htm;*.docx;*.eml;*.csv;*.tsv;*.json;*.xml;*.ipynb;*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp;*.mp4;*.m4v;*.webm;*.ogv;*.mov|Markdown files (*.md;*.markdown)|*.md;*.markdown|Text files (*.txt)|*.txt|HTML files (*.html;*.htm)|*.html;*.htm|Word documents (*.docx)|*.docx|E-mail (*.eml)|*.eml|CSV / TSV (*.csv;*.tsv)|*.csv;*.tsv|JSON / XML (*.json;*.xml)|*.json;*.xml|Jupyter Notebook (*.ipynb)|*.ipynb|Images (*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp)|*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp|Videos (*.mp4;*.m4v;*.webm;*.ogv;*.mov)|*.mp4;*.m4v;*.webm;*.ogv;*.mov|All files (*.*)|*.*",
+        ["開けるファイル|*.md;*.markdown;*.txt;*.html;*.htm;*.docx;*.eml;*.csv;*.tsv;*.json;*.xml;*.ipynb;*.pdf;*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp;*.mp4;*.m4v;*.webm;*.ogv;*.mov|Markdown ファイル (*.md;*.markdown)|*.md;*.markdown|テキスト ファイル (*.txt)|*.txt|HTML ファイル (*.html;*.htm)|*.html;*.htm|Word 文書 (*.docx)|*.docx|メール (*.eml)|*.eml|CSV / TSV (*.csv;*.tsv)|*.csv;*.tsv|JSON / XML (*.json;*.xml)|*.json;*.xml|Jupyter Notebook (*.ipynb)|*.ipynb|PDF (*.pdf)|*.pdf|画像 (*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp)|*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp|動画 (*.mp4;*.m4v;*.webm;*.ogv;*.mov)|*.mp4;*.m4v;*.webm;*.ogv;*.mov|すべてのファイル (*.*)|*.*"] =
+            "Files mdEditor can open|*.md;*.markdown;*.txt;*.html;*.htm;*.docx;*.eml;*.csv;*.tsv;*.json;*.xml;*.ipynb;*.pdf;*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp;*.mp4;*.m4v;*.webm;*.ogv;*.mov|Markdown files (*.md;*.markdown)|*.md;*.markdown|Text files (*.txt)|*.txt|HTML files (*.html;*.htm)|*.html;*.htm|Word documents (*.docx)|*.docx|E-mail (*.eml)|*.eml|CSV / TSV (*.csv;*.tsv)|*.csv;*.tsv|JSON / XML (*.json;*.xml)|*.json;*.xml|Jupyter Notebook (*.ipynb)|*.ipynb|PDF (*.pdf)|*.pdf|Images (*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp)|*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp|Videos (*.mp4;*.m4v;*.webm;*.ogv;*.mov)|*.mp4;*.m4v;*.webm;*.ogv;*.mov|All files (*.*)|*.*",
         ["Markdown ファイル (*.md)|*.md|テキスト ファイル (*.txt)|*.txt|すべてのファイル (*.*)|*.*"] =
             "Markdown files (*.md)|*.md|Text files (*.txt)|*.txt|All files (*.*)|*.*",
         ["Markdown ファイル (*.md)|*.md|テキスト（そのまま）(*.txt)|*.txt|テキスト（記号なし）(*.txt)|*.txt|PDF (*.pdf)|*.pdf|HTML (*.html)|*.html|PNG 画像 (*.png)|*.png|Word 文書 (*.docx)|*.docx|CSV（文書の中の表）(*.csv)|*.csv|TSV（文書の中の表）(*.tsv)|*.tsv|JSON（文書の中の表）(*.json)|*.json|Jupyter Notebook (*.ipynb)|*.ipynb|配布用 ZIP（文書と「名前_files」フォルダー）(*.zip)|*.zip"] =
@@ -84,8 +84,8 @@ internal static partial class Strings
             "The page could not be opened. Check the address and your internet connection, then try again.",
         ["Markdown・HTML ファイル (*.md;*.markdown;*.html;*.htm)|*.md;*.markdown;*.html;*.htm|Markdown ファイル (*.md;*.markdown)|*.md;*.markdown|HTML ファイル (*.html;*.htm)|*.html;*.htm|すべてのファイル (*.*)|*.*"] =
             "Markdown and HTML files (*.md;*.markdown;*.html;*.htm)|*.md;*.markdown;*.html;*.htm|Markdown files (*.md;*.markdown)|*.md;*.markdown|HTML files (*.html;*.htm)|*.html;*.htm|All files (*.*)|*.*",
-        ["開けるファイル（.md、.txt、.html、.docx、.eml、.csv、.tsv、.json、.xml、.ipynb、画像、動画）は、1つだけドロップしてください。編集画面にドロップすると、ファイルの中身・画像・動画・リンクを文書に入れます。フォルダーはドロップできません。"] =
-            "Drop only one file that mdEditor opens (.md, .txt, .html, .docx, .eml, .csv, .tsv, .json, .xml, .ipynb, an image, or a video). Files dropped on the editor go into the document instead, as their content, images and videos, or links. Folders cannot be dropped.",
+        ["開けるファイル（.md、.txt、.html、.docx、.pdf、.eml、.csv、.tsv、.json、.xml、.ipynb、画像、動画）は、1つだけドロップしてください。編集画面にドロップすると、ファイルの中身・画像・動画・リンクを文書に入れます。フォルダーはドロップできません。"] =
+            "Drop only one file that mdEditor opens (.md, .txt, .html, .docx, .pdf, .eml, .csv, .tsv, .json, .xml, .ipynb, an image, or a video). Files dropped on the editor go into the document instead, as their content, images and videos, or links. Folders cannot be dropped.",
         ["mdEditor では開けないファイルです。編集画面にドロップすると、リンクとして入ります。"] =
             "mdEditor cannot open this file. Drop it on the editor to insert it as a link.",
         ["「{0}」の中身を入れました。ファイルとして開くときは、編集画面の外にドロップしてください（Ctrl+Z で取り消せます）。"] =
@@ -202,6 +202,18 @@ internal static partial class Strings
             "Discard unsaved changes and reopen the file in the selected encoding?",
         ["この文書には、選んだ文字コードで読めなかった文字（�）が含まれています。上書きすると、元のファイルのその部分は失われます。上書き保存しますか？"] =
             "This document contains characters that could not be read in the selected encoding (�). Overwriting the file loses those parts of the original. Overwrite anyway?",
+        ["見出しのスタイルがないため、文字の大きさから {0} 個の段落を見出しにしました。"] =
+            "The document has no heading styles, so {0} paragraphs were made headings from their text size.",
+        ["PDF を Markdown に変換して開きました。文字・見出し（文字の大きさから推測）・箇条書き・画像を取り出し、表・数式・図・段組みの配置は元に戻りません。保存すると Markdown ファイルになります（PDF ファイルは変わりません）。"] =
+            "Converted the PDF to Markdown. Text, headings (guessed from text size), lists, and images come back; tables, math, drawings, and column layout do not. Saving makes a Markdown file (the PDF stays as it is).",
+        ["この PDF からは文字を取り出せませんでした。画像だけでできた PDF（スキャンしたものなど）の可能性があります。"] =
+            "No text could be taken from this PDF. It may be made of images only (a scan, for example).",
+        ["ページが多いため、最初の {0} ページだけを開きました（全部で {1} ページ）。"] =
+            "The PDF is long, so only the first {0} pages were opened ({1} pages in all).",
+        ["パスワードで保護された PDF は開けません。保護を外した PDF を開いてください"] =
+            "A password-protected PDF cannot be opened. Open a copy without the protection",
+        ["PDF を読み込めません。PDF を表示するアプリで開けるか確かめてから、もう一度開いてください"] =
+            "The PDF cannot be read. Check that it opens in a PDF viewer, then try again",
         ["mdEditor（クリップボードから新規作成）"] = "mdEditor (new from clipboard)",
         ["コピーしたテキストや画像を、mdEditor の新しい文書に入れます。"] = "Puts copied text or pictures in a new mdEditor document.",
         ["デスクトップのショートカット「{0}」を削除しますか？"] = "Delete the desktop shortcut \"{0}\"?",

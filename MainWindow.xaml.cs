@@ -804,7 +804,7 @@ public partial class MainWindow : Window
         }
 
         MessageBox.Show(
-            Strings.Tr("開けるファイル（.md、.txt、.html、.docx、.eml、.csv、.tsv、.json、.xml、.ipynb、画像、動画）は、1つだけドロップしてください。編集画面にドロップすると、ファイルの中身・画像・動画・リンクを文書に入れます。フォルダーはドロップできません。"),
+            Strings.Tr("開けるファイル（.md、.txt、.html、.docx、.pdf、.eml、.csv、.tsv、.json、.xml、.ipynb、画像、動画）は、1つだけドロップしてください。編集画面にドロップすると、ファイルの中身・画像・動画・リンクを文書に入れます。フォルダーはドロップできません。"),
             "mdEditor",
             MessageBoxButton.OK,
             MessageBoxImage.Information);
@@ -813,12 +813,19 @@ public partial class MainWindow : Window
     // Files that open as a document of their own (images and videos open too, see IsMediaPath).
     private static bool IsDocumentPath(string path) =>
         Path.GetExtension(path).ToLowerInvariant() is ".md" or ".markdown" or ".txt" or ".html" or ".htm" or ".docx"
-            or ".eml" or ".csv" or ".tsv" or ".json" or ".xml" or ".ipynb";
+            or ".eml" or ".csv" or ".tsv" or ".json" or ".xml" or ".ipynb" or ".pdf";
+
+    private static bool IsPdfPath(string path) =>
+        string.Equals(Path.GetExtension(path), ".pdf", StringComparison.OrdinalIgnoreCase);
+
+    // Dropped on the editor, a file's content goes in, except a PDF: it is usually sent
+    // along as it is, so it goes into name_files and in as a link, as before.
+    private static bool InsertsContent(string path) => IsDocumentPath(path) && !IsPdfPath(path);
 
     private const string OpenFilter =
-        "開けるファイル|*.md;*.markdown;*.txt;*.html;*.htm;*.docx;*.eml;*.csv;*.tsv;*.json;*.xml;*.ipynb;*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp;*.mp4;*.m4v;*.webm;*.ogv;*.mov"
+        "開けるファイル|*.md;*.markdown;*.txt;*.html;*.htm;*.docx;*.eml;*.csv;*.tsv;*.json;*.xml;*.ipynb;*.pdf;*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp;*.mp4;*.m4v;*.webm;*.ogv;*.mov"
         + "|Markdown ファイル (*.md;*.markdown)|*.md;*.markdown|テキスト ファイル (*.txt)|*.txt|HTML ファイル (*.html;*.htm)|*.html;*.htm"
-        + "|Word 文書 (*.docx)|*.docx|メール (*.eml)|*.eml|CSV / TSV (*.csv;*.tsv)|*.csv;*.tsv|JSON / XML (*.json;*.xml)|*.json;*.xml|Jupyter Notebook (*.ipynb)|*.ipynb"
+        + "|Word 文書 (*.docx)|*.docx|メール (*.eml)|*.eml|CSV / TSV (*.csv;*.tsv)|*.csv;*.tsv|JSON / XML (*.json;*.xml)|*.json;*.xml|Jupyter Notebook (*.ipynb)|*.ipynb|PDF (*.pdf)|*.pdf"
         + "|画像 (*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp)|*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp"
         + "|動画 (*.mp4;*.m4v;*.webm;*.ogv;*.mov)|*.mp4;*.m4v;*.webm;*.ogv;*.mov|すべてのファイル (*.*)|*.*";
 
@@ -867,6 +874,26 @@ public partial class MainWindow : Window
                                                or System.Xml.XmlException or NotSupportedException or KeyNotFoundException)
                 {
                     ShowFileError("Word の文書を読み込めません。Word で開けるか確かめて、.docx 形式で保存し直してから、もう一度開いてください", ex);
+                }
+
+                return;
+            }
+
+            if (IsPdfPath(fullPath))
+            {
+                try
+                {
+                    ImportPdf(fullPath);
+                }
+                catch (UglyToad.PdfPig.Exceptions.PdfDocumentEncryptedException ex)
+                {
+                    ShowFileError("パスワードで保護された PDF は開けません。保護を外した PDF を開いてください", ex);
+                }
+                catch (Exception ex) when (ex is UglyToad.PdfPig.Core.PdfDocumentFormatException or InvalidOperationException
+                                               or InvalidDataException or FormatException or NotSupportedException
+                                               or ArgumentException or IndexOutOfRangeException)
+                {
+                    ShowFileError("PDF を読み込めません。PDF を表示するアプリで開けるか確かめてから、もう一度開いてください", ex);
                 }
 
                 return;
@@ -1519,22 +1546,60 @@ public partial class MainWindow : Window
     private void ImportDocx(string path)
     {
         var name = Path.GetFileNameWithoutExtension(path);
-        var (markdown, assets, count) = ConvertDocx(path);
-        ApplyImported(markdown, assets, name + ".md", false, Strings.Tr(
-            "Word の文書を Markdown に変換して開きました。見出し・リスト・表・リンク・画像は戻り、色や配置は戻りません。保存すると Markdown ファイルになります（Word の文書は変わりません）。"));
+        var (markdown, assets, count) = ConvertDocx(path, out var guessed);
+        var notice = Strings.Tr("Word の文書を Markdown に変換して開きました。見出し・リスト・表・リンク・画像は戻り、色や配置は戻りません。保存すると Markdown ファイルになります（Word の文書は変わりません）。");
+        if (guessed > 0)
+        {
+            notice += Strings.SentenceJoin + string.Format(Strings.Tr("見出しのスタイルがないため、文字の大きさから {0} 個の段落を見出しにしました。"), guessed);
+        }
+
+        ApplyImported(markdown, assets, name + ".md", false, notice);
         _suggestFolder = Path.GetDirectoryName(path);
         _importAssets = count > 0 ? Path.Combine(assets, name + FilesSuffix) : null;
+    }
+
+    // A PDF opens as Markdown (see PdfImport): text in reading order, headings guessed
+    // from text size, lists, and pictures, which are handled like a Word document's.
+    // The PDF itself is never written.
+    private void ImportPdf(string path)
+    {
+        var name = Path.GetFileNameWithoutExtension(path);
+        var assets = NewImportFolder();
+        var result = PdfImport.ToMarkdown(path, assets, name + FilesSuffix);
+        var notices = new List<string>
+        {
+            Strings.Tr("PDF を Markdown に変換して開きました。文字・見出し（文字の大きさから推測）・箇条書き・画像を取り出し、表・数式・図・段組みの配置は元に戻りません。保存すると Markdown ファイルになります（PDF ファイルは変わりません）。")
+        };
+        if (!result.HasText)
+        {
+            notices.Add(Strings.Tr("この PDF からは文字を取り出せませんでした。画像だけでできた PDF（スキャンしたものなど）の可能性があります。"));
+        }
+
+        if (result.ReadPages < result.Pages)
+        {
+            notices.Add(string.Format(Strings.Tr("ページが多いため、最初の {0} ページだけを開きました（全部で {1} ページ）。"), result.ReadPages, result.Pages));
+        }
+
+        ApplyImported(result.Markdown, assets, name + ".md", false, string.Join(Strings.SentenceJoin, notices));
+        _suggestFolder = Path.GetDirectoryName(path);
+        _importAssets = result.Images > 0 ? Path.Combine(assets, name + FilesSuffix) : null;
     }
 
     private static string NewImportFolder() =>
         Path.Combine(Path.GetTempPath(), "mdEditor-import-" + Guid.NewGuid().ToString("N"));
 
     // Word to Markdown; its images are written to "name_files" in a new temporary folder.
-    private static (string Markdown, string Assets, int Images) ConvertDocx(string path)
+    // Headings made only by a larger text size become headings too (DocxHeadings).
+    private static (string Markdown, string Assets, int Images) ConvertDocx(string path) =>
+        ConvertDocx(path, out _);
+
+    private static (string Markdown, string Assets, int Images) ConvertDocx(string path, out int guessedHeadings)
     {
         var imagesName = Path.GetFileNameWithoutExtension(path) + FilesSuffix;
         var assets = NewImportFolder();
         var count = 0;
+        var (source, guessed) = DocxHeadings.Prepare(path, Path.Combine(assets, "word"));
+        guessedHeadings = guessed;
         var converter = new Mammoth.DocumentConverter().ImageConverter(image =>
         {
             var extension = image.ContentType switch
@@ -1560,7 +1625,16 @@ public partial class MainWindow : Window
                 ["alt"] = image.AltText ?? string.Empty
             };
         });
-        var html = converter.ConvertToHtml(path).Value;
+        string html;
+        try
+        {
+            html = converter.ConvertToHtml(source).Value;
+        }
+        finally
+        {
+            Directory.Delete(Path.Combine(assets, "word"), true);
+        }
+
         return (HtmlImport.ToMarkdown(html, null, _ => true).Markdown, assets, count);
     }
 
@@ -1648,7 +1722,7 @@ public partial class MainWindow : Window
     private async Task InsertFilesAsync(IReadOnlyList<string> files, byte[]? pasted, string pastedExtension = ".png")
     {
         var contents = new Dictionary<string, (string Markdown, string[] Folders)>();
-        foreach (var file in files.Where(IsDocumentPath))
+        foreach (var file in files.Where(InsertsContent))
         {
             try
             {
@@ -1664,7 +1738,7 @@ public partial class MainWindow : Window
             }
         }
 
-        var needsFolder = pasted is not null || files.Any(file => !IsDocumentPath(file))
+        var needsFolder = pasted is not null || files.Any(file => !InsertsContent(file))
             || contents.Values.Any(content => RebaseReferences(content.Markdown, content.Folders, null).Count > 0);
         if (_filePath is null && needsFolder)
         {

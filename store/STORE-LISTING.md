@@ -35,7 +35,7 @@ Write and see
 - Also a viewer: expand the preview to fill the window and read without the editor.
 
 Open and save
-- Open Word, HTML, web pages, e-mail (.eml), CSV, TSV, JSON, XML, Jupyter Notebooks, and images as Markdown. The original file is never changed.
+- Open Word, PDF, HTML, web pages, e-mail (.eml), CSV, TSV, JSON, XML, Jupyter Notebooks, and images as Markdown. The original file is never changed.
 - Save As writes PDF, HTML, PNG, Word, CSV, TSV, JSON, Jupyter Notebook, and plain text, and a ZIP for sharing that holds the document and its name_files folder.
 - Drop or paste pictures into the editor; they are saved beside your document.
 - New to Markdown? Open a built-in sample, or press F1 and insert examples with one click.
@@ -63,7 +63,7 @@ Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Des
 - GitHub-style Markdown: alerts, front matter shown as a list, math blocks, emoji short names, collapsible sections, and the HTML GitHub allows. Videos in a document play too.
 - Code is colored for about 40 languages, and the colors stay in PDF, PNG, HTML, and Word.
 - Contents builds a table of contents from your headings; press it again to update.
-- Open Word, HTML, web pages, e-mail, CSV, TSV, JSON, XML, Jupyter Notebooks, and images as Markdown.
+- Open Word, PDF, HTML, web pages, e-mail, CSV, TSV, JSON, XML, Jupyter Notebooks, and images as Markdown.
 - Save As lists every format, including a ZIP for sharing the document with its name_files folder.
 - Drop or paste pictures into the editor.
 - Adjust image sets a picture's size and position, written the way GitHub does.
@@ -85,7 +85,7 @@ Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Des
 - Table of contents from your headings, updated with one press
 - GitHub-style alerts, front matter, and collapsible sections
 - Videos play right in the preview
-- Opens Word, HTML, e-mail, CSV, JSON, Jupyter Notebooks, and images
+- Opens Word, PDF, HTML, e-mail, CSV, JSON, Jupyter Notebooks, and images
 - Saves as PDF, HTML, PNG, Word, CSV, JSON, Jupyter Notebook, text, or ZIP
 - Drop or paste pictures straight into your document
 - Safe saving and automatic crash recovery
@@ -151,7 +151,7 @@ PDF に保存する
 - ビューアーとしても使えます。プレビューをウィンドウいっぱいに広げれば、編集欄なしで読めます。
 
 開く・保存する
-- Word・HTML・Web ページ・メール（.eml）・CSV・TSV・JSON・XML・Jupyter Notebook・画像を、Markdown として開けます。元のファイルは書き換えません。
+- Word・PDF・HTML・Web ページ・メール（.eml）・CSV・TSV・JSON・XML・Jupyter Notebook・画像を、Markdown として開けます。元のファイルは書き換えません。
 - 「名前を付けて保存」で、PDF・HTML・PNG・Word・CSV・TSV・JSON・Jupyter Notebook・テキストにも保存できます。文書と「名前_files」フォルダーをまとめた配布用 ZIP も作れます。
 - 画像は、編集欄にドロップするか貼り付けるだけで、文書の横に保存して入れます。
 - Markdown が初めてでも、内蔵のサンプルや F1 の書き方一覧から、ワンクリックで例を入れられます。
@@ -179,7 +179,7 @@ PDF に保存する
 - GitHub と同じ書き方に対応しました（注意書き、項目の一覧として表示するフロントマター、数式のコードブロック、絵文字の短縮名、折りたたみ、GitHub が許している HTML）。文書の中の動画も再生できます。
 - 約 40 の言語のコードを色分けし、PDF・PNG・HTML・Word に保存しても色が残ります。
 - 「目次」ボタンで、見出しから目次を作れます。押し直すと新しくなります。
-- Word・HTML・Web ページ・メール・CSV・TSV・JSON・XML・Jupyter Notebook・画像を、Markdown として開けます。
+- Word・PDF・HTML・Web ページ・メール・CSV・TSV・JSON・XML・Jupyter Notebook・画像を、Markdown として開けます。
 - 「名前を付けて保存」で、すべての形式を選べます。文書と「名前_files」フォルダーを 1 つにまとめる配布用 ZIP も作れます。
 - 画像は、ドロップや貼り付けで文書に入ります。
 - 「画像の調整」で、画像の大きさと位置を、GitHub と同じ書き方で変えられます。
@@ -201,7 +201,7 @@ PDF に保存する
 - 見出しから目次を作り、ボタン 1 つで新しくする
 - GitHub と同じ注意書き・フロントマター・折りたたみ
 - 文書の中の動画をプレビューで再生
-- Word・HTML・メール・CSV・JSON・Jupyter Notebook・画像を開ける
+- Word・PDF・HTML・メール・CSV・JSON・Jupyter Notebook・画像を開ける
 - PDF・HTML・PNG・Word・CSV・JSON・Jupyter Notebook・テキスト・ZIP に保存
 - 画像はドロップや貼り付けで、そのまま文書に
 - 安全な保存と、異常終了からの自動復元
@@ -249,7 +249,7 @@ PDF に保存する
 - 也可以当作查看器：把预览扩展到填满窗口，不显示编辑区即可阅读。
 
 打开和保存
-- 可以把 Word、HTML、网页、电子邮件（.eml）、CSV、TSV、JSON、XML、Jupyter Notebook 和图像作为 Markdown 打开。原文件不会被改写。
+- 可以把 Word、PDF、HTML、网页、电子邮件（.eml）、CSV、TSV、JSON、XML、Jupyter Notebook 和图像作为 Markdown 打开。原文件不会被改写。
 - “另存为”可以保存为 PDF、HTML、PNG、Word、CSV、TSV、JSON、Jupyter Notebook 和纯文本，以及包含文档和“名称_files”文件夹的用于分发的 ZIP。
 - 把图片拖放或粘贴到编辑区，图片会保存在文档旁边。
 - 刚接触 Markdown？打开内置的示例，或按 F1 一键插入示例。
@@ -278,7 +278,7 @@ PDF に保存する
 - 支持与 GitHub 相同的写法（提示框、显示为项目列表的前置元数据、公式代码块、表情符号短名称、折叠、GitHub 允许的 HTML）。文档中的视频也可以播放。
 - 约 40 种语言的代码会着色显示，保存为 PDF、PNG、HTML 和 Word 后颜色仍然保留。
 - “目录”根据标题生成目录，再按一次即可更新。
-- 可以把 Word、HTML、网页、电子邮件、CSV、TSV、JSON、XML、Jupyter Notebook 和图像作为 Markdown 打开。
+- 可以把 Word、PDF、HTML、网页、电子邮件、CSV、TSV、JSON、XML、Jupyter Notebook 和图像作为 Markdown 打开。
 - “另存为”可以选择所有格式，也可以生成把文档和“名称_files”文件夹打包在一起的用于分发的 ZIP。
 - 图片可以通过拖放或粘贴放入文档。
 - “调整图像”可以按 GitHub 的写法更改图像的大小和位置。
@@ -300,7 +300,7 @@ PDF に保存する
 - 根据标题生成目录，一键更新
 - 与 GitHub 相同的提示框、前置元数据和折叠
 - 文档中的视频直接在预览中播放
-- 打开 Word、HTML、电子邮件、CSV、JSON、Jupyter Notebook 和图像
+- 打开 Word、PDF、HTML、电子邮件、CSV、JSON、Jupyter Notebook 和图像
 - 保存为 PDF、HTML、PNG、Word、CSV、JSON、Jupyter Notebook、文本或 ZIP
 - 图片拖放或粘贴即可放入文档
 - 复制后按一个键，即可作为新文档打开

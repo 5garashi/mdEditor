@@ -19,6 +19,8 @@ These files check every format mdEditor opens and every type in Save As. Open ea
 | [text-test.en.txt](text-test.en.txt) | Text | Opening and saving as is, line breaks, export without marks |
 | [html-test.en.html](html-test.en.html) | HTML | Conversion to Markdown, removed parts, images |
 | [word-test.en.docx](word-test.en.docx) | Word | Conversion to Markdown, images taken out |
+| [word-headings-test.en.docx](word-headings-test.en.docx) | Word (no heading styles) | Headings guessed from text size |
+| [pdf-test.en.pdf](pdf-test.en.pdf) | PDF | Conversion to Markdown, headings guessed, images taken out |
 | [mail-test.en.eml](mail-test.en.eml) | E-mail (HTML) | Subject and other fields, a picture in the mail, an attachment, an external image |
 | [mail-text-test.en.eml](mail-text-test.en.eml) | E-mail (text only) | Line breaks |
 | [table-test.en.csv](table-test.en.csv) | CSV (UTF-8) | Conversion to a table, cells with special characters |
@@ -152,6 +154,26 @@ Expected:
 - Code is in ```python blocks with outputs below: "run 0" to "run 2" (an output block), the name and qty table, the sample image, and ZeroDivisionError (plain text without color codes).
 - The raw cell's text is a code block without a language.
 - Saving with Save As as Jupyter Notebook gives a notebook with only Markdown cells and the four code cells; outputs are not included.
+
+### 2.14 word-headings-test.en.docx (Word without heading styles)
+
+Expected results:
+
+- The notice says the Word document was converted, followed by "The document has no heading styles, so 3 paragraphs were made headings from their text size."
+- "A Word document without heading styles" (20 pt bold) becomes a `#` heading, "A large bold heading" (14 pt bold) `##`, and "A large heading, not bold" (14 pt) `###`.
+- "Bold at the body size" is not a heading; it stays a bold paragraph (`**…**`).
+- word-test.en.docx, which uses heading styles, does not show this notice (the same result as 2.3).
+
+### 2.15 pdf-test.en.pdf
+
+Expected results:
+
+- The notice says the PDF was converted to Markdown, and the file name becomes pdf-test.en.md.
+- "Opening a PDF" becomes a `#` heading, "Headings and paragraphs", "Image", and "Table" `##`, and "A smaller heading" `###`.
+- The paragraph starting "A long paragraph" comes back as one paragraph, whatever the line breaks in the PDF, with no space before the periods.
+- The sample image shows in the preview and points to `pdf-test.en_files/image1.png` in the editor.
+- The table does not come back as a table; the text of its cells ("Item", "Cost", "Prototype", "120", …) is listed one per line.
+- Dropping pdf-test.en.pdf on the editor inserts a link to the PDF copied into the "name_files" folder, not its content.
 
 ## 3. Save As
 

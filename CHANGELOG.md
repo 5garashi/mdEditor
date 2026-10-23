@@ -12,6 +12,18 @@
 
 The version number lives in [VERSION](./VERSION). Add each new version at the top, with a `## version — date` heading (used as the GitHub Release notes).
 
+## 1.0.16 — 2026-10-24
+
+- PDF（.pdf）を開けるようにした（「開く」と、編集画面の外へのドロップ）。PdfPig（Apache 2.0、PC の中だけで動く）で文字を読む順に取り出し、折り返した行を 1 つの段落にまとめ、見出しを文字の大きさから推し量り、「・」や番号で始まる行を箇条書きにする。画像は Word 文書と同じく「名前_files」フォルダーに取り出す。表・数式・図・段組みの配置は戻らない（文字は残る）。ページの上下の端のページ番号は省く。ブラウザーで作った PDF に多い、漢字が部首の文字（「⽅」など）になる問題を直して取り出す。画像だけの PDF とパスワード付きの PDF はお知らせする。開くのは 500 ページまで。編集画面にドロップした PDF は、これまでどおり「名前_files」に写してリンクを入れる。
+- 見出しのスタイルを使わず、文字を大きくしただけで見出しを作った Word 文書は、文字の大きさから見出しを推し量るようにした（本文よりはっきり大きい文字、または一回り大きい太字を、大きさ・太さの順に見出し 1〜3 にする）。見出しのスタイルを使った文書は、これまでどおり。いくつ見出しにしたかはお知らせ欄に出す。
+- サンプルに pdf-test.pdf・pdf-test.en.pdf と word-headings-test.docx・word-headings-test.en.docx を足し、samples/import-test に確かめ方を書いた。
+- THIRD-PARTY-NOTICES.md に PdfPig と、その中の Adobe Glyph List のライセンスを足した。
+
+- PDFs (.pdf) open as Markdown (Open, or a drop outside the editor). PdfPig (Apache 2.0, runs only on your PC) reads the text in reading order; wrapped lines join into paragraphs, headings are guessed from text size, and lines starting with a bullet or number become list items. Pictures go in the "name_files" folder as with Word documents. Tables, math, drawings, and column layout do not come back (their text does). Page numbers at the top or bottom of a page are left out. Kanji that PDFs made by browsers often store as radicals (such as ⽅) are put back. PDFs made only of images and password-protected PDFs are reported. Up to 500 pages. A PDF dropped on the editor still goes into "name_files" as a link.
+- A Word document whose headings are made only with larger text (no heading styles) gets its headings from text size: clearly larger text, or bold text one step larger, becomes heading 1 to 3 by size and then boldness. Documents with heading styles open as before. The notice bar says how many paragraphs became headings.
+- New samples: pdf-test.pdf, pdf-test.en.pdf, word-headings-test.docx, and word-headings-test.en.docx, with steps in samples/import-test.
+- THIRD-PARTY-NOTICES.md lists PdfPig and the license of the Adobe Glyph List inside it.
+
 ## 1.0.15 — 2026-10-23
 
 - 簡体字中国語の表示を足した。ツールバーの言語の切り替えを「Language」の一覧（日本語・English・简体中文）にし、Ctrl+Shift+L では 3 つの言語を順に切り替える。初回は Windows の表示言語に合わせる（中国語なら簡体字中国語）。`--lang zh`（`zh-CN` も可）で起動時に指定できる。

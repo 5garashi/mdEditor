@@ -19,6 +19,8 @@
 | [text-test.en.txt](text-test.en.txt) | 文本 | 按原样打开和保存、换行、去掉标记的导出 |
 | [html-test.en.html](html-test.en.html) | HTML | 转换为 Markdown、被移除的部分、图像 |
 | [word-test.en.docx](word-test.en.docx) | Word | 转换为 Markdown、取出图像 |
+| [word-headings-test.en.docx](word-headings-test.en.docx) | Word（没有标题样式） | 根据文字大小推测标题 |
+| [pdf-test.en.pdf](pdf-test.en.pdf) | PDF | 转换为 Markdown、推测标题、取出图像 |
 | [mail-test.en.eml](mail-test.en.eml) | 电子邮件（HTML） | 主题等项目、邮件中的图片、附件、外部图像 |
 | [mail-text-test.en.eml](mail-text-test.en.eml) | 电子邮件（仅文本） | 换行 |
 | [table-test.en.csv](table-test.en.csv) | CSV（UTF-8） | 转换为表格、含有特殊字符的单元格 |
@@ -152,6 +154,26 @@
 - 代码在 ```python 代码块中，下面是运行结果：“run 0”到“run 2”（output 代码块）、name 和 qty 的表格、示例图像，以及 ZeroDivisionError（不带颜色代码的纯文本）。
 - raw 单元格的文字成为没有语言名的代码块。
 - 用“另存为”保存为 Jupyter Notebook 时，得到只有 Markdown 单元格和四个代码单元格的笔记本；不包含运行结果。
+
+### 2.14 word-headings-test.en.docx（没有标题样式的 Word）
+
+期待的结果：
+
+- 通知栏在“已将 Word 文档转换为 Markdown 打开”之后，显示“由于文档没有标题样式，已根据文字大小把 3 个段落设为标题。”。
+- “A Word document without heading styles”（20 磅粗体）成为 `#` 标题，“A large bold heading”（14 磅粗体）成为 `##`，“A large heading, not bold”（14 磅）成为 `###`。
+- “Bold at the body size”不会成为标题，保持为粗体段落（`**…**`）。
+- 使用了标题样式的 word-test.en.docx 不会显示这条通知（与 2.3 的结果相同）。
+
+### 2.15 pdf-test.en.pdf
+
+期待的结果：
+
+- 通知栏显示“已将 PDF 转换为 Markdown 打开”，文件名变为 pdf-test.en.md。
+- “Opening a PDF”成为 `#` 标题，“Headings and paragraphs”“Image”“Table”成为 `##`，“A smaller heading”成为 `###`。
+- 以“A long paragraph”开头的段落，无论在 PDF 中怎样折行，都会合成一个段落，句号前没有空格。
+- 示例图像显示在预览中，编辑区中指向 `pdf-test.en_files/image1.png`。
+- 表格不会恢复为表格，单元格的文字（“Item”“Cost”“Prototype”“120”…）每行一个。
+- 把 pdf-test.en.pdf 拖放到编辑区时，插入的是复制到“名称_files”文件夹中的 PDF 的链接，而不是其内容。
 
 ## 3. 另存为
 

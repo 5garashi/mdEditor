@@ -52,8 +52,8 @@ internal static partial class Strings
         ["Word 文書を保存しました。"] = "已保存 Word 文档。",
         ["Word 文書を書き込めません。同じ名前の文書を Word で開いている場合は閉じるか、別の名前で保存してください"] = "无法写入 Word 文档。如果 Word 正在打开同名的文档，请先关闭，或换一个名称保存",
         ["Word 文書を書き出せません。少し待ってから、もう一度お試しください"] = "无法导出 Word 文档。请稍候再试",
-        ["開けるファイル|*.md;*.markdown;*.txt;*.html;*.htm;*.docx;*.eml;*.csv;*.tsv;*.json;*.xml;*.ipynb;*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp;*.mp4;*.m4v;*.webm;*.ogv;*.mov|Markdown ファイル (*.md;*.markdown)|*.md;*.markdown|テキスト ファイル (*.txt)|*.txt|HTML ファイル (*.html;*.htm)|*.html;*.htm|Word 文書 (*.docx)|*.docx|メール (*.eml)|*.eml|CSV / TSV (*.csv;*.tsv)|*.csv;*.tsv|JSON / XML (*.json;*.xml)|*.json;*.xml|Jupyter Notebook (*.ipynb)|*.ipynb|画像 (*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp)|*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp|動画 (*.mp4;*.m4v;*.webm;*.ogv;*.mov)|*.mp4;*.m4v;*.webm;*.ogv;*.mov|すべてのファイル (*.*)|*.*"] =
-            "mdEditor 可以打开的文件|*.md;*.markdown;*.txt;*.html;*.htm;*.docx;*.eml;*.csv;*.tsv;*.json;*.xml;*.ipynb;*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp;*.mp4;*.m4v;*.webm;*.ogv;*.mov|Markdown 文件 (*.md;*.markdown)|*.md;*.markdown|文本文件 (*.txt)|*.txt|HTML 文件 (*.html;*.htm)|*.html;*.htm|Word 文档 (*.docx)|*.docx|电子邮件 (*.eml)|*.eml|CSV / TSV (*.csv;*.tsv)|*.csv;*.tsv|JSON / XML (*.json;*.xml)|*.json;*.xml|Jupyter Notebook (*.ipynb)|*.ipynb|图像 (*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp)|*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp|视频 (*.mp4;*.m4v;*.webm;*.ogv;*.mov)|*.mp4;*.m4v;*.webm;*.ogv;*.mov|所有文件 (*.*)|*.*",
+        ["開けるファイル|*.md;*.markdown;*.txt;*.html;*.htm;*.docx;*.eml;*.csv;*.tsv;*.json;*.xml;*.ipynb;*.pdf;*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp;*.mp4;*.m4v;*.webm;*.ogv;*.mov|Markdown ファイル (*.md;*.markdown)|*.md;*.markdown|テキスト ファイル (*.txt)|*.txt|HTML ファイル (*.html;*.htm)|*.html;*.htm|Word 文書 (*.docx)|*.docx|メール (*.eml)|*.eml|CSV / TSV (*.csv;*.tsv)|*.csv;*.tsv|JSON / XML (*.json;*.xml)|*.json;*.xml|Jupyter Notebook (*.ipynb)|*.ipynb|PDF (*.pdf)|*.pdf|画像 (*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp)|*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp|動画 (*.mp4;*.m4v;*.webm;*.ogv;*.mov)|*.mp4;*.m4v;*.webm;*.ogv;*.mov|すべてのファイル (*.*)|*.*"] =
+            "mdEditor 可以打开的文件|*.md;*.markdown;*.txt;*.html;*.htm;*.docx;*.eml;*.csv;*.tsv;*.json;*.xml;*.ipynb;*.pdf;*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp;*.mp4;*.m4v;*.webm;*.ogv;*.mov|Markdown 文件 (*.md;*.markdown)|*.md;*.markdown|文本文件 (*.txt)|*.txt|HTML 文件 (*.html;*.htm)|*.html;*.htm|Word 文档 (*.docx)|*.docx|电子邮件 (*.eml)|*.eml|CSV / TSV (*.csv;*.tsv)|*.csv;*.tsv|JSON / XML (*.json;*.xml)|*.json;*.xml|Jupyter Notebook (*.ipynb)|*.ipynb|PDF (*.pdf)|*.pdf|图像 (*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp)|*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp|视频 (*.mp4;*.m4v;*.webm;*.ogv;*.mov)|*.mp4;*.m4v;*.webm;*.ogv;*.mov|所有文件 (*.*)|*.*",
         ["Markdown ファイル (*.md)|*.md|テキスト ファイル (*.txt)|*.txt|すべてのファイル (*.*)|*.*"] = "Markdown 文件 (*.md)|*.md|文本文件 (*.txt)|*.txt|所有文件 (*.*)|*.*",
         ["Markdown ファイル (*.md)|*.md|テキスト（そのまま）(*.txt)|*.txt|テキスト（記号なし）(*.txt)|*.txt|PDF (*.pdf)|*.pdf|HTML (*.html)|*.html|PNG 画像 (*.png)|*.png|Word 文書 (*.docx)|*.docx|CSV（文書の中の表）(*.csv)|*.csv|TSV（文書の中の表）(*.tsv)|*.tsv|JSON（文書の中の表）(*.json)|*.json|Jupyter Notebook (*.ipynb)|*.ipynb|配布用 ZIP（文書と「名前_files」フォルダー）(*.zip)|*.zip"] =
             "Markdown 文件 (*.md)|*.md|文本（原样）(*.txt)|*.txt|文本（去掉标记）(*.txt)|*.txt|PDF (*.pdf)|*.pdf|HTML (*.html)|*.html|PNG 图像 (*.png)|*.png|Word 文档 (*.docx)|*.docx|CSV（文档中的表格）(*.csv)|*.csv|TSV（文档中的表格）(*.tsv)|*.tsv|JSON（文档中的表格）(*.json)|*.json|Jupyter Notebook (*.ipynb)|*.ipynb|用于分发的 ZIP（文档和“名称_files”文件夹）(*.zip)|*.zip",
@@ -68,7 +68,7 @@ internal static partial class Strings
         ["ページを開けませんでした。アドレスとインターネットの接続を確かめて、もう一度お試しください。"] = "无法打开页面。请检查地址和网络连接后再试。",
         ["Markdown・HTML ファイル (*.md;*.markdown;*.html;*.htm)|*.md;*.markdown;*.html;*.htm|Markdown ファイル (*.md;*.markdown)|*.md;*.markdown|HTML ファイル (*.html;*.htm)|*.html;*.htm|すべてのファイル (*.*)|*.*"] =
             "Markdown 和 HTML 文件 (*.md;*.markdown;*.html;*.htm)|*.md;*.markdown;*.html;*.htm|Markdown 文件 (*.md;*.markdown)|*.md;*.markdown|HTML 文件 (*.html;*.htm)|*.html;*.htm|所有文件 (*.*)|*.*",
-        ["開けるファイル（.md、.txt、.html、.docx、.eml、.csv、.tsv、.json、.xml、.ipynb、画像、動画）は、1つだけドロップしてください。編集画面にドロップすると、ファイルの中身・画像・動画・リンクを文書に入れます。フォルダーはドロップできません。"] = "请只拖放一个 mdEditor 可以打开的文件（.md、.txt、.html、.docx、.eml、.csv、.tsv、.json、.xml、.ipynb、图像或视频）。拖放到编辑区时，会把文件的内容、图像、视频或链接插入文档。不能拖放文件夹。",
+        ["開けるファイル（.md、.txt、.html、.docx、.pdf、.eml、.csv、.tsv、.json、.xml、.ipynb、画像、動画）は、1つだけドロップしてください。編集画面にドロップすると、ファイルの中身・画像・動画・リンクを文書に入れます。フォルダーはドロップできません。"] = "请只拖放一个 mdEditor 可以打开的文件（.md、.txt、.html、.docx、.pdf、.eml、.csv、.tsv、.json、.xml、.ipynb、图像或视频）。拖放到编辑区时，会把文件的内容、图像、视频或链接插入文档。不能拖放文件夹。",
         ["mdEditor では開けないファイルです。編集画面にドロップすると、リンクとして入ります。"] = "mdEditor 无法打开此文件。拖放到编辑区时，会作为链接插入。",
         ["「{0}」の中身を入れました。ファイルとして開くときは、編集画面の外にドロップしてください（Ctrl+Z で取り消せます）。"] = "已插入“{0}”的内容。要作为文件打开时，请拖放到编辑区以外（可用 Ctrl+Z 撤销）。",
         ["前の文書のファイルが見つかりません。移動・名前の変更・削除がされていないか確かめてください。\n\n{0}"] = "找不到上一个文档的文件。请确认它没有被移动、重命名或删除。\n\n{0}",
@@ -135,6 +135,14 @@ internal static partial class Strings
             "上次 mdEditor 异常关闭时，有文档尚未保存。\n\n文档：{0}\n最后的备份：{1}\n\n是否恢复？\n选择“否”将删除备份。选择“取消”时，下次启动会再次询问。",
         ["未保存の変更を破棄して、選んだ文字コードで開き直しますか？"] = "是否放弃未保存的更改，并用所选的编码重新打开？",
         ["この文書には、選んだ文字コードで読めなかった文字（�）が含まれています。上書きすると、元のファイルのその部分は失われます。上書き保存しますか？"] = "此文档包含无法用所选编码读取的字符（�）。覆盖保存后，原文件中的这些部分将丢失。仍要覆盖保存吗？",
+        ["見出しのスタイルがないため、文字の大きさから {0} 個の段落を見出しにしました。"] = "由于文档没有标题样式，已根据文字大小把 {0} 个段落设为标题。",
+        ["PDF を Markdown に変換して開きました。文字・見出し（文字の大きさから推測）・箇条書き・画像を取り出し、表・数式・図・段組みの配置は元に戻りません。保存すると Markdown ファイルになります（PDF ファイルは変わりません）。"] =
+            "已将 PDF 转换为 Markdown 打开。文字、标题（根据文字大小推测）、项目符号列表和图像会取出，表格、公式、图表和分栏排版不会恢复。保存后将成为 Markdown 文件（PDF 文件不会改变）。",
+        ["この PDF からは文字を取り出せませんでした。画像だけでできた PDF（スキャンしたものなど）の可能性があります。"] =
+            "无法从此 PDF 中取出文字。它可能只由图像组成（例如扫描件）。",
+        ["ページが多いため、最初の {0} ページだけを開きました（全部で {1} ページ）。"] = "由于页数较多，只打开了前 {0} 页（共 {1} 页）。",
+        ["パスワードで保護された PDF は開けません。保護を外した PDF を開いてください"] = "无法打开受密码保护的 PDF。请打开已解除保护的 PDF",
+        ["PDF を読み込めません。PDF を表示するアプリで開けるか確かめてから、もう一度開いてください"] = "无法读取 PDF。请确认它能在 PDF 阅读器中打开，然后再试",
         ["mdEditor（クリップボードから新規作成）"] = "mdEditor（从剪贴板新建）",
         ["コピーしたテキストや画像を、mdEditor の新しい文書に入れます。"] = "把复制的文本或图像放入 mdEditor 的新文档。",
         ["デスクトップのショートカット「{0}」を削除しますか？"] = "是否删除桌面快捷方式“{0}”？",

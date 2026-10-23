@@ -21,7 +21,7 @@ A Windows app that opens Markdown files and lets you edit the text side by side 
 
 English | [日本語](./README.ja.md) | [简体中文](./README.zh-CN.md)
 
-Version: 1.0.15 (Changes: [CHANGELOG.md](./CHANGELOG.md))
+Version: 1.0.16 (Changes: [CHANGELOG.md](./CHANGELOG.md))
 
 ## Highlights
 
@@ -33,7 +33,7 @@ An editor that shows the formatted result right beside the Markdown you are writ
 - **Write on one display, read on another**: open the preview in its own window and maximize it, or make it full screen, on a second display. The editor and the preview still scroll together, matched line by line. On a wide screen the text keeps a readable width while tables and diagrams spread out. The window's place is remembered for next time.
 - **Diagrams, charts, math, and tables as they look**: Mermaid diagrams such as flowcharts, sequence diagrams, Gantt charts, and pie charts, KaTeX math, tables, task lists, and images in the document appear in the preview.
 - **Export to PDF and HTML**: save the preview as a PDF exactly as it looks, diagrams and math included, on A4 or Letter paper (chosen automatically by region at first). Or save it as one self-contained HTML file to email or put on the web.
-- **Open and save many formats**: Word, HTML, web pages, e-mail, CSV, JSON, Jupyter Notebooks, and images open as Markdown, and Save As also writes PNG, Word, CSV, JSON, Jupyter Notebook, a ZIP for sharing, and more.
+- **Open and save many formats**: Word, PDF, HTML, web pages, e-mail, CSV, JSON, Jupyter Notebooks, and images open as Markdown, and Save As also writes PNG, Word, CSV, JSON, Jupyter Notebook, a ZIP for sharing, and more.
 - **Syntax help at hand**: F1 lists the Markdown syntax and inserts examples into the editor.
 - **No trouble with text encodings**: besides UTF-8, older files in Shift_JIS, EUC-JP, and more are detected and opened, with a notice when the encoding was guessed or some characters could not be read. You can also choose the encoding to save in.
 - **Your work is protected**: saving never leaves the original file broken, even if writing fails midway. Unsaved changes are backed up automatically and can be restored at the next launch after a crash.
@@ -113,7 +113,8 @@ On pull requests, GitHub Actions checks that the three match (it reads the line 
 
 - **Samples**: puts a short sample ("Diagrams and math" or "Basic writing") or the "Diagram and chart test" of every supported diagram, chart, and formula (Japanese, English, or Simplified Chinese; the three files in [samples/](./samples/)) as a new document, only when you choose it (if the open document has changes, you are asked to save them first; the open file is never written).
 - **About**: shows links to the company, support, and the privacy policy. Links open in your browser only when you choose them.
-- **Open**: choose a Markdown file. Text (.txt), Word (.docx), and HTML (.html, .htm) files open too. Text opens and saves back as it is. A Word document opens as Markdown: headings, lists, tables, links, and images come back (colors and layout do not); its images are placed beside the Markdown file in a "name_files" folder on the first save, and the Word document is never written. HTML files (.html, .htm) open too: they are converted to Markdown, and headings, paragraphs, lists, tables, links, images, and math come back (colors, layout, and drawn diagrams do not). Saving makes a Markdown file and never writes the HTML file.
+- **Open**: choose a Markdown file. Text (.txt), Word (.docx), and HTML (.html, .htm) files open too. Text opens and saves back as it is. A Word document opens as Markdown: headings, lists, tables, links, and images come back (colors and layout do not); its images are placed beside the Markdown file in a "name_files" folder on the first save, and the Word document is never written. A Word document without heading styles (headings made only with larger text) gets its headings from text size: clearly larger text, or bold text one step larger, becomes heading 1 to 3, and the notice bar says how many. HTML files (.html, .htm) open too: they are converted to Markdown, and headings, paragraphs, lists, tables, links, images, and math come back (colors, layout, and drawn diagrams do not). Saving makes a Markdown file and never writes the HTML file.
+  - **PDF (.pdf)**: opens as Markdown. The text comes back in reading order, wrapped lines join into paragraphs, headings are guessed from text size, lines starting with a bullet or number become list items, and pictures are handled like a Word document's. Tables, math, drawings, and column layout do not come back (the text of table cells and formulas remains). Page numbers at the top or bottom of a page are left out. A PDF made only of images (a scan) has no text to take, and a password-protected PDF does not open. Up to 500 pages. The PDF itself is never written.
   - **E-mail (.eml)**: opens as Markdown with the subject as the heading, then the sender, recipients, date, attachment names, and the body. Pictures in the body are handled like a Word document's. Internet images in the mail (sometimes used to track opening) do not load until you allow them. Attachments are not extracted.
   - **CSV, TSV (.csv, .tsv)**: opens as a Markdown table with the first row as the header. Shift_JIS CSV files saved by Excel open too.
   - **JSON (.json)**: a list (an array of objects) opens as a table with the field names as the header row. Other JSON opens in a code block, so you can add notes before and after it.
@@ -127,7 +128,8 @@ On pull requests, GitHub Actions checks that the three match (it reads the line 
   | :--- | :--- | :--- |
   | Images and videos | Copied to a "name_files" folder beside the document, with `![](name_files/image.png)` inserted | Opens as an image or video document |
   | Files Open accepts (.md, .txt, .html, .docx, .eml, .csv, .json, .ipynb, and so on) | Their content goes in, converted to Markdown as Open does | Opens (unsaved changes are asked about first) |
-  | Files mdEditor cannot open (.pdf, .pptx, .zip, and so on) | Copied to the "name_files" folder, with a link such as `[report.pdf](name_files/report.pdf)` inserted | Not opened; a message says that dropping it on the editor inserts a link |
+  | PDF (.pdf) | Copied to the "name_files" folder, with a link such as `[report.pdf](name_files/report.pdf)` inserted (not converted, as a PDF is usually sent along as it is) | Opens as Markdown, as Open does |
+  | Files mdEditor cannot open (.pptx, .zip, and so on) | Copied to the "name_files" folder, with a link such as `[slides.pptx](name_files/slides.pptx)` inserted | Not opened; a message says that dropping it on the editor inserts a link |
 
   - When content goes in, the notice bar says so. If you meant to open the file, press Ctrl+Z and drop it outside the editor instead.
   - Images and videos the content shows, and files it links to, are copied to the "name_files" folder too. Front matter at the top of Markdown (the part between `---` lines) is left out.
@@ -704,4 +706,4 @@ The app does not collect or transmit your documents or personal information. Aut
 ---
 
 **Author**: 5garashi.com Design Office
-**Last updated**: 2026-10-23 JST
+**Last updated**: 2026-10-24 JST
