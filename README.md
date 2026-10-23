@@ -53,9 +53,9 @@ An editor that shows the formatted result right beside the Markdown you are writ
 
 ![Write Markdown on the left and the preview on the right updates as you type, with diagrams, tables, and math.](docs/images/1-main.en.png)
 
-**Dark mode** — Follows the Windows setting, or choose day or night with the Theme button. Printing and PDF always use a white page.
+**Dark mode** — Follows the Windows setting, or choose day or night with the Theme button in Settings (or Ctrl+Shift+T). Printing and PDF always use a white page.
 
-![Follows the Windows setting, or choose day or night with the Theme button. Printing and PDF always use a white page.](docs/images/2-dark.en.png)
+![Follows the Windows setting, or choose day or night with the Theme button in Settings (or Ctrl+Shift+T). Printing and PDF always use a white page.](docs/images/2-dark.en.png)
 
 **The preview in its own window** — Put the preview on a second display to keep writing and reading apart. It scrolls along with your editing.
 
@@ -163,7 +163,7 @@ On pull requests, GitHub Actions checks that the three match (it reads the line 
 - **PNG / Ctrl+Shift+G**: the preview as pictures (PNG) in the day palette; a long document is split into name-1.png, name-2.png, and so on.
 - **Word / Ctrl+Shift+D**: export a Word document (.docx). Headings, paragraphs, lists, quotes, code, tables, links, and images use Word's own styles, so Word's navigation pane and table of contents work. Diagrams and math go in as pictures from the preview (not editable in Word).
 - **HTML / Ctrl+Shift+M**: export the rendered preview as one self-contained HTML file. Diagrams are SVG, math is MathML, and images beside the document are embedded. In a browser it switches to the night palette in dark mode. Opening it makes no connections, except that web images in the document load from their servers.
-- **Paper**: cycle the PDF paper through Auto, A4, and Letter. Auto follows the Windows region (Letter where US customary units are used, A4 elsewhere). The choice is remembered.
+- **Paper** (in Settings, or Ctrl+Shift+A): cycle the PDF paper through Auto, A4, and Letter. Auto follows the Windows region (Letter where US customary units are used, A4 elsewhere). The choice is remembered.
 - **Encoding**: the document's encoding is shown next to the file name. Press it to choose an encoding and either reopen the file in it or use it from the next save.
 - **Ctrl+Shift+P**: save as PDF.
 - **Contents / Ctrl+Shift+J**: build a table of contents (links to the headings) and insert it at the cursor. It goes between `<!-- toc -->` and `<!-- /toc -->` (not shown in the preview); after changing headings, press it again to update that table in place. The document title (a single `#` heading at the top) is left out, and three levels are kept. The links go to the headings in the preview, PDF, HTML, and Word.
@@ -685,7 +685,7 @@ Also confirmed: read-aloud can use voices on the PC (such as Microsoft Ayumi), t
 
 ## Design and official assets
 
-The screen design follows the 5garashi.com Design Office Identity v4.20.0 (2026-10-17). The "Theme" button in the toolbar cycles the theme through Auto (follows the Windows app mode), Light, and Dark, and the choice is remembered for the next launch. In Dark, the app uses the night palette (dark mode) of Art. 4-2, and the logotype switches to the gray reversal of Art. 3-7 (the symbol mark at the top right stays red in Dark too, as Art. 3-7 (5) allows). The editor, preview, diagrams, and window title bar follow as well. Printing and PDFs always use the day palette. The official logotype (Japanese and English versions, each with its dark-mode reversal, chosen by the display language; the Simplified Chinese interface uses the English version) and simple symbol mark are bundled unmodified from the SVG assets of [5garashi/5garashi-identity](https://github.com/5garashi/5garashi-identity). The simple mark is used for the window, the executable, and the Markdown file association icons. The author, copyright, and CC BY-ND 4.0 license stated in each SVG file are preserved. The image size and position examples in samples/diagram-test (section 22) use the same official assets, unmodified (the symbol mark, the logotypes and their reversals, and the banner og_image.png; CC BY-ND 4.0), in samples/import-test_files.
+The screen design follows the 5garashi.com Design Office Identity v4.20.0 (2026-10-17). The Theme button in Settings (or Ctrl+Shift+T) cycles the theme through Auto (follows the Windows app mode), Light, and Dark, and the choice is remembered for the next launch. In Dark, the app uses the night palette (dark mode) of Art. 4-2, and the logotype switches to the gray reversal of Art. 3-7 (the symbol mark at the top right stays red in Dark too, as Art. 3-7 (5) allows). The editor, preview, diagrams, and window title bar follow as well. Printing and PDFs always use the day palette. The official logotype (Japanese and English versions, each with its dark-mode reversal, chosen by the display language; the Simplified Chinese interface uses the English version) and simple symbol mark are bundled unmodified from the SVG assets of [5garashi/5garashi-identity](https://github.com/5garashi/5garashi-identity). The simple mark is used for the window, the executable, and the Markdown file association icons. The author, copyright, and CC BY-ND 4.0 license stated in each SVG file are preserved. The image size and position examples in samples/diagram-test (section 22) use the same official assets, unmodified (the symbol mark, the logotypes and their reversals, and the banner og_image.png; CC BY-ND 4.0), in samples/import-test_files.
 
 ## License
 

@@ -100,7 +100,7 @@ Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Des
 
 **Screenshots (1366 x 768, the Store minimum; English UI) with captions:**
 1. `docs/images/1-main.en.png` — Type Markdown on the left and the preview on the right updates at once, with diagrams, tables, and math.
-2. `docs/images/2-dark.en.png` — Day and night palettes follow Windows, or choose one with the Theme button. Printing and PDF always use a white page.
+2. `docs/images/2-dark.en.png` — Day and night palettes follow Windows, or choose one with the Theme button in Settings. Printing and PDF always use a white page.
 3. `docs/images/3-preview-window.en.png` — Put the preview on a second display to keep writing and reading apart. It scrolls with your editing.
 4. `docs/images/4-syntax.en.png` — Press F1 for the Markdown quick reference. Insert puts the example at the cursor.
 5. `docs/images/5-save-as.en.png` — Save As writes PDF, HTML, PNG, Word, CSV, TSV, JSON, Jupyter Notebook, text, and a ZIP for sharing.
@@ -208,7 +208,7 @@ The app's own logos (Start, taskbar, File Explorer) are in `store/assets/` and a
 
 **スクリーンショット（1366 x 768。Store の最小の大きさ。日本語の画面）と説明文:**
 1. `docs/images/1-main.ja.png` — 左に Markdown を書くと、右のプレビューにすぐ反映されます。図・表・数式も、そのまま表示します。
-2. `docs/images/2-dark.ja.png` — 昼と夜の配色は Windows の設定に合わせて切り替わり、「表示」ボタンでも選べます。印刷と PDF は常に白地です。
+2. `docs/images/2-dark.ja.png` — 昼と夜の配色は Windows の設定に合わせて切り替わり、「設定」の「表示」ボタンでも選べます。印刷と PDF は常に白地です。
 3. `docs/images/3-preview-window.ja.png` — プレビューを別のウィンドウにして 2 台目のディスプレイへ。書く画面と見る画面を分けられ、スクロールは編集と連動します。
 4. `docs/images/4-syntax.ja.png` — F1 で Markdown の書き方の一覧を表示します。「挿入」を押すと、カーソルの位置に例が入ります。
 5. `docs/images/5-save-as.ja.png` — 「名前を付けて保存」で、PDF・HTML・PNG・Word・CSV・TSV・JSON・Jupyter Notebook・テキスト・配布用 ZIP を選べます。

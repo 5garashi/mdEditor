@@ -55,9 +55,9 @@ tags: [markdown, windows, wpf, webview2]
 
 ![在左边写 Markdown，右边的预览会随输入更新，包括图表、表格和公式。](docs/images/1-main.en.png)
 
-**深色模式** — 跟随 Windows 的设置，也可以用“显示”按钮选择白天或夜间。打印和 PDF 始终使用白色页面。
+**深色模式** — 跟随 Windows 的设置，也可以用“设置”中的“显示”按钮（或 Ctrl+Shift+T）选择白天或夜间。打印和 PDF 始终使用白色页面。
 
-![跟随 Windows 的设置，也可以用“显示”按钮选择白天或夜间。打印和 PDF 始终使用白色页面。](docs/images/2-dark.en.png)
+![跟随 Windows 的设置，也可以用“设置”中的“显示”按钮（或 Ctrl+Shift+T）选择白天或夜间。打印和 PDF 始终使用白色页面。](docs/images/2-dark.en.png)
 
 **在单独窗口中显示预览** — 把预览放到第二个显示器上，写作和阅读分开进行。预览会跟随编辑滚动。
 
@@ -165,7 +165,7 @@ mdEditor 能打开的其他类型（.txt、.html、.htm、.docx、.eml、.csv、
 - **PNG / Ctrl+Shift+G**：以白天配色把预览保存为图片（PNG）；长文档分为 名称-1.png、名称-2.png 等。
 - **Word / Ctrl+Shift+D**：导出 Word 文档（.docx）。标题、段落、列表、引用、代码、表格、链接和图像使用 Word 自带的样式，因此 Word 的导航窗格和目录功能可以使用。图表和公式以预览中的图片放入（在 Word 中不能编辑）。
 - **HTML / Ctrl+Shift+M**：把排版后的预览导出为一个独立的 HTML 文件。图表为 SVG，公式为 MathML，文档旁边的图像会嵌入。在浏览器中，深色模式下会切换为夜间配色。打开它时不会建立连接，只有文档中网络上的图像会从其服务器加载。
-- **纸张**：按“自动”→“A4”→“Letter”的顺序切换 PDF 的纸张。“自动”跟随 Windows 的区域设置（使用美国惯用单位的地区为 Letter，其他为 A4）。选择会被记住。
+- **纸张**（在“设置”中，或 Ctrl+Shift+A）：按“自动”→“A4”→“Letter”的顺序切换 PDF 的纸张。“自动”跟随 Windows 的区域设置（使用美国惯用单位的地区为 Letter，其他为 A4）。选择会被记住。
 - **编码**：文档的编码显示在文件名旁边。按下后可以选择编码，并用它重新打开文件，或从下次保存起使用它。
 - **Ctrl+Shift+P**：保存为 PDF。
 - **目录 / Ctrl+Shift+J**：根据文档的标题生成目录（指向各标题的链接），并插入到光标位置。目录放在 `<!-- toc -->` 和 `<!-- /toc -->` 之间（不在预览中显示）；更改标题后再按一次，会就地更新该目录。文档标题（开头唯一的 `#` 标题）不放入目录，最多放入三层。目录中的链接在预览、PDF、HTML 和 Word 中都能跳到对应的标题。
@@ -687,7 +687,7 @@ Identity 第 7-7 条规定的发布前检查记录。
 
 ## 设计和官方素材
 
-界面设计遵循 5garashi.com Design Office Identity v4.20.0（2026-10-17）。工具栏中的“主题”按钮按“自动”（跟随 Windows 的应用模式）、“白天”、“夜间”的顺序切换，下次启动时会保留所选的主题。夜间使用第 4-2 条的夜间配色（深色模式），徽标切换为第 3-7 条的灰色反白版本（右上角的标志在夜间也保持红色，这是第 3-7 条 (5) 允许的）。编辑区、预览、图表和窗口标题栏也会跟随。打印和 PDF 始终使用白天配色。官方徽标（日文版和英文版，各自带有深色模式的反白版本，根据显示语言选择；简体中文界面使用英文版）和简易标志，从 [5garashi/5garashi-identity](https://github.com/5garashi/5garashi-identity) 的 SVG 素材原样随附，未作修改。简易标志用于窗口、可执行文件和 Markdown 文件关联的图标。各 SVG 文件中写明的作者、版权和 CC BY-ND 4.0 许可证均予保留。samples/diagram-test 中图像大小和位置的示例（第 22 节）在 samples/import-test_files 中使用同样未经修改的官方素材（标志、徽标及其反白版本，以及横幅 og_image.png；CC BY-ND 4.0）。
+界面设计遵循 5garashi.com Design Office Identity v4.20.0（2026-10-17）。“设置”中的“显示”按钮（或 Ctrl+Shift+T）按“自动”（跟随 Windows 的应用模式）、“白天”、“夜间”的顺序切换，下次启动时会保留所选的主题。夜间使用第 4-2 条的夜间配色（深色模式），徽标切换为第 3-7 条的灰色反白版本（右上角的标志在夜间也保持红色，这是第 3-7 条 (5) 允许的）。编辑区、预览、图表和窗口标题栏也会跟随。打印和 PDF 始终使用白天配色。官方徽标（日文版和英文版，各自带有深色模式的反白版本，根据显示语言选择；简体中文界面使用英文版）和简易标志，从 [5garashi/5garashi-identity](https://github.com/5garashi/5garashi-identity) 的 SVG 素材原样随附，未作修改。简易标志用于窗口、可执行文件和 Markdown 文件关联的图标。各 SVG 文件中写明的作者、版权和 CC BY-ND 4.0 许可证均予保留。samples/diagram-test 中图像大小和位置的示例（第 22 节）在 samples/import-test_files 中使用同样未经修改的官方素材（标志、徽标及其反白版本，以及横幅 og_image.png；CC BY-ND 4.0）。
 
 Identity 中没有关于中文的规定。简体中文界面的正式名称使用英文名称“5garashi.com Design Office”，字体使用 Windows 标准的简体中文字体（Microsoft YaHei）。
 

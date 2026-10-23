@@ -202,7 +202,9 @@ button.primary:hover {
 
 .brand-bar {
   display: flex;
-  flex: 0 0 72px;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  min-height: 72px;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
@@ -367,10 +369,28 @@ body.dragging {
   justify-content: flex-end;
 }
 
-/* Keep room for the file name; the buttons wrap to the next row first. */
-.document-status {
-  flex: 1 1 380px;
+/* The open document sits in the header between the logotype and the mark. The
+   margins keep well clear of both (Identity 3-5 asks for at least one chili of the
+   mark around them); a long name is shortened, with the full name in its tooltip. */
+.brand-bar .document-status {
+  flex: 1 1 0;
+  margin-inline: 24px;
+}
+
+.brand-bar #document-name {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+/* Settings > Theme and PDF paper: the two switches side by side. */
+.theme-paper-row {
+  display: flex;
   flex-wrap: wrap;
+  gap: 10px;
+}
+
+.theme-paper-row button {
+  min-height: 44px;
 }
 
 .workspace {
@@ -1467,11 +1487,13 @@ body.capture-export .preview-content {
     flex-direction: column;
   }
 
-  /* Narrow screens wrap the status row so the full file name stays readable.
-     The toolbar is a column here, so the 380px basis would become a height. */
-  .document-status {
+  /* Narrow screens give the open document a row of its own under the logotype and
+     mark, and wrap it so the full file name stays readable. */
+  .brand-bar .document-status {
     flex: 0 0 auto;
+    order: 3;
     width: 100%;
+    margin-inline: 0;
     flex-wrap: wrap;
   }
 
@@ -1502,7 +1524,7 @@ body.capture-export .preview-content {
   }
 
   .brand-bar {
-    flex-basis: 64px;
+    min-height: 64px;
   }
 
   .brand-logo {

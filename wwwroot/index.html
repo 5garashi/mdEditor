@@ -39,24 +39,26 @@
       </picture>
       <h1>mdEditor</h1>
     </div>
+    <!-- The open document sits in the header between the logotype and the mark, clear of
+         both (Identity 3-5, 9-1), so the toolbar below has a whole row for its buttons. -->
+    <div class="document-status" aria-live="polite">
+      <span id="document-name">新しい文書.md</span>
+      <span id="save-state">保存済み</span>
+      <button id="encoding-button" class="status-button" type="button" aria-haspopup="dialog">UTF-8</button>
+    </div>
     <!-- The symbol mark stays red (volt) in dark mode too, by the owner's choice. -->
     <picture>
       <img class="brand-mark" src="assets/5garashi_mark_simple.svg" alt="" aria-hidden="true">
     </picture>
   </header>
   <section class="toolbar" data-i18n-attr="aria-label:toolbar">
-    <div class="document-status" aria-live="polite">
-      <span id="document-name">新しい文書.md</span>
-      <span id="save-state">保存済み</span>
-      <button id="encoding-button" class="status-button" type="button" aria-haspopup="dialog">UTF-8</button>
-    </div>
     <div class="actions">
       <button id="open-button" type="button" data-i18n="open">開く</button>
       <button id="restore-button" type="button" data-i18n="restoreDiscarded" hidden>前の文書に戻す</button>
       <button id="url-button" type="button" data-i18n="openUrl" aria-haspopup="dialog">URLを開く</button>
       <button id="save-button" class="primary" type="button" data-i18n="save">保存</button>
-      <button id="save-as-button" type="button" data-i18n="saveAs">名前を付けて保存</button>      <button id="paper-button" type="button">用紙: 自動（A4）</button>
-      <button id="theme-button" type="button">表示: 自動</button>
+      <button id="save-as-button" type="button" data-i18n="saveAs">名前を付けて保存</button>
+      <!-- Theme and paper are in Settings (Ctrl+Shift+T / Ctrl+Shift+A switch them anywhere). -->
       <button id="settings-button" type="button" data-i18n="settings" aria-haspopup="dialog">設定</button>
       <button id="sample-button" type="button" data-i18n="sample" aria-haspopup="dialog">サンプル</button>
       <button id="about-button" type="button" data-i18n="about" aria-haspopup="dialog">このアプリについて</button>
@@ -183,6 +185,14 @@
           <option value="2.5" data-i18n="settingsSpacingWider">とても広い</option>
         </select></label>
       <label class="settings-check"><input id="setting-full-width" type="checkbox"> <span data-i18n="settingsFullWidth">プレビューの本文の幅を制限しない（広い画面で1行を長くする）</span></label>
+    </fieldset>
+    <fieldset class="settings-group">
+      <legend data-i18n="settingsThemePaper">表示テーマと PDF の用紙</legend>
+      <div class="settings-row theme-paper-row">
+        <button id="theme-button" type="button">表示: 自動</button>
+        <button id="paper-button" type="button">用紙: 自動（A4）</button>
+      </div>
+      <p class="settings-note" data-i18n="settingsThemePaperNote"></p>
     </fieldset>
     <fieldset class="settings-group">
       <legend data-i18n="settingsZoom">画面全体の表示倍率</legend>
