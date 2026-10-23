@@ -15,11 +15,15 @@ Paste each section into the matching Partner Center field. Check the character l
 **Product name:** mdEditor by 5garashi.com
 
 **Short description (one line):**
-Write plain text. Get diagrams, math, and a polished PDF. Private, offline, ad-free.
+Save plain text as a polished PDF, diagrams and math included. Private, offline, ad-free.
 
 **Description:**
 
-A Markdown editor that shows the finished page beside your text as you type. Diagrams, math, and tables appear as you write them, and one click saves a PDF. Your documents stay on your PC, with no ads and no account.
+Turn plain text into a polished PDF with one click. Diagrams, math, tables, and colored code go into the PDF exactly as the preview shows them, on A4 or Letter. This Markdown editor shows the finished page beside your text as you type. Your documents stay on your PC, with no ads and no account.
+
+Save as PDF
+- One click saves a PDF that looks exactly like the preview: diagrams, math, tables, 3D models, maps, and colored code included.
+- Choose A4 or Letter (Auto follows your region). Printing and PDF always use a white page, even in dark mode.
 
 Write and see
 - Type on the left and the preview on the right updates at once. Both sides scroll together.
@@ -31,7 +35,6 @@ Write and see
 - Also a viewer: expand the preview to fill the window and read without the editor.
 
 Open and save
-- Save a PDF that looks exactly like the preview, diagrams and math included, on A4 or Letter.
 - Open Word, HTML, web pages, e-mail (.eml), CSV, TSV, JSON, XML, Jupyter Notebooks, and images as Markdown. The original file is never changed.
 - Save As also writes HTML, PNG, Word, CSV, TSV, JSON, Jupyter Notebook, and plain text, and a ZIP for sharing that holds the document and its name_files folder.
 - Drop or paste pictures into the editor; they are saved beside your document.
@@ -71,6 +74,7 @@ Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Des
 - mdEditor appears in Open with for the file types it supports.
 
 **Features (bullets):**
+- One-click PDF that looks exactly like the preview
 - Live preview beside your text, scrolling together
 - Preview on a second display, following the line you edit
 - Also a viewer: the preview fills the window
@@ -81,7 +85,6 @@ Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Des
 - Table of contents from your headings, updated with one press
 - GitHub-style alerts, front matter, and collapsible sections
 - Videos play right in the preview
-- One-click PDF that looks exactly like the preview
 - Opens Word, HTML, e-mail, CSV, JSON, Jupyter Notebooks, and images
 - Saves as HTML, PNG, Word, CSV, JSON, Jupyter Notebook, text, or ZIP
 - Drop or paste pictures straight into your document
@@ -92,7 +95,7 @@ Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Des
 - Everything from the keyboard, with custom shortcuts
 - Screen reader support, read-aloud, and dark mode
 
-**Search terms (up to 7):** markdown editor, preview, mermaid, diagram, PDF, second display, jupyter notebook
+**Search terms (up to 7):** markdown editor, markdown to PDF, PDF, preview, mermaid, diagram, second display
 
 **Privacy policy URL:** https://github.com/5garashi/mdEditor/blob/main/PRIVACY.md
 
@@ -127,11 +130,15 @@ The app's own logos (Start, taskbar, File Explorer) are in `store/assets/` and a
 **製品名:** mdEditor by 5garashi.com
 
 **簡単な説明:**
-文字を書くだけで、図・数式・きれいな PDF に。オフラインで使え、広告もありません。
+文字を書くだけで、図・数式入りのきれいな PDF に。オフラインで使え、広告もありません。
 
 **説明:**
 
-書くそばから、仕上がりが横に見える Markdown エディターです。図・数式・表もその場で表示し、ワンクリックで PDF にできます。文書は PC の外に出ず、広告もアカウントもありません。
+書いた文章を、ワンクリックできれいな PDF にできます。図・数式・表・色分けしたコードも、プレビューのとおりに PDF に入ります（用紙は A4 か Letter）。書くそばから仕上がりが横に見える Markdown エディターです。文書は PC の外に出ず、広告もアカウントもありません。
+
+PDF に保存する
+- プレビューと同じ見た目の PDF を、ワンクリックで保存します。図・数式・表・3D モデル・地図・色分けしたコードも入ります。
+- 用紙は A4 と Letter から選べます（「自動」は地域の設定に合わせます）。ダークモードでも、印刷と PDF は白地です。
 
 書く・見る
 - 左に書くと、右のプレビューにすぐ反映されます。両側のスクロールは連動します。
@@ -143,7 +150,6 @@ The app's own logos (Start, taskbar, File Explorer) are in `store/assets/` and a
 - ビューアーとしても使えます。プレビューをウィンドウいっぱいに広げれば、編集欄なしで読めます。
 
 開く・保存する
-- プレビューと同じ見た目で PDF に保存します。図も数式も含み、用紙は A4 と Letter から選べます。
 - Word・HTML・Web ページ・メール（.eml）・CSV・TSV・JSON・XML・Jupyter Notebook・画像を、Markdown として開けます。元のファイルは書き換えません。
 - 「名前を付けて保存」で、HTML・PNG・Word・CSV・TSV・JSON・Jupyter Notebook・テキストにも保存できます。文書と「名前_files」フォルダーをまとめた配布用 ZIP も作れます。
 - 画像は、編集欄にドロップするか貼り付けるだけで、文書の横に保存して入れます。
@@ -183,6 +189,7 @@ The app's own logos (Start, taskbar, File Explorer) are in `store/assets/` and a
 - 対応する形式のファイルで、「プログラムから開く」に mdEditor が出ます。
 
 **製品の機能（箇条書き）:**
+- プレビューと同じ見た目の PDF をワンクリックで
 - 書きながら横で仕上がりを確認。スクロールも連動
 - プレビューを 2 台目のディスプレイに。編集中の行を表示
 - ビューアーとしても。プレビューをウィンドウいっぱいに
@@ -193,7 +200,6 @@ The app's own logos (Start, taskbar, File Explorer) are in `store/assets/` and a
 - 見出しから目次を作り、ボタン 1 つで新しくする
 - GitHub と同じ注意書き・フロントマター・折りたたみ
 - 文書の中の動画をプレビューで再生
-- プレビューと同じ見た目の PDF をワンクリックで
 - Word・HTML・メール・CSV・JSON・Jupyter Notebook・画像を開ける
 - HTML・PNG・Word・CSV・JSON・Jupyter Notebook・テキスト・ZIP に保存
 - 画像はドロップや貼り付けで、そのまま文書に
@@ -204,7 +210,7 @@ The app's own logos (Start, taskbar, File Explorer) are in `store/assets/` and a
 - キーボードで全操作。ショートカットも変更できる
 - 画面読み上げ・文書の読み上げ・ダークモードに対応
 
-**検索用語（7つまで）:** Markdown, マークダウン, エディタ, プレビュー, PDF, 数式, デュアルモニター
+**検索用語（7つまで）:** Markdown, マークダウン, PDF, PDF変換, エディタ, プレビュー, 数式
 
 **スクリーンショット（1366 x 768。Store の最小の大きさ。日本語の画面）と説明文:**
 1. `docs/images/1-main.ja.png` — 左に Markdown を書くと、右のプレビューにすぐ反映されます。STL で書いた 3D モデルも、ドラッグで回せます。
@@ -221,11 +227,15 @@ The app's own logos (Start, taskbar, File Explorer) are in `store/assets/` and a
 **产品名称:** mdEditor by 5garashi.com
 
 **简短说明:**
-只需输入文字，就能得到图表、公式和精美的 PDF。离线可用，没有广告。
+只需输入文字，就能保存为含图表和公式的精美 PDF。离线可用，没有广告。
 
 **说明:**
 
-一款边写边在旁边显示排版效果的 Markdown 编辑器。图表、公式和表格随写随显示，一键即可保存为 PDF。文档留在你的电脑中，没有广告，也不需要账户。
+一键即可把写好的文字保存为精美的 PDF。图表、公式、表格和着色的代码，都会按预览的样子放入 PDF（纸张为 A4 或 Letter）。这是一款边写边在旁边显示排版效果的 Markdown 编辑器。文档留在你的电脑中，没有广告，也不需要账户。
+
+保存为 PDF
+- 一键保存与预览外观完全相同的 PDF，包括图表、公式、表格、3D 模型、地图和着色的代码。
+- 纸张可选 A4 或 Letter（“自动”跟随地区设置）。即使在深色模式下，打印和 PDF 也始终使用白色页面。
 
 写作和查看
 - 在左边输入，右边的预览立即更新。两边同步滚动。
@@ -237,7 +247,6 @@ The app's own logos (Start, taskbar, File Explorer) are in `store/assets/` and a
 - 也可以当作查看器：把预览扩展到填满窗口，不显示编辑区即可阅读。
 
 打开和保存
-- 保存为与预览外观完全相同的 PDF，包括图表和公式，纸张可选 A4 或 Letter。
 - 可以把 Word、HTML、网页、电子邮件（.eml）、CSV、TSV、JSON、XML、Jupyter Notebook 和图像作为 Markdown 打开。原文件不会被改写。
 - “另存为”还可以保存为 HTML、PNG、Word、CSV、TSV、JSON、Jupyter Notebook 和纯文本，以及包含文档和“名称_files”文件夹的用于分发的 ZIP。
 - 把图片拖放或粘贴到编辑区，图片会保存在文档旁边。
@@ -278,6 +287,7 @@ The app's own logos (Start, taskbar, File Explorer) are in `store/assets/` and a
 - 对于支持的文件类型，“打开方式”中会列出 mdEditor。
 
 **产品功能（要点）:**
+- 一键保存与预览外观相同的 PDF
 - 边写边在旁边查看效果，滚动同步
 - 预览可放到第二个显示器上，跟随正在编辑的行
 - 也可当作查看器：预览填满窗口
@@ -288,7 +298,6 @@ The app's own logos (Start, taskbar, File Explorer) are in `store/assets/` and a
 - 根据标题生成目录，一键更新
 - 与 GitHub 相同的提示框、前置元数据和折叠
 - 文档中的视频直接在预览中播放
-- 一键保存与预览外观相同的 PDF
 - 打开 Word、HTML、电子邮件、CSV、JSON、Jupyter Notebook 和图像
 - 保存为 HTML、PNG、Word、CSV、JSON、Jupyter Notebook、文本或 ZIP
 - 图片拖放或粘贴即可放入文档
@@ -299,7 +308,7 @@ The app's own logos (Start, taskbar, File Explorer) are in `store/assets/` and a
 - 没有广告、没有跟踪、不需要账户
 - 全部可用键盘操作，支持屏幕阅读器、朗读和深色模式
 
-**搜索词（最多 7 个）:** Markdown, Markdown编辑器, 预览, Mermaid, 图表, PDF, 双显示器
+**搜索词（最多 7 个）:** Markdown, Markdown编辑器, PDF, Markdown转PDF, 预览, Mermaid, 图表
 
 **屏幕截图（1366 x 768，Store 的最小尺寸；简体中文界面）及说明:**
 1. `docs/images/1-main.zh-CN.png` — 在左边写 Markdown，右边的预览立即更新。用 STL 写的 3D 模型也可以拖动旋转。
