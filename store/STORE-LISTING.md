@@ -103,13 +103,14 @@ Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Des
 
 **Screenshots (1366 x 768, the Store minimum; English UI) with captions:**
 1. `docs/images/1-main.en.png` — Type Markdown on the left and the preview on the right updates at once. A 3D model written in STL turns when you drag it.
-2. `docs/images/2-dark.en.png` — Day and night palettes follow Windows, or choose one with the Theme button in Settings. Printing and PDF always use a white page.
-3. `docs/images/3-preview-window.en.png` — Put the preview on a second display to keep writing and reading apart. It scrolls with your editing.
-4. `docs/images/4-syntax.en.png` — Press F1 for the Markdown quick reference. Insert puts the example at the cursor.
-5. `docs/images/5-save-as.en.png` — Save As writes PDF, HTML, PNG, Word, CSV, TSV, JSON, Jupyter Notebook, text, and a ZIP for sharing.
-6. `docs/images/6-code-toc.en.png` — Code with a language name is colored. Contents builds a table of contents from your headings.
-7. `docs/images/7-3d-model.en.png` — Turn a 3D model written in STL by dragging it. It shows without an internet connection.
-8. `docs/images/8-map.en.png` — Allow it, and a map is drawn on a detailed OpenStreetMap map. Front matter at the top becomes a list of keys and values.
+2. `docs/images/9-pdf.en.png` — One click saves a PDF that looks exactly like the preview: diagrams, tables, math, and colored code included, on A4 or Letter.
+3. `docs/images/2-dark.en.png` — Day and night palettes follow Windows, or choose one with the Theme button in Settings. Printing and PDF always use a white page.
+4. `docs/images/3-preview-window.en.png` — Put the preview on a second display to keep writing and reading apart. It scrolls with your editing.
+5. `docs/images/4-syntax.en.png` — Press F1 for the Markdown quick reference. Insert puts the example at the cursor.
+6. `docs/images/5-save-as.en.png` — Save As writes PDF, HTML, PNG, Word, CSV, TSV, JSON, Jupyter Notebook, text, and a ZIP for sharing.
+7. `docs/images/6-code-toc.en.png` — Code with a language name is colored. Contents builds a table of contents from your headings.
+8. `docs/images/7-3d-model.en.png` — Turn a 3D model written in STL by dragging it. It shows without an internet connection.
+9. `docs/images/8-map.en.png` — Allow it, and a map is drawn on a detailed OpenStreetMap map. Front matter at the top becomes a list of keys and values.
 
 ## Store art / ストア用の画像
 
@@ -214,13 +215,14 @@ PDF に保存する
 
 **スクリーンショット（1366 x 768。Store の最小の大きさ。日本語の画面）と説明文:**
 1. `docs/images/1-main.ja.png` — 左に Markdown を書くと、右のプレビューにすぐ反映されます。STL で書いた 3D モデルも、ドラッグで回せます。
-2. `docs/images/2-dark.ja.png` — 昼と夜の配色は Windows の設定に合わせて切り替わり、「設定」の「表示」ボタンでも選べます。印刷と PDF は常に白地です。
-3. `docs/images/3-preview-window.ja.png` — プレビューを別のウィンドウにして 2 台目のディスプレイへ。書く画面と見る画面を分けられ、スクロールは編集と連動します。
-4. `docs/images/4-syntax.ja.png` — F1 で Markdown の書き方の一覧を表示します。「挿入」を押すと、カーソルの位置に例が入ります。
-5. `docs/images/5-save-as.ja.png` — 「名前を付けて保存」で、PDF・HTML・PNG・Word・CSV・TSV・JSON・Jupyter Notebook・テキスト・配布用 ZIP を選べます。
-6. `docs/images/6-code-toc.ja.png` — 言語名を書いたコードを色分けして表示します。「目次」ボタンで、見出しから目次を作れます。
-7. `docs/images/7-3d-model.ja.png` — STL で書いた 3D モデルを、ドラッグで回して確かめられます。インターネットにつながなくても表示します。
-8. `docs/images/8-map.ja.png` — 許可すると、地図を OpenStreetMap の詳しい地図の上に描きます。先頭の YAML は、項目と値の一覧になります。
+2. `docs/images/9-pdf.ja.png` — ワンクリックで、プレビューと同じ見た目の PDF に保存します。図・表・数式・色分けしたコードもそのまま入り、用紙は A4 か Letter です。
+3. `docs/images/2-dark.ja.png` — 昼と夜の配色は Windows の設定に合わせて切り替わり、「設定」の「表示」ボタンでも選べます。印刷と PDF は常に白地です。
+4. `docs/images/3-preview-window.ja.png` — プレビューを別のウィンドウにして 2 台目のディスプレイへ。書く画面と見る画面を分けられ、スクロールは編集と連動します。
+5. `docs/images/4-syntax.ja.png` — F1 で Markdown の書き方の一覧を表示します。「挿入」を押すと、カーソルの位置に例が入ります。
+6. `docs/images/5-save-as.ja.png` — 「名前を付けて保存」で、PDF・HTML・PNG・Word・CSV・TSV・JSON・Jupyter Notebook・テキスト・配布用 ZIP を選べます。
+7. `docs/images/6-code-toc.ja.png` — 言語名を書いたコードを色分けして表示します。「目次」ボタンで、見出しから目次を作れます。
+8. `docs/images/7-3d-model.ja.png` — STL で書いた 3D モデルを、ドラッグで回して確かめられます。インターネットにつながなくても表示します。
+9. `docs/images/8-map.ja.png` — 許可すると、地図を OpenStreetMap の詳しい地図の上に描きます。先頭の YAML は、項目と値の一覧になります。
 
 ## 简体中文 (zh-CN)
 
@@ -312,20 +314,21 @@ PDF に保存する
 
 **屏幕截图（1366 x 768，Store 的最小尺寸；简体中文界面）及说明:**
 1. `docs/images/1-main.zh-CN.png` — 在左边写 Markdown，右边的预览立即更新。用 STL 写的 3D 模型也可以拖动旋转。
-2. `docs/images/2-dark.zh-CN.png` — 白天和夜间的配色跟随 Windows 的设置，也可以在“设置”中用“显示”按钮选择。打印和 PDF 始终使用白色页面。
-3. `docs/images/3-preview-window.zh-CN.png` — 把预览放到第二个显示器上，写作和阅读分开进行。预览会跟随编辑滚动。
-4. `docs/images/4-syntax.zh-CN.png` — 按 F1 显示 Markdown 简明写法。按“插入”会把示例放到光标位置。
-5. `docs/images/5-save-as.zh-CN.png` — “另存为”可以保存为 PDF、HTML、PNG、Word、CSV、TSV、JSON、Jupyter Notebook、文本和用于分发的 ZIP。
-6. `docs/images/6-code-toc.zh-CN.png` — 写了语言名的代码会着色显示。“目录”会根据标题生成目录。
-7. `docs/images/7-3d-model.zh-CN.png` — 用 STL 写的 3D 模型可以拖动旋转。不需要连接互联网也能显示。
-8. `docs/images/8-map.zh-CN.png` — 允许后，地图会绘制在 OpenStreetMap 的详细地图上。开头的 YAML 显示为项目名和值的列表。
+2. `docs/images/9-pdf.zh-CN.png` — 一键保存与预览外观相同的 PDF。图表、表格、公式和着色的代码都会原样放入，纸张为 A4 或 Letter。
+3. `docs/images/2-dark.zh-CN.png` — 白天和夜间的配色跟随 Windows 的设置，也可以在“设置”中用“显示”按钮选择。打印和 PDF 始终使用白色页面。
+4. `docs/images/3-preview-window.zh-CN.png` — 把预览放到第二个显示器上，写作和阅读分开进行。预览会跟随编辑滚动。
+5. `docs/images/4-syntax.zh-CN.png` — 按 F1 显示 Markdown 简明写法。按“插入”会把示例放到光标位置。
+6. `docs/images/5-save-as.zh-CN.png` — “另存为”可以保存为 PDF、HTML、PNG、Word、CSV、TSV、JSON、Jupyter Notebook、文本和用于分发的 ZIP。
+7. `docs/images/6-code-toc.zh-CN.png` — 写了语言名的代码会着色显示。“目录”会根据标题生成目录。
+8. `docs/images/7-3d-model.zh-CN.png` — 用 STL 写的 3D 模型可以拖动旋转。不需要连接互联网也能显示。
+9. `docs/images/8-map.zh-CN.png` — 允许后，地图会绘制在 OpenStreetMap 的详细地图上。开头的 YAML 显示为项目名和值的列表。
 
 ## Before you submit / 提出前の確認
 
 - Reserve the name in Partner Center and confirm it is available. Use the same spelling ("5garashi.com Design Office") in the Store, the app, and the website.
 - Replace the privacy or support links if the final URLs differ. The company URL in the app is `https://www.5garashi.com/`.
 - "Worldwide" distribution and "all languages" are different settings. The app supports Japanese, English, and Simplified Chinese (1.0.15) only. Since 1.0.15 the package declares ja-JP, en-US, and zh-CN, so Partner Center expects a listing in each of the three languages; the zh-CN text and its screenshots are above. The Chinese text has not been reviewed by a native speaker.
-- The screenshots are in `docs/images/` (1366 x 768 window, 90% zoom), in Japanese (`.ja`), English (`.en`), and Simplified Chinese (`.zh-CN`). All were retaken with 1.0.15 (2026-10-23) after the header and toolbar changed; screenshot 1 now shows the 3D model of samples/diagram-test (21-1). Retake them when the screen changes.
-- Screenshot 8 shows OpenStreetMap map tiles. Keep the credit "© OpenStreetMap contributors" visible; do not crop it out.
-  スクリーンショット 8 には OpenStreetMap の地図が写っています。右下の「© OpenStreetMap contributors」を切り取らないでください。
+- The screenshots are in `docs/images/` (1366 x 768 window, 90% zoom), in Japanese (`.ja`), English (`.en`), and Simplified Chinese (`.zh-CN`). All were retaken with 1.0.15 (2026-10-23) after the header and toolbar changed; screenshot 1 now shows the 3D model of samples/diagram-test (21-1). `9-pdf` (listed second, to lead with PDF) puts the window beside the first page of the PDF it saved. Upload the screenshots in the listed order. Retake them when the screen changes.
+- The map screenshot (`8-map`, listed ninth) shows OpenStreetMap map tiles. Keep the credit "© OpenStreetMap contributors" visible; do not crop it out.
+  地図のスクリーンショット（`8-map`、一覧の 9 番目）には OpenStreetMap の地図が写っています。右下の「© OpenStreetMap contributors」を切り取らないでください。
 - Partner Center limits: What's new 1,500 characters, each feature 200 characters (up to 20), each screenshot caption 200 characters (up to 10 screenshots).

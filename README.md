@@ -53,6 +53,10 @@ An editor that shows the formatted result right beside the Markdown you are writ
 
 ![Write Markdown on the left and the preview on the right updates as you type, with diagrams, tables, math, and 3D models you turn by dragging.](docs/images/1-main.en.png)
 
+**Save as PDF** — One click saves a PDF that looks exactly like the preview, with diagrams, tables, math, and colored code.
+
+![One click saves a PDF that looks exactly like the preview, with diagrams, tables, math, and colored code.](docs/images/9-pdf.en.png)
+
 **Dark mode** — Follows the Windows setting, or choose day or night with the Theme button in Settings (or Ctrl+Shift+T). Printing and PDF always use a white page.
 
 ![Follows the Windows setting, or choose day or night with the Theme button in Settings (or Ctrl+Shift+T). Printing and PDF always use a white page.](docs/images/2-dark.en.png)

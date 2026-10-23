@@ -53,6 +53,10 @@ tags: [markdown, windows, wpf, webview2]
 
 ![在左边写 Markdown，右边的预览会随输入更新，包括图表、表格、公式和可以拖动旋转的 3D 模型。](docs/images/1-main.zh-CN.png)
 
+**保存为 PDF** — 一键保存与预览外观相同的 PDF，图表、表格、公式和着色的代码都会原样放入。
+
+![一键保存与预览外观相同的 PDF，图表、表格、公式和着色的代码都会原样放入。](docs/images/9-pdf.zh-CN.png)
+
 **深色模式** — 跟随 Windows 的设置，也可以用“设置”中的“显示”按钮（或 Ctrl+Shift+T）选择白天或夜间。打印和 PDF 始终使用白色页面。
 
 ![跟随 Windows 的设置，也可以用“设置”中的“显示”按钮（或 Ctrl+Shift+T）选择白天或夜间。打印和 PDF 始终使用白色页面。](docs/images/2-dark.zh-CN.png)
