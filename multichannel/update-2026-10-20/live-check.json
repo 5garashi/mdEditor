@@ -24,11 +24,11 @@
     "new_youtube": false
   },
   "youtube.html": {
-    "source_1.0.14": false,
-    "new_youtube": false
+    "source_1.0.14": true,
+    "new_youtube": true
   },
   "youtube-en.html": {
-    "source_1.0.14": false,
-    "new_youtube": false
+    "source_1.0.14": true,
+    "new_youtube": true
   }
 }

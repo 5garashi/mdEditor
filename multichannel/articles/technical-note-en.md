@@ -1,41 +1,11 @@
-<!--
-File: promotion/multichannel/articles/technical-note-en.md
-Description: mdEditor use-case article
-Author: 5garashi.com Design Office
-Created: 2026-10-20
-Version: 1.12.0
-License: MIT
-SPDX-License-Identifier: MIT
--->
-# Diagrams, 3D and video in one Markdown document
+<!-- File: technical-note-en.md | Description: Current feature guide | Author: 5garashi.com Design Office | Version: 1.13.0 | Created: 2026-10-23 | License: MIT -->
+# mdEditor 1.0.15
 
-Start with an STL cube you can rotate and zoom. Then explore diagrams, math, maps and video inside the same document, and the main editing and sharing features of mdEditor, a free Windows app developed by 5garashi.com Design Office.
+Now in Simplified Chinese. Create a new document from the clipboard. Improved startup.
 
-[Watch the source 1.0.14 demonstration](https://5garashi.github.io/mdEditor/en.html#demo) · [YouTube entry](https://5garashi.github.io/mdEditor/youtube-en.html)
+Write beside a live preview. Render Mermaid, Graphviz and math offline. Rotate 3D, adjust images, and share PDF, Word or ZIP.
 
-![Actual mdEditor: STL source beside a 3D cube with a red 5.](https://5garashi.github.io/mdEditor/assets/hero-3d-1.0.14-en.png)
-
-## Try the same sample
-
-Save [diagram-test.en.md](https://5garashi.github.io/mdEditor/samples/diagram-test.en.md), then choose Open in mdEditor. Scroll from the top; drag the STL canvas to rotate and use the wheel to zoom. Internet images, video and detailed OpenStreetMap tiles load only with permission. Servers receive information such as your IP address when you permit a request. The sample deliberately contains one syntax-error example.
-
-This sample targets mdEditor. GitHub also renders STL and GeoJSON; DOT needs a compatible renderer such as mdEditor. Rendering behavior is not identical in every environment. Use the sample in mdEditor; use Mermaid that renders in both environments for shared Markdown documents.
-
-## Write with the result beside you
-
-Edit a heading and check the live preview. Synchronized scrolling keeps the result near your current line. Detach the preview to put it in another window, or expand it to read the document. A second physical display was not tested in this recording.
-
-## Drop, resize and center an image
-
-Drop an image into the editor, then use image adjustment to set 50% width and centered alignment. Save the document and its used assets together as a sharing ZIP.
-
-![Actual centered image adjustment.](https://5garashi.github.io/mdEditor/assets/image-adjust-1.0.14-en.png)
-
-## Share a document
-
-Use Save to keep the Markdown. Use Save As and choose PDF, Word, HTML, PNG or another supported format. Open the result and check diagrams, text and page breaks before sharing. Current source 1.0.14 also offers one-click PDF export. Word import does not preserve its colors or layout; notebook export omits execution output. Equations and table values are not automatically calculated.
-
-## Main features
+Start with rotating 3D, tour diagram-test from top to bottom, then explore the main features, including image drag-and-drop, 50% width and centered alignment.
 
 - Live preview beside your text, scrolling together
 - Preview on a second display, following the line you edit
@@ -52,21 +22,18 @@ Use Save to keep the Markdown. Use Save As and choose PDF, Word, HTML, PNG or an
 - Saves as HTML, PNG, Word, CSV, JSON, Jupyter Notebook, or text; sharing ZIP
 - Drop or paste images; adjust their size and centered alignment
 - Safe saving and automatic crash recovery
-- Opens Shift_JIS, EUC-JP, and UTF-8 files correctly
+- Create a new document from copied text, pictures or files
 - Internet images, videos, and maps load only when you allow them
 - No ads, no tracking, no account
 - Everything from the keyboard, with custom shortcuts
 - Screen reader support, read-aloud, and dark mode
 
-## Scope and credits
+Windows only. Word import does not preserve colors or layout. Internet images, videos and detailed maps load only with permission. Recorded from source build 1.0.15.
 
-The new video uses source build 1.0.14 (local source snapshot), with captions and Light Steps BGM. Import of seven formats, PDF export, diagrams, math, maps, video and rotating 3D were checked during recording. Full keyboard coverage, crash recovery, all export formats and screen-reader behavior were not exhaustively retested. The desktop background is covered during recording. Native file-dialog intervals are removed.
+Clipboard: optional shortcut, created after confirmation in Settings. Startup depends on the PC.
 
-[PDFs, images and samples](https://5garashi.github.io/mdEditor/resources-en.html) · [App privacy](https://github.com/5garashi/mdEditor/blob/main/PRIVACY.md)
+[Guide and demo](https://5garashi.github.io/mdEditor/en.html)
 
-Design reference: [Design Office Identity 4.20.0](https://5garashi.github.io/5garashi-identity/). App, article and notation examples: MIT. Official logos: CC BY-ND 4.0.
+Design Office Identity 4.20.0, verified 2026-10-23.
 
----
-
-**Author**: 5garashi.com Design Office
-**Last updated**: 2026-10-20 JST
+5garashi.com設計事務所 / 5garashi.com Design Office
