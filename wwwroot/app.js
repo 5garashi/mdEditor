@@ -1744,19 +1744,77 @@
     updateReaderButtons();
   };
 
+  // Read-aloud reads the selection when there is one: text selected in the preview, or
+  // in the editor when it has the focus (or had it just before the button was pressed).
+  // Without a selection it reads paragraphs from the first one in view.
+  let editorFocusedBeforeButton = false;
+  readerPlay.addEventListener("pointerdown", () => { editorFocusedBeforeButton = view.hasFocus; });
+
+  // Markdown written in the editor, as words to say: marks, link addresses, and code
+  // fences are left out.
+  const spokenMarkdown = (markdown) => markdown
+    .split("\n")
+    .filter((line) => !/^\s*(```|~~~)/.test(line))
+    .map((line) => line
+      .replace(/^\s{0,3}#{1,6}\s+/, "")
+      .replace(/^\s*>\s?/, "")
+      .replace(/^\s*(?:[-*+]|\d+[.)])\s+(?:\[[ xX]\]\s+)?/, "")
+      .replace(/!\[([^\]]*)\]\([^)]*\)/g, "$1")
+      .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+      .replace(/<[^>]+>/g, "")
+      .replace(/(\*\*|__|~~|==|\*|_|`)/g, "")
+      .replace(/\|/g, " ")
+      .trim())
+    .filter((line) => line && !/^[-:\s]+$/.test(line))
+    .join("\n");
+
+  const selectedText = () => {
+    const selection = window.getSelection();
+    if (selection && !selection.isCollapsed && selection.rangeCount > 0
+        && preview.contains(selection.getRangeAt(0).commonAncestorContainer)) {
+      const holder = document.createElement("div");
+      for (let i = 0; i < selection.rangeCount; i++) holder.appendChild(selection.getRangeAt(i).cloneContents());
+      return readableText(holder);
+    }
+    const range = view.state.selection.main;
+    if (!range.empty && (view.hasFocus || editorFocusedBeforeButton)) {
+      return spokenMarkdown(view.state.sliceDoc(range.from, range.to));
+    }
+    return "";
+  };
+
+  // A long selection is spoken a sentence or two at a time: speech engines may stop
+  // partway through very long text.
+  const spokenChunks = (text) => {
+    const sentences = text.replace(/\s+/g, " ").match(/[^。．！？!?.]+[。．！？!?.]*\s*/g) ?? [text];
+    const chunks = [];
+    for (const sentence of sentences) {
+      if (chunks.length > 0 && (chunks[chunks.length - 1] + sentence).length <= 200) {
+        chunks[chunks.length - 1] += sentence;
+      } else {
+        chunks.push(sentence);
+      }
+    }
+    return chunks.map((chunk) => chunk.trim()).filter(Boolean);
+  };
+
   const speakNext = () => {
     if (!reader) return;
     reader.timer = 0;
     reader.waiting = false;
     const block = reader.blocks[reader.index];
-    if (!block || !block.isConnected) {
+    if (!block || (typeof block !== "string" && !block.isConnected)) {
       stopReading();
       return;
     }
-    clearReadingMark();
-    block.classList.add("reading");
-    block.scrollIntoView({ block: "nearest" });
-    const text = readableText(block);
+    let text = block;
+    if (typeof block !== "string") {
+      // A paragraph of the preview is marked while it is read; a selection stays as selected.
+      clearReadingMark();
+      block.classList.add("reading");
+      block.scrollIntoView({ block: "nearest" });
+      text = readableText(block);
+    }
     const { lang, voice } = voiceFor(text);
     if (!voice) {
       stopReading();
@@ -1779,6 +1837,14 @@
   const toggleReading = () => {
     if (!displaySettings.reader) return;
     if (!reader) {
+      const selected = selectedText();
+      editorFocusedBeforeButton = false;
+      if (selected) {
+        reader = { blocks: spokenChunks(selected), index: 0, paused: false, timer: 0, waiting: false, selection: true };
+        speakNext();
+        updateReaderButtons();
+        return;
+      }
       const blocks = readableBlocks();
       if (blocks.length === 0) return;
       const top = preview.getBoundingClientRect().top;
