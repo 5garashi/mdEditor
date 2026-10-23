@@ -19,7 +19,7 @@ Save plain text as a polished PDF, diagrams and math included. Private, offline,
 
 **Description:**
 
-Turn plain text into a polished PDF with one click. Diagrams, math, tables, and colored code go into the PDF exactly as the preview shows them, on A4 or Letter. This Markdown editor shows the finished page beside your text as you type. Your documents stay on your PC, with no ads and no account.
+Save plain text as a polished PDF with one click. Diagrams, math, tables, and colored code go into the PDF exactly as the preview shows them, on A4 or Letter. This Markdown editor shows the finished page beside your text as you type. Your documents stay on your PC, with no ads and no account.
 
 Save as PDF
 - One click saves a PDF that looks exactly like the preview: diagrams, math, tables, 3D models, maps, and colored code included.
@@ -36,7 +36,7 @@ Write and see
 
 Open and save
 - Open Word, HTML, web pages, e-mail (.eml), CSV, TSV, JSON, XML, Jupyter Notebooks, and images as Markdown. The original file is never changed.
-- Save As also writes HTML, PNG, Word, CSV, TSV, JSON, Jupyter Notebook, and plain text, and a ZIP for sharing that holds the document and its name_files folder.
+- Save As writes PDF, HTML, PNG, Word, CSV, TSV, JSON, Jupyter Notebook, and plain text, and a ZIP for sharing that holds the document and its name_files folder.
 - Drop or paste pictures into the editor; they are saved beside your document.
 - New to Markdown? Open a built-in sample, or press F1 and insert examples with one click.
 
@@ -74,7 +74,7 @@ Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Des
 - mdEditor appears in Open with for the file types it supports.
 
 **Features (bullets):**
-- One-click PDF that looks exactly like the preview
+- Save as PDF in one click, exactly as the preview looks
 - Live preview beside your text, scrolling together
 - Preview on a second display, following the line you edit
 - Also a viewer: the preview fills the window
@@ -86,7 +86,7 @@ Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Des
 - GitHub-style alerts, front matter, and collapsible sections
 - Videos play right in the preview
 - Opens Word, HTML, e-mail, CSV, JSON, Jupyter Notebooks, and images
-- Saves as HTML, PNG, Word, CSV, JSON, Jupyter Notebook, text, or ZIP
+- Saves as PDF, HTML, PNG, Word, CSV, JSON, Jupyter Notebook, text, or ZIP
 - Drop or paste pictures straight into your document
 - Safe saving and automatic crash recovery
 - Opens Shift_JIS, EUC-JP, and UTF-8 files correctly
@@ -131,7 +131,7 @@ The app's own logos (Start, taskbar, File Explorer) are in `store/assets/` and a
 **製品名:** mdEditor by 5garashi.com
 
 **簡単な説明:**
-文字を書くだけで、図・数式入りのきれいな PDF に。オフラインで使え、広告もありません。
+文字を書くだけで、図・数式入りのきれいな PDF に保存できます。オフラインで使え、広告もありません。
 
 **説明:**
 
@@ -152,7 +152,7 @@ PDF に保存する
 
 開く・保存する
 - Word・HTML・Web ページ・メール（.eml）・CSV・TSV・JSON・XML・Jupyter Notebook・画像を、Markdown として開けます。元のファイルは書き換えません。
-- 「名前を付けて保存」で、HTML・PNG・Word・CSV・TSV・JSON・Jupyter Notebook・テキストにも保存できます。文書と「名前_files」フォルダーをまとめた配布用 ZIP も作れます。
+- 「名前を付けて保存」で、PDF・HTML・PNG・Word・CSV・TSV・JSON・Jupyter Notebook・テキストにも保存できます。文書と「名前_files」フォルダーをまとめた配布用 ZIP も作れます。
 - 画像は、編集欄にドロップするか貼り付けるだけで、文書の横に保存して入れます。
 - Markdown が初めてでも、内蔵のサンプルや F1 の書き方一覧から、ワンクリックで例を入れられます。
 
@@ -190,7 +190,7 @@ PDF に保存する
 - 対応する形式のファイルで、「プログラムから開く」に mdEditor が出ます。
 
 **製品の機能（箇条書き）:**
-- プレビューと同じ見た目の PDF をワンクリックで
+- ワンクリックで PDF に保存。プレビューと同じ見た目のまま
 - 書きながら横で仕上がりを確認。スクロールも連動
 - プレビューを 2 台目のディスプレイに。編集中の行を表示
 - ビューアーとしても。プレビューをウィンドウいっぱいに
@@ -202,7 +202,7 @@ PDF に保存する
 - GitHub と同じ注意書き・フロントマター・折りたたみ
 - 文書の中の動画をプレビューで再生
 - Word・HTML・メール・CSV・JSON・Jupyter Notebook・画像を開ける
-- HTML・PNG・Word・CSV・JSON・Jupyter Notebook・テキスト・ZIP に保存
+- PDF・HTML・PNG・Word・CSV・JSON・Jupyter Notebook・テキスト・ZIP に保存
 - 画像はドロップや貼り付けで、そのまま文書に
 - 安全な保存と、異常終了からの自動復元
 - Shift_JIS・EUC-JP・UTF-8 のファイルを正しく開ける
@@ -250,7 +250,7 @@ PDF に保存する
 
 打开和保存
 - 可以把 Word、HTML、网页、电子邮件（.eml）、CSV、TSV、JSON、XML、Jupyter Notebook 和图像作为 Markdown 打开。原文件不会被改写。
-- “另存为”还可以保存为 HTML、PNG、Word、CSV、TSV、JSON、Jupyter Notebook 和纯文本，以及包含文档和“名称_files”文件夹的用于分发的 ZIP。
+- “另存为”可以保存为 PDF、HTML、PNG、Word、CSV、TSV、JSON、Jupyter Notebook 和纯文本，以及包含文档和“名称_files”文件夹的用于分发的 ZIP。
 - 把图片拖放或粘贴到编辑区，图片会保存在文档旁边。
 - 刚接触 Markdown？打开内置的示例，或按 F1 一键插入示例。
 - 在任意应用中复制文本或图片后，按你设置的按键，即可作为新文档打开（从剪贴板新建）。
@@ -289,7 +289,7 @@ PDF に保存する
 - 对于支持的文件类型，“打开方式”中会列出 mdEditor。
 
 **产品功能（要点）:**
-- 一键保存与预览外观相同的 PDF
+- 一键保存为 PDF，外观与预览完全相同
 - 边写边在旁边查看效果，滚动同步
 - 预览可放到第二个显示器上，跟随正在编辑的行
 - 也可当作查看器：预览填满窗口
@@ -301,7 +301,7 @@ PDF に保存する
 - 与 GitHub 相同的提示框、前置元数据和折叠
 - 文档中的视频直接在预览中播放
 - 打开 Word、HTML、电子邮件、CSV、JSON、Jupyter Notebook 和图像
-- 保存为 HTML、PNG、Word、CSV、JSON、Jupyter Notebook、文本或 ZIP
+- 保存为 PDF、HTML、PNG、Word、CSV、JSON、Jupyter Notebook、文本或 ZIP
 - 图片拖放或粘贴即可放入文档
 - 复制后按一个键，即可作为新文档打开
 - 安全保存，异常退出后自动恢复
