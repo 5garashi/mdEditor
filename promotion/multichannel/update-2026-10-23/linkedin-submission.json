@@ -1,0 +1,22 @@
+{
+  "phase": "submitted",
+  "account": "MOTOMASA IGARASHI",
+  "visibility": "Anyone",
+  "results": [
+    {
+      "type": "Hyperlink",
+      "text": "View post",
+      "url": "https://www.linkedin.com/feed/update/urn:li:share:7519355800176287744/"
+    },
+    {
+      "type": "Text",
+      "text": "Post successful.",
+      "url": ""
+    },
+    {
+      "type": "Hyperlink",
+      "text": "View post",
+      "url": "https://www.linkedin.com/feed/update/urn:li:activity:7519355801665261568/"
+    }
+  ]
+}

@@ -5,6 +5,7 @@ Created: 2026-10-13
 License: MIT
 SPDX-License-Identifier: MIT
 """
+from pathlib import Path
 import html
 import json
 import re
@@ -33,7 +34,7 @@ File: {filename}
 Description: Latest confirmed public mdEditor demo; generated from publication state
 Author: 5garashi.com Design Office
 Created: 2026-10-13
-Version: 1.0.0
+Version: {(Path(__file__).resolve().parents[2]/'VERSION').read_text().strip()}
 License: MIT
 SPDX-License-Identifier: MIT
 -->

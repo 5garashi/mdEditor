@@ -1,0 +1,48 @@
+{
+  "assets": {
+    "ja": {
+      "url": "https://5garashi.github.io/mdEditor/assets/mdEditor-demo-1.0.15-ja.mp4",
+      "bytes": 10666308,
+      "sha256": "e76abb5ace79d19b3912a8628fbc8171670f358645f92aa2a3695cb64fb96bf2",
+      "matches_master": true
+    },
+    "en": {
+      "url": "https://5garashi.github.io/mdEditor/assets/mdEditor-demo-1.0.15-en.mp4",
+      "bytes": 11420092,
+      "sha256": "9aa3d4bf3eba8fe60066543294b34c1513e31e57b0fac19ddfe17384c12b227b",
+      "matches_master": true
+    },
+    "zh-CN": {
+      "url": "https://5garashi.github.io/mdEditor/assets/mdEditor-demo-1.0.15-zh-CN.mp4",
+      "bytes": 11256150,
+      "sha256": "cd1839e15a6ddd655731d5d94dac524d0695cdcabd872747de7746dcb8934cf3",
+      "matches_master": true
+    }
+  },
+  "pdf": {
+    "features-en.pdf": {
+      "pages": 2,
+      "text_inside_page": true
+    },
+    "features-ja.pdf": {
+      "pages": 2,
+      "text_inside_page": true
+    },
+    "features-zh-CN.pdf": {
+      "pages": 2,
+      "text_inside_page": true
+    },
+    "one-page-en.pdf": {
+      "pages": 1,
+      "text_inside_page": true
+    },
+    "one-page-ja.pdf": {
+      "pages": 1,
+      "text_inside_page": true
+    },
+    "one-page-zh-CN.pdf": {
+      "pages": 1,
+      "text_inside_page": true
+    }
+  }
+}

@@ -1,4 +1,4 @@
-<!-- File: technical-note-ja.md | Description: Current feature guide | Author: 5garashi.com Design Office | Version: 1.13.0 | Created: 2026-10-23 | License: MIT -->
+<!-- ファイル名 / File: technical-note-ja.md | Description: Current feature guide | 作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office | 版 / Version: 1.13.0 | 作成日 / Created: 2026-10-23 | ライセンス / License: MIT -->
 # mdEditor 1.0.15
 
 簡体字中国語に対応。クリップボードから新規作成。起動処理も改善。

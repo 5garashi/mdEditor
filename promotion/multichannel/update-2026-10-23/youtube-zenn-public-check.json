@@ -1,0 +1,26 @@
+{
+  "ja": {
+    "id": "xQ4febIk19I",
+    "public_oembed": true,
+    "title": "mdEditor 1.0.15 — 中国語対応・コピーから文書へ。図・3D・PDFまで",
+    "author": "Moto igarashi"
+  },
+  "en": {
+    "id": "mRyXDg3urwc",
+    "public_oembed": true,
+    "title": "mdEditor 1.0.15 — Chinese UI & Clipboard Capture, with Diagrams, 3D and PDF",
+    "author": "Moto igarashi"
+  },
+  "zh-CN": {
+    "id": "pLHtnbmDRi8",
+    "public_oembed": true,
+    "title": "mdEditor 1.0.15 — 简体中文与剪贴板新建，图表、3D 和 PDF",
+    "author": "Moto igarashi"
+  },
+  "zenn": {
+    "url": "https://zenn.dev/5garashi_com/articles/mdeditor-diagrams-math-pdf",
+    "version_1_0_15": true,
+    "new_ja_video": true,
+    "chinese_video": true
+  }
+}

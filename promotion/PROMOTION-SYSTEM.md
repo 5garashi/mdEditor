@@ -9,13 +9,13 @@ SPDX-License-Identifier: MIT
 -->
 # mdEditor プロモーションの全体図と更新台帳
 
-2026-10-23：**[ソース1.0.15・日英中の公開記録](multichannel/update-2026-10-23/PUBLICATION.md)**。簡体字中国語・クリップボード新規作成・起動改善と、ライブプレビュー・図・3D・PDFを案内。媒体別の公開状態は今回の記録を優先します。
+2026-10-23：**[ソース1.0.15・日英中の公開記録](multichannel/update-2026-10-23/PUBLICATION.md)**。サイト・YouTube・TikTok・X・Zenn・LinkedInは公開確認済み（Xは10月24日）。Reddit既存本文を更新しましたが、2投稿ともフィルター削除表示です。新機能と従来の図・3D・PDFの強みを併せて紹介しています。
 
 
 2026-10-20：**[ソース1.0.14の公開資料と媒体別記録](multichannel/update-2026-10-20/README.md)** を公開しました。YouTube・TikTok・X・LinkedIn・ZennとReddit既存本文を更新。事務所サイトの本文変更のみ保留です。画像のドロップ・サイズと中央揃え・ZIP保存を案内。以下の2026-10-18の結果は前回版の履歴です。
 
 
-現在の公開対象はソース版1.0.14・動画revision 1.0.1です。[今回の媒体別結果・未完了事項](multichannel/update-2026-10-20/PUBLICATION.md)を確認してください。Redditの添付動画は旧版を残し、新版へのリンクを本文へ追記しました。
+現在の公開対象はソース版1.0.15・動画revision 1.1.0、日英中の3言語です。[今回の媒体別結果・未完了事項](multichannel/update-2026-10-23/PUBLICATION.md)を確認してください。Redditの添付動画は旧版を残し、新版へのリンクを本文へ追記しました。
 
 2026-10-18：Redditの **r/windowsapps・r/sideprojects** を全体図・媒体一覧・更新手順・進捗・結果に統合しました。r/sideprojectsはフィルター削除、モデレーターへ確認依頼済みで、承認は未確認です。[Reddit資料](integration/reddit/README.md)・[詳細記録](integration/reddit/SIDEPROJECTS.md)。
 
