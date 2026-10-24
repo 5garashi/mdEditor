@@ -1,10 +1,10 @@
 <!--
-File: README.md
+ファイル名 / File: README.md
 Description: mdEditor trilingual release material
-Author: 5garashi.com Design Office
-Created: 2026-10-23
-Version: 1.13.0
-License: MIT
+作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
+作成日 / Created: 2026-10-23
+版 / Version: 1.13.0
+ライセンス / License: MIT
 SPDX-License-Identifier: MIT
 -->
 # mdEditor 1.0.15 / Trilingual release

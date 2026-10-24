@@ -1,0 +1,13 @@
+{
+  "x": {
+    "status": "published",
+    "target": "@5garashi_com",
+    "text": "mdEditor 1.0.15\n新：簡体字中国語・コピーから新規文書・起動改善。\nライブプレビュー、オフラインの図・数式、3D、PDF保存。\n広告・計測・アカウント不要。\n日英中の実演 https://5garashi.github.io/mdEditor/\n#mdEditor",
+    "url": "https://x.com/5garashi_com/status/2113793970975518721",
+    "date": "2026-10-24"
+  },
+  "linkedin": {
+    "status": "published",
+    "text": "mdEditor 1.0.15: Simplified Chinese, clipboard capture, and an improved startup.\n\nI updated my free Windows Markdown editor and recorded new Japanese, English and Simplified Chinese demonstrations.\n\nNew: a Chinese interface and samples, optional new-document-from-clipboard shortcut, and startup improvements. The clipboard shortcut is created only after confirmation in Settings; startup performance depends on your PC.\n\nThe established strengths remain: live preview and synchronized scrolling, offline Mermaid/Graphviz/math, interactive STL models, maps, image drag-and-drop with size and alignment controls, and PDF/Word/ZIP sharing.\n\nNo ads, no tracking, no account. Internet media and detailed maps load only with permission. Word import does not preserve colors or layout.\n\nEnglish: https://5garashi.github.io/mdEditor/en.html\n日本語: https://5garashi.github.io/mdEditor/\n简体中文: https://5garashi.github.io/mdEditor/zh-CN.html\n\n簡体字中国語・クリップボード新規作成・起動改善に加え、従来の図・数式・3D・PDFの強みも紹介しています。\n\n#Markdown #Windows #mdEditor"
+  }
+}
