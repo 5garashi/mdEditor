@@ -114,7 +114,9 @@ internal static partial class PdfImport
                 letters.Add(Placeholder(formula, (char)(0xE000 + inlines.Count - 1), page.Letters));
             }
 
-            var blocks = Blocks(letters, rejoined, tags).ToList();
+            // A card's frame, not a code background or one as tall as the page (a browser's page background).
+            var cards = shapes.Frames.Where((frame, index) => !shapes.CodeFrames.Contains(index) && frame.Height < page.Height * 0.5).ToList();
+            var blocks = Blocks(letters, rejoined, tags, cards).ToList();
             // A bullet set apart from its text, in a block of its own, marks the line it is
             // level with, as a bullet drawn as a shape does (even in the middle of a block).
             foreach (var bullet in blocks.Where(block => LoneBulletPattern().IsMatch(block.Text)).ToList())
@@ -423,8 +425,8 @@ internal static partial class PdfImport
     // Whether a page's running text (figures, tables, and formulas apart) cannot be read in
     // order, so the page is better kept as a picture of itself: it is written in vertical
     // lines (half the steps from a letter to the next go down), much of it is turned, or
-    // much of it lies over other text (a poster's lettering over its background words; a
-    // letter drawn twice for bold does not count). A page of under 20 letters is read.
+    // much of it lies over other text on another baseline (a poster's lettering over its
+    // background words). A page of under 20 letters is read.
     private static bool PicturePage(IReadOnlyList<Letter> letters)
     {
         var text = letters.Where(letter => !IsBlank(letter)).ToList();
@@ -459,8 +461,10 @@ internal static partial class PdfImport
                 var b = sorted[j].BoundingBox;
                 var width = Math.Min(a.Right, b.Right) - Math.Max(a.Left, b.Left);
                 var height = Math.Min(a.Top, b.Top) - Math.Max(a.Bottom, b.Bottom);
-                var twice = sorted[i].Value == sorted[j].Value && Math.Abs(a.Left - b.Left) < 1.5 && Math.Abs(a.Bottom - b.Bottom) < 1.5;
-                if (width > 0 && height > 0 && !twice && width * height > Math.Min(a.Width * a.Height, b.Width * b.Height) * 0.4)
+                // Letters on one baseline overlap where they are set tight (their boxes are wider
+                // than their advance), and a letter drawn twice for bold is on its own baseline.
+                var sameLine = Math.Abs(sorted[i].StartBaseLine.Y - sorted[j].StartBaseLine.Y) < Math.Min(sorted[i].PointSize, sorted[j].PointSize) * 0.3;
+                if (width > 0 && height > 0 && !sameLine && width * height > Math.Min(a.Width * a.Height, b.Width * b.Height) * 0.4)
                 {
                     over++;
                     break;
@@ -650,7 +654,7 @@ internal static partial class PdfImport
     // untagged page is). A letter in no element (a formula set in the text, an icon a style
     // sheet adds) goes with the nearest letter on its line that is in one; others make
     // blocks placed by where they stand.
-    private static IEnumerable<TextBlock> Blocks(IReadOnlyList<Letter> letters, HashSet<Word> rejoined, PageTags? tags)
+    private static IEnumerable<TextBlock> Blocks(IReadOnlyList<Letter> letters, HashSet<Word> rejoined, PageTags? tags, IReadOnlyList<PdfRectangle> frames)
     {
         if (letters.Count == 0)
         {
@@ -660,7 +664,7 @@ internal static partial class PdfImport
         if (tags is null)
         {
             var ordered = new List<TextBlock>();
-            foreach (var block in TextBlocks(letters, rejoined))
+            foreach (var block in TextBlocks(letters, rejoined, frames))
             {
                 InsertByPlace(ordered, block);
             }
@@ -674,8 +678,8 @@ internal static partial class PdfImport
             .Where(pair => pair.gap < Math.Max(letter.PointSize, 1) * 3).OrderBy(pair => pair.gap).Select(pair => pair.other).FirstOrDefault() is { } near ? tags.Of(near) : null;
         var groups = letters.GroupBy(letter => (tags.Of(letter) ?? Near(letter))?.Block ?? -1).ToList();
         var result = groups.Where(group => group.Key >= 0).OrderBy(group => group.Min(letter => tags.Of(letter)?.Order ?? int.MaxValue))
-            .SelectMany(group => ElementBlock(group.ToList()) is { } block ? [block] : TextBlocks(group.ToList(), rejoined)).ToList();
-        foreach (var block in groups.Where(group => group.Key < 0).SelectMany(group => TextBlocks(group.ToList(), rejoined)))
+            .SelectMany(group => ElementBlock(group.ToList()) is { } block ? [block] : TextBlocks(group.ToList(), rejoined, frames)).ToList();
+        foreach (var block in groups.Where(group => group.Key < 0).SelectMany(group => TextBlocks(group.ToList(), rejoined, frames)))
         {
             InsertByPlace(result, block);
         }
@@ -723,10 +727,10 @@ internal static partial class PdfImport
     // Letters in blocks, in PdfPig's reading order. PdfPig follows the order the page draws
     // its text in where places leave it open, and a page can draw a title after the text
     // below it (a chapter's first page): see InsertByPlace.
-    private static IEnumerable<TextBlock> TextBlocks(IReadOnlyList<Letter> letters, HashSet<Word> rejoined)
+    private static IEnumerable<TextBlock> TextBlocks(IReadOnlyList<Letter> letters, HashSet<Word> rejoined, IReadOnlyList<PdfRectangle> frames)
     {
         var words = NearestNeighbourWordExtractor.Instance.GetWords(letters).ToList();
-        var blocks = JoinSplitLines(DocstrumBoundingBoxes.Instance.GetBlocks(words).ToList(), rejoined);
+        var blocks = KeyValueRows(JoinSplitLines(DocstrumBoundingBoxes.Instance.GetBlocks(words).ToList(), rejoined), rejoined, frames);
         var ordered = new List<TextBlock>();
         foreach (var block in UnsupervisedReadingOrderDetector.Instance.Get(blocks))
         {
@@ -902,6 +906,114 @@ internal static partial class PdfImport
             blocks[owner] =new TextBlock(blocks[owner].TextLines.Concat(blocks[i].TextLines).ToList());
             blocks.RemoveAt(i);
             i = -1;
+        }
+
+        return blocks;
+    }
+
+    // Keys and values set side by side (a front matter card: "title" beside its value,
+    // "tags" beside a row of tags) come apart into a column of keys and blocks of values,
+    // and each word would stand alone. A narrow block of short lines (twelve letters at
+    // most) with blocks to its right on the same baselines is one: it, those blocks, and
+    // more keys under it at the same left edge become one block whose rows are lines of
+    // their own (their words are added to rejoined), when two rows or more have a key. It
+    // must all lie in one frame (a card; chart labels and labels around a picture, set
+    // the same way, are not framed), not a code background.
+    private static List<TextBlock> KeyValueRows(List<TextBlock> blocks, HashSet<Word> rejoined, IReadOnlyList<PdfRectangle> frames)
+    {
+        if (blocks.Count < 2)
+        {
+            return blocks;
+        }
+
+        var width = blocks.Max(block => block.BoundingBox.Right) - blocks.Min(block => block.BoundingBox.Left);
+        bool Keys(TextBlock block) => SplitLines(block) is var lines && lines.Count > 0
+            && lines.All(line => ReadLine(line).Text.Count(c => !char.IsWhiteSpace(c)) <= 12) && block.BoundingBox.Width < width * 0.25;
+        // The leftmost column of short lines holds the keys (the values can be short too).
+        foreach (var keys in blocks.OrderBy(block => block.BoundingBox.Left).ToList())
+        {
+            var i = blocks.IndexOf(keys);
+            if (i < 0 || !Keys(keys))
+            {
+                continue;
+            }
+
+            var height = Math.Max(SplitLines(keys).Max(line => line.Max(word => word.BoundingBox.Height)), 1);
+            var group = new List<TextBlock> { keys };
+            for (var grown = true; grown;)
+            {
+                grown = false;
+                var (top, bottom) = (group.Max(block => block.BoundingBox.Top), group.Min(block => block.BoundingBox.Bottom));
+                foreach (var block in blocks.Where(block => !group.Contains(block)))
+                {
+                    var box = block.BoundingBox;
+                    // Rows can stand a few line heights apart.
+                    var level = box.Top <= top + height && box.Top >= bottom - height * 3;
+                    var values = box.Left >= keys.BoundingBox.Right - 1;
+                    // A key already put back with its value across a wide gap (JoinSplitLines) is one too.
+                    var moreKeys = Math.Abs(box.Left - keys.BoundingBox.Left) <= 2
+                        && (Keys(block) || block.TextLines.SelectMany(line => line.Words).Any(rejoined.Contains));
+                    if (level && (values || moreKeys))
+                    {
+                        group.Add(block);
+                        grown = true;
+                    }
+                }
+            }
+
+            // Two rows or more with a key and a value on one baseline.
+            var keyLines = group.Where(block => Math.Abs(block.BoundingBox.Left - keys.BoundingBox.Left) <= 2).SelectMany(SplitLines).ToList();
+            var valueLines = group.Where(block => block.BoundingBox.Left >= keys.BoundingBox.Right - 1).SelectMany(SplitLines).ToList();
+            if (valueLines.Count == 0 || keyLines.Count(key => valueLines.Any(value => Math.Abs(value[0].BoundingBox.Bottom - key[0].BoundingBox.Bottom) < height * 0.5)) < 2)
+            {
+                continue;
+            }
+
+            var area = Union(group.Select(block => block.BoundingBox));
+            if (!frames.Any(frame => frame.Left <= area.Left + 2 && frame.Right >= area.Right - 2 && frame.Bottom <= area.Bottom + 2 && frame.Top >= area.Top - 2))
+            {
+                continue;
+            }
+
+            // Values that wrap (a line reaching the right edge, the next starting where its
+            // value does) are prose beside a label, read as it was. A nested key ("url" under
+            // "author") starts left of the value before it.
+            var rows = SplitLines(new TextBlock(group.SelectMany(block => block.TextLines).ToList()));
+            var right = rows.Max(row => row.Max(word => word.BoundingBox.Right));
+            double ValueStart(List<Word> row)
+            {
+                var value = row.Where(word => word.BoundingBox.Left > keys.BoundingBox.Right + 1).ToList();
+                if (value.Count == 0)
+                {
+                    return row[0].BoundingBox.Left;
+                }
+
+                // After the widest gap: a nested key's value.
+                var start = value[0];
+                var widest = 0.0;
+                for (var w = 1; w < value.Count; w++)
+                {
+                    var gap = value[w].BoundingBox.Left - value[w - 1].BoundingBox.Right;
+                    if (gap > widest && gap > height * 1.5)
+                    {
+                        (widest, start) = (gap, value[w]);
+                    }
+                }
+
+                return start.BoundingBox.Left;
+            }
+
+            if (rows.Zip(rows.Skip(1)).Any(pair => pair.First.Max(word => word.BoundingBox.Right) >= right - height * 3
+                    && Math.Abs(pair.Second[0].BoundingBox.Left - ValueStart(pair.First)) <= 3))
+            {
+                continue;
+            }
+
+
+            var merged = new TextBlock(group.SelectMany(block => block.TextLines).ToList());
+            rejoined.UnionWith(group.SelectMany(block => block.TextLines).SelectMany(line => line.Words));
+            blocks.RemoveAll(group.Contains);
+            blocks.Insert(Math.Min(i, blocks.Count), merged);
         }
 
         return blocks;
