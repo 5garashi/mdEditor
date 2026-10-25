@@ -176,7 +176,10 @@
 - 表格恢复为 Markdown 表格（`| Item | Cost |`）。
 - “Code”下的 Python 成为用 ``` 围起来的代码块，缩进也会保留。
 - “Bullets”成为 `- The first item`，其下为缩进的 `  - A nested item`。“To do”成为 `- [x] A finished task` 和 `- [ ] A task still to do`。
-- “Figure”下的流程图被重新绘制为 SVG 图片（`![](pdf-test.en_files/image2.svg)`），预览中可以看到与 PDF 相同布局的方框、箭头和“Write”“Save”“Share”文字。图中的文字不会出现在正文中。
+- “Figure”下的流程图被重新绘制为 SVG 图片（`<p align="center"><img src="pdf-test.en_files/image….svg" …></p>`），预览中可以看到与 PDF 相同布局的方框、箭头和“Write”“Save”“Share”文字。图中的文字不会出现在正文中。
+- “Math”中句子里的 $E = mc^2$ 成为原位置的图片（`![E=mc2](pdf-test.en_files/image….svg)`），单独一行的分数成为居中的图片。
+- “Image size and position”成为 `<p align="center">…width="50%"…</p>`，以及 `width="25%" align="left"` 的图片、其后环绕的段落和 `<br clear="all">`。
+- “Video”恢复为单独一行的地址（`https://www.w3schools.com/html/mov_bbb.mp4`）；PDF 中是“未加载”的注记。
 - 把 pdf-test.en.pdf 拖放到编辑区时，插入的是复制到“名称_files”文件夹中的 PDF 的链接，而不是其内容。
 
 ### 2.16 pdf-toc-test.en.pdf（目录和带编号的标题）

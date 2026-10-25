@@ -24,8 +24,16 @@ namespace MdEditor;
 // then pictures, then text.
 internal static partial class PdfImport
 {
-    private static string FigureSvg(Page page, PdfRectangle area)
+    // A formula's picture also takes lines that reach out of it (KaTeX draws a root sign as a
+    // very long line that the page cuts off), cut off at its edge.
+    private static string FigureSvg(Page page, PdfRectangle area, bool formula = false)
     {
+        // Italic letters reach a little past their boxes.
+        if (formula)
+        {
+            area = new PdfRectangle(area.Left - 2, area.Bottom - 2, area.Right + 2, area.Top + 2);
+        }
+
         static string N(double value) => Math.Round(value, 2).ToString(CultureInfo.InvariantCulture);
         string X(double x) => N(x - area.Left);
         string Y(double y) => N(area.Top - y);
@@ -44,7 +52,8 @@ internal static partial class PdfImport
         svg.Append("<rect width=\"100%\" height=\"100%\" fill=\"#fff\"/>\n");
         foreach (var path in page.Paths)
         {
-            if (path.IsClipping || !(path.IsFilled || path.IsStroked) || path.GetBoundingRectangle() is not { } box || !Contains(area, box))
+            if (path.IsClipping || !(path.IsFilled || path.IsStroked) || path.GetBoundingRectangle() is not { } box
+                || !(Contains(area, box) || (formula && Overlaps(area, box) && box.Height <= area.Height * 1.5)))
             {
                 continue;
             }
@@ -163,7 +172,21 @@ internal static partial class PdfImport
             }
 
             var first = run[0];
-            var family = IsMonospaced(first.FontName) ? "monospace"
+            // KaTeX's math letters are italic; Cambria Math has the large operators.
+            var katex = IsMathLetter(first);
+            // KaTeX sets large operators and brackets in fonts of their own sizes: such a
+            // letter is drawn as tall as it stands, centered on its place.
+            if (katex && (first.FontName ?? string.Empty).Contains("KaTeX_Size", StringComparison.OrdinalIgnoreCase))
+            {
+                var glyph = first.BoundingBox;
+                svg.Append($"<text x=\"{X((glyph.Left + glyph.Right) / 2)}\" y=\"{Y((glyph.Top + glyph.Bottom) / 2)}\" font-size=\"{N(glyph.Height)}\" text-anchor=\"middle\" dominant-baseline=\"central\" font-family=\"'Cambria Math', 'Times New Roman', serif\" fill=\"{Color(first.Color)}\">")
+                    .Append(WebUtility.HtmlEncode(first.Value)).Append("</text>\n");
+                run.Clear();
+                return;
+            }
+
+            var family = katex ? "'Cambria Math', 'Times New Roman', serif"
+                : IsMonospaced(first.FontName) ? "monospace"
                 : Family(first.FontName) is var name && (name.Contains("mincho") || name.Contains("times") || name.Contains("serif") && !name.Contains("sans") || name.Contains("georgia")) ? "serif"
                 : "sans-serif";
             var angle = Math.Atan2(first.EndBaseLine.Y - first.StartBaseLine.Y, first.EndBaseLine.X - first.StartBaseLine.X) * 180 / Math.PI;
@@ -178,6 +201,11 @@ internal static partial class PdfImport
             if (IsBold(first))
             {
                 svg.Append(" font-weight=\"bold\"");
+            }
+
+            if (katex && (first.FontName ?? string.Empty).Contains("Italic", StringComparison.OrdinalIgnoreCase))
+            {
+                svg.Append(" font-style=\"italic\"");
             }
 
             if (Math.Abs(angle) > 1)
@@ -209,7 +237,8 @@ internal static partial class PdfImport
             }
 
             run.Add(letter);
-            if (Math.Abs(letter.EndBaseLine.Y - letter.StartBaseLine.Y) >= 0.01)
+            if (Math.Abs(letter.EndBaseLine.Y - letter.StartBaseLine.Y) >= 0.01
+                || (letter.FontName ?? string.Empty).Contains("KaTeX_Size", StringComparison.OrdinalIgnoreCase))
             {
                 Flush();
             }

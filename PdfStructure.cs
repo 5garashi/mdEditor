@@ -19,7 +19,9 @@ namespace MdEditor;
 //   it is drawn again as an SVG picture with its labels (PdfFigure.cs), so they are left
 //   out of the text;
 // - a small shape or a small square just before the start of a line is a bullet or a check
-//   box, so the line becomes a list item.
+//   box, so the line becomes a list item;
+// - letters in KaTeX's typefaces, with the lines drawn with them, are a formula, drawn
+//   again as a picture like a figure.
 // Boxes behind text (code, notes) and lines under headings are none of these.
 internal static partial class PdfImport
 {
@@ -27,10 +29,14 @@ internal static partial class PdfImport
 
     private sealed record Mark(PdfRectangle Box, bool CheckBox, bool Checked);
 
+    // A formula set by KaTeX: its letters in math typefaces with the lines drawn with them
+    // (fraction bars, root signs, large brackets). Display math has a line of its own.
+    private sealed record Formula(PdfRectangle Box, bool Display, List<Letter> Letters);
+
     // Frames are the wide boxes behind text (a code block's background, a note).
-    private sealed record PageShapes(List<Grid> Tables, List<PdfRectangle> Figures, List<Mark> Marks, List<PdfRectangle> Frames)
+    private sealed record PageShapes(List<Grid> Tables, List<PdfRectangle> Figures, List<Mark> Marks, List<PdfRectangle> Frames, List<Formula> Formulas)
     {
-        public static readonly PageShapes None = new([], [], [], []);
+        public static readonly PageShapes None = new([], [], [], [], []);
     }
 
     private sealed record Segment(bool Horizontal, double At, double From, double To);
@@ -135,8 +141,93 @@ internal static partial class PdfImport
         marks.RemoveAll(mark => figures.Any(figure => Contains(figure, mark.Box)));
         var frames = shapes.Where(shape => shape.BoxLike && shape.Box.Width > page.Width * 0.45 && !figures.Any(figure => Overlaps(figure, shape.Box)))
             .Select(shape => shape.Box).ToList();
-        return new PageShapes(tables, figures, marks, frames);
+        return new PageShapes(tables, figures, marks, frames, FindFormulas(letters, shapes, segments, figures, tables));
     }
+
+    // Math letters close together make a formula, which takes in the lines drawn over or
+    // around them. Formulas in figures and tables stay part of them.
+    private static List<Formula> FindFormulas(List<Letter> letters, List<Shape> shapes, List<Segment> segments, List<PdfRectangle> figures, List<Grid> tables)
+    {
+        var math = letters.Where(letter => IsMathLetter(letter) && !figures.Any(figure => Contains(figure, letter))
+            && !tables.Any(table => Contains(table.Box, letter))).ToList();
+        if (math.Count == 0)
+        {
+            return [];
+        }
+
+        // Letters of one formula stand apart by up to a thick space around "=" (and a little
+        // more); two formulas in a sentence have words or punctuation between them.
+        var gap = math.Select(letter => letter.PointSize).Order().ElementAt(math.Count / 2) * 0.6;
+        var drawn = shapes.Select(shape => shape.Box).Concat(segments.Select(SegmentBox)).ToList();
+        var others = letters.Where(letter => !IsMathLetter(letter) && letter.BoundingBox.Width > 0.5).ToList();
+        List<PdfRectangle> Merge(List<PdfRectangle> boxes) =>
+            Clusters(boxes, gap).Select(cluster => Union(cluster.Select(index => boxes[index]))).ToList();
+
+        // A formula takes in the lines drawn with it, and the other letters `takes` allows
+        // that touch it.
+        PdfRectangle Grow(PdfRectangle box, Func<Letter, bool> takes)
+        {
+            bool grew;
+            do
+            {
+                grew = false;
+                foreach (var letter in others)
+                {
+                    var glyph = letter.BoundingBox;
+                    if (!Contains(box, letter) && glyph.Left - gap <= box.Right && box.Left - gap <= glyph.Right
+                        && glyph.Bottom < box.Top && glyph.Top > box.Bottom && takes(letter))
+                    {
+                        box = Union([box, glyph]);
+                        grew = true;
+                    }
+                }
+
+                foreach (var part in drawn)
+                {
+                    // A fraction bar stands a thin space from the "=" and a little below its numerator.
+                    var near = new PdfRectangle(box.Left - gap, box.Bottom - gap / 2, box.Right + gap, box.Top + gap / 2);
+                    if (part.Height <= Math.Max(box.Height * 2, 30) && (part.Width <= box.Width + 30 || (part.Height <= 2 && part.Width <= gap * 20))
+                        && Overlaps(near, part) && !Contains(box, part))
+                    {
+                        box = Union([box, part]);
+                        grew = true;
+                    }
+                }
+            }
+            while (grew);
+            return box;
+        }
+
+        var boxes = Merge(Clusters(math.Select(letter => letter.BoundingBox).ToList(), gap)
+            .Select(cluster => Grow(Union(cluster.Select(index => math[index].BoundingBox)), _ => false)).ToList());
+        // Japanese or Chinese in a formula (\text{売上}) is set in the system's typeface; such
+        // letters belong to the formula when they touch it and sit off the line of the text
+        // right beside it (a fraction's parts, a subscript). With no text beside it (display
+        // math), every letter that touches it does.
+        boxes = Merge(boxes.Select(box =>
+        {
+            var size = math.Where(letter => Contains(box, letter)).Select(letter => letter.PointSize).DefaultIfEmpty(gap / 0.6).Max();
+            var beside = others.Where(letter => !Contains(box, letter) && letter.BoundingBox.Bottom < box.Top && letter.BoundingBox.Top > box.Bottom
+                    && ((letter.BoundingBox.Right <= box.Left + 1 && box.Left - letter.BoundingBox.Right < gap * 2)
+                        || (letter.BoundingBox.Left >= box.Right - 1 && letter.BoundingBox.Left - box.Right < gap * 2)))
+                .OrderBy(letter => Math.Min(Math.Abs(box.Left - letter.BoundingBox.Right), Math.Abs(letter.BoundingBox.Left - box.Right)))
+                .FirstOrDefault();
+            return Grow(box, letter => beside is null || Math.Abs(letter.StartBaseLine.Y - beside.StartBaseLine.Y) > size * 0.3);
+        }).ToList());
+        // Display math: no text but math level with it (zero-width letters do not count). Its
+        // pieces on one line (a matrix's columns, a root apart from the "=") are one formula.
+        bool Display(PdfRectangle box) => !letters.Any(letter => !IsMathLetter(letter) && !Contains(box, letter) && letter.BoundingBox.Width > 0.5
+            && (letter.BoundingBox.Top + letter.BoundingBox.Bottom) / 2 is var middle && middle > box.Bottom && middle < box.Top);
+        var display = boxes.Where(Display).ToList();
+        var lines = Clusters(display.Select(box => new PdfRectangle(0, box.Bottom, 1, box.Top)).ToList(), 0)
+            .Select(cluster => Union(cluster.Select(index => display[index]))).ToList();
+        return boxes.Where(box => !Display(box)).Select(box => (Box: box, Display: false)).Concat(lines.Select(box => (Box: box, Display: true)))
+            .Select(formula => new Formula(formula.Box, formula.Display, letters.Where(letter => Contains(formula.Box, letter)).ToList()))
+            .Where(formula => formula.Letters.Count > 0).ToList();
+    }
+
+    private static bool IsMathLetter(Letter letter) =>
+        (letter.FontName ?? string.Empty).Contains("KaTeX", StringComparison.OrdinalIgnoreCase);
 
     // A rectangle, or one with rounded corners: straight lines only across or down, and
     // curves only as small corners. A small circle (curves only) is not a box.
@@ -198,17 +289,17 @@ internal static partial class PdfImport
             }
 
             var middle = (box.Top + box.Bottom) / 2;
-            bool SameLine(Letter letter) => middle > letter.GlyphRectangle.Bottom - 2 && middle < letter.GlyphRectangle.Top + 2;
+            bool SameLine(Letter letter) => middle > letter.BoundingBox.Bottom - 2 && middle < letter.BoundingBox.Top + 2;
             var size = letters.Where(SameLine).Select(letter => letter.PointSize).DefaultIfEmpty(0).Max();
             if (size <= 0)
             {
                 continue;
             }
 
-            var after = letters.Any(letter => SameLine(letter) && letter.GlyphRectangle.Left >= box.Right - 1
-                && letter.GlyphRectangle.Left - box.Right < size * 2.5);
-            var before = letters.Any(letter => SameLine(letter) && letter.GlyphRectangle.Right <= box.Left + 1
-                && box.Left - letter.GlyphRectangle.Right < size * 1.5);
+            var after = letters.Any(letter => SameLine(letter) && letter.BoundingBox.Left >= box.Right - 1
+                && letter.BoundingBox.Left - box.Right < size * 2.5);
+            var before = letters.Any(letter => SameLine(letter) && letter.BoundingBox.Right <= box.Left + 1
+                && box.Left - letter.BoundingBox.Right < size * 1.5);
             if (!after || before)
             {
                 continue;
@@ -298,17 +389,19 @@ internal static partial class PdfImport
         return lines;
     }
 
-    // Groups of boxes that touch or lie within `gap` of each other.
-    private static List<List<int>> Clusters(List<PdfRectangle> boxes, double gap)
+    // Groups of boxes that touch or lie within `gap` of each other (`vertical` above and
+    // below, when given).
+    private static List<List<int>> Clusters(List<PdfRectangle> boxes, double gap, double? vertical = null)
     {
         var parent = Enumerable.Range(0, boxes.Count).ToArray();
         int Find(int i) => parent[i] == i ? i : parent[i] = Find(parent[i]);
+        var up = vertical ?? gap;
         for (var i = 0; i < boxes.Count; i++)
         {
             for (var j = i + 1; j < boxes.Count; j++)
             {
                 if (boxes[i].Left - gap <= boxes[j].Right && boxes[j].Left - gap <= boxes[i].Right
-                    && boxes[i].Bottom - gap <= boxes[j].Top && boxes[j].Bottom - gap <= boxes[i].Top)
+                    && boxes[i].Bottom - up <= boxes[j].Top && boxes[j].Bottom - up <= boxes[i].Top)
                 {
                     parent[Find(i)] = Find(j);
                 }
@@ -368,8 +461,8 @@ internal static partial class PdfImport
 
     private static bool Contains(PdfRectangle box, Letter letter)
     {
-        var x = (letter.GlyphRectangle.Left + letter.GlyphRectangle.Right) / 2;
-        var y = (letter.GlyphRectangle.Top + letter.GlyphRectangle.Bottom) / 2;
+        var x = (letter.BoundingBox.Left + letter.BoundingBox.Right) / 2;
+        var y = (letter.BoundingBox.Top + letter.BoundingBox.Bottom) / 2;
         return x >= box.Left && x <= box.Right && y >= box.Bottom && y <= box.Top;
     }
 }

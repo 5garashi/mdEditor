@@ -176,7 +176,10 @@ Expected results:
 - The table comes back as a Markdown table (`| Item | Cost |`).
 - The Python under "Code" becomes a fenced code block, with its indentation.
 - "Bullets" becomes `- The first item`, with `  - A nested item` indented under it. "To do" becomes `- [x] A finished task` and `- [ ] A task still to do`.
-- The flowchart under "Figure" is redrawn as an SVG picture (`![](pdf-test.en_files/image2.svg)`): the preview shows its boxes, arrows, and the labels "Write", "Save", and "Share" laid out as in the PDF. Its labels do not appear in the text.
+- The flowchart under "Figure" is redrawn as an SVG picture (`<p align="center"><img src="pdf-test.en_files/image….svg" …></p>`): the preview shows its boxes, arrows, and the labels "Write", "Save", and "Share" laid out as in the PDF. Its labels do not appear in the text.
+- Under "Math", $E = mc^2$ in the sentence becomes a picture in its place (`![E=mc2](pdf-test.en_files/image….svg)`), and the fraction on a line of its own a centered picture.
+- "Image size and position" becomes `<p align="center">…width="50%"…</p>`, and an image with `width="25%" align="left"` followed by the paragraph that flows around it and `<br clear="all">`.
+- "Video" comes back as the address on a line of its own (`https://www.w3schools.com/html/mov_bbb.mp4`); the PDF has the "not loaded" note.
 - Dropping pdf-test.en.pdf on the editor inserts a link to the PDF copied into the "name_files" folder, not its content.
 
 ### 2.16 pdf-toc-test.en.pdf (contents and numbered headings)

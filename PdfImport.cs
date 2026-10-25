@@ -11,6 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using UglyToad.PdfPig;
 using UglyToad.PdfPig.Content;
+using UglyToad.PdfPig.Core;
 using UglyToad.PdfPig.DocumentLayoutAnalysis;
 using UglyToad.PdfPig.DocumentLayoutAnalysis.PageSegmenter;
 using UglyToad.PdfPig.DocumentLayoutAnalysis.ReadingOrderDetector;
@@ -24,7 +25,8 @@ namespace MdEditor;
 // (HeadingGuess), lines starting with a bullet or number become list items, lines in a
 // monospaced typeface become code blocks, and pictures are written to "name_files". Ruled
 // tables, figures, and bullets drawn as shapes are found from the drawings (PdfStructure.cs).
-// Math and column layout come back only as their text.
+// Figures and math are drawn again as SVG pictures (PdfFigure.cs), and pictures keep their
+// size and place (Picture). Column layout comes back only as its text.
 // Nothing is sent anywhere, and the PDF itself is never written.
 internal static partial class PdfImport
 {
@@ -34,7 +36,11 @@ internal static partial class PdfImport
 
     private sealed record Line(string Text, double Size, bool Bold, double Top, double Right, bool MathFont, string Family, double Left = 0, bool Rejoined = false);
 
-    private sealed record Item(string Text, double Size, bool Bold, ItemKind Kind, double Top, int Page, bool Math = false, string Family = "", bool Toc = false, double Left = 0, double Advance = 0, int Frame = -1);
+    // A picture also keeps where it was (Left, Right, Top, Bottom), the width it has at its
+    // own size in CSS pixels (Natural), its description (Alt), and the side text flows
+    // around it on (Float); ClearAfter ends the flow after a paragraph.
+    private sealed record Item(string Text, double Size, bool Bold, ItemKind Kind, double Top, int Page, bool Math = false, string Family = "", bool Toc = false, double Left = 0, double Advance = 0, int Frame = -1,
+        double Right = 0, double Bottom = 0, double Natural = 0, string Alt = "", string Float = "", bool ClearAfter = false);
 
     // Code is one item per line; a Table item holds its Markdown.
     private enum ItemKind { Paragraph, Bullet, Numbered, Image, Code, Table }
@@ -44,6 +50,20 @@ internal static partial class PdfImport
         using var document = PdfDocument.Open(path);
         var items = new List<Item>();
         var images = 0;
+        // Formulas in a line of text: each stands in the text as one private-use character,
+        // replaced with its picture at the end.
+        var inlines = new List<string>();
+        // The body's column, for the size and place of pictures.
+        double columnLeft = double.MaxValue, columnRight = double.MinValue;
+        string SaveSvg(string svg)
+        {
+            images++;
+            var file = $"image{images}.svg";
+            Directory.CreateDirectory(Path.Combine(assets, imagesName));
+            File.WriteAllText(Path.Combine(assets, imagesName, file), svg);
+            return file;
+        }
+
         var readPages = Math.Min(document.NumberOfPages, MaxPages);
         for (var number = 1; number <= readPages; number++)
         {
@@ -51,9 +71,17 @@ internal static partial class PdfImport
             var pageItems = new List<Item>();
             var rejoined = new HashSet<Word>(ReferenceEqualityComparer.Instance);
             var shapes = FindShapes(page);
-            // The text of tables and figures is read with them, not in the running text.
+            // The text of tables, figures, and formulas is read with them, not in the running text.
             var letters = page.Letters.Where(letter => !shapes.Tables.Any(table => Contains(table.Box, letter))
-                && !shapes.Figures.Any(figure => Contains(figure, letter))).ToList();
+                && !shapes.Figures.Any(figure => Contains(figure, letter))
+                && !shapes.Formulas.Any(formula => Contains(formula.Box, letter))).ToList();
+            foreach (var formula in shapes.Formulas.Where(formula => !formula.Display))
+            {
+                var file = SaveSvg(FigureSvg(page, formula.Box, formula: true));
+                inlines.Add($"![{EscapeAlt(FormulaText(formula))}]({Uri.EscapeDataString(imagesName)}/{file})");
+                letters.Add(Placeholder(formula, (char)(0xE000 + inlines.Count - 1), page.Letters));
+            }
+
             var blocks = Blocks(letters, rejoined).ToList();
             // A bullet set apart from its text, in a block of its own, marks the line it is
             // level with, as a bullet drawn as a shape does (even in the middle of a block).
@@ -67,6 +95,8 @@ internal static partial class PdfImport
             foreach (var block in blocks)
             {
                 pageItems.AddRange(Paragraphs(block, number, textWidth, rejoined, shapes));
+                columnLeft = Math.Min(columnLeft, block.BoundingBox.Left);
+                columnRight = Math.Max(columnRight, block.BoundingBox.Right);
             }
 
             // A line on the same background as code (one in Japanese only, say) is code too,
@@ -106,14 +136,13 @@ internal static partial class PdfImport
                 Place(new Item(TableMarkdown(table, page.Letters), 0, false, ItemKind.Table, table.Box.Top, number));
             }
 
-            // A figure is drawn again as an SVG picture (PdfFigure.cs).
-            foreach (var figure in shapes.Figures)
+            // A figure, and a formula on a line of its own, is drawn again as an SVG picture
+            // (PdfFigure.cs) at the size it has on the page.
+            foreach (var (box, alt, isFormula) in shapes.Figures.Select(figure => (figure, string.Empty, false))
+                         .Concat(shapes.Formulas.Where(formula => formula.Display).Select(formula => (formula.Box, FormulaText(formula), true))))
             {
-                images++;
-                var file = $"image{images}.svg";
-                Directory.CreateDirectory(Path.Combine(assets, imagesName));
-                File.WriteAllText(Path.Combine(assets, imagesName, file), FigureSvg(page, figure));
-                Place(new Item(file, 0, false, ItemKind.Image, figure.Top, number));
+                Place(new Item(SaveSvg(FigureSvg(page, box, isFormula)), 0, false, ItemKind.Image, box.Top, number,
+                    Left: box.Left, Right: box.Right, Bottom: box.Bottom, Natural: box.Width * 4 / 3, Alt: alt));
             }
 
             // A page number sits alone near the top or bottom edge; numbers elsewhere (a
@@ -160,11 +189,41 @@ internal static partial class PdfImport
                 {
                     images++;
                     // Placed before the first text that starts below the picture's top.
-                    var top = image.BoundingBox.Top;
-                    var at = pageItems.FindIndex(item => item.Kind != ItemKind.Image && item.Top < top - 1);
-                    var picture = new Item(file, 0, false, ItemKind.Image, top, number);
+                    var bounds = image.BoundingBox;
+                    var at = pageItems.FindIndex(item => item.Kind != ItemKind.Image && item.Top < bounds.Top - 1);
+                    var picture = new Item(file, 0, false, ItemKind.Image, bounds.Top, number,
+                        Left: bounds.Left, Right: bounds.Right, Bottom: bounds.Bottom, Natural: image.WidthInSamples);
                     if (at < 0) pageItems.Add(picture); else pageItems.Insert(at, picture);
                 }
+            }
+
+            // Text beside a narrow picture flows around it: the picture keeps to the other
+            // side, and the flow ends after the last paragraph that starts beside it.
+            for (var i = 0; i < pageItems.Count; i++)
+            {
+                var picture = pageItems[i];
+                if (picture.Kind != ItemKind.Image || picture.Right - picture.Left <= 0 || IsIcon(picture)
+                    || picture.Right - picture.Left > (columnRight - columnLeft) * 0.6)
+                {
+                    continue;
+                }
+
+                // A paragraph's first line starts level with the picture (a little above it when
+                // the picture has a margin) and beside it.
+                var beside = pageItems.Select((item, index) => (item, index)).Where(pair => pair.item.Kind is ItemKind.Paragraph or ItemKind.Bullet or ItemKind.Numbered
+                    && !pair.item.Toc && pair.item.Top <= picture.Top + Math.Max(pair.item.Size, 1) * 1.5 && pair.item.Top > picture.Bottom
+                    && (pair.item.Left >= picture.Right - 2 || (pair.item.Right > 0 && pair.item.Right <= picture.Left + 2))).ToList();
+                if (beside.Count == 0)
+                {
+                    continue;
+                }
+
+                // The picture goes right before the text that flows around it.
+                pageItems.RemoveAt(i);
+                var first = beside[0].index > i ? beside[0].index - 1 : beside[0].index;
+                pageItems.Insert(first, picture with { Float = beside[0].item.Left >= picture.Right - 2 ? "left" : "right" });
+                var last = pageItems.FindLastIndex(item => beside.Any(pair => ReferenceEquals(pair.item, item)));
+                pageItems[last] = pageItems[last] with { ClearAfter = true };
             }
 
             items.AddRange(pageItems);
@@ -219,6 +278,14 @@ internal static partial class PdfImport
                 continue;
             }
 
+            // A video on the internet that mdEditor had not loaded is printed as a note with
+            // its address; the address alone on a line shows it again.
+            if (level == 0 && kind is ItemKind.Paragraph or ItemKind.Bullet && ExternalVideoPattern().Match(item.Text) is { Success: true } video)
+            {
+                kind = ItemKind.Paragraph;
+                item = item with { Text = video.Groups["url"].Value };
+            }
+
             if (kind is not (ItemKind.Bullet or ItemKind.Numbered))
             {
                 lists.Clear();
@@ -242,7 +309,7 @@ internal static partial class PdfImport
             switch (kind)
             {
                 case ItemKind.Image:
-                    markdown.Append($"![]({Uri.EscapeDataString(imagesName)}/{item.Text})");
+                    markdown.Append(Picture(item, $"{Uri.EscapeDataString(imagesName)}/{item.Text}", columnLeft, columnRight));
                     break;
                 case ItemKind.Bullet:
                 case ItemKind.Numbered:
@@ -265,12 +332,82 @@ internal static partial class PdfImport
                     break;
             }
 
+            if (item.ClearAfter)
+            {
+                markdown.Append("\n\n<br clear=\"all\">");
+            }
+
             previous = kind;
+        }
+
+        for (var i = 0; i < inlines.Count; i++)
+        {
+            markdown.Replace(((char)(0xE000 + i)).ToString(), inlines[i]);
         }
 
         var headings = levels.Count(level => level > 0);
         return new Result(markdown.Length > 0 ? markdown.Append('\n').ToString() : string.Empty,
             images, document.NumberOfPages, readPages, text.Count > 0, headings);
+    }
+
+    // A picture as Markdown, or as HTML when it is shown at another size than its own (the
+    // width as a share of the body's column, or in pixels), centered, at the right, or with
+    // text flowing around it.
+    private static string Picture(Item item, string source, double columnLeft, double columnRight)
+    {
+        var column = columnRight - columnLeft;
+        var width = item.Right - item.Left;
+        if (width <= 0 || column <= 0 || IsIcon(item))
+        {
+            return $"![{EscapeAlt(item.Alt)}]({source})";
+        }
+
+        var shown = width * 4 / 3;
+        var percent = width / column * 100;
+        var nearest = Math.Round(percent / 5) * 5;
+        var size = item.Natural <= 0 || Math.Abs(shown - item.Natural) <= item.Natural * 0.05 || percent >= 90 ? null
+            : Math.Abs(percent - nearest) < 1.5 ? $"{nearest}%" : $"{Math.Round(shown)}";
+        var (left, right) = (item.Left - columnLeft, columnRight - item.Right);
+        var align = item.Float.Length > 0 ? null
+            : left > column * 0.05 && Math.Abs(left - right) < column * 0.05 ? "center"
+            : left > column * 0.1 && right < column * 0.03 ? "right"
+            : null;
+        if (size is null && align is null && item.Float.Length == 0)
+        {
+            return $"![{EscapeAlt(item.Alt)}]({source})";
+        }
+
+        var alt = System.Net.WebUtility.HtmlEncode(item.Alt);
+        var image = $"<img src=\"{source}\" alt=\"{alt}\"" + (size is null ? string.Empty : $" width=\"{size}\"")
+            + (item.Float.Length > 0 ? $" align=\"{item.Float}\" hspace=\"16\"" : string.Empty) + ">";
+        return align is null ? image : $"<p align=\"{align}\">{image}</p>";
+    }
+
+    // A picture no taller than a line or so (an icon, an emoji drawn as a picture) stays in
+    // the text as it is.
+    private static bool IsIcon(Item picture) => picture.Top - picture.Bottom < 24 && picture.Alt.Length == 0;
+
+    private static string EscapeAlt(string alt) => alt.Replace("\\", "\\\\").Replace("[", "\\[").Replace("]", "\\]");
+
+    // A formula's letters left to right (zero-width ones left out), as its description.
+    private static string FormulaText(Formula formula) => Normalize(string.Concat(formula.Letters
+        .Where(letter => letter.BoundingBox.Width > 0.5 && !string.IsNullOrWhiteSpace(letter.Value))
+        .OrderBy(letter => letter.StartBaseLine.X).Select(letter => letter.Value)));
+
+    // The one letter an inline formula stands as: as wide as the formula, on the baseline
+    // and in the typeface and size of the text next to it.
+    private static Letter Placeholder(Formula formula, char mark, IEnumerable<Letter> letters)
+    {
+        var box = formula.Box;
+        var near = letters.Where(letter => !IsMathLetter(letter) && letter.BoundingBox.Width > 0.5 && !string.IsNullOrWhiteSpace(letter.Value)
+                && letter.GetFont() is not null && !Contains(box, letter) && letter.BoundingBox.Bottom < box.Top && letter.BoundingBox.Top > box.Bottom)
+            .OrderBy(letter => Math.Min(Math.Abs(letter.BoundingBox.Left - box.Right), Math.Abs(box.Left - letter.BoundingBox.Right)))
+            .FirstOrDefault() ?? formula.Letters.Where(letter => letter.GetFont() is not null).OrderByDescending(letter => letter.PointSize).FirstOrDefault()
+            ?? formula.Letters[0];
+        var baseline = near.StartBaseLine.Y;
+        var glyph = new PdfRectangle(box.Left, baseline, box.Right, baseline + near.PointSize * 0.7);
+        return new Letter(mark.ToString(), glyph, glyph, new PdfPoint(box.Left, baseline), new PdfPoint(box.Right, baseline),
+            box.Width, near.FontSize, near.GetFont()!, near.RenderingMode, near.StrokeColor, near.FillColor, near.PointSize, near.TextSequence);
     }
 
     // Text blocks of a page in reading order (columns are read one after another).
@@ -380,8 +517,10 @@ internal static partial class PdfImport
 
             var text = JoinLines(current.Select(line => line.Text));
             var mathInItem = current.Any(line => line.MathFont);
+            // Where the first line ends, for text that flows around a picture.
+            var right = current[0].Right;
             current.Clear();
-            yield return new Item(text, firstSize, firstBold, kind, firstTop, page, mathInItem, firstFamily, Left: firstLeft);
+            yield return new Item(text, firstSize, firstBold, kind, firstTop, page, mathInItem, firstFamily, Left: firstLeft, Right: right);
         }
 
         for (var index = 0; index < lines.Count; index++)
@@ -518,9 +657,12 @@ internal static partial class PdfImport
     {
         var letters = words.SelectMany(word => word.Letters).Where(letter => !string.IsNullOrWhiteSpace(letter.Value))
             .OrderBy(letter => letter.StartBaseLine.X).ToList();
-        // Japanese and Chinese in code (comments, strings) are set in another typeface.
+        // Japanese and Chinese in code (comments, strings) are set in another typeface. A line
+        // of prose with code words in it starts with prose or is mostly Japanese or Chinese (a
+        // long comment on a code background is code all the same; see ToMarkdown).
         var latin = letters.Where(letter => !letter.Value.Any(IsCjk)).ToList();
-        if (latin.Count == 0 || latin.Count(letter => IsMonospaced(letter.FontName)) < latin.Count * 0.8)
+        if (latin.Count == 0 || latin.Count(letter => IsMonospaced(letter.FontName)) < latin.Count * 0.8
+            || !IsMonospaced(letters[0].FontName) || letters.Count - latin.Count > latin.Count)
         {
             return null;
         }
@@ -780,6 +922,10 @@ internal static partial class PdfImport
 
     [GeneratedRegex(@"^\s*[•●○◦▪■□・·‣⁃\-–*]\s+")]
     private static partial Regex BulletPattern();
+
+    // mdEditor's note for an internet video it has not loaded, in each language.
+    [GeneratedRegex(@"^\s*[［\[](?:外部の動画|外部视频|Internet video)\s*[:：]\s*(?<url>https?://[^\s（(]+)\s*[（(][^）)]*[）)][。，,]?\s*(?:読み込んでいません|未加载|not loaded)\s*[］\]]\s*$")]
+    private static partial Regex ExternalVideoPattern();
 
     [GeneratedRegex(@"^\s*(\d{1,3})[.)．）]\s+")]
     private static partial Regex NumberedPattern();
