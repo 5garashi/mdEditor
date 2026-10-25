@@ -170,10 +170,13 @@
 期待的结果：
 
 - 通知栏显示“已将 PDF 转换为 Markdown 打开”，文件名变为 pdf-test.en.md。
-- “Opening a PDF”成为 `#` 标题，“Headings and paragraphs”“Image”“Table”成为 `##`，“A smaller heading”成为 `###`。
+- “Opening a PDF”成为 `#` 标题，“Headings and paragraphs”“Image”“Table”“Code”“Bullets”“To do”“Figure”成为 `##`，“A smaller heading”成为 `###`。
 - 以“A long paragraph”开头的段落，无论在 PDF 中怎样折行，都会合成一个段落，句号前没有空格。
 - 示例图像显示在预览中，编辑区中指向 `pdf-test.en_files/image1.png`。
-- 表格不会恢复为表格，单元格的文字（“Item”“Cost”“Prototype”“120”…）会保留（按行或按单元格排列）。
+- 表格恢复为 Markdown 表格（`| Item | Cost |`）。
+- “Code”下的 Python 成为用 ``` 围起来的代码块，缩进也会保留。
+- “Bullets”成为 `- The first item`，其下为缩进的 `  - A nested item`。“To do”成为 `- [x] A finished task` 和 `- [ ] A task still to do`。
+- “Figure”下的流程图成为“（图）”标记，图中的文字（“Write”等）不会出现。
 - 把 pdf-test.en.pdf 拖放到编辑区时，插入的是复制到“名称_files”文件夹中的 PDF 的链接，而不是其内容。
 
 ### 2.16 pdf-toc-test.en.pdf（目录和带编号的标题）
@@ -186,6 +189,7 @@
 - “1. Introduction”“2. Requirements”成为 `##` 标题，“2.1 Definitions”成为 `###`，“(1) First condition”“(2) Second condition”成为 `####`。
 - 封面的标题、日期和“Contents”成为 `#`。“1 April 2026”的数字后面没有点，不会成为带编号的标题。
 - “•”与文字分开的行成为列表项 `- A definition item, …`。
+- 在同一行上隔着较宽间距的“File Number: E12345”和“Type: A-1”成为一行 `File Number: E12345 Type: A-1`，其下的“Main board”保持为单独的段落。
 - 在文件资源管理器中复制此文件，然后按“从剪贴板新建”的按键，会打开此文件。
 
 ## 3. 另存为

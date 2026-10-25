@@ -204,8 +204,9 @@ internal static partial class Strings
             "This document contains characters that could not be read in the selected encoding (�). Overwriting the file loses those parts of the original. Overwrite anyway?",
         ["見出しのスタイルがないため、文字の大きさから {0} 個の段落を見出しにしました。"] =
             "The document has no heading styles, so {0} paragraphs were made headings from their text size.",
-        ["PDF を Markdown に変換して開きました。文字・見出し（文字の大きさから推測）・箇条書き・画像を取り出し、表・数式・図・段組みの配置は元に戻りません。保存すると Markdown ファイルになります（PDF ファイルは変わりません）。"] =
-            "Converted the PDF to Markdown. Text, headings (guessed from text size), lists, and images come back; tables, math, drawings, and column layout do not. Saving makes a Markdown file (the PDF stays as it is).",
+        ["PDF を Markdown に変換して開きました。文字・見出し（文字の大きさから推測）・箇条書き・罫線のある表・コード・画像を取り出します。図は「（図）」の印に置き換え、数式と段組みの配置は元に戻りません。保存すると Markdown ファイルになります（PDF ファイルは変わりません）。"] =
+            "Converted the PDF to Markdown. Text, headings (guessed from text size), lists, ruled tables, code, and images come back. Figures become a \"(Figure)\" marker, and math and column layout do not come back. Saving makes a Markdown file (the PDF stays as it is).",
+        ["（図）"] = "(Figure)",
         ["この PDF からは文字を取り出せませんでした。画像だけでできた PDF（スキャンしたものなど）の可能性があります。"] =
             "No text could be taken from this PDF. It may be made of images only (a scan, for example).",
         ["ページが多いため、最初の {0} ページだけを開きました（全部で {1} ページ）。"] =

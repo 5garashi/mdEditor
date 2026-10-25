@@ -21,8 +21,10 @@ namespace MdEditor;
 // A PDF records where each letter goes, not what is a heading, a paragraph, or a table.
 // PdfPig (Apache 2.0, managed code only) reads the letters; text blocks are put in reading
 // order, lines are joined into paragraphs, headings are guessed from text size
-// (HeadingGuess), lines starting with a bullet or number become list items, and pictures
-// are written to "name_files". Tables, math, and drawings come back only as their text.
+// (HeadingGuess), lines starting with a bullet or number become list items, lines in a
+// monospaced typeface become code blocks, and pictures are written to "name_files". Ruled
+// tables, figures, and bullets drawn as shapes are found from the drawings (PdfStructure.cs).
+// Math and column layout come back only as their text.
 // Nothing is sent anywhere, and the PDF itself is never written.
 internal static partial class PdfImport
 {
@@ -32,9 +34,10 @@ internal static partial class PdfImport
 
     private sealed record Line(string Text, double Size, bool Bold, double Top, double Right, bool MathFont, string Family, double Left = 0, bool Rejoined = false);
 
-    private sealed record Item(string Text, double Size, bool Bold, ItemKind Kind, double Top, int Page, bool Math = false, string Family = "", bool Toc = false, double Left = 0);
+    private sealed record Item(string Text, double Size, bool Bold, ItemKind Kind, double Top, int Page, bool Math = false, string Family = "", bool Toc = false, double Left = 0, double Advance = 0, int Frame = -1);
 
-    private enum ItemKind { Paragraph, Bullet, Numbered, Image }
+    // Code is one item per line; Table and Figure items hold their Markdown.
+    private enum ItemKind { Paragraph, Bullet, Numbered, Image, Code, Table, Figure }
 
     public static Result ToMarkdown(string path, string assets, string imagesName)
     {
@@ -47,11 +50,65 @@ internal static partial class PdfImport
             var page = document.GetPage(number);
             var pageItems = new List<Item>();
             var rejoined = new HashSet<Word>(ReferenceEqualityComparer.Instance);
-            var blocks = Blocks(page, rejoined).ToList();
+            var shapes = FindShapes(page);
+            // The text of tables and figures is read with them, not in the running text.
+            var letters = page.Letters.Where(letter => !shapes.Tables.Any(table => Contains(table.Box, letter))
+                && !shapes.Figures.Any(figure => Contains(figure, letter))).ToList();
+            var blocks = Blocks(letters, rejoined).ToList();
+            // A bullet set apart from its text, in a block of its own, marks the line it is
+            // level with, as a bullet drawn as a shape does (even in the middle of a block).
+            foreach (var bullet in blocks.Where(block => LoneBulletPattern().IsMatch(block.Text)).ToList())
+            {
+                shapes.Marks.Add(new Mark(bullet.BoundingBox, false, false));
+                blocks.Remove(bullet);
+            }
+
             var textWidth = blocks.Count == 0 ? 0 : blocks.Max(block => block.BoundingBox.Width);
             foreach (var block in blocks)
             {
-                pageItems.AddRange(Paragraphs(block, number, textWidth, rejoined));
+                pageItems.AddRange(Paragraphs(block, number, textWidth, rejoined, shapes));
+            }
+
+            // A line on the same background as code (one in Japanese only, say) is code too,
+            // and the code lines of one background are kept together.
+            for (var i = 0; i < pageItems.Count; i++)
+            {
+                var item = pageItems[i];
+                if (item.Kind != ItemKind.Paragraph || item.Toc)
+                {
+                    continue;
+                }
+
+                var frame = FrameAt(shapes, item.Left + 1, item.Top - item.Size / 2);
+                if (frame >= 0 && pageItems.FirstOrDefault(other => other.Kind == ItemKind.Code && other.Frame == frame) is { } code)
+                {
+                    pageItems[i] = item with { Kind = ItemKind.Code, Advance = code.Advance, Frame = frame, Top = item.Top - item.Size * 0.85 };
+                }
+            }
+
+            foreach (var frame in pageItems.Where(item => item.Kind == ItemKind.Code && item.Frame >= 0).Select(item => item.Frame).Distinct().ToList())
+            {
+                var first = pageItems.FindIndex(item => item.Kind == ItemKind.Code && item.Frame == frame);
+                var group = pageItems.Where(item => item.Kind == ItemKind.Code && item.Frame == frame).ToList();
+                pageItems.RemoveAll(item => item.Kind == ItemKind.Code && item.Frame == frame);
+                pageItems.InsertRange(Math.Min(first, pageItems.Count), group);
+            }
+
+            // Each table and figure goes before the first text that starts below its top.
+            void Place(Item item)
+            {
+                var at = pageItems.FindIndex(other => other.Kind != ItemKind.Image && other.Top < item.Top - 1);
+                if (at < 0) pageItems.Add(item); else pageItems.Insert(at, item);
+            }
+
+            foreach (var table in shapes.Tables)
+            {
+                Place(new Item(TableMarkdown(table, page.Letters), 0, false, ItemKind.Table, table.Box.Top, number));
+            }
+
+            foreach (var figure in shapes.Figures)
+            {
+                Place(new Item(Strings.Tr("（図）"), 0, false, ItemKind.Figure, figure.Top, number));
             }
 
             // A page number sits alone near the top or bottom edge; numbers elsewhere (a
@@ -110,12 +167,12 @@ internal static partial class PdfImport
         var text = items.Where(item => item.Kind != ItemKind.Image).ToList();
         // The body typeface is the one most of the text is set in; a heading set in another
         // (Gothic over Mincho, for example) stands out even at the body size.
-        var bodyFamily = text.GroupBy(item => item.Family)
+        var bodyFamily = text.Where(item => item.Kind is not (ItemKind.Code or ItemKind.Table or ItemKind.Figure)).GroupBy(item => item.Family)
             .OrderByDescending(group => group.Sum(item => item.Text.Length))
             .Select(group => group.Key).FirstOrDefault() ?? string.Empty;
         var levels = HeadingGuess.Levels(text.Select(item => new SizedParagraph(
             item.Text, item.Size, item.Bold,
-            item.Kind == ItemKind.Bullet || item.Math || item.Toc,
+            item.Kind is ItemKind.Bullet or ItemKind.Code or ItemKind.Table or ItemKind.Figure || item.Math || item.Toc,
             item.Family.Length > 0 && item.Family != bodyFamily)).ToList());
         var headingOf = new Dictionary<Item, int>(ReferenceEqualityComparer.Instance);
         for (var i = 0; i < text.Count; i++)
@@ -127,10 +184,39 @@ internal static partial class PdfImport
         var markdown = new StringBuilder();
         ItemKind? previous = null;
         var previousToc = false;
-        foreach (var item in items)
+        // The open list items, outermost first: where each starts, and how far its text is
+        // indented (a nested item is indented to its parent's text).
+        var lists = new List<(double Left, int Indent)>();
+        for (var index = 0; index < items.Count; index++)
         {
+            var item = items[index];
             var level = headingOf.GetValueOrDefault(item);
             var kind = level > 0 ? ItemKind.Paragraph : item.Kind;
+            if (kind == ItemKind.Code)
+            {
+                var end = index;
+                while (end + 1 < items.Count && items[end + 1].Kind == ItemKind.Code && SameCodeBlock(items[end], items[end + 1]))
+                {
+                    end++;
+                }
+
+                if (markdown.Length > 0)
+                {
+                    markdown.Append("\n\n");
+                }
+
+                markdown.Append(CodeBlock(items.GetRange(index, end - index + 1)));
+                index = end;
+                previous = ItemKind.Code;
+                previousToc = false;
+                lists.Clear();
+                continue;
+            }
+
+            if (kind is not (ItemKind.Bullet or ItemKind.Numbered))
+            {
+                lists.Clear();
+            }
             var listContinues = ((previous is ItemKind.Bullet or ItemKind.Numbered) && kind == previous) || (item.Toc && previousToc);
             if (markdown.Length > 0)
             {
@@ -153,9 +239,20 @@ internal static partial class PdfImport
                     markdown.Append($"![]({Uri.EscapeDataString(imagesName)}/{item.Text})");
                     break;
                 case ItemKind.Bullet:
-                    markdown.Append("- ").Append(Escape(item.Text));
-                    break;
                 case ItemKind.Numbered:
+                    while (lists.Count > 0 && lists[^1].Left >= item.Left - 4)
+                    {
+                        lists.RemoveAt(lists.Count - 1);
+                    }
+
+                    var indent = lists.Count == 0 ? 0 : lists[^1].Indent;
+                    var marker = kind == ItemKind.Bullet ? "- " : item.Text[..(item.Text.IndexOf('.') + 2)];
+                    markdown.Append(new string(' ', indent))
+                        .Append(kind == ItemKind.Bullet ? "- " + Escape(item.Text) : item.Text);
+                    lists.Add((item.Left, indent + marker.Length));
+                    break;
+                case ItemKind.Table:
+                case ItemKind.Figure:
                     markdown.Append(item.Text);
                     break;
                 default:
@@ -172,14 +269,14 @@ internal static partial class PdfImport
     }
 
     // Text blocks of a page in reading order (columns are read one after another).
-    private static IEnumerable<TextBlock> Blocks(Page page, HashSet<Word> rejoined)
+    private static IEnumerable<TextBlock> Blocks(IReadOnlyList<Letter> letters, HashSet<Word> rejoined)
     {
-        if (page.Letters.Count == 0)
+        if (letters.Count == 0)
         {
             return [];
         }
 
-        var words = NearestNeighbourWordExtractor.Instance.GetWords(page.Letters).ToList();
+        var words = NearestNeighbourWordExtractor.Instance.GetWords(letters).ToList();
         var blocks = JoinSplitLines(DocstrumBoundingBoxes.Instance.GetBlocks(words).ToList(), rejoined);
         return UnsupervisedReadingOrderDetector.Instance.Get(blocks);
     }
@@ -234,10 +331,21 @@ internal static partial class PdfImport
     // not wrapped: the last line of a paragraph, or a short item such as a checklist line).
     // In a block much narrower than the page's text (a list of short items, table cells),
     // every line stands alone. Wrapped lines are joined.
-    private static IEnumerable<Item> Paragraphs(TextBlock block, int page, double textWidth, HashSet<Word> rejoined)
+    // A line in a monospaced typeface is a line of code: it keeps its spaces and stands
+    // alone (CodeBlock puts the lines back together).
+    private static IEnumerable<Item> Paragraphs(TextBlock block, int page, double textWidth, HashSet<Word> rejoined, PageShapes shapes)
     {
-        var lines = SplitLines(block).Select(words => ReadLine(words) with { Rejoined = words.Any(rejoined.Contains) })
-            .Where(line => line.Text.Length > 0).ToList();
+        var split = SplitLines(block);
+        var lines = split.Select(words => ReadLine(words) with { Rejoined = words.Any(rejoined.Contains) }).ToList();
+        var code = split.Select(CodeLine).ToList();
+        for (var i = lines.Count - 1; i >= 0; i--)
+        {
+            if (lines[i].Text.Length == 0)
+            {
+                lines.RemoveAt(i);
+                code.RemoveAt(i);
+            }
+        }
         var blockRight = block.BoundingBox.Right;
         var shortLine = block.BoundingBox.Width < textWidth * 0.5 ? -1 : block.BoundingBox.Width * 0.2;
         Line? previousLine = null;
@@ -271,8 +379,19 @@ internal static partial class PdfImport
             yield return new Item(text, firstSize, firstBold, kind, firstTop, page, mathInItem, firstFamily, Left: firstLeft);
         }
 
-        foreach (var line in lines)
+        for (var index = 0; index < lines.Count; index++)
         {
+            var line = lines[index];
+            if (code[index] is { } codeLine)
+            {
+                foreach (var item in Flush()) yield return item;
+                // Code lines are spaced by their baselines (letters of other typefaces stand taller).
+                yield return new Item(codeLine.Text, line.Size, false, ItemKind.Code, codeLine.Baseline, page, Family: line.Family, Left: line.Left, Advance: codeLine.Advance,
+                    Frame: FrameAt(shapes, line.Left + 1, line.Top - line.Size / 2));
+                previousLine = null;
+                continue;
+            }
+
             // A table-of-contents line ("3.1 Definitions ........ 6") reaches the right edge
             // because of its leader dots, so it would look wrapped; it stands alone, with the
             // dots shortened, and is never a heading.
@@ -287,6 +406,11 @@ internal static partial class PdfImport
             }
 
             var (lineKind, rest) = ListMarker(line.Text);
+            // A bullet or a check box drawn as a shape.
+            if (lineKind == ItemKind.Paragraph && MarkBefore(shapes, line.Left, line.Top, line.Size) is { } mark)
+            {
+                (lineKind, rest) = (ItemKind.Bullet, mark.CheckBox ? (mark.Checked ? "[x] " : "[ ] ") + line.Text : line.Text);
+            }
             var sizeChanged = current.Count > 0 && Math.Abs(line.Size - firstSize) > firstSize * 0.1;
             var fontChanged = current.Count > 0 && line.Family != firstFamily;
             var endedEarly = previousLine is not null && blockRight - previousLine.Right > shortLine;
@@ -379,6 +503,97 @@ internal static partial class PdfImport
             .OrderByDescending(group => group.Count()).First().Key;
         return new Line(Normalize(builder.ToString()), size, bold, words.Max(word => word.BoundingBox.Top), words.Max(word => word.BoundingBox.Right), mathFont, family,
             words.Min(word => word.BoundingBox.Left));
+    }
+
+    private sealed record CodeText(string Text, double Advance, double Baseline);
+
+    // A line set (almost) all in a monospaced typeface, with its spaces put back from where
+    // the letters stand (one space per letter width); null for any other line.
+    private static CodeText? CodeLine(List<Word> words)
+    {
+        var letters = words.SelectMany(word => word.Letters).Where(letter => !string.IsNullOrWhiteSpace(letter.Value))
+            .OrderBy(letter => letter.StartBaseLine.X).ToList();
+        // Japanese and Chinese in code (comments, strings) are set in another typeface.
+        var latin = letters.Where(letter => !letter.Value.Any(IsCjk)).ToList();
+        if (latin.Count == 0 || latin.Count(letter => IsMonospaced(letter.FontName)) < latin.Count * 0.8)
+        {
+            return null;
+        }
+
+        var widths = letters.Where(letter => letter.Value.Length == 1 && letter.Value[0] < '⺀')
+            .Select(letter => letter.EndBaseLine.X - letter.StartBaseLine.X).Where(width => width > 0).OrderBy(width => width).ToList();
+        var advance = widths.Count > 0 ? widths[widths.Count / 2] : letters[0].PointSize * 0.55;
+        var builder = new StringBuilder();
+        double? end = null;
+        foreach (var letter in letters)
+        {
+            if (end is { } x && (int)Math.Round((letter.StartBaseLine.X - x) / advance) is var spaces and > 0)
+            {
+                builder.Append(' ', spaces);
+            }
+
+            builder.Append(letter.Value);
+            end = letter.EndBaseLine.X;
+        }
+
+        return new CodeText(Normalize(builder.ToString()), advance, letters[0].StartBaseLine.Y);
+    }
+
+    private static bool IsMonospaced(string? fontName)
+    {
+        var name = Family(fontName).Replace(" ", string.Empty);
+        return name.Contains("mono") || name.Contains("consolas") || name.Contains("courier") || name.Contains("menlo")
+            || name.Contains("monaco") || name.Contains("lucidaconsole") || name.Contains("sourcecode") || name.Contains("cascadia")
+            || name.Contains("inconsolata") || name.Contains("firacode") || name.Contains("jetbrains");
+    }
+
+    // Code lines belong to one block when they are on the same background, follow each
+    // other closely (or are pieces of one line), or go on at the top of the next page.
+    private static bool SameCodeBlock(Item above, Item below) =>
+        below.Page == above.Page + 1
+        || (below.Page == above.Page && (above.Frame >= 0 ? below.Frame == above.Frame
+            : above.Top - below.Top is > -1 and var gap && gap < Math.Max(above.Size, 1) * 3.2));
+
+    // The lines of a code block in a fence, indented by how far right each starts; a wider
+    // gap between lines is an empty line. The fence is "~~~~" when the code holds "```".
+    private static string CodeBlock(List<Item> lines)
+    {
+        var left = lines.Min(line => line.Left);
+        var advance = Math.Max(lines.Select(line => line.Advance).Where(width => width > 0).DefaultIfEmpty(1).Min(), 0.1);
+        var fence = lines.Any(line => line.Text.Contains("```")) ? "~~~~" : "```";
+        var builder = new StringBuilder(fence).Append('\n');
+        // Pieces of one line (cut apart at wide gaps) go back together, each at its column.
+        var rows = new List<List<Item>>();
+        foreach (var line in lines.OrderBy(line => line.Page).ThenByDescending(line => line.Top))
+        {
+            if (rows.Count > 0 && rows[^1][0].Page == line.Page && Math.Abs(rows[^1][0].Top - line.Top) < 1)
+            {
+                rows[^1].Add(line);
+            }
+            else
+            {
+                rows.Add([line]);
+            }
+        }
+
+        for (var i = 0; i < rows.Count; i++)
+        {
+            if (i > 0 && rows[i][0].Page == rows[i - 1][0].Page && rows[i - 1][0].Top - rows[i][0].Top > Math.Max(rows[i][0].Size, 1) * 1.9)
+            {
+                builder.Append('\n');
+            }
+
+            var row = new StringBuilder();
+            foreach (var piece in rows[i].OrderBy(piece => piece.Left))
+            {
+                var column = Math.Max(0, (int)Math.Round((piece.Left - left) / advance));
+                row.Append(' ', Math.Max(row.Length == 0 ? column : 1, column - row.Length)).Append(piece.Text);
+            }
+
+            builder.Append(row).Append('\n');
+        }
+
+        return builder.Append(fence).ToString();
     }
 
     // A typeface without its subset prefix ("ABCDEF+") and weight or style ("-Bold",

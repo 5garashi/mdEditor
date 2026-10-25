@@ -170,10 +170,13 @@ Expected results:
 Expected results:
 
 - The notice says the PDF was converted to Markdown, and the file name becomes pdf-test.en.md.
-- "Opening a PDF" becomes a `#` heading, "Headings and paragraphs", "Image", and "Table" `##`, and "A smaller heading" `###`.
+- "Opening a PDF" becomes a `#` heading, "Headings and paragraphs", "Image", "Table", "Code", "Bullets", "To do", and "Figure" `##`, and "A smaller heading" `###`.
 - The paragraph starting "A long paragraph" comes back as one paragraph, whatever the line breaks in the PDF, with no space before the periods.
 - The sample image shows in the preview and points to `pdf-test.en_files/image1.png` in the editor.
-- The table does not come back as a table; the text of its cells ("Item", "Cost", "Prototype", "120", …) remains, by row or by cell.
+- The table comes back as a Markdown table (`| Item | Cost |`).
+- The Python under "Code" becomes a fenced code block, with its indentation.
+- "Bullets" becomes `- The first item`, with `  - A nested item` indented under it. "To do" becomes `- [x] A finished task` and `- [ ] A task still to do`.
+- The flowchart under "Figure" becomes a "(Figure)" marker; its labels ("Write" and so on) do not appear.
 - Dropping pdf-test.en.pdf on the editor inserts a link to the PDF copied into the "name_files" folder, not its content.
 
 ### 2.16 pdf-toc-test.en.pdf (contents and numbered headings)
@@ -186,6 +189,7 @@ Expected results:
 - "1. Introduction" and "2. Requirements" become `##` headings, "2.1 Definitions" `###`, and "(1) First condition" and "(2) Second condition" `####`.
 - The cover title, the date, and "Contents" become `#`. "1 April 2026" is not a numbered heading, as its number has no period.
 - The line whose "•" is set apart from its text becomes the list item `- A definition item, …`.
+- "File Number: E12345" and "Type: A-1", on one line with a wide gap between them, become the one line `File Number: E12345 Type: A-1`, and "Main board" below it stays a paragraph of its own.
 - Copying this file in File Explorer and pressing the New from clipboard key opens it.
 
 ## 3. Save As

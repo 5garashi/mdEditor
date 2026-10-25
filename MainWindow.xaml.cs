@@ -1568,7 +1568,7 @@ public partial class MainWindow : Window
         var result = PdfImport.ToMarkdown(path, assets, name + FilesSuffix);
         var notices = new List<string>
         {
-            Strings.Tr("PDF を Markdown に変換して開きました。文字・見出し（文字の大きさから推測）・箇条書き・画像を取り出し、表・数式・図・段組みの配置は元に戻りません。保存すると Markdown ファイルになります（PDF ファイルは変わりません）。")
+            Strings.Tr("PDF を Markdown に変換して開きました。文字・見出し（文字の大きさから推測）・箇条書き・罫線のある表・コード・画像を取り出します。図は「（図）」の印に置き換え、数式と段組みの配置は元に戻りません。保存すると Markdown ファイルになります（PDF ファイルは変わりません）。")
         };
         if (!result.HasText)
         {

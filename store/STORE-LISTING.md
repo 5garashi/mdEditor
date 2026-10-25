@@ -10,8 +10,8 @@
 
 Paste each section into the matching Partner Center field. Check the character limits there before submitting.
 
-Since 1.0.16 the listing leads with opening PDF and Word files as Markdown and saving them back as PDF or Word, offline. Say what does not come back from a PDF (tables, math, drawings, column layout, scans) wherever PDF import is described, and do not claim exact conversion.
-1.0.16 から、掲載文の先頭は「PDF や Word を Markdown として開き、PDF や Word で渡せる（PC の中だけで）」にしています。PDF の取り込みを書くところには、戻らないもの（表・数式・図・段組み・スキャンした PDF）を必ず併記し、正確に変換できるとは書きません。
+Since 1.0.16 the listing leads with opening PDF and Word files as Markdown and saving them back as PDF or Word, offline. Say what does not come back from a PDF (math, column layout, tables without cell borders, scans; figures become a marker) wherever PDF import is described, and do not claim exact conversion.
+1.0.16 から、掲載文の先頭は「PDF や Word を Markdown として開き、PDF や Word で渡せる（PC の中だけで）」にしています。PDF の取り込みを書くところには、戻らないもの（数式・段組み・罫線のない表・スキャンした PDF。図は印に置き換わる）を必ず併記し、正確に変換できるとは書きません。
 
 ## English (en-US)
 
@@ -25,7 +25,7 @@ Open PDF and Word files as Markdown, fix them, and save them as PDF or Word. Off
 Turn PDFs, Word files, e-mails, and web pages into clean Markdown, and back into PDF or Word, offline on Windows. Open a file and its text, headings, lists, and pictures come back as Markdown you can read and fix right away, beside a live preview. There is nothing else to set up: no Python, no command line, no account. Your documents stay on your PC, with no ads.
 
 Open as Markdown
-- PDF: the text comes back in reading order, wrapped lines join into paragraphs, and headings (from text size and numbering), lists, the table of contents, and pictures come back. Tables, math, drawings, and column layout do not (the text of table cells and formulas remains), and a scanned PDF has no text to take.
+- PDF: the text comes back in reading order, wrapped lines join into paragraphs, and headings (from text size and numbering), lists, the table of contents, and pictures come back. Ruled tables and code come back too. A diagram or chart becomes a "(Figure)" marker; math, column layout, and tables without cell borders do not come back (their text remains), and a scanned PDF has no text to take.
 - Word: headings, lists, tables, links, and pictures come back (colors and layout do not). When a document has no heading styles, headings are guessed from text size.
 - Also HTML, web pages, e-mail (.eml), CSV, TSV, JSON, XML, Jupyter Notebooks, and images. The original file is never changed.
 - Check and fix the result before you share it or paste it into an AI chat.
@@ -61,7 +61,7 @@ Made for everyone
 Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Design Office. Open About in the app for the company, support, and privacy policy links.
 
 **What's new in this version:**
-- Open PDFs as Markdown, on your PC: text, headings, lists, the table of contents, and pictures come back. Tables, math, and column layout do not.
+- Open PDFs as Markdown, on your PC: text, headings, lists, the table of contents, ruled tables, code, and pictures come back, and diagrams become a "(Figure)" marker. Math and column layout do not come back.
 - Word documents without heading styles get their headings from text size.
 - Read aloud reads only the text you select.
 - Simplified Chinese: choose Japanese, English, or Chinese from the Language list.
@@ -76,7 +76,7 @@ Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Des
 
 **Features (bullets):**
 - Open PDF and Word files as Markdown, offline
-- Headings, lists, contents, and pictures come back from PDFs
+- Headings, lists, tables, code, and pictures come back from PDFs
 - Save as PDF in one click, exactly as the preview looks
 - Save as Word, HTML, PNG, CSV, JSON, text, or a ZIP
 - Live preview beside your text, scrolling together
@@ -103,7 +103,7 @@ Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Des
 **Support contact:** https://github.com/5garashi/mdEditor/issues
 
 **Screenshots (1366 x 768, the Store minimum; English UI) with captions:**
-1. `docs/images/10-pdf-open.en.png` — Open a PDF and it becomes Markdown on your PC: text, headings, lists, and pictures come back. The notice says what does not (tables, math, column layout).
+1. `docs/images/10-pdf-open.en.png` — Open a PDF and it becomes Markdown on your PC: text, headings, lists, tables, and pictures come back. The notice says what does not (math, column layout).
 2. `docs/images/9-pdf.en.png` — One click saves a PDF that looks exactly like the preview: diagrams, tables, math, and colored code included, on A4 or Letter.
 3. `docs/images/1-main.en.png` — Type Markdown on the left and the preview on the right updates at once. A 3D model written in STL turns when you drag it.
 4. `docs/images/2-dark.en.png` — Day and night palettes follow Windows, or choose one with the Theme button in Settings. Printing and PDF always use a white page.
@@ -140,7 +140,7 @@ PDF や Word を Markdown として開いて直し、PDF や Word で渡せま�
 PDF・Word・メール・Web ページを、PC の中だけで Markdown にできます。直したら、PDF や Word で渡せます。ファイルを開くと、文字・見出し・箇条書き・画像が Markdown になり、横のプレビューで確かめながら、その場で直せます。Python もコマンドもアカウントも要りません。文書は PC の外に出ず、広告もありません。
 
 Markdown として開く
-- PDF: 文字を読む順に取り出し、折り返した行を段落にまとめます。見出し（文字の大きさと番号から推測）・箇条書き・目次・画像も戻ります。表・数式・図・段組みの配置は戻りません（表のセルや数式の文字は残ります）。スキャンした画像だけの PDF からは、文字を取り出せません。
+- PDF: 文字を読む順に取り出し、折り返した行を段落にまとめます。見出し（文字の大きさと番号から推測）・箇条書き・目次・画像も戻ります。罫線のある表とコードも戻ります。図は「（図）」の印に置き換わり、数式・段組みの配置・罫線のない表は戻りません（文字は残ります）。スキャンした画像だけの PDF からは、文字を取り出せません。
 - Word: 見出し・箇条書き・表・リンク・画像が戻ります（色や配置は戻りません）。見出しのスタイルがない文書は、文字の大きさから見出しを推測します。
 - HTML・Web ページ・メール（.eml）・CSV・TSV・JSON・XML・Jupyter Notebook・画像も開けます。元のファイルは書き換えません。
 - 取り込んだ結果は、人に渡す前や AI のチャットに貼る前に、確かめて直せます。
@@ -176,7 +176,7 @@ PDF や Word で保存する
 日本語・英語・簡体字中国語に対応します。5garashi.com Design Office が作りました。会社紹介・サポート・プライバシーポリシーは、アプリの「このアプリについて」から開けます。
 
 **このバージョンの新機能:**
-- PDF を Markdown として開けるようになりました（PC の中で変換します）。文字・見出し・箇条書き・目次・画像が戻ります。表・数式・段組みの配置は戻りません。
+- PDF を Markdown として開けるようになりました（PC の中で変換します）。文字・見出し・箇条書き・目次・罫線のある表・コード・画像が戻り、図は「（図）」の印になります。数式と段組みの配置は戻りません。
 - 見出しのスタイルがない Word 文書は、文字の大きさから見出しを推測します。
 - 読み上げで、選んだ部分だけを読めるようになりました。
 - 簡体字中国語に対応しました。「Language」の一覧で、日本語・英語・中国語を選べます。
@@ -191,7 +191,7 @@ PDF や Word で保存する
 
 **製品の機能（箇条書き）:**
 - PDF や Word を Markdown として開ける。PC の中だけで変換
-- PDF から見出し・箇条書き・目次・画像を取り出す
+- PDF から見出し・箇条書き・表・コード・画像を取り出す
 - ワンクリックで PDF に保存。プレビューと同じ見た目のまま
 - Word・HTML・PNG・CSV・JSON・テキスト・ZIP にも保存
 - 書きながら横で仕上がりを確認。スクロールも連動
@@ -214,7 +214,7 @@ PDF や Word で保存する
 **検索用語（7つまで）:** Markdown, マークダウン, PDF, PDF変換, Word変換, エディタ, プレビュー
 
 **スクリーンショット（1366 x 768。Store の最小の大きさ。日本語の画面）と説明文:**
-1. `docs/images/10-pdf-open.ja.png` — PDF を開くと、PC の中で Markdown になります。文字・見出し・箇条書き・画像が戻り、戻らないもの（表・数式・段組み）はお知らせ欄に出ます。
+1. `docs/images/10-pdf-open.ja.png` — PDF を開くと、PC の中で Markdown になります。文字・見出し・箇条書き・表・画像が戻り、戻らないもの（数式・段組み）はお知らせ欄に出ます。
 2. `docs/images/9-pdf.ja.png` — ワンクリックで、プレビューと同じ見た目の PDF に保存します。図・表・数式・色分けしたコードもそのまま入り、用紙は A4 か Letter です。
 3. `docs/images/1-main.ja.png` — 左に Markdown を書くと、右のプレビューにすぐ反映されます。STL で書いた 3D モデルも、ドラッグで回せます。
 4. `docs/images/2-dark.ja.png` — 昼と夜の配色は Windows の設定に合わせて切り替わり、「設定」の「表示」ボタンでも選べます。印刷と PDF は常に白地です。
@@ -237,7 +237,7 @@ PDF や Word で保存する
 在 Windows 上离线把 PDF、Word、电子邮件和网页变成整洁的 Markdown，改好后再保存为 PDF 或 Word。打开文件后，文字、标题、列表和图片会变成 Markdown，可以一边看旁边的预览一边当场修改。不需要 Python、命令行或账户。文档留在你的电脑中，没有广告。
 
 作为 Markdown 打开
-- PDF：按阅读顺序取出文字，把折行合并为段落，标题（根据文字大小和编号推测）、列表、目录和图片也会取出。表格、公式、图形和分栏排版不会恢复（表格单元格和公式中的文字会保留）。扫描得到的纯图像 PDF 无法取出文字。
+- PDF：按阅读顺序取出文字，把折行合并为段落，标题（根据文字大小和编号推测）、列表、目录和图片也会取出。有边框的表格和代码也会取出。图表替换为“（图）”标记，公式、分栏排版和没有边框的表格不会恢复（文字会保留）。扫描得到的纯图像 PDF 无法取出文字。
 - Word：标题、列表、表格、链接和图片会取出（颜色和排版不会保留）。没有使用标题样式的文档，会根据文字大小推测标题。
 - 也可以打开 HTML、网页、电子邮件（.eml）、CSV、TSV、JSON、XML、Jupyter Notebook 和图像。原文件不会被改写。
 - 在分享给别人或粘贴到 AI 聊天之前，可以先检查并修改取出的结果。
@@ -273,7 +273,7 @@ PDF や Word で保存する
 支持日语、英语和简体中文。由 5garashi.com Design Office 制作。公司介绍、支持和隐私政策的链接，可以在应用的“关于此应用”中打开。
 
 **此版本的新功能:**
-- 可以把 PDF 作为 Markdown 打开（在你的电脑中转换）。文字、标题、列表、目录和图片会取出；表格、公式和分栏排版不会恢复。
+- 可以把 PDF 作为 Markdown 打开（在你的电脑中转换）。文字、标题、列表、目录、有边框的表格、代码和图片会取出，图表成为“（图）”标记；公式和分栏排版不会恢复。
 - 没有标题样式的 Word 文档，会根据文字大小推测标题。
 - 朗读可以只朗读选中的文字。
 - 支持简体中文。可以在“Language”列表中选择日语、英语或中文。
@@ -288,7 +288,7 @@ PDF や Word で保存する
 
 **产品功能（要点）:**
 - 把 PDF 和 Word 作为 Markdown 打开，在电脑中转换
-- 从 PDF 取出标题、列表、目录和图片
+- 从 PDF 取出标题、列表、表格、代码和图片
 - 一键保存为 PDF，外观与预览完全相同
 - 也可保存为 Word、HTML、PNG、CSV、JSON、文本或 ZIP
 - 边写边在旁边查看效果，滚动同步
@@ -311,7 +311,7 @@ PDF や Word で保存する
 **搜索词（最多 7 个）:** Markdown, Markdown编辑器, PDF转Markdown, Word转Markdown, Markdown转PDF, 预览, Mermaid
 
 **屏幕截图（1366 x 768，Store 的最小尺寸；简体中文界面）及说明:**
-1. `docs/images/10-pdf-open.zh-CN.png` — 打开 PDF，就会在电脑中变成 Markdown。文字、标题、列表和图片会取出，不会恢复的内容（表格、公式、分栏排版）会显示在通知栏中。
+1. `docs/images/10-pdf-open.zh-CN.png` — 打开 PDF，就会在电脑中变成 Markdown。文字、标题、列表、表格和图片会取出，不会恢复的内容（公式、分栏排版）会显示在通知栏中。
 2. `docs/images/9-pdf.zh-CN.png` — 一键保存与预览外观相同的 PDF。图表、表格、公式和着色的代码都会原样放入，纸张为 A4 或 Letter。
 3. `docs/images/1-main.zh-CN.png` — 在左边写 Markdown，右边的预览立即更新。用 STL 写的 3D 模型也可以拖动旋转。
 4. `docs/images/2-dark.zh-CN.png` — 白天和夜间的配色跟随 Windows 的设置，也可以在“设置”中用“显示”按钮选择。打印和 PDF 始终使用白色页面。
@@ -327,7 +327,7 @@ PDF や Word で保存する
 - Reserve the name in Partner Center and confirm it is available. Use the same spelling ("5garashi.com Design Office") in the Store, the app, and the website.
 - Replace the privacy or support links if the final URLs differ. The company URL in the app is `https://www.5garashi.com/`.
 - "Worldwide" distribution and "all languages" are different settings. The app supports Japanese, English, and Simplified Chinese (1.0.15) only. Since 1.0.15 the package declares ja-JP, en-US, and zh-CN, so Partner Center expects a listing in each of the three languages; the zh-CN text and its screenshots are above. The Chinese text has not been reviewed by a native speaker.
-- The screenshots are in `docs/images/` (1366 x 768 window, 90% zoom), in Japanese (`.ja`), English (`.en`), and Simplified Chinese (`.zh-CN`). Screenshots 1-main to 9-pdf were retaken with 1.0.15 (2026-10-23) after the header and toolbar changed; screenshot 1-main shows the 3D model of samples/diagram-test (21-1). `10-pdf-open` (1.0.16, 2026-10-25, listed first to lead with PDF import) puts page 1 of a short report PDF beside the window that opened it as Markdown; the report was written for the screenshot and saved as PDF by mdEditor, with numbered lists (bullets drawn as shapes in mdEditor's own PDFs do not come back as list items). `9-pdf` (listed second) puts the window beside the first page of the PDF it saved. Upload the screenshots in the listed order; ten is the Store maximum. Retake them when the screen changes.
+- The screenshots are in `docs/images/` (1366 x 768 window, 90% zoom), in Japanese (`.ja`), English (`.en`), and Simplified Chinese (`.zh-CN`). Screenshots 1-main to 9-pdf were retaken with 1.0.15 (2026-10-23) after the header and toolbar changed; screenshot 1-main shows the 3D model of samples/diagram-test (21-1). `10-pdf-open` (retaken with 1.0.17 on 2026-10-25 for the new notice text; listed first to lead with PDF import) puts page 1 of a short report PDF beside the window that opened it as Markdown; the report was written for the screenshot and saved as PDF by mdEditor, with numbered lists. `9-pdf` (listed second) puts the window beside the first page of the PDF it saved. Upload the screenshots in the listed order; ten is the Store maximum. Retake them when the screen changes.
 - The map screenshot (`8-map`, listed tenth) shows OpenStreetMap map tiles. Keep the credit "© OpenStreetMap contributors" visible; do not crop it out.
   地図のスクリーンショット（`8-map`、一覧の 10 番目）には OpenStreetMap の地図が写っています。右下の「© OpenStreetMap contributors」を切り取らないでください。
 - Partner Center limits: What's new 1,500 characters, each feature 200 characters (up to 20), each screenshot caption 200 characters (up to 10 screenshots).

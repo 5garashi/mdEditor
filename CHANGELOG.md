@@ -12,6 +12,16 @@
 
 The version number lives in [VERSION](./VERSION). Add each new version at the top, with a `## version — date` heading (used as the GitHub Release notes).
 
+## 1.0.17 — 2026-10-25
+
+- PDF を開いたときに、罫線のある表を Markdown の表に、等幅の書体（Consolas など）の行をコードのブロック（字下げと空行を保つ。日本語のコメントの行も含む）に、図形で描いた箇条書きの印とチェックボックス（ブラウザーや mdEditor で保存した PDF など）を箇条書き（入れ子と `[x]` を含む）にするようにした。線や図形で描いた図（ダイアグラム・グラフ）は「（図）」の印に置き換え、図の中の文字は省く。数式と段組みの配置、罫線のない表は、これまでどおり文字だけが残る。お知らせ欄の説明も合わせた。
+- PDF で、広い間隔をあけて同じ行に書いた項目（「File Number: …   Type dsg: …」など）が、下の行より後に読まれることがあったのを直した。本文と離れた「・」が段落の途中の行にあっても、その行から箇条書きにする。
+- サンプルの pdf-test.pdf・pdf-test.en.pdf にコード・箇条書き・やること・図を足し、pdf-toc-test.en.pdf に間隔の広い行を足して、samples/import-test の確かめ方を直した。
+
+- Opening a PDF now brings back tables with ruled cells as Markdown tables, lines in a monospaced typeface (Consolas and so on) as code blocks (keeping indentation and empty lines, including lines with Japanese comments), and bullets and check boxes drawn as shapes (as in PDFs saved from a browser or mdEditor) as list items, nested and with `[x]`. A figure drawn with lines and shapes (a diagram or chart) is replaced with a "(Figure)" marker, and its labels are left out. Math, column layout, and tables without cell borders still come back as their text only. The notice bar says so.
+- PDF: items on one line with a wide gap between them ("File Number: …   Type dsg: …", for example) could be read after the line below; they are now read in order. A bullet set apart from its text starts a list item even on a line in the middle of a paragraph.
+- The samples pdf-test.pdf and pdf-test.en.pdf gain code, bullets, a to-do list, and a figure, and pdf-toc-test.en.pdf a line with a wide gap; samples/import-test is updated.
+
 ## 1.0.16 — 2026-10-25
 
 - PDF（.pdf）を開けるようにした（「開く」と、編集画面の外へのドロップ）。PdfPig（Apache 2.0、PC の中だけで動く）で文字を読む順に取り出し、折り返した行を 1 つの段落にまとめ、見出しを文字の大きさから推し量り、「・」や番号で始まる行を箇条書きにする。画像は Word 文書と同じく「名前_files」フォルダーに取り出す。表・数式・図・段組みの配置は戻らない（文字は残る）。ページの上下の端のページ番号は省く。ブラウザーで作った PDF に多い、漢字が部首の文字（「⽅」など）になる問題を直して取り出す。画像だけの PDF とパスワード付きの PDF はお知らせする。開くのは 500 ページまで。編集画面にドロップした PDF は、これまでどおり「名前_files」に写してリンクを入れる。
