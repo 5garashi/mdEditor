@@ -73,8 +73,8 @@ internal static partial class PdfImport
             var pageItems = new List<Item>();
             var rejoined = new HashSet<Word>(ReferenceEqualityComparer.Instance);
             var shapes = FindShapes(page);
-            // How see-through each shape is, read only for a page with figures or formulas.
-            var alphas = new Lazy<IReadOnlyList<(double Fill, double Stroke)>?>(() => PathAlphas(document, page));
+            // How each shape was drawn (see-through, scaling), read only for a page with figures or formulas.
+            var states = new Lazy<IReadOnlyList<PaintState>?>(() => PathStates(document, page));
             // The text of tables, figures, and formulas is read with them, not in the running text.
             // Some PDFs map glyphs to control characters (NUL); they show nothing.
             var letters = page.Letters.Where(letter => !letter.Value.All(char.IsControl) && !shapes.Tables.Any(table => Contains(table.Box, letter))
@@ -83,7 +83,7 @@ internal static partial class PdfImport
             letters = InlineMarkup(letters, page);
             foreach (var formula in shapes.Formulas.Where(formula => !formula.Display))
             {
-                var file = SaveSvg(FigureSvg(page, formula.Box, alphas.Value, formula: true));
+                var file = SaveSvg(FigureSvg(page, formula.Box, states.Value, formula: true));
                 inlines.Add($"![{EscapeAlt(FormulaText(formula))}]({Uri.EscapeDataString(imagesName)}/{file})");
                 letters.Add(Placeholder(formula, (char)(0xE000 + inlines.Count - 1), page.Letters));
             }
@@ -158,7 +158,7 @@ internal static partial class PdfImport
             foreach (var (box, alt, isFormula) in shapes.Figures.Select(figure => (figure, string.Empty, false))
                          .Concat(shapes.Formulas.Where(formula => formula.Display).Select(formula => (formula.Box, FormulaText(formula), true))))
             {
-                Place(new Item(SaveSvg(FigureSvg(page, box, alphas.Value, isFormula)), 0, false, ItemKind.Image, box.Top, number,
+                Place(new Item(SaveSvg(FigureSvg(page, box, states.Value, isFormula)), 0, false, ItemKind.Image, box.Top, number,
                     Left: box.Left, Right: box.Right, Bottom: box.Bottom, Natural: box.Width * 4 / 3, Alt: alt));
             }
 

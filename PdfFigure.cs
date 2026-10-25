@@ -33,13 +33,18 @@ namespace MdEditor;
 // then pictures, then text.
 internal static partial class PdfImport
 {
-    // The see-through of each shape the page paints (fill, stroke), in the order of
-    // page.Paths without the clipping paths. PdfPig reads it but does not keep it with the
-    // shape, so the page's drawing is gone through again: the graphics states (gs) it sets,
-    // saved and restored with q and Q, inside the forms it draws too (a browser puts a whole
-    // page in one). A form drawn as a group (a browser's opacity) is see-through as a whole:
-    // the see-through set when it is drawn applies on top of what it sets inside. Null when the shapes found do not match PdfPig's (all are then drawn solid).
-    private static IReadOnlyList<(double Fill, double Stroke)>? PathAlphas(PdfDocument document, Page page)
+    // How each shape the page paints was drawn, in the order of page.Paths without the
+    // clipping paths: its see-through (fill, stroke), the scaling its line width is set in
+    // (Scale), and the space of the drawing it is in (Base, where a gradient is placed).
+    private sealed record PaintState(double Fill, double Stroke, double Scale, TransformationMatrix Base);
+
+    // PdfPig reads these but does not keep them with the shape, so the page's drawing is
+    // gone through again: the graphics states (gs) and scalings (cm) it sets, saved and
+    // restored with q and Q, inside the forms it draws too (a browser puts a whole page in
+    // one). A form drawn as a group (a browser's opacity) is see-through as a whole: the
+    // see-through set when it is drawn applies on top of what it sets inside. Null when the
+    // shapes found do not match PdfPig's (all are then drawn solid, and line widths guessed).
+    private static IReadOnlyList<PaintState>? PathStates(PdfDocument document, Page page)
     {
         try
         {
@@ -48,10 +53,11 @@ internal static partial class PdfImport
                 dictionary is not null && dictionary.TryGet(NameToken.Create(name), out var value) ? Resolve(value) as T : null;
 
             var parser = new PageContentParser(ReflectionGraphicsStateOperationFactory.Instance, new StackDepthGuard(256), false);
-            var alphas = new List<(double Fill, double Stroke)>();
+            var paints = new List<PaintState>();
             var current = (Fill: 1.0, Stroke: 1.0);
-            var saved = new Stack<(double Fill, double Stroke)>();
-            void Run(IEnumerable<IGraphicsStateOperation> operations, DictionaryToken? resources, (double Fill, double Stroke) group, int depth)
+            var matrix = TransformationMatrix.Identity;
+            var saved = new Stack<((double Fill, double Stroke) Alpha, TransformationMatrix Matrix)>();
+            void Run(IEnumerable<IGraphicsStateOperation> operations, DictionaryToken? resources, (double Fill, double Stroke) group, TransformationMatrix space, int depth)
             {
                 var states = Get<DictionaryToken>(resources, "ExtGState");
                 foreach (var operation in operations)
@@ -59,10 +65,13 @@ internal static partial class PdfImport
                     switch (operation)
                     {
                         case Push:
-                            saved.Push(current);
+                            saved.Push((current, matrix));
                             break;
                         case Pop when saved.Count > 0:
-                            current = saved.Pop();
+                            (current, matrix) = saved.Pop();
+                            break;
+                        case ModifyCurrentTransformationMatrix cm:
+                            matrix = TransformationMatrix.FromArray(cm.Value).Multiply(matrix);
                             break;
                         case SetGraphicsStateParametersFromDictionary gs when Get<DictionaryToken>(states, gs.Name.Data) is { } state:
                             current = (Get<NumericToken>(state, "ca")?.Double ?? current.Fill, Get<NumericToken>(state, "CA")?.Double ?? current.Stroke);
@@ -70,7 +79,12 @@ internal static partial class PdfImport
                         case InvokeNamedXObject named when depth < 8 && Get<StreamToken>(Get<DictionaryToken>(resources, "XObject"), named.Name.Data) is { } form
                             && Get<NameToken>(form.StreamDictionary, "Subtype")?.Data == "Form":
                             var inner = parser.Parse(page.Number, new MemoryInputBytes(form.Decode(DefaultFilterProvider.Instance).ToArray()), new NoLog());
-                            saved.Push(current);
+                            saved.Push((current, matrix));
+                            if (Get<ArrayToken>(form.StreamDictionary, "Matrix") is { Data.Count: 6 } placed)
+                            {
+                                matrix = TransformationMatrix.FromArray(placed.Data.Select(value => (Resolve(value) as NumericToken)?.Double ?? 0).ToArray()).Multiply(matrix);
+                            }
+
                             var grouped = Get<DictionaryToken>(form.StreamDictionary, "Group") is not null;
                             var outer = grouped ? (current.Fill * group.Fill, current.Stroke * group.Stroke) : group;
                             if (grouped)
@@ -78,19 +92,20 @@ internal static partial class PdfImport
                                 current = (1, 1);
                             }
 
-                            Run(inner, Get<DictionaryToken>(form.StreamDictionary, "Resources") ?? resources, outer, depth + 1);
-                            current = saved.Pop();
+                            Run(inner, Get<DictionaryToken>(form.StreamDictionary, "Resources") ?? resources, outer, matrix, depth + 1);
+                            (current, matrix) = saved.Pop();
                             break;
                         case StrokePath or CloseAndStrokePath or FillPathEvenOddRule or FillPathNonZeroWinding or FillPathNonZeroWindingCompatibility
                             or FillPathEvenOddRuleAndStroke or FillPathNonZeroWindingAndStroke or CloseFillPathEvenOddRuleAndStroke or CloseFillPathNonZeroWindingAndStroke:
-                            alphas.Add((current.Fill * group.Fill, current.Stroke * group.Stroke));
+                            paints.Add(new PaintState(current.Fill * group.Fill, current.Stroke * group.Stroke,
+                                Math.Sqrt(Math.Abs(matrix.A * matrix.D - matrix.B * matrix.C)), space));
                             break;
                     }
                 }
             }
 
-            Run(page.Operations, Get<DictionaryToken>(page.Dictionary, "Resources"), (1, 1), 0);
-            return alphas.Count == page.Paths.Count(path => !path.IsClipping) ? alphas : null;
+            Run(page.Operations, Get<DictionaryToken>(page.Dictionary, "Resources"), (1, 1), TransformationMatrix.Identity, 0);
+            return paints.Count == page.Paths.Count(path => !path.IsClipping) ? paints : null;
         }
         catch (Exception)
         {
@@ -110,7 +125,7 @@ internal static partial class PdfImport
 
     // A formula's picture also takes lines that reach out of it (KaTeX draws a root sign as a
     // very long line that the page cuts off), cut off at its edge.
-    private static string FigureSvg(Page page, PdfRectangle area, IReadOnlyList<(double Fill, double Stroke)>? alphas, bool formula = false)
+    private static string FigureSvg(Page page, PdfRectangle area, IReadOnlyList<PaintState>? states, bool formula = false)
     {
         // Italic letters reach a little past their boxes.
         if (formula)
@@ -122,9 +137,10 @@ internal static partial class PdfImport
         string X(double x) => N(x - area.Left);
         string Y(double y) => N(area.Top - y);
         string Point(PdfPoint point) => X(point.X) + " " + Y(point.Y);
-        // PdfPig gives line widths before the page's scaling; the labels show it (their size
-        // on the page over the size they were set in). A width wider than a quarter of the
-        // figure is scaled by something else (a nested group) and is kept to that.
+        // PdfPig gives line widths before the page's scaling. Without the shapes' own scaling
+        // (states), the labels show it (their size on the page over the size they were set
+        // in), and a width wider than a quarter of the figure is scaled by something else (a
+        // nested group) and is kept to that.
         var scales = page.Letters.Where(letter => letter.FontSize > 0 && Contains(area, letter))
             .Select(letter => letter.PointSize / letter.FontSize).Order().ToList();
         var scale = scales.Count > 0 ? scales[scales.Count / 2] : 1;
@@ -134,11 +150,47 @@ internal static partial class PdfImport
         svg.Append($"<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"{N(area.Width * 4 / 3)}\" height=\"{N(area.Height * 4 / 3)}\" viewBox=\"0 0 {N(area.Width)} {N(area.Height)}\">\n");
         // The page is white; without it, dark lines would vanish on a dark preview.
         svg.Append("<rect width=\"100%\" height=\"100%\" fill=\"#fff\"/>\n");
+        var gradients = 0;
+        // A gradient (a shading pattern from one color to another along a line) becomes an
+        // SVG gradient where the page has it; any other pattern is half-tone gray.
+        string Paint(IColor? color, PaintState? state, out double opacity)
+        {
+            opacity = 1;
+            if (color is ShadingPatternColor { Shading: AxialShading axial } pattern && state is not null && axial.Coords.Length == 4)
+            {
+                try
+                {
+                    var place = pattern.Matrix.Multiply(state.Base);
+                    var (from, to) = (place.Transform(new PdfPoint(axial.Coords[0], axial.Coords[1])), place.Transform(new PdfPoint(axial.Coords[2], axial.Coords[3])));
+                    var stops = string.Concat(Enumerable.Range(0, 11).Select(i =>
+                    {
+                        var t = axial.Domain[0] + (axial.Domain[1] - axial.Domain[0]) * i / 10;
+                        return $"<stop offset=\"{N(i / 10.0)}\" stop-color=\"{Color(axial.ColorSpace.GetColor(axial.Eval([t])))}\"/>";
+                    }));
+                    var id = $"g{++gradients}";
+                    svg.Append($"<linearGradient id=\"{id}\" gradientUnits=\"userSpaceOnUse\" x1=\"{X(from.X)}\" y1=\"{Y(from.Y)}\" x2=\"{X(to.X)}\" y2=\"{Y(to.Y)}\">{stops}</linearGradient>\n");
+                    return $"url(#{id})";
+                }
+                catch (Exception)
+                {
+                    // A shading PdfPig cannot work out: gray as below.
+                }
+            }
+
+            if (color is PatternColor)
+            {
+                opacity = 0.5;
+            }
+
+            return Color(color);
+        }
+
         var painted = -1;
         foreach (var path in page.Paths)
         {
             painted += path.IsClipping ? 0 : 1;
-            var (fillAlpha, strokeAlpha) = alphas is not null && !path.IsClipping ? alphas[painted] : (1, 1);
+            var state = states is not null && !path.IsClipping ? states[painted] : null;
+            var (fillAlpha, strokeAlpha) = state is not null ? (state.Fill, state.Stroke) : (1, 1);
             var filled = path.IsFilled && fillAlpha > 0;
             var stroked = path.IsStroked && strokeAlpha > 0;
             if (path.IsClipping || !(filled || stroked) || path.GetBoundingRectangle() is not { } box
@@ -196,9 +248,14 @@ internal static partial class PdfImport
                 continue;
             }
 
+            // A gradient is defined before the shape that uses it.
+            var fillPattern = 1.0;
+            var strokePattern = 1.0;
+            var fill = filled ? Paint(path.FillColor, state, out fillPattern) : "none";
+            var stroke = stroked ? Paint(path.StrokeColor, state, out strokePattern) : "none";
             svg.Append("<path d=\"").Append(d).Append('"');
-            svg.Append(" fill=\"").Append(filled ? Color(path.FillColor) : "none").Append('"');
-            var fillOpacity = fillAlpha * (path.FillColor is PatternColor ? 0.5 : 1);
+            svg.Append(" fill=\"").Append(fill).Append('"');
+            var fillOpacity = fillAlpha * fillPattern;
             if (filled && fillOpacity < 1)
             {
                 svg.Append($" fill-opacity=\"{N(fillOpacity)}\"");
@@ -211,8 +268,9 @@ internal static partial class PdfImport
 
             if (stroked)
             {
-                svg.Append($" stroke=\"{Color(path.StrokeColor)}\" stroke-width=\"{N(Math.Clamp(path.LineWidth * scale, 0.25, widest))}\" stroke-linejoin=\"round\"");
-                var strokeOpacity = strokeAlpha * (path.StrokeColor is PatternColor ? 0.5 : 1);
+                var width = state is not null ? Math.Max(path.LineWidth * state.Scale, 0.25) : Math.Clamp(path.LineWidth * scale, 0.25, widest);
+                svg.Append($" stroke=\"{stroke}\" stroke-width=\"{N(width)}\" stroke-linejoin=\"round\"");
+                var strokeOpacity = strokeAlpha * strokePattern;
                 if (strokeOpacity < 1)
                 {
                     svg.Append($" stroke-opacity=\"{N(strokeOpacity)}\"");
@@ -220,7 +278,7 @@ internal static partial class PdfImport
 
                 if (path.LineDashPattern is { } dash && dash.Array.Count > 0 && dash.Array.Any(length => length > 0))
                 {
-                    svg.Append($" stroke-dasharray=\"{string.Join(' ', dash.Array.Select(length => N(length * scale)))}\"");
+                    svg.Append($" stroke-dasharray=\"{string.Join(' ', dash.Array.Select(length => N(length * (state?.Scale ?? scale))))}\"");
                 }
             }
 
