@@ -204,12 +204,14 @@ internal static partial class Strings
             "This document contains characters that could not be read in the selected encoding (�). Overwriting the file loses those parts of the original. Overwrite anyway?",
         ["見出しのスタイルがないため、文字の大きさから {0} 個の段落を見出しにしました。"] =
             "The document has no heading styles, so {0} paragraphs were made headings from their text size.",
-        ["PDF を Markdown に変換して開きました。文字・見出し（文字の大きさから推測）・箇条書き・罫線のある表・コード・画像（大きさと位置を含む）を取り出し、図と数式は線と文字から画像（SVG）に描き直します。段組みの配置は元に戻りません。保存すると Markdown ファイルになります（PDF ファイルは変わりません）。"] =
-            "Converted the PDF to Markdown. Text, headings (guessed from text size), lists, ruled tables, code, and images (with their size and position) come back, and figures and math are redrawn as pictures (SVG) from their lines and text. Column layout does not come back. Saving makes a Markdown file (the PDF stays as it is).",
+        ["PDF を Markdown に変換して開きました。できる範囲で変換したもので、元の PDF を Markdown で忠実に再現したものではありません。文字・見出し・箇条書き・表・コード・画像を取り出し、図と数式は線と文字から画像（SVG）に描き直します。保存すると Markdown ファイルになります。"] =
+            "Converted the PDF to Markdown. This is a best-effort conversion, not a faithful copy of the PDF in Markdown. Text, headings, lists, tables, code, and images come back, and figures and math are redrawn as pictures (SVG) from their lines and text. Saving makes a Markdown file.",
         ["この PDF からは文字を取り出せませんでした。画像だけでできた PDF（スキャンしたものなど）の可能性があります。"] =
             "No text could be taken from this PDF. It may be made of images only (a scan, for example).",
         ["ページが多いため、最初の {0} ページだけを開きました（全部で {1} ページ）。"] =
             "The PDF is long, so only the first {0} pages were opened ({1} pages in all).",
+        ["{0} ページ目は、文字の並び（縦書き・重なった文字など）を読み取れないため、ページ全体を画像（SVG）にしました。"] =
+            "The text of page {0} could not be read in order (vertical writing, text set over text, and so on), so the whole page became a picture (SVG).",
         ["パスワードで保護された PDF は開けません。保護を外した PDF を開いてください"] =
             "A password-protected PDF cannot be opened. Open a copy without the protection",
         ["PDF を読み込めません。PDF を表示するアプリで開けるか確かめてから、もう一度開いてください"] =

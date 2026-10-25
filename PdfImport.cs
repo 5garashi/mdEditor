@@ -30,13 +30,16 @@ namespace MdEditor;
 // Figures and math are drawn again as SVG pictures (PdfFigure.cs), and pictures keep their
 // size and place (Picture). A tagged PDF's tags decide the reading order, paragraphs,
 // headings, list items, and tables without borders where they hold a page's text
-// (PdfTags.cs). Column layout comes back only as its text.
+// (PdfTags.cs). Column layout comes back only as its text. A page whose text cannot be
+// read in order (vertical writing, text set over text) comes back as one picture of the
+// whole page (PicturePage).
 // Nothing is sent anywhere, and the PDF itself is never written.
 internal static partial class PdfImport
 {
     public const int MaxPages = 500;
 
-    public sealed record Result(string Markdown, int Images, int Pages, int ReadPages, bool HasText, int Headings);
+    // PicturePages: the pages that came back as a picture of the whole page.
+    public sealed record Result(string Markdown, int Images, int Pages, int ReadPages, bool HasText, int Headings, IReadOnlyList<int> PicturePages);
 
     private sealed record Line(string Text, double Size, bool Bold, double Top, double Right, bool MathFont, string Family, double Left = 0, bool Rejoined = false);
 
@@ -55,6 +58,7 @@ internal static partial class PdfImport
         using var document = PdfDocument.Open(path);
         var structure = ReadStructure(document);
         var items = new List<Item>();
+        var picturePages = new List<int>();
         var images = 0;
         // Formulas in a line of text: each stands in the text as one private-use character,
         // replaced with its picture at the end.
@@ -86,6 +90,15 @@ internal static partial class PdfImport
             var letters = page.Letters.Where(letter => !letter.Value.All(char.IsControl) && !shapes.Tables.Any(table => Contains(table.Box, letter))
                 && !shapes.Figures.Any(figure => Contains(figure, letter))
                 && !shapes.Formulas.Any(formula => Contains(formula.Box, letter)) && tags?.IsFurniture(letter) != true).ToList();
+            if (PicturePage(letters))
+            {
+                var whole = new PdfRectangle(0, 0, page.Width, page.Height);
+                items.Add(new Item(SaveSvg(FigureSvg(page, whole, states.Value)), 0, false, ItemKind.Image, page.Height, number,
+                    Left: 0, Right: page.Width, Bottom: 0, Natural: page.Width * 4 / 3));
+                picturePages.Add(number);
+                continue;
+            }
+
             var taggedTables = tags is null ? [] : TaggedTables(tags, letters);
             foreach (var table in taggedTables)
             {
@@ -404,7 +417,58 @@ internal static partial class PdfImport
 
         var headings = levels.Count(level => level > 0);
         return new Result(markdown.Length > 0 ? markdown.Append('\n').ToString() : string.Empty,
-            images, document.NumberOfPages, readPages, text.Count > 0, headings);
+            images, document.NumberOfPages, readPages, text.Count > 0, headings, picturePages);
+    }
+
+    // Whether a page's running text (figures, tables, and formulas apart) cannot be read in
+    // order, so the page is better kept as a picture of itself: it is written in vertical
+    // lines (half the steps from a letter to the next go down), much of it is turned, or
+    // much of it lies over other text (a poster's lettering over its background words; a
+    // letter drawn twice for bold does not count). A page of under 20 letters is read.
+    private static bool PicturePage(IReadOnlyList<Letter> letters)
+    {
+        var text = letters.Where(letter => !IsBlank(letter)).ToList();
+        if (text.Count < 20)
+        {
+            return false;
+        }
+
+        var down = 0;
+        for (var i = 1; i < text.Count; i++)
+        {
+            var (from, to) = (text[i - 1].StartBaseLine, text[i].StartBaseLine);
+            var size = Math.Max(text[i].PointSize, 1);
+            if (from.Y - to.Y > size * 0.5 && from.Y - to.Y < size * 2 && Math.Abs(to.X - from.X) < size * 0.3)
+            {
+                down++;
+            }
+        }
+
+        if (down * 2 >= text.Count - 1 || text.Count(letter => letter.TextOrientation != TextOrientation.Horizontal) * 10 >= text.Count * 3)
+        {
+            return true;
+        }
+
+        var over = 0;
+        var sorted = text.OrderBy(letter => letter.BoundingBox.Left).ToList();
+        for (var i = 0; i < sorted.Count; i++)
+        {
+            var a = sorted[i].BoundingBox;
+            for (var j = i + 1; j < sorted.Count && sorted[j].BoundingBox.Left < a.Right; j++)
+            {
+                var b = sorted[j].BoundingBox;
+                var width = Math.Min(a.Right, b.Right) - Math.Max(a.Left, b.Left);
+                var height = Math.Min(a.Top, b.Top) - Math.Max(a.Bottom, b.Bottom);
+                var twice = sorted[i].Value == sorted[j].Value && Math.Abs(a.Left - b.Left) < 1.5 && Math.Abs(a.Bottom - b.Bottom) < 1.5;
+                if (width > 0 && height > 0 && !twice && width * height > Math.Min(a.Width * a.Height, b.Width * b.Height) * 0.4)
+                {
+                    over++;
+                    break;
+                }
+            }
+        }
+
+        return over * 100 >= text.Count * 15;
     }
 
     // A picture as Markdown, or as HTML when it is shown at another size than its own (the

@@ -1568,7 +1568,7 @@ public partial class MainWindow : Window
         var result = PdfImport.ToMarkdown(path, assets, name + FilesSuffix);
         var notices = new List<string>
         {
-            Strings.Tr("PDF を Markdown に変換して開きました。文字・見出し（文字の大きさから推測）・箇条書き・罫線のある表・コード・画像（大きさと位置を含む）を取り出し、図と数式は線と文字から画像（SVG）に描き直します。段組みの配置は元に戻りません。保存すると Markdown ファイルになります（PDF ファイルは変わりません）。")
+            Strings.Tr("PDF を Markdown に変換して開きました。できる範囲で変換したもので、元の PDF を Markdown で忠実に再現したものではありません。文字・見出し・箇条書き・表・コード・画像を取り出し、図と数式は線と文字から画像（SVG）に描き直します。保存すると Markdown ファイルになります。")
         };
         if (!result.HasText)
         {
@@ -1578,6 +1578,12 @@ public partial class MainWindow : Window
         if (result.ReadPages < result.Pages)
         {
             notices.Add(string.Format(Strings.Tr("ページが多いため、最初の {0} ページだけを開きました（全部で {1} ページ）。"), result.ReadPages, result.Pages));
+        }
+
+        if (result.PicturePages.Count > 0)
+        {
+            notices.Add(string.Format(Strings.Tr("{0} ページ目は、文字の並び（縦書き・重なった文字など）を読み取れないため、ページ全体を画像（SVG）にしました。"),
+                string.Join(", ", result.PicturePages)));
         }
 
         ApplyImported(result.Markdown, assets, name + ".md", false, string.Join(Strings.SentenceJoin, notices));
