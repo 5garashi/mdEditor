@@ -61,7 +61,8 @@ Made for everyone
 Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Design Office. Open About in the app for the company, support, and privacy policy links.
 
 **What's new in this version:**
-- Open PDFs as Markdown, on your PC: text, headings, lists, the table of contents, ruled tables, code, and pictures come back, and diagrams and math are redrawn as pictures. Column layout does not come back.
+- Open PDFs as Markdown, on your PC: text, headings, lists, the table of contents, ruled tables, code, and pictures come back, and diagrams and math are redrawn as pictures. Tagged PDFs are read by their tags, and a page whose text cannot be read comes back as a picture. Column layout does not come back.
+- Saved PDFs are tagged, so screen readers can follow their headings, lists, and tables.
 - Word documents without heading styles get their headings from text size.
 - Read aloud reads only the text you select.
 - Simplified Chinese: choose Japanese, English, or Chinese from the Language list.
@@ -103,7 +104,7 @@ Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Des
 **Support contact:** https://github.com/5garashi/mdEditor/issues
 
 **Screenshots (1366 x 768, the Store minimum; English UI) with captions:**
-1. `docs/images/10-pdf-open.en.png` — Open a PDF and it becomes Markdown on your PC: text, headings, lists, tables, and pictures come back. The notice says what does not (column layout).
+1. `docs/images/10-pdf-open.en.png` — Open a PDF and it becomes Markdown on your PC: text, headings, lists, tables, and pictures come back. The notice says the conversion is best-effort.
 2. `docs/images/9-pdf.en.png` — One click saves a PDF that looks exactly like the preview: diagrams, tables, math, and colored code included, on A4 or Letter.
 3. `docs/images/1-main.en.png` — Type Markdown on the left and the preview on the right updates at once. A 3D model written in STL turns when you drag it.
 4. `docs/images/2-dark.en.png` — Day and night palettes follow Windows, or choose one with the Theme button in Settings. Printing and PDF always use a white page.
@@ -176,7 +177,8 @@ PDF や Word で保存する
 日本語・英語・簡体字中国語に対応します。5garashi.com Design Office が作りました。会社紹介・サポート・プライバシーポリシーは、アプリの「このアプリについて」から開けます。
 
 **このバージョンの新機能:**
-- PDF を Markdown として開けるようになりました（PC の中で変換します）。文字・見出し・箇条書き・目次・罫線のある表・コード・画像が戻り、図と数式は画像に描き直します。段組みの配置は戻りません。
+- PDF を Markdown として開けるようになりました（PC の中で変換します）。文字・見出し・箇条書き・目次・罫線のある表・コード・画像が戻り、図と数式は画像に描き直します。タグ付きの PDF はタグのとおりに読み、文字を読み取れないページはページ全体を画像にします。段組みの配置は戻りません。
+- 保存した PDF はタグ付きになり、画面読み上げで見出し・箇条書き・表をたどれます。
 - 見出しのスタイルがない Word 文書は、文字の大きさから見出しを推測します。
 - 読み上げで、選んだ部分だけを読めるようになりました。
 - 簡体字中国語に対応しました。「Language」の一覧で、日本語・英語・中国語を選べます。
@@ -214,7 +216,7 @@ PDF や Word で保存する
 **検索用語（7つまで）:** Markdown, マークダウン, PDF, PDF変換, Word変換, エディタ, プレビュー
 
 **スクリーンショット（1366 x 768。Store の最小の大きさ。日本語の画面）と説明文:**
-1. `docs/images/10-pdf-open.ja.png` — PDF を開くと、PC の中で Markdown になります。文字・見出し・箇条書き・表・画像が戻り、戻らないもの（段組み）はお知らせ欄に出ます。
+1. `docs/images/10-pdf-open.ja.png` — PDF を開くと、PC の中で Markdown になります。文字・見出し・箇条書き・表・画像が戻ります。できる範囲での変換であることを、お知らせ欄に示します。
 2. `docs/images/9-pdf.ja.png` — ワンクリックで、プレビューと同じ見た目の PDF に保存します。図・表・数式・色分けしたコードもそのまま入り、用紙は A4 か Letter です。
 3. `docs/images/1-main.ja.png` — 左に Markdown を書くと、右のプレビューにすぐ反映されます。STL で書いた 3D モデルも、ドラッグで回せます。
 4. `docs/images/2-dark.ja.png` — 昼と夜の配色は Windows の設定に合わせて切り替わり、「設定」の「表示」ボタンでも選べます。印刷と PDF は常に白地です。
@@ -273,7 +275,8 @@ PDF や Word で保存する
 支持日语、英语和简体中文。由 5garashi.com Design Office 制作。公司介绍、支持和隐私政策的链接，可以在应用的“关于此应用”中打开。
 
 **此版本的新功能:**
-- 可以把 PDF 作为 Markdown 打开（在你的电脑中转换）。文字、标题、列表、目录、有边框的表格、代码和图片会取出，图表和公式重新绘制为图片；分栏排版不会恢复。
+- 可以把 PDF 作为 Markdown 打开（在你的电脑中转换）。文字、标题、列表、目录、有边框的表格、代码和图片会取出，图表和公式重新绘制为图片。带标签的 PDF 按标签读取，无法读取文字的页面会整页变为图片；分栏排版不会恢复。
+- 保存的 PDF 带有标签，屏幕阅读器可以按标题、列表和表格浏览。
 - 没有标题样式的 Word 文档，会根据文字大小推测标题。
 - 朗读可以只朗读选中的文字。
 - 支持简体中文。可以在“Language”列表中选择日语、英语或中文。
@@ -311,7 +314,7 @@ PDF や Word で保存する
 **搜索词（最多 7 个）:** Markdown, Markdown编辑器, PDF转Markdown, Word转Markdown, Markdown转PDF, 预览, Mermaid
 
 **屏幕截图（1366 x 768，Store 的最小尺寸；简体中文界面）及说明:**
-1. `docs/images/10-pdf-open.zh-CN.png` — 打开 PDF，就会在电脑中变成 Markdown。文字、标题、列表、表格和图片会取出，不会恢复的内容（分栏排版）会显示在通知栏中。
+1. `docs/images/10-pdf-open.zh-CN.png` — 打开 PDF，就会在电脑中变成 Markdown。文字、标题、列表、表格和图片会取出，通知栏会说明这是尽力而为的转换。
 2. `docs/images/9-pdf.zh-CN.png` — 一键保存与预览外观相同的 PDF。图表、表格、公式和着色的代码都会原样放入，纸张为 A4 或 Letter。
 3. `docs/images/1-main.zh-CN.png` — 在左边写 Markdown，右边的预览立即更新。用 STL 写的 3D 模型也可以拖动旋转。
 4. `docs/images/2-dark.zh-CN.png` — 白天和夜间的配色跟随 Windows 的设置，也可以在“设置”中用“显示”按钮选择。打印和 PDF 始终使用白色页面。
@@ -327,7 +330,7 @@ PDF や Word で保存する
 - Reserve the name in Partner Center and confirm it is available. Use the same spelling ("5garashi.com Design Office") in the Store, the app, and the website.
 - Replace the privacy or support links if the final URLs differ. The company URL in the app is `https://www.5garashi.com/`.
 - "Worldwide" distribution and "all languages" are different settings. The app supports Japanese, English, and Simplified Chinese (1.0.15) only. Since 1.0.15 the package declares ja-JP, en-US, and zh-CN, so Partner Center expects a listing in each of the three languages; the zh-CN text and its screenshots are above. The Chinese text has not been reviewed by a native speaker.
-- The screenshots are in `docs/images/` (1366 x 768 window, 90% zoom), in Japanese (`.ja`), English (`.en`), and Simplified Chinese (`.zh-CN`). Screenshots 1-main to 9-pdf were retaken with 1.0.15 (2026-10-23) after the header and toolbar changed; screenshot 1-main shows the 3D model of samples/diagram-test (21-1). `10-pdf-open` (retaken with 1.0.17 on 2026-10-25 for the new notice text; listed first to lead with PDF import) puts page 1 of a short report PDF beside the window that opened it as Markdown; the report was written for the screenshot and saved as PDF by mdEditor, with numbered lists. `9-pdf` (listed second) puts the window beside the first page of the PDF it saved. Upload the screenshots in the listed order; ten is the Store maximum. Retake them when the screen changes.
+- The screenshots are in `docs/images/` (1366 x 768 window, 90% zoom), in Japanese (`.ja`), English (`.en`), and Simplified Chinese (`.zh-CN`). Screenshots 1-main to 9-pdf were retaken with 1.0.15 (2026-10-23) after the header and toolbar changed; screenshot 1-main shows the 3D model of samples/diagram-test (21-1). `10-pdf-open` (retaken with 1.0.18 on 2026-10-26 for the new notice text; listed first to lead with PDF import) puts page 1 of a short report PDF beside the window that opened it as Markdown; the report was written for the screenshot and saved as PDF by mdEditor, with numbered lists. `9-pdf` (listed second) puts the window beside the first page of the PDF it saved. Upload the screenshots in the listed order; ten is the Store maximum. Retake them when the screen changes.
 - The map screenshot (`8-map`, listed tenth) shows OpenStreetMap map tiles. Keep the credit "© OpenStreetMap contributors" visible; do not crop it out.
   地図のスクリーンショット（`8-map`、一覧の 10 番目）には OpenStreetMap の地図が写っています。右下の「© OpenStreetMap contributors」を切り取らないでください。
 - Partner Center limits: What's new 1,500 characters, each feature 200 characters (up to 20), each screenshot caption 200 characters (up to 10 screenshots).
