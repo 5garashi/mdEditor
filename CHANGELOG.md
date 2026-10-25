@@ -16,9 +16,11 @@ The version number lives in [VERSION](./VERSION). Add each new version at the to
 
 - タグ付きの PDF（Word・Acrobat・LibreOffice・ブラウザーなどで作ったもの）を開いたときに、PDF の中のタグ（見出し・段落・箇条書き・表と、その読む順）を使うようにした。ページの文字のほとんどがタグに入っていれば、読む順・段落の区切り・見出しの段階（H1〜H6）・箇条書きをタグのとおりにし、罫線のない表も Markdown の表に戻し、柱やページ番号として印の付いた文字は省く。次のページに続いた箇条書きや段落の続きも、正しい場所に読む。タグのない PDF や、タグが文字を覆っていないページは、これまでどおり文字の位置から読む。図・数式・罫線のある表・コードは、タグがあってもこれまでどおり。
 - PDF で、文字の箱に高さがない書体（ブラウザーがフォントなしで印刷した Type 3 の書体）や絵文字の行が、2 行に分かれて順番が入れ替わることがあったのを直した。
+- PDF に書き出すと、タグ付きの PDF になるようにした。見出し・段落・箇条書き・表の区別が PDF に残り、読み上げソフトがたどれるほか、mdEditor で開き直すとタグのとおりに戻る（数式・図・コードの読み方は変わらない）。タグ付きで書き出せないときは、これまでどおりの PDF にする。
 
 - Opening a tagged PDF (one made by Word, Acrobat, LibreOffice, or a browser, for example) now uses the tags in it: what is a heading, a paragraph, a list item, or a table, and the order they are read in. Where the tags hold nearly all of a page's text, they decide the reading order, where paragraphs end, the heading levels (H1 to H6), and the list items; a table without cell borders comes back as a Markdown table, and running titles and page numbers marked as such are left out. A list item or paragraph that goes on to the next page is read in its place. A PDF without tags, and a page whose tags do not hold its text, is read from where the letters stand as before. Figures, math, ruled tables, and code are found as before, tags or not.
 - PDF: a line in a typeface whose letters have boxes of no height (a Type 3 font, as a browser printing without the fonts writes them), or a line with emoji, could be read as two lines in the wrong order; it is now read as one.
+- Export to PDF now writes a tagged PDF: what is a heading, a paragraph, a list, or a table stays in the PDF, so screen readers can follow it, and opening it again in mdEditor reads it by its tags (math, figures, and code are read as before). When a tagged PDF cannot be written, the PDF is written as before.
 
 ## 1.0.17 — 2026-10-25
 

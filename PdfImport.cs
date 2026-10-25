@@ -580,8 +580,9 @@ internal static partial class PdfImport
     // make its own block, read in the order of the tree (PdfPig's blocks would cut one
     // paragraph into lines, having too few lines to measure their spacing; an element with
     // a wide gap in a line, a form line or text across columns, is cut into blocks as an
-    // untagged page is). Letters in no element (a formula set in the text) make blocks
-    // placed by where they stand.
+    // untagged page is). A letter in no element (a formula set in the text, an icon a style
+    // sheet adds) goes with the nearest letter on its line that is in one; others make
+    // blocks placed by where they stand.
     private static IEnumerable<TextBlock> Blocks(IReadOnlyList<Letter> letters, HashSet<Word> rejoined, PageTags? tags)
     {
         if (letters.Count == 0)
@@ -600,8 +601,12 @@ internal static partial class PdfImport
             return ordered;
         }
 
-        var groups = letters.GroupBy(letter => tags.Of(letter)?.Block ?? -1).ToList();
-        var result = groups.Where(group => group.Key >= 0).OrderBy(group => group.Min(letter => tags.Of(letter)!.Order))
+        var tagged = letters.Where(letter => tags.Of(letter) is not null && !IsBlank(letter)).ToList();
+        Tag? Near(Letter letter) => tagged.Where(other => Math.Abs(other.StartBaseLine.Y - letter.StartBaseLine.Y) < Math.Max(letter.PointSize, 1) * 0.5)
+            .Select(other => (other, gap: Math.Max(other.BoundingBox.Left - letter.BoundingBox.Right, letter.BoundingBox.Left - other.BoundingBox.Right)))
+            .Where(pair => pair.gap < Math.Max(letter.PointSize, 1) * 3).OrderBy(pair => pair.gap).Select(pair => pair.other).FirstOrDefault() is { } near ? tags.Of(near) : null;
+        var groups = letters.GroupBy(letter => (tags.Of(letter) ?? Near(letter))?.Block ?? -1).ToList();
+        var result = groups.Where(group => group.Key >= 0).OrderBy(group => group.Min(letter => tags.Of(letter)?.Order ?? int.MaxValue))
             .SelectMany(group => ElementBlock(group.ToList()) is { } block ? [block] : TextBlocks(group.ToList(), rejoined)).ToList();
         foreach (var block in groups.Where(group => group.Key < 0).SelectMany(group => TextBlocks(group.ToList(), rejoined)))
         {

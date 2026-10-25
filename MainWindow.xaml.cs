@@ -3583,6 +3583,41 @@ public partial class MainWindow : Window
         return TryResolveDocumentImage(url.Replace('\\', '/'), out var path, out _) ? path : null;
     }
 
+    // The page printed to a tagged PDF with the same paper, margins, and backgrounds as
+    // the print settings; false when DevTools cannot print it.
+    private async Task<bool> PrintTaggedPdfAsync(string path, CoreWebView2PrintSettings settings)
+    {
+        try
+        {
+            var parameters = JsonSerializer.Serialize(new
+            {
+                paperWidth = settings.PageWidth,
+                paperHeight = settings.PageHeight,
+                marginTop = settings.MarginTop,
+                marginBottom = settings.MarginBottom,
+                marginLeft = settings.MarginLeft,
+                marginRight = settings.MarginRight,
+                landscape = settings.Orientation == CoreWebView2PrintOrientation.Landscape,
+                printBackground = settings.ShouldPrintBackgrounds,
+                displayHeaderFooter = settings.ShouldPrintHeaderAndFooter,
+                generateTaggedPDF = true,
+            });
+            var result = await EditorWebView.CoreWebView2.CallDevToolsProtocolMethodAsync("Page.printToPDF", parameters);
+            using var json = JsonDocument.Parse(result);
+            if (!json.RootElement.TryGetProperty("data", out var data) || data.GetString() is not { Length: > 0 } base64)
+            {
+                return false;
+            }
+
+            await File.WriteAllBytesAsync(path, Convert.FromBase64String(base64));
+            return true;
+        }
+        catch (Exception ex) when (ex is COMException or InvalidOperationException or JsonException or FormatException or IOException or UnauthorizedAccessException or ArgumentException)
+        {
+            return false;
+        }
+    }
+
     private async Task ExportPdfAsync(string? presetPath = null)
     {
         if (_pdfExportActive)
@@ -3648,9 +3683,11 @@ public partial class MainWindow : Window
                 tempPath = Path.Combine(
                     Path.GetDirectoryName(Path.GetFullPath(targetPath))!,
                     $".mdEditor-{Guid.NewGuid():N}.tmp");
-                saved = await EditorWebView.CoreWebView2.PrintToPdfAsync(
-                    tempPath,
-                    settings);
+                // A tagged PDF keeps what is a heading, a paragraph, a list, or a table (opening
+                // it again reads them back, and screen readers use them). WebView2's own print
+                // has no such setting, so DevTools prints it; if that fails, the plain print.
+                saved = await PrintTaggedPdfAsync(tempPath, settings)
+                        || await EditorWebView.CoreWebView2.PrintToPdfAsync(tempPath, settings);
                 if (saved)
                 {
                     File.Move(tempPath, targetPath, overwrite: true);

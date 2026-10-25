@@ -54,8 +54,11 @@ internal static partial class PdfImport
         private static (int, double) Key(Letter letter) => (letter.TextSequence, Math.Round(letter.StartBaseLine.X, 2));
     }
 
-    // Elements that are part of a paragraph, not one: a list item's label and body belong
-    // to the item, a link or a span to the line it is in.
+    // Elements that are part of a paragraph when they are in one: a list item's label and
+    // body belong to the item, a link or a span to the line it is in. Outside a paragraph
+    // (a browser writes a <div> as NonStruct too) each is a block of its own.
+    private static readonly HashSet<string> ParagraphRoles = ["P", "H", "H1", "H2", "H3", "H4", "H5", "H6", "Title", "LI", "TD", "TH", "TOCI", "Caption", "Lbl", "LBody"];
+
     private static readonly HashSet<string> InlineRoles = ["Span", "Quote", "Note", "Reference", "BibEntry", "Code", "Link", "Annot", "Ruby", "RB", "RT", "RP",
         "Warichu", "WT", "WP", "Lbl", "LBody", "Em", "Strong", "Sub", "Formula", "NonStruct", "Private"];
 
@@ -118,7 +121,7 @@ internal static partial class PdfImport
             var rows = new Dictionary<int, int>();
             var cells = new Dictionary<(int, int), int>();
             var listStarts = new Dictionary<int, int>();
-            void Walk(IToken? token, int page, Tag context, bool artifact, bool label, int depth)
+            void Walk(IToken? token, int page, Tag context, bool artifact, bool label, bool paragraph, int depth)
             {
                 if (depth > 256 || token is IndirectReferenceToken reference && !visited.Add(reference.Data))
                 {
@@ -131,7 +134,7 @@ internal static partial class PdfImport
                         Piece(page, mcid.Int);
                         return;
                     case ArrayToken array:
-                        foreach (var item in array.Data) Walk(item, page, context, artifact, label, depth + 1);
+                        foreach (var item in array.Data) Walk(item, page, context, artifact, label, paragraph, depth + 1);
                         return;
                     case DictionaryToken dictionary:
                         if (dictionary.TryGet(NameToken.Create("Pg"), out var pg) && pg is IndirectReferenceToken pageReference && pageOf.TryGetValue(pageReference.Data, out var number))
@@ -155,7 +158,7 @@ internal static partial class PdfImport
                         var role = Role(name);
                         var element = ++elements;
                         var inner = context;
-                        if (!InlineRoles.Contains(role))
+                        if (!paragraph || !InlineRoles.Contains(role))
                         {
                             inner = inner with { Block = element };
                         }
@@ -185,7 +188,7 @@ internal static partial class PdfImport
                         }
 
                         dictionary.TryGet(NameToken.Create("K"), out var kids);
-                        Walk(kids, page, inner, artifact || name == "Artifact" || role == "Artifact", label || role == "Lbl", depth + 1);
+                        Walk(kids, page, inner, artifact || name == "Artifact" || role == "Artifact", label || role == "Lbl", paragraph || ParagraphRoles.Contains(role), depth + 1);
                         return;
                 }
 
@@ -207,7 +210,7 @@ internal static partial class PdfImport
             }
 
             root.TryGet(NameToken.Create("K"), out var top);
-            Walk(top, 0, new Tag(0, -1, 0, -1, -1, -1, -1), false, false, 0);
+            Walk(top, 0, new Tag(0, -1, 0, -1, -1, -1, -1), false, false, false, 0);
             return pieces.Count == 0 ? null : new Structure(pieces, furniture, hasHeadings, listStarts);
         }
         catch (Exception)
