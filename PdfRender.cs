@@ -1,17 +1,18 @@
 /*
   ファイル名 / File: PdfRender.cs
-  概要 / Description: Finds PDF pages whose letters cannot be read and draws them as pictures with Windows' own PDF renderer
+  概要 / Description: Finds PDF pages whose letters cannot be read and draws them as pictures with PDFium
   作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
   作成日 / Created: 2026-10-26
   ライセンス / License: MIT
   SPDX-License-Identifier: MIT
 */
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using UglyToad.PdfPig;
 using UglyToad.PdfPig.Content;
 using UglyToad.PdfPig.Tokens;
-using Windows.Storage;
-using Windows.Storage.Streams;
 
 namespace MdEditor;
 
@@ -19,8 +20,9 @@ namespace MdEditor;
 // a font that numbers its glyphs in its own order (Identity-H, as many older programs embed
 // Japanese and Chinese fonts) gives letters that look like text but are other characters
 // ("宓宇安季" for "PDF を"), and nothing in the letters tells. A page set mostly in such fonts
-// is drawn instead as a picture of itself by Windows' PDF renderer (Windows.Data.Pdf), which
-// draws the glyphs, not the characters.
+// is drawn instead as a picture of itself by PDFium (the PDF renderer of Chromium and Edge,
+// BSD-3-Clause; pdfium.dll from bblanchon.PDFium.Win32), which draws the glyphs, not the
+// characters.
 internal static partial class PdfImport
 {
     // The fonts of a page (and of the forms it draws) that have no table to characters and
@@ -97,30 +99,126 @@ internal static partial class PdfImport
         return fonts.Count > 0 && text.Count(letter => letter.FontName is { } name && fonts.Contains(name)) * 10 >= text.Count * 3;
     }
 
-    // A page drawn as a PNG picture by Windows, twice as wide as it is shown (sharp on a
-    // high-resolution screen); null when Windows cannot draw it.
+    // A page drawn as a PNG picture by PDFium, twice as wide as it is shown (sharp on a
+    // high-resolution screen), on white; null when PDFium cannot draw it.
     private static byte[]? RenderPage(string path, int number, double width)
     {
         try
         {
-            // Away from the window's thread: the renderer's work completes on its own threads.
-            return Task.Run(async () =>
+            var bytes = File.ReadAllBytes(path);
+            lock (Pdfium.Gate)
             {
-                var file = await StorageFile.GetFileFromPathAsync(Path.GetFullPath(path));
-                var document = await Windows.Data.Pdf.PdfDocument.LoadFromFileAsync(file);
-                using var page = document.GetPage((uint)(number - 1));
-                using var stream = new InMemoryRandomAccessStream();
-                await page.RenderToStreamAsync(stream, new Windows.Data.Pdf.PdfPageRenderOptions { DestinationWidth = (uint)Math.Round(width * 4 / 3 * 2) });
-                var bytes = new byte[stream.Size];
-                using var reader = new DataReader(stream.GetInputStreamAt(0));
-                await reader.LoadAsync((uint)stream.Size);
-                reader.ReadBytes(bytes);
-                return bytes;
-            }).GetAwaiter().GetResult();
+                Pdfium.Initialize();
+                var data = GCHandle.Alloc(bytes, GCHandleType.Pinned);
+                var document = IntPtr.Zero;
+                var page = IntPtr.Zero;
+                var bitmap = IntPtr.Zero;
+                try
+                {
+                    document = Pdfium.FPDF_LoadMemDocument64(data.AddrOfPinnedObject(), (nuint)bytes.Length, null);
+                    page = document == IntPtr.Zero ? IntPtr.Zero : Pdfium.FPDF_LoadPage(document, number - 1);
+                    if (page == IntPtr.Zero)
+                    {
+                        return null;
+                    }
+
+                    var scale = width * 4 / 3 * 2 / Math.Max(Pdfium.FPDF_GetPageWidthF(page), 1);
+                    var (pixelWidth, pixelHeight) = ((int)Math.Round(Pdfium.FPDF_GetPageWidthF(page) * scale), (int)Math.Round(Pdfium.FPDF_GetPageHeightF(page) * scale));
+                    if (pixelWidth <= 0 || pixelHeight <= 0 || (long)pixelWidth * pixelHeight > 40_000_000)
+                    {
+                        return null;
+                    }
+
+                    bitmap = Pdfium.FPDFBitmap_Create(pixelWidth, pixelHeight, 0);
+                    if (bitmap == IntPtr.Zero)
+                    {
+                        return null;
+                    }
+
+                    Pdfium.FPDFBitmap_FillRect(bitmap, 0, 0, pixelWidth, pixelHeight, 0xFFFFFFFF);
+                    Pdfium.FPDF_RenderPageBitmap(bitmap, page, 0, 0, pixelWidth, pixelHeight, 0, Pdfium.Annotations);
+                    var stride = Pdfium.FPDFBitmap_GetStride(bitmap);
+                    var picture = BitmapSource.Create(pixelWidth, pixelHeight, 96, 96, PixelFormats.Bgr32, null,
+                        Pdfium.FPDFBitmap_GetBuffer(bitmap), stride * pixelHeight, stride);
+                    picture.Freeze();
+                    var encoder = new PngBitmapEncoder();
+                    encoder.Frames.Add(BitmapFrame.Create(picture));
+                    using var png = new MemoryStream();
+                    encoder.Save(png);
+                    return png.ToArray();
+                }
+                finally
+                {
+                    if (bitmap != IntPtr.Zero) Pdfium.FPDFBitmap_Destroy(bitmap);
+                    if (page != IntPtr.Zero) Pdfium.FPDF_ClosePage(page);
+                    if (document != IntPtr.Zero) Pdfium.FPDF_CloseDocument(document);
+                    data.Free();
+                }
+            }
         }
-        catch (Exception)
+        catch (Exception ex) when (ex is DllNotFoundException or EntryPointNotFoundException or BadImageFormatException or IOException
+                                       or UnauthorizedAccessException or InvalidOperationException or ArgumentException or OutOfMemoryException)
         {
             return null;
         }
+    }
+
+    // The few PDFium calls used (fpdfview.h). PDFium is not safe to call from two threads at
+    // once, so every use holds Gate.
+    private static class Pdfium
+    {
+        public const int Annotations = 0x01;
+
+        public static readonly object Gate = new();
+
+        private static bool initialized;
+
+        public static void Initialize()
+        {
+            if (!initialized)
+            {
+                FPDF_InitLibrary();
+                initialized = true;
+            }
+        }
+
+        [DllImport("pdfium.dll")]
+        private static extern void FPDF_InitLibrary();
+
+        [DllImport("pdfium.dll")]
+        public static extern IntPtr FPDF_LoadMemDocument64(IntPtr data, nuint size, [MarshalAs(UnmanagedType.LPStr)] string? password);
+
+        [DllImport("pdfium.dll")]
+        public static extern void FPDF_CloseDocument(IntPtr document);
+
+        [DllImport("pdfium.dll")]
+        public static extern IntPtr FPDF_LoadPage(IntPtr document, int index);
+
+        [DllImport("pdfium.dll")]
+        public static extern void FPDF_ClosePage(IntPtr page);
+
+        [DllImport("pdfium.dll")]
+        public static extern float FPDF_GetPageWidthF(IntPtr page);
+
+        [DllImport("pdfium.dll")]
+        public static extern float FPDF_GetPageHeightF(IntPtr page);
+
+        [DllImport("pdfium.dll")]
+        public static extern IntPtr FPDFBitmap_Create(int width, int height, int alpha);
+
+        [DllImport("pdfium.dll")]
+        public static extern int FPDFBitmap_FillRect(IntPtr bitmap, int left, int top, int width, int height, uint color);
+
+        [DllImport("pdfium.dll")]
+        public static extern void FPDF_RenderPageBitmap(IntPtr bitmap, IntPtr page, int x, int y, int width, int height, int rotate, int flags);
+
+        [DllImport("pdfium.dll")]
+        public static extern IntPtr FPDFBitmap_GetBuffer(IntPtr bitmap);
+
+        [DllImport("pdfium.dll")]
+        public static extern int FPDFBitmap_GetStride(IntPtr bitmap);
+
+        [DllImport("pdfium.dll")]
+        public static extern void FPDFBitmap_Destroy(IntPtr bitmap);
     }
 }

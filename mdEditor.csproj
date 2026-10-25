@@ -9,10 +9,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <!-- Windows 10 2004 SDK for Windows' own PDF renderer (Windows.Data.Pdf, PdfRender.cs); the
-         app still runs on Windows 10 1809 and later, as the Store manifest says. -->
-    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
-    <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -27,22 +24,6 @@
          code is compiled while the window opens. -->
     <PublishReadyToRun>true</PublishReadyToRun>
   </PropertyGroup>
-  <!-- The Windows projection (Windows.Data.Pdf and the rest of Windows' own API: 24 MB, with
-       the C#/WinRT runtime) is used only to draw a PDF page. Windows SDK's terms let it be
-       distributed only unmodified, and the single-file exe would compile it into its one
-       composite image ahead of time (about 40 MB more; PublishReadyToRunExclude does not reach
-       the composite). It is taken out of the compile lists and only referenced, so it ships as
-       it is. -->
-  <Target Name="KeepWindowsProjectionAsIs" AfterTargets="_PrepareForReadyToRunCompilation">
-    <ItemGroup>
-      <_WindowsProjection Include="@(_ReadyToRunCompositeBuildInput)" Condition="'%(Filename)%(Extension)' == 'Microsoft.Windows.SDK.NET.dll' or '%(Filename)%(Extension)' == 'WinRT.Runtime.dll'" />
-      <_ReadyToRunCompositeBuildInput Remove="@(_WindowsProjection)" />
-      <_ReadyToRunCompositeUnrootedBuildInput Remove="@(_WindowsProjection)" />
-      <_ReadyToRunCompositeBuildReferences Include="@(_WindowsProjection)" />
-      <_ReadyToRunCompileList Remove="@(_ReadyToRunCompileList)" Condition="'%(Filename)%(Extension)' == 'Microsoft.Windows.SDK.NET.dll' or '%(Filename)%(Extension)' == 'WinRT.Runtime.dll'" />
-      <_ReadyToRunFilesToPublish Remove="@(_ReadyToRunFilesToPublish)" Condition="'%(Filename)%(Extension)' == 'Microsoft.Windows.SDK.NET.dll' or '%(Filename)%(Extension)' == 'WinRT.Runtime.dll'" />
-    </ItemGroup>
-  </Target>
   <ItemGroup>
     <!-- WebView2 serves these from a real folder, so keep them beside the single-file exe. -->
     <Content Include="wwwroot\**\*">
@@ -77,6 +58,8 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DocumentFormat.OpenXml" Version="3.5.1" />
+    <!-- PDFium (BSD-3-Clause and permissive third-party licenses; THIRD-PARTY-NOTICES.md) draws a PDF page whose letters cannot be read as a picture (PdfRender.cs). -->
+    <PackageReference Include="bblanchon.PDFium.Win32" Version="158.0.8111" />
     <PackageReference Include="HtmlSanitizer" Version="9.2.1039" />
     <PackageReference Include="Mammoth" Version="1.13.0" />
     <PackageReference Include="Markdig" Version="1.4.0" />
