@@ -30,8 +30,7 @@ The 5garashi.com logotype and symbol mark in `wwwroot/assets/` are not covered b
 | DocumentFormat.OpenXml (Open XML SDK) | 3.5.1 | MIT | Copyright (c) Microsoft Corporation | https://github.com/dotnet/Open-XML-SDK |
 | PdfPig (opening PDFs; includes the Adobe Glyph List and Zapf Dingbats Glyph List) | 0.1.16 | Apache-2.0 (glyph lists: BSD-3-Clause) | Copyright (c) 2002-2007, www.pdfbox.org; Adobe Systems Incorporated (glyph lists) | https://github.com/UglyToad/PdfPig |
 | Microsoft.Web.WebView2 (SDK) | 1.0.4258.31 | BSD-3-Clause (Microsoft) | Copyright (C) Microsoft Corporation | https://www.nuget.org/packages/Microsoft.Web.WebView2 |
-| Windows SDK projection for .NET (Microsoft.Windows.SDK.NET; drawing PDF pages with Windows' own renderer) | 10.0.19041.55 | Microsoft Software License Terms, Windows SDK for Windows 10 (Distributable Code) | Copyright (c) Microsoft Corporation | https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref |
-| C#/WinRT runtime (WinRT.Runtime) | 2.2.0 | MIT | Copyright (c) Microsoft Corporation | https://github.com/microsoft/CsWinRT |
+| Windows SDK projection for .NET (Microsoft.Windows.SDK.NET.dll and WinRT.Runtime.dll from the Microsoft.Windows.SDK.NET.Ref package; drawing PDF pages with Windows' own renderer) | 10.0.19041.55 (WinRT.Runtime 2.2.0) | Microsoft Software License Terms, Windows SDK for Windows 10 (Distributable Code, REDIST list) | Copyright (c) Microsoft Corporation | https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref |
 | Mermaid | 11.17.2 | MIT | Copyright (c) 2014 - 2022 Knut Sveidqvist | https://github.com/mermaid-js/mermaid |
 | KaTeX (including fonts) | 0.18.9 | MIT | Copyright (c) 2013-2020 Khan Academy and other contributors | https://github.com/KaTeX/KaTeX |
 | highlight.js (with the PowerShell and Dockerfile grammars) | 11.12.0 | BSD-3-Clause | Copyright (c) 2006, Ivan Sagalaev | https://highlightjs.org/ |
@@ -98,7 +97,7 @@ Microsoft Edge WebView2 Runtime is not distributed with mdEditor; it is provided
 
 ## MIT License
 
-Applies to: .NET Runtime, C#/WinRT (WinRT.Runtime), HtmlSanitizer, AngleSharp, AngleSharp.Css, ReverseMarkdown, MimeKitLite, YamlDotNet, three.js, Viz.js, Expat, DocumentFormat.OpenXml, Mermaid, KaTeX, CodeMirror, and the MIT-licensed libraries above. Each component's copyright notice is listed in the tables above.
+Applies to: .NET Runtime, HtmlSanitizer, AngleSharp, AngleSharp.Css, ReverseMarkdown, MimeKitLite, YamlDotNet, three.js, Viz.js, Expat, DocumentFormat.OpenXml, Mermaid, KaTeX, CodeMirror, and the MIT-licensed libraries above. Each component's copyright notice is listed in the tables above.
 
 ```text
 Copyright (c) <year> <copyright holders>
@@ -152,11 +151,11 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ```
 
-## Microsoft Windows SDK for Windows 10 (Microsoft.Windows.SDK.NET)
+## Microsoft Windows SDK for Windows 10 (Microsoft.Windows.SDK.NET.Ref)
 
-Microsoft.Windows.SDK.NET.dll lets mdEditor call Windows' own PDF renderer (Windows.Data.Pdf), which draws a page whose letters cannot be read as a picture. It is Microsoft's Distributable Code, distributed unmodified under the Microsoft Software License Terms for the Microsoft Windows Software Development Kit (SDK) for Windows 10 (https://aka.ms/WinSDKLicenseURL). It is not covered by mdEditor's MIT License: it stays under those terms, its copyright notices may not be altered, and it may be used only as part of mdEditor on Windows.
+Microsoft.Windows.SDK.NET.dll and WinRT.Runtime.dll let mdEditor call Windows' own PDF renderer (Windows.Data.Pdf), which draws a page whose letters cannot be read as a picture. Both come from the Microsoft.Windows.SDK.NET.Ref NuGet package, whose files the Windows SDK REDIST list (https://learn.microsoft.com/legal/windows-sdk/redist) allows to be distributed unmodified as part of a program so that it can call WinRT APIs. They are Microsoft's Distributable Code under the Microsoft Software License Terms for the Microsoft Windows Software Development Kit (SDK) for Windows 10 (https://aka.ms/WinSDKLicenseURL). They are not covered by mdEditor's MIT License: they stay under those terms, their copyright notices may not be altered, and they may be used only as part of mdEditor on Windows. (The source of WinRT.Runtime, the C#/WinRT project, is published under the MIT License at https://github.com/microsoft/CsWinRT.)
 
-Microsoft.Windows.SDK.NET.dll は、mdEditor から Windows の PDF 描画（Windows.Data.Pdf）を使うためのファイルで、文字を読み取れないページを画像にするときに使います。Microsoft の「再頒布可能コード」で、Microsoft Windows SDK for Windows 10 のライセンス条項（https://aka.ms/WinSDKLicenseURL）のもとで、変更せずに同梱しています。mdEditor の MIT License の対象ではなく、これらの条項に従います（著作権表示の変更は不可、Windows 上の mdEditor の一部としてのみ使用）。
+Microsoft.Windows.SDK.NET.dll と WinRT.Runtime.dll は、mdEditor から Windows の PDF 描画（Windows.Data.Pdf）を使うためのファイルで、文字を読み取れないページを画像にするときに使います。どちらも NuGet パッケージ Microsoft.Windows.SDK.NET.Ref のファイルで、Windows SDK の REDIST リスト（https://learn.microsoft.com/legal/windows-sdk/redist）により、WinRT API を呼ぶためにプログラムの一部として変更せずに配布できます。Microsoft の「再頒布可能コード」として、Microsoft Windows SDK for Windows 10 のライセンス条項（https://aka.ms/WinSDKLicenseURL）のもとで同梱しています。mdEditor の MIT License の対象ではなく、これらの条項に従います（著作権表示の変更は不可、Windows 上の mdEditor の一部としてのみ使用）。なお、WinRT.Runtime のソース（C#/WinRT）は MIT License で公開されています（https://github.com/microsoft/CsWinRT）。
 
 ## Microsoft.Web.WebView2 SDK License
 
