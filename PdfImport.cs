@@ -684,7 +684,8 @@ internal static partial class PdfImport
             InsertByPlace(result, block);
         }
 
-        return result;
+        // A browser tags each key and value of a front matter card as an element of its own.
+        return KeyValueRows(result, rejoined, frames);
     }
 
     // An element's letters as one block of lines, or null when a line has a gap wider than
@@ -1350,6 +1351,11 @@ internal static partial class PdfImport
             else if (builder[^1] == '-' && builder.Length > 1 && char.IsLetter(builder[^2]) && char.IsLower(line[0]))
             {
                 builder.Length--;
+                builder.Append(line);
+            }
+            else if (builder[^1] == '-' && builder.Length > 1 && char.IsAsciiDigit(builder[^2]) && char.IsAsciiDigit(line[0]))
+            {
+                // A range of numbers wrapped after its hyphen ("8-" and "9") keeps the hyphen.
                 builder.Append(line);
             }
             else

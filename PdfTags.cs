@@ -56,8 +56,9 @@ internal static partial class PdfImport
 
     // Elements that are part of a paragraph when they are in one: a list item's label and
     // body belong to the item, a link or a span to the line it is in. Outside a paragraph
-    // (a browser writes a <div> as NonStruct too) each is a block of its own.
-    private static readonly HashSet<string> ParagraphRoles = ["P", "H", "H1", "H2", "H3", "H4", "H5", "H6", "Title", "LI", "TD", "TH", "TOCI", "Caption", "Lbl", "LBody"];
+    // (a browser writes a <div> as NonStruct too) each is a block of its own. A block of
+    // code is one too: a browser tags each colored word in it.
+    private static readonly HashSet<string> ParagraphRoles = ["P", "H", "H1", "H2", "H3", "H4", "H5", "H6", "Title", "LI", "TD", "TH", "TOCI", "Caption", "Lbl", "LBody", "Code", "BlockCode"];
 
     private static readonly HashSet<string> InlineRoles = ["Span", "Quote", "Note", "Reference", "BibEntry", "Code", "Link", "Annot", "Ruby", "RB", "RT", "RP",
         "Warichu", "WT", "WP", "Lbl", "LBody", "Em", "Strong", "Sub", "Formula", "NonStruct", "Private"];
