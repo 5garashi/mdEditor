@@ -135,11 +135,19 @@ internal static partial class PdfImport
                 pageItems.InsertRange(Math.Min(first, pageItems.Count), group);
             }
 
-            // A page number sits alone near the top or bottom edge; numbers elsewhere (a
-            // table's figures) stay. It goes first: one at the foot of the page can come
-            // first in reading order, and the figures would be placed before it.
+            // A page number sits alone near the top or bottom edge, or a little farther in
+            // with nothing beyond it (LaTeX sets it an inch and more from the edge); numbers
+            // elsewhere (a table's figures) stay. It goes first: one at the foot of the page
+            // can come first in reading order, and the figures would be placed before it.
             var margin = page.Height * 0.08;
-            pageItems.RemoveAll(item => IsPageNumber(item.Text) && (item.Top > page.Height - margin || item.Top < margin));
+            var highest = pageItems.Count == 0 ? 0 : pageItems.Max(item => item.Top);
+            var lowest = pageItems.Count == 0 ? 0 : pageItems.Min(item => item.Top);
+            // A running title can share the line at the top.
+            pageItems.RemoveAll(item => IsPageNumber(item.Text) && (item.Top > page.Height - margin || item.Top < margin
+                || item.Top > page.Height - margin * 2 && item.Top >= highest - Math.Max(item.Size, 1) * 0.5
+                    && pageItems.Count(other => other.Top >= item.Top - Math.Max(item.Size, 1) * 0.5) <= 2
+                || item.Top < margin * 2 && item.Top <= lowest + Math.Max(item.Size, 1) * 0.5
+                    && pageItems.Count(other => other.Top <= item.Top + Math.Max(item.Size, 1) * 0.5) == 1));
 
             // Each table and figure goes before the first text that starts below its top.
             void Place(Item item)
@@ -533,7 +541,11 @@ internal static partial class PdfImport
         && inner.Left - box.Left is >= 0 and < 3 && box.Right - inner.Right is >= 0 and < 3
         && inner.Bottom - box.Bottom is >= 0 and < 3 && box.Top - inner.Top is >= 0 and < 3;
 
-    // Text blocks of a page in reading order (columns are read one after another).
+    // Text blocks of a page in reading order (columns are read one after another). PdfPig
+    // follows the order the page draws its text in where places leave it open, and a page
+    // can draw a title after the text below it (a chapter's first page): a block wholly
+    // above one read before it, and over most of its width or wholly to its left, is read
+    // first (a block of another column to the right stays after).
     private static IEnumerable<TextBlock> Blocks(IReadOnlyList<Letter> letters, HashSet<Word> rejoined)
     {
         if (letters.Count == 0)
@@ -543,7 +555,19 @@ internal static partial class PdfImport
 
         var words = NearestNeighbourWordExtractor.Instance.GetWords(letters).ToList();
         var blocks = JoinSplitLines(DocstrumBoundingBoxes.Instance.GetBlocks(words).ToList(), rejoined);
-        return UnsupervisedReadingOrderDetector.Instance.Get(blocks);
+        var ordered = new List<TextBlock>();
+        foreach (var block in UnsupervisedReadingOrderDetector.Instance.Get(blocks))
+        {
+            var box = block.BoundingBox;
+            // After every block that stands above it, before the first one below it.
+            var above = ordered.FindLastIndex(other => other.BoundingBox.Bottom > box.Top);
+            var below = ordered.FindIndex(above + 1, other => other.BoundingBox.Top < box.Bottom
+                && (Math.Min(other.BoundingBox.Right, box.Right) - Math.Max(other.BoundingBox.Left, box.Left) > Math.Min(other.BoundingBox.Width, box.Width) * 0.5
+                    || box.Right <= other.BoundingBox.Left));
+            ordered.Insert(below < 0 ? ordered.Count : below, block);
+        }
+
+        return ordered;
     }
 
     // Labels around a figure (a chart's "男児" and "0", a title set beside it) cannot keep
@@ -658,27 +682,31 @@ internal static partial class PdfImport
     // blocks, and its right part would then be read after the lines below its left part. A
     // block of one line that goes on from a line of another block, on the same baseline and
     // across a gap narrower than a column gap (2.5 line heights), goes back into that block.
-    // Its words are added to rejoined.
+    // So does a column of page numbers that goes on from contents lines ending in leader
+    // dots, one number to a line. Its words are added to rejoined.
     private static List<TextBlock> JoinSplitLines(List<TextBlock> blocks, HashSet<Word> rejoined)
     {
+        static bool GoesOn(List<Word> line, List<Word> part)
+        {
+            var height = Math.Max(part.Max(word => word.BoundingBox.Height), 1);
+            var gap = part.Min(word => word.BoundingBox.Left) - line.Max(word => word.BoundingBox.Right);
+            return Math.Abs(line[0].BoundingBox.Bottom - part[0].BoundingBox.Bottom) < height * 0.5 && gap > 0 && gap < height * 2.5
+                && !LoneBulletPattern().IsMatch(ReadLine(line).Text);
+        }
+
         for (var i = 0; i < blocks.Count; i++)
         {
             var piece = SplitLines(blocks[i]);
             // A lone bullet is put back with its text later, as a list item.
-            if (piece.Count != 1 || LoneBulletPattern().IsMatch(ReadLine(piece[0]).Text))
+            if (piece.Count == 0 || piece.Count == 1 && LoneBulletPattern().IsMatch(ReadLine(piece[0]).Text)
+                || piece.Count > 1 && !piece.All(part => IsPageNumber(ReadLine(part).Text)))
             {
                 continue;
             }
 
-            var bottom = piece[0][0].BoundingBox.Bottom;
-            var left = piece[0].Min(word => word.BoundingBox.Left);
-            var height = Math.Max(piece[0].Max(word => word.BoundingBox.Height), 1);
-            var owner = blocks.FindIndex(block => !ReferenceEquals(block, blocks[i]) && SplitLines(block).Any(line =>
-            {
-                var gap = left - line.Max(word => word.BoundingBox.Right);
-                return Math.Abs(line[0].BoundingBox.Bottom - bottom) < height * 0.5 && gap > 0 && gap < height * 2.5
-                    && !LoneBulletPattern().IsMatch(ReadLine(line).Text);
-            }));
+            var owner = blocks.FindIndex(block => !ReferenceEquals(block, blocks[i]) && (piece.Count == 1
+                ? SplitLines(block).Any(line => GoesOn(line, piece[0]))
+                : piece.All(part => SplitLines(block).Any(line => GoesOn(line, part) && LeaderDotsPattern().IsMatch(ReadLine(line).Text)))));
             if (owner < 0)
             {
                 continue;
@@ -686,7 +714,8 @@ internal static partial class PdfImport
 
             // Only a piece that reaches past the block's right edge makes a form line (or a
             // table row); a piece inside a paragraph's width is part of a wrapped line.
-            if (piece[0].Max(word => word.BoundingBox.Right) > blocks[owner].BoundingBox.Right + height)
+            var height = Math.Max(piece[0].Max(word => word.BoundingBox.Height), 1);
+            if (piece.Count == 1 && piece[0].Max(word => word.BoundingBox.Right) > blocks[owner].BoundingBox.Right + height)
             {
                 rejoined.UnionWith(piece[0]);
             }
@@ -1177,6 +1206,10 @@ internal static partial class PdfImport
 
     [GeneratedRegex(@"^\s*[•●○◦▪■□・·‣⁃]\s*$")]
     private static partial Regex LoneBulletPattern();
+
+    // Leader dots at the end of a line, before its page number.
+    [GeneratedRegex(@"(?:[.．・‥…]\s*){4,}$")]
+    private static partial Regex LeaderDotsPattern();
 
     // Leader dots (or ・ ‥ …) and a page number at the end of a table-of-contents line.
     [GeneratedRegex(@"\s*(?:[.．・‥…]\s*){4,}([0-9０-９]{1,4})\s*$")]

@@ -373,6 +373,19 @@ internal static partial class PdfImport
                 continue;
             }
 
+            // TeX's radical sign hangs from its baseline down past the radicand, and no font
+            // here sets it so (it would stand on the baseline): it is drawn as lines in its
+            // box, from the top right down to the bottom and up a little to the left.
+            if (letter.Value == "√" && letter.BoundingBox.Top < letter.StartBaseLine.Y + letter.PointSize * 0.3)
+            {
+                Flush();
+                var sign = letter.BoundingBox;
+                var (width, rise, bottom) = (sign.Right - sign.Left, sign.Top - sign.Bottom, sign.Bottom);
+                svg.Append($"<path d=\"M{X(sign.Left)} {Y(bottom + rise * 0.45)}L{X(sign.Left + width * 0.2)} {Y(bottom + rise * 0.55)}L{X(sign.Left + width * 0.5)} {Y(bottom)}L{X(sign.Right)} {Y(sign.Top)}\"")
+                    .Append($" fill=\"none\" stroke=\"{Color(letter.Color)}\" stroke-width=\"{N(letter.PointSize * 0.06)}\" stroke-linejoin=\"round\"/>\n");
+                continue;
+            }
+
             if (run.Count > 0)
             {
                 var last = run[^1];
