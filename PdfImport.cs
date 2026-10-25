@@ -16,6 +16,8 @@ using UglyToad.PdfPig.DocumentLayoutAnalysis;
 using UglyToad.PdfPig.DocumentLayoutAnalysis.PageSegmenter;
 using UglyToad.PdfPig.DocumentLayoutAnalysis.ReadingOrderDetector;
 using UglyToad.PdfPig.DocumentLayoutAnalysis.WordExtractor;
+using UglyToad.PdfPig.Graphics;
+using UglyToad.PdfPig.Graphics.Colors;
 
 namespace MdEditor;
 
@@ -71,14 +73,17 @@ internal static partial class PdfImport
             var pageItems = new List<Item>();
             var rejoined = new HashSet<Word>(ReferenceEqualityComparer.Instance);
             var shapes = FindShapes(page);
+            // How see-through each shape is, read only for a page with figures or formulas.
+            var alphas = new Lazy<IReadOnlyList<(double Fill, double Stroke)>?>(() => PathAlphas(document, page));
             // The text of tables, figures, and formulas is read with them, not in the running text.
             // Some PDFs map glyphs to control characters (NUL); they show nothing.
             var letters = page.Letters.Where(letter => !letter.Value.All(char.IsControl) && !shapes.Tables.Any(table => Contains(table.Box, letter))
                 && !shapes.Figures.Any(figure => Contains(figure, letter))
                 && !shapes.Formulas.Any(formula => Contains(formula.Box, letter))).ToList();
+            letters = InlineMarkup(letters, page);
             foreach (var formula in shapes.Formulas.Where(formula => !formula.Display))
             {
-                var file = SaveSvg(FigureSvg(page, formula.Box, formula: true));
+                var file = SaveSvg(FigureSvg(page, formula.Box, alphas.Value, formula: true));
                 inlines.Add($"![{EscapeAlt(FormulaText(formula))}]({Uri.EscapeDataString(imagesName)}/{file})");
                 letters.Add(Placeholder(formula, (char)(0xE000 + inlines.Count - 1), page.Letters));
             }
@@ -153,7 +158,7 @@ internal static partial class PdfImport
             foreach (var (box, alt, isFormula) in shapes.Figures.Select(figure => (figure, string.Empty, false))
                          .Concat(shapes.Formulas.Where(formula => formula.Display).Select(formula => (formula.Box, FormulaText(formula), true))))
             {
-                Place(new Item(SaveSvg(FigureSvg(page, box, isFormula)), 0, false, ItemKind.Image, box.Top, number,
+                Place(new Item(SaveSvg(FigureSvg(page, box, alphas.Value, isFormula)), 0, false, ItemKind.Image, box.Top, number,
                     Left: box.Left, Right: box.Right, Bottom: box.Bottom, Natural: box.Width * 4 / 3, Alt: alt));
             }
 
@@ -417,6 +422,116 @@ internal static partial class PdfImport
         return new Letter(mark.ToString(), glyph, glyph, new PdfPoint(box.Left, baseline), new PdfPoint(box.Right, baseline),
             box.Width, near.FontSize, near.GetFont()!, near.RenderingMode, near.StrokeColor, near.FillColor, near.PointSize, near.TextSequence);
     }
+
+    // Inline markup as a browser draws it: a highlight (<mark>) is a colored box just around
+    // its letters, a key (<kbd>) a gray ring around monospaced letters, and a superscript or
+    // subscript (<sup>, <sub>) smaller letters raised or lowered from the line. The letters
+    // of each run carry its tags (the first opens, the last closes), and raised or lowered
+    // letters are set back on the line, so they are read with it.
+    private static List<Letter> InlineMarkup(List<Letter> letters, Page page)
+    {
+        var shapes = page.Paths.Where(path => !path.IsClipping && path.IsFilled && path.GetBoundingRectangle() is not null)
+            .Select(path => (Box: path.GetBoundingRectangle()!.Value, Path: path)).ToList();
+        var tags = new string?[letters.Count];
+        var shift = new double[letters.Count];
+        bool Inside(PdfRectangle box, Letter letter) => Contains(box, letter) && box.Height <= letter.PointSize * 2.2;
+        for (var i = 0; i < letters.Count; i++)
+        {
+            var letter = letters[i];
+            if (IsBlank(letter) || letter.GetFont() is null)
+            {
+                continue;
+            }
+
+            // Raised or lowered: smaller than the letter before (or after) it on the line, and
+            // close to it; letters of one run follow the first.
+            var size = letter.PointSize;
+            Letter? Beside(int at) => at >= 0 && at < letters.Count && !IsBlank(letters[at])
+                && Math.Min(Math.Abs(letters[at].EndBaseLine.X - letter.StartBaseLine.X), Math.Abs(letter.EndBaseLine.X - letters[at].StartBaseLine.X)) < size ? letters[at] : null;
+            if (i > 0 && tags[i - 1] is "sup" or "sub" && Beside(i - 1) is { } run && Math.Abs(run.PointSize - size) < 0.1
+                && Math.Abs(run.StartBaseLine.Y - letter.StartBaseLine.Y) < 0.1)
+            {
+                (tags[i], shift[i]) = (tags[i - 1], shift[i - 1]);
+                continue;
+            }
+
+            if ((Beside(i - 1) ?? Beside(i + 1)) is { } line && line.PointSize > size * 1.1
+                && (letter.StartBaseLine.Y - line.StartBaseLine.Y) / line.PointSize is var raised && Math.Abs(raised) is > 0.15 and < 0.7)
+            {
+                (tags[i], shift[i]) = (raised > 0 ? "sup" : "sub", line.StartBaseLine.Y - letter.StartBaseLine.Y);
+                continue;
+            }
+
+            foreach (var (box, path) in shapes)
+            {
+                if (!Inside(box, letter))
+                {
+                    continue;
+                }
+
+                // Only a box that fits its letters closely (not a banner or a code background).
+                var within = letters.Where(other => !IsBlank(other) && Contains(box, other)).ToList();
+                if (within.Count == 0 || box.Width > within.Max(other => other.BoundingBox.Right) - within.Min(other => other.BoundingBox.Left) + size * 1.6)
+                {
+                    continue;
+                }
+
+                var (r, g, b) = path.FillColor is null || path.FillColor is PatternColor ? (0.0, 0.0, 0.0) : path.FillColor.ToRGBValues();
+                var colorful = Math.Max(r, Math.Max(g, b)) - Math.Min(r, Math.Min(g, b)) >= 0.25 && Math.Max(r, Math.Max(g, b)) >= 0.6;
+                if (colorful && IsRectangle(path, box))
+                {
+                    tags[i] = "mark";
+                }
+                else if (!colorful && IsRing(path, box) && within.All(other => IsMonospaced(other.FontName)))
+                {
+                    tags[i] = "kbd";
+                }
+            }
+        }
+
+        var result = new List<Letter>(letters.Count);
+        for (var i = 0; i < letters.Count; i++)
+        {
+            var letter = letters[i];
+            if (tags[i] is not { } tag)
+            {
+                result.Add(letter);
+                continue;
+            }
+
+            // A run is the letters next to each other with the same tag (blanks between the
+            // letters of a highlight stay in it).
+            bool Same(int at) => at >= 0 && at < letters.Count && tags[at] == tag && Math.Abs(shift[at] - shift[i]) < 0.1;
+            var open = !Same(i - 1) ? $"<{tag}>" : string.Empty;
+            var close = !Same(i + 1) ? $"</{tag}>" : string.Empty;
+            var dy = shift[i];
+            var box = new PdfRectangle(letter.BoundingBox.Left, letter.BoundingBox.Bottom + dy, letter.BoundingBox.Right, letter.BoundingBox.Top + dy);
+            result.Add(new Letter(open + letter.Value + close, box, box, new PdfPoint(letter.StartBaseLine.X, letter.StartBaseLine.Y + dy),
+                new PdfPoint(letter.EndBaseLine.X, letter.EndBaseLine.Y + dy), letter.Width, letter.FontSize, letter.GetFont()!, letter.RenderingMode,
+                letter.StrokeColor, letter.FillColor, letter.PointSize, letter.TextSequence));
+        }
+
+        return result;
+    }
+
+    // A box of straight lines along its edges (not a letter drawn as a shape).
+    private static bool IsRectangle(PdfPath path, PdfRectangle box) =>
+        path.Count == 1 && path[0].Commands.All(command => command switch
+        {
+            PdfSubpath.Move move => OnEdge(move.Location, box),
+            PdfSubpath.Line line => OnEdge(line.From, box) && OnEdge(line.To, box),
+            PdfSubpath.Close => true,
+            _ => false,
+        });
+
+    private static bool OnEdge(PdfPoint point, PdfRectangle box) =>
+        Math.Min(Math.Abs(point.X - box.Left), Math.Abs(point.X - box.Right)) < 0.5 || Math.Min(Math.Abs(point.Y - box.Bottom), Math.Abs(point.Y - box.Top)) < 0.5;
+
+    // A border drawn as a filled ring: an outline and one just inside it.
+    private static bool IsRing(PdfPath path, PdfRectangle box) =>
+        path.Count == 2 && path[1].GetBoundingRectangle() is { } inner
+        && inner.Left - box.Left is >= 0 and < 3 && box.Right - inner.Right is >= 0 and < 3
+        && inner.Bottom - box.Bottom is >= 0 and < 3 && box.Top - inner.Top is >= 0 and < 3;
 
     // Text blocks of a page in reading order (columns are read one after another).
     private static IEnumerable<TextBlock> Blocks(IReadOnlyList<Letter> letters, HashSet<Word> rejoined)
@@ -744,15 +859,17 @@ internal static partial class PdfImport
                 continue;
             }
 
+            var bare = InlineTagPattern().Replace(text, string.Empty) is { Length: > 0 } stripped ? stripped : text;
+
             // No space between Japanese or Chinese characters, before closing punctuation,
-            // or after an opening bracket.
-            if (last is not null && !(IsCjk(last[^1]) && IsCjk(text[0])) && !".,;:!?)]}%".Contains(text[0]) && !"([{".Contains(last[^1]))
+            // or after an opening bracket (inline tags aside).
+            if (last is not null && !(IsCjk(last[^1]) && IsCjk(bare[0])) && !".,;:!?)]}%".Contains(bare[0]) && !"([{".Contains(last[^1]))
             {
                 builder.Append(' ');
             }
 
             builder.Append(text);
-            last = text;
+            last = bare;
         }
 
         var letters = words.SelectMany(word => word.Letters).Where(letter => !IsBlank(letter)).ToList();
@@ -1039,6 +1156,10 @@ internal static partial class PdfImport
 
     [GeneratedRegex(@"^\s*[•●○◦▪■□・·‣⁃\-–*]\s+")]
     private static partial Regex BulletPattern();
+
+    // The tags InlineMarkup puts in the text.
+    [GeneratedRegex("</?(?:mark|kbd|sup|sub)>")]
+    private static partial Regex InlineTagPattern();
 
     // mdEditor's note for an internet video it has not loaded, in each language.
     [GeneratedRegex(@"^\s*[［\[](?:外部の動画|外部视频|Internet video)\s*[:：]\s*(?<url>https?://[^\s（(]+)\s*[（(][^）)]*[）)][。，,]?\s*(?:読み込んでいません|未加载|not loaded)\s*[］\]]\s*$")]

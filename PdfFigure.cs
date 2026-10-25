@@ -9,9 +9,18 @@
 using System.Globalization;
 using System.Net;
 using System.Text;
+using UglyToad.PdfPig;
 using UglyToad.PdfPig.Content;
 using UglyToad.PdfPig.Core;
+using UglyToad.PdfPig.Filters;
+using UglyToad.PdfPig.Graphics;
 using UglyToad.PdfPig.Graphics.Colors;
+using UglyToad.PdfPig.Graphics.Operations;
+using UglyToad.PdfPig.Graphics.Operations.PathPainting;
+using UglyToad.PdfPig.Graphics.Operations.SpecialGraphicsState;
+using UglyToad.PdfPig.Logging;
+using UglyToad.PdfPig.Parser;
+using UglyToad.PdfPig.Tokens;
 
 namespace MdEditor;
 
@@ -24,9 +33,84 @@ namespace MdEditor;
 // then pictures, then text.
 internal static partial class PdfImport
 {
+    // The see-through of each shape the page paints (fill, stroke), in the order of
+    // page.Paths without the clipping paths. PdfPig reads it but does not keep it with the
+    // shape, so the page's drawing is gone through again: the graphics states (gs) it sets,
+    // saved and restored with q and Q, inside the forms it draws too (a browser puts a whole
+    // page in one). A form drawn as a group (a browser's opacity) is see-through as a whole:
+    // the see-through set when it is drawn applies on top of what it sets inside. Null when the shapes found do not match PdfPig's (all are then drawn solid).
+    private static IReadOnlyList<(double Fill, double Stroke)>? PathAlphas(PdfDocument document, Page page)
+    {
+        try
+        {
+            IToken? Resolve(IToken? token) => token is IndirectReferenceToken reference ? document.Structure.GetObject(reference.Data)?.Data : token;
+            T? Get<T>(DictionaryToken? dictionary, string name) where T : class, IToken =>
+                dictionary is not null && dictionary.TryGet(NameToken.Create(name), out var value) ? Resolve(value) as T : null;
+
+            var parser = new PageContentParser(ReflectionGraphicsStateOperationFactory.Instance, new StackDepthGuard(256), false);
+            var alphas = new List<(double Fill, double Stroke)>();
+            var current = (Fill: 1.0, Stroke: 1.0);
+            var saved = new Stack<(double Fill, double Stroke)>();
+            void Run(IEnumerable<IGraphicsStateOperation> operations, DictionaryToken? resources, (double Fill, double Stroke) group, int depth)
+            {
+                var states = Get<DictionaryToken>(resources, "ExtGState");
+                foreach (var operation in operations)
+                {
+                    switch (operation)
+                    {
+                        case Push:
+                            saved.Push(current);
+                            break;
+                        case Pop when saved.Count > 0:
+                            current = saved.Pop();
+                            break;
+                        case SetGraphicsStateParametersFromDictionary gs when Get<DictionaryToken>(states, gs.Name.Data) is { } state:
+                            current = (Get<NumericToken>(state, "ca")?.Double ?? current.Fill, Get<NumericToken>(state, "CA")?.Double ?? current.Stroke);
+                            break;
+                        case InvokeNamedXObject named when depth < 8 && Get<StreamToken>(Get<DictionaryToken>(resources, "XObject"), named.Name.Data) is { } form
+                            && Get<NameToken>(form.StreamDictionary, "Subtype")?.Data == "Form":
+                            var inner = parser.Parse(page.Number, new MemoryInputBytes(form.Decode(DefaultFilterProvider.Instance).ToArray()), new NoLog());
+                            saved.Push(current);
+                            var grouped = Get<DictionaryToken>(form.StreamDictionary, "Group") is not null;
+                            var outer = grouped ? (current.Fill * group.Fill, current.Stroke * group.Stroke) : group;
+                            if (grouped)
+                            {
+                                current = (1, 1);
+                            }
+
+                            Run(inner, Get<DictionaryToken>(form.StreamDictionary, "Resources") ?? resources, outer, depth + 1);
+                            current = saved.Pop();
+                            break;
+                        case StrokePath or CloseAndStrokePath or FillPathEvenOddRule or FillPathNonZeroWinding or FillPathNonZeroWindingCompatibility
+                            or FillPathEvenOddRuleAndStroke or FillPathNonZeroWindingAndStroke or CloseFillPathEvenOddRuleAndStroke or CloseFillPathNonZeroWindingAndStroke:
+                            alphas.Add((current.Fill * group.Fill, current.Stroke * group.Stroke));
+                            break;
+                    }
+                }
+            }
+
+            Run(page.Operations, Get<DictionaryToken>(page.Dictionary, "Resources"), (1, 1), 0);
+            return alphas.Count == page.Paths.Count(path => !path.IsClipping) ? alphas : null;
+        }
+        catch (Exception)
+        {
+            // A form or a stream PdfPig cannot read: shapes are drawn solid.
+            return null;
+        }
+    }
+
+    private sealed class NoLog : ILog
+    {
+        public void Debug(string message) { }
+        public void Debug(string message, Exception ex) { }
+        public void Warn(string message) { }
+        public void Error(string message) { }
+        public void Error(string message, Exception ex) { }
+    }
+
     // A formula's picture also takes lines that reach out of it (KaTeX draws a root sign as a
     // very long line that the page cuts off), cut off at its edge.
-    private static string FigureSvg(Page page, PdfRectangle area, bool formula = false)
+    private static string FigureSvg(Page page, PdfRectangle area, IReadOnlyList<(double Fill, double Stroke)>? alphas, bool formula = false)
     {
         // Italic letters reach a little past their boxes.
         if (formula)
@@ -50,9 +134,14 @@ internal static partial class PdfImport
         svg.Append($"<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"{N(area.Width * 4 / 3)}\" height=\"{N(area.Height * 4 / 3)}\" viewBox=\"0 0 {N(area.Width)} {N(area.Height)}\">\n");
         // The page is white; without it, dark lines would vanish on a dark preview.
         svg.Append("<rect width=\"100%\" height=\"100%\" fill=\"#fff\"/>\n");
+        var painted = -1;
         foreach (var path in page.Paths)
         {
-            if (path.IsClipping || !(path.IsFilled || path.IsStroked) || path.GetBoundingRectangle() is not { } box
+            painted += path.IsClipping ? 0 : 1;
+            var (fillAlpha, strokeAlpha) = alphas is not null && !path.IsClipping ? alphas[painted] : (1, 1);
+            var filled = path.IsFilled && fillAlpha > 0;
+            var stroked = path.IsStroked && strokeAlpha > 0;
+            if (path.IsClipping || !(filled || stroked) || path.GetBoundingRectangle() is not { } box
                 || !(Contains(area, box) || (formula && Overlaps(area, box) && box.Height <= area.Height * 1.5)))
             {
                 continue;
@@ -108,23 +197,25 @@ internal static partial class PdfImport
             }
 
             svg.Append("<path d=\"").Append(d).Append('"');
-            svg.Append(" fill=\"").Append(path.IsFilled ? Color(path.FillColor) : "none").Append('"');
-            if (path.IsFilled && path.FillColor is PatternColor)
+            svg.Append(" fill=\"").Append(filled ? Color(path.FillColor) : "none").Append('"');
+            var fillOpacity = fillAlpha * (path.FillColor is PatternColor ? 0.5 : 1);
+            if (filled && fillOpacity < 1)
             {
-                svg.Append(" fill-opacity=\"0.5\"");
+                svg.Append($" fill-opacity=\"{N(fillOpacity)}\"");
             }
 
-            if (path.IsFilled && path.FillingRule == FillingRule.EvenOdd)
+            if (filled && path.FillingRule == FillingRule.EvenOdd)
             {
                 svg.Append(" fill-rule=\"evenodd\"");
             }
 
-            if (path.IsStroked)
+            if (stroked)
             {
                 svg.Append($" stroke=\"{Color(path.StrokeColor)}\" stroke-width=\"{N(Math.Clamp(path.LineWidth * scale, 0.25, widest))}\" stroke-linejoin=\"round\"");
-                if (path.StrokeColor is PatternColor)
+                var strokeOpacity = strokeAlpha * (path.StrokeColor is PatternColor ? 0.5 : 1);
+                if (strokeOpacity < 1)
                 {
-                    svg.Append(" stroke-opacity=\"0.5\"");
+                    svg.Append($" stroke-opacity=\"{N(strokeOpacity)}\"");
                 }
 
                 if (path.LineDashPattern is { } dash && dash.Array.Count > 0 && dash.Array.Any(length => length > 0))
