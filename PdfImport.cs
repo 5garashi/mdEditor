@@ -181,8 +181,11 @@ internal static partial class PdfImport
 
             // A figure, and a formula on a line of its own, is drawn again as an SVG picture
             // (PdfFigure.cs) at the size it has on the page.
+            // Figures with no text between them keep the page's order: top to bottom, then
+            // left to right.
             foreach (var (box, alt, isFormula) in shapes.Figures.Select(figure => (figure, string.Empty, false))
-                         .Concat(shapes.Formulas.Where(formula => formula.Display).Select(formula => (formula.Box, FormulaText(formula), true))))
+                         .Concat(shapes.Formulas.Where(formula => formula.Display).Select(formula => (formula.Box, FormulaText(formula), true)))
+                         .OrderByDescending(entry => Math.Round(entry.Item1.Top)).ThenBy(entry => entry.Item1.Left))
             {
                 Place(new Item(SaveSvg(FigureSvg(page, box, states.Value, isFormula)), 0, false, ItemKind.Image, box.Top, number,
                     Left: box.Left, Right: box.Right, Bottom: box.Bottom, Natural: box.Width * 4 / 3, Alt: alt));
@@ -771,10 +774,10 @@ internal static partial class PdfImport
             {
                 for (var j = figures.Count - 1; j > i; j--)
                 {
-                    // Charts set side by side, half an inch apart or less, stay side by side.
+                    // Charts set side by side stay side by side, however far apart, when only
+                    // their labels stand between them (Reach fails on other text).
                     var (a, b) = (figures[i], figures[j]);
-                    var row = Math.Min(a.Top, b.Top) - Math.Max(a.Bottom, b.Bottom) > Math.Min(a.Height, b.Height) * 0.5
-                        && Math.Max(a.Left - b.Right, b.Left - a.Right) <= 36;
+                    var row = Math.Min(a.Top, b.Top) - Math.Max(a.Bottom, b.Bottom) > Math.Min(a.Height, b.Height) * 0.5;
                     var joined = Union([a, b]);
                     if ((Overlaps(a, b) || row) && Reach(ref joined, [a, b]) is { } along)
                     {

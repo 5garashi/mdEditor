@@ -363,6 +363,17 @@ body.dragging {
   pointer-events: none;
 }
 
+/* Dropping on the editor puts the files in at the cursor: the label and the editor's
+   frame turn red (volt) so it is not taken for opening them. */
+body.drop-insert .drop-hint {
+  border-color: var(--volt);
+  color: var(--volt);
+}
+
+body.drop-insert .editor-pane {
+  border-color: var(--volt);
+}
+
 .actions {
   flex: 1 1 auto;
   flex-wrap: wrap;

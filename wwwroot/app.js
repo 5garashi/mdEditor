@@ -3185,14 +3185,15 @@
   const hasLink = (event) =>
     Array.from(event.dataTransfer?.types ?? []).includes("text/uri-list");
   // While files are dragged, a label by the pointer says what dropping there does:
-  // on the editor they go in at the cursor, anywhere else a file opens.
+  // on the editor they go in at the cursor, anywhere else a file opens. Going in at the
+  // cursor is set apart in red (volt), the label and the editor's frame both.
   const dropHint = document.createElement("div");
   dropHint.className = "drop-hint";
   dropHint.hidden = true;
   document.body.append(dropHint);
   const hideDropHint = () => {
     dropHint.hidden = true;
-    document.body.classList.remove("dragging");
+    document.body.classList.remove("dragging", "drop-insert");
   };
   window.addEventListener("dragover", (event) => {
     if (!hasFiles(event) && !hasLink(event)) return;
@@ -3200,7 +3201,9 @@
     event.dataTransfer.dropEffect = "copy";
     document.body.classList.add("dragging");
     if (!hasFiles(event)) return;
-    dropHint.textContent = t(editorHost.contains(event.target) ? "dropInsert" : "dropOpen");
+    const insert = editorHost.contains(event.target);
+    dropHint.textContent = t(insert ? "dropInsert" : "dropOpen");
+    document.body.classList.toggle("drop-insert", insert);
     dropHint.hidden = false;
     // Beside the picture Windows draws around the pointer (about 90px wide): to its
     // right, or to its left when the window has no room there.
