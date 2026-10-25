@@ -28,7 +28,9 @@ namespace MdEditor;
 // monospaced typeface become code blocks, and pictures are written to "name_files". Ruled
 // tables, figures, and bullets drawn as shapes are found from the drawings (PdfStructure.cs).
 // Figures and math are drawn again as SVG pictures (PdfFigure.cs), and pictures keep their
-// size and place (Picture). Column layout comes back only as its text.
+// size and place (Picture). A tagged PDF's tags decide the reading order, paragraphs,
+// headings, list items, and tables without borders where they hold a page's text
+// (PdfTags.cs). Column layout comes back only as its text.
 // Nothing is sent anywhere, and the PDF itself is never written.
 internal static partial class PdfImport
 {
@@ -40,9 +42,10 @@ internal static partial class PdfImport
 
     // A picture also keeps where it was (Left, Right, Top, Bottom), the width it has at its
     // own size in CSS pixels (Natural), its description (Alt), and the side text flows
-    // around it on (Float); ClearAfter ends the flow after a paragraph.
+    // around it on (Float); ClearAfter ends the flow after a paragraph. Heading is the level
+    // the tags give (0 for text the tags say is no heading, -1 on a page without tags).
     private sealed record Item(string Text, double Size, bool Bold, ItemKind Kind, double Top, int Page, bool Math = false, string Family = "", bool Toc = false, double Left = 0, double Advance = 0, int Frame = -1,
-        double Right = 0, double Bottom = 0, double Natural = 0, string Alt = "", string Float = "", bool ClearAfter = false);
+        double Right = 0, double Bottom = 0, double Natural = 0, string Alt = "", string Float = "", bool ClearAfter = false, int Heading = -1);
 
     // Code is one item per line; a Table item holds its Markdown.
     private enum ItemKind { Paragraph, Bullet, Numbered, Image, Code, Table }
@@ -50,6 +53,7 @@ internal static partial class PdfImport
     public static Result ToMarkdown(string path, string assets, string imagesName)
     {
         using var document = PdfDocument.Open(path);
+        var structure = ReadStructure(document);
         var items = new List<Item>();
         var images = 0;
         // Formulas in a line of text: each stands in the text as one private-use character,
@@ -75,11 +79,20 @@ internal static partial class PdfImport
             var shapes = FindShapes(page);
             // How each shape was drawn (see-through, scaling), read only for a page with figures or formulas.
             var states = new Lazy<IReadOnlyList<PaintState>?>(() => PathStates(document, page));
+            var tags = structure is null ? null : ReadPageTags(structure, page);
             // The text of tables, figures, and formulas is read with them, not in the running text.
-            // Some PDFs map glyphs to control characters (NUL); they show nothing.
+            // Some PDFs map glyphs to control characters (NUL); they show nothing. What the tags
+            // mark as not the text (running titles, page numbers) is left out.
             var letters = page.Letters.Where(letter => !letter.Value.All(char.IsControl) && !shapes.Tables.Any(table => Contains(table.Box, letter))
                 && !shapes.Figures.Any(figure => Contains(figure, letter))
-                && !shapes.Formulas.Any(formula => Contains(formula.Box, letter))).ToList();
+                && !shapes.Formulas.Any(formula => Contains(formula.Box, letter)) && tags?.IsFurniture(letter) != true).ToList();
+            var taggedTables = tags is null ? [] : TaggedTables(tags, letters);
+            foreach (var table in taggedTables)
+            {
+                var cells = new HashSet<Letter>(table.Letters, ReferenceEqualityComparer.Instance);
+                letters.RemoveAll(cells.Contains);
+            }
+
             letters = InlineMarkup(letters, page);
             foreach (var formula in shapes.Formulas.Where(formula => !formula.Display))
             {
@@ -88,7 +101,7 @@ internal static partial class PdfImport
                 letters.Add(Placeholder(formula, (char)(0xE000 + inlines.Count - 1), page.Letters));
             }
 
-            var blocks = Blocks(letters, rejoined).ToList();
+            var blocks = Blocks(letters, rejoined, tags).ToList();
             // A bullet set apart from its text, in a block of its own, marks the line it is
             // level with, as a bullet drawn as a shape does (even in the middle of a block).
             foreach (var bullet in blocks.Where(block => LoneBulletPattern().IsMatch(block.Text)).ToList())
@@ -105,7 +118,7 @@ internal static partial class PdfImport
             var textWidth = blocks.Count == 0 ? 0 : blocks.Max(block => block.BoundingBox.Width);
             foreach (var block in blocks)
             {
-                pageItems.AddRange(Paragraphs(block, number, textWidth, rejoined, shapes));
+                pageItems.AddRange(Paragraphs(block, number, textWidth, rejoined, shapes, tags));
                 columnLeft = Math.Min(columnLeft, block.BoundingBox.Left);
                 columnRight = Math.Max(columnRight, block.BoundingBox.Right);
             }
@@ -159,6 +172,11 @@ internal static partial class PdfImport
             foreach (var table in shapes.Tables)
             {
                 Place(new Item(TableMarkdown(table, page.Letters), 0, false, ItemKind.Table, table.Box.Top, number));
+            }
+
+            foreach (var (box, table, _) in taggedTables)
+            {
+                Place(new Item(table, 0, false, ItemKind.Table, box.Top, number));
             }
 
             // A figure, and a formula on a line of its own, is drawn again as an SVG picture
@@ -259,6 +277,22 @@ internal static partial class PdfImport
             item.Text, item.Size, item.Bold,
             item.Kind is ItemKind.Bullet or ItemKind.Code or ItemKind.Table || item.Math || item.Toc,
             item.Family.Length > 0 && item.Family != bodyFamily)).ToList());
+        // In a PDF tagged with headings, a tagged page's headings are those the tags name, at
+        // their levels ("H" without one keeps the guess); text set larger than all of them (a
+        // title the tags call a paragraph) stays a heading too.
+        if (structure?.HasHeadings == true)
+        {
+            var largest = text.Where(item => item.Heading > 0).Select(item => item.Size).DefaultIfEmpty(double.MaxValue).Max();
+            for (var i = 0; i < text.Count; i++)
+            {
+                var item = text[i];
+                levels[i] = item.Heading < 0 || item.Toc || item.Kind is ItemKind.Code or ItemKind.Table ? levels[i]
+                    : item.Heading == HeadingTag ? Math.Max(levels[i], 1)
+                    : item.Heading > 0 ? item.Heading
+                    : levels[i] > 0 && item.Size > largest * 1.05 ? 1 : 0;
+            }
+        }
+
         var headingOf = new Dictionary<Item, int>(ReferenceEqualityComparer.Instance);
         for (var i = 0; i < text.Count; i++)
         {
@@ -541,33 +575,106 @@ internal static partial class PdfImport
         && inner.Left - box.Left is >= 0 and < 3 && box.Right - inner.Right is >= 0 and < 3
         && inner.Bottom - box.Bottom is >= 0 and < 3 && box.Top - inner.Top is >= 0 and < 3;
 
-    // Text blocks of a page in reading order (columns are read one after another). PdfPig
-    // follows the order the page draws its text in where places leave it open, and a page
-    // can draw a title after the text below it (a chapter's first page): a block wholly
-    // above one read before it, and over most of its width or wholly to its left, is read
-    // first (a block of another column to the right stays after).
-    private static IEnumerable<TextBlock> Blocks(IReadOnlyList<Letter> letters, HashSet<Word> rejoined)
+    // Text blocks of a page in reading order (columns are read one after another).
+    // On a tagged page the blocks come from the tags: each paragraph-like element's letters
+    // make its own block, read in the order of the tree (PdfPig's blocks would cut one
+    // paragraph into lines, having too few lines to measure their spacing; an element with
+    // a wide gap in a line, a form line or text across columns, is cut into blocks as an
+    // untagged page is). Letters in no element (a formula set in the text) make blocks
+    // placed by where they stand.
+    private static IEnumerable<TextBlock> Blocks(IReadOnlyList<Letter> letters, HashSet<Word> rejoined, PageTags? tags)
     {
         if (letters.Count == 0)
         {
             return [];
         }
 
+        if (tags is null)
+        {
+            var ordered = new List<TextBlock>();
+            foreach (var block in TextBlocks(letters, rejoined))
+            {
+                InsertByPlace(ordered, block);
+            }
+
+            return ordered;
+        }
+
+        var groups = letters.GroupBy(letter => tags.Of(letter)?.Block ?? -1).ToList();
+        var result = groups.Where(group => group.Key >= 0).OrderBy(group => group.Min(letter => tags.Of(letter)!.Order))
+            .SelectMany(group => ElementBlock(group.ToList()) is { } block ? [block] : TextBlocks(group.ToList(), rejoined)).ToList();
+        foreach (var block in groups.Where(group => group.Key < 0).SelectMany(group => TextBlocks(group.ToList(), rejoined)))
+        {
+            InsertByPlace(result, block);
+        }
+
+        return result;
+    }
+
+    // An element's letters as one block of lines, or null when a line has a gap wider than
+    // three line heights.
+    private static TextBlock? ElementBlock(IReadOnlyList<Letter> letters)
+    {
+        var words = NearestNeighbourWordExtractor.Instance.GetWords(letters).Where(word => word.Text.Trim().Length > 0).ToList();
+        if (words.Count == 0)
+        {
+            return null;
+        }
+
+        var lines = new List<List<Word>>();
+        foreach (var word in words.OrderByDescending(word => word.BoundingBox.Bottom))
+        {
+            var line = lines.LastOrDefault();
+            if (line is not null && Math.Abs(line[0].BoundingBox.Bottom - word.BoundingBox.Bottom) < LineHeight(word) * 0.5)
+            {
+                line.Add(word);
+            }
+            else
+            {
+                lines.Add([word]);
+            }
+        }
+
+        foreach (var line in lines)
+        {
+            line.Sort((a, b) => a.BoundingBox.Left.CompareTo(b.BoundingBox.Left));
+            var height = Math.Max(line.Max(word => word.BoundingBox.Height), 1);
+            if (line.Zip(line.Skip(1)).Any(pair => pair.Second.BoundingBox.Left - pair.First.BoundingBox.Right > height * 3))
+            {
+                return null;
+            }
+        }
+
+        return new TextBlock(lines.Select(line => new TextLine(line)).ToList());
+    }
+
+    // Letters in blocks, in PdfPig's reading order. PdfPig follows the order the page draws
+    // its text in where places leave it open, and a page can draw a title after the text
+    // below it (a chapter's first page): see InsertByPlace.
+    private static IEnumerable<TextBlock> TextBlocks(IReadOnlyList<Letter> letters, HashSet<Word> rejoined)
+    {
         var words = NearestNeighbourWordExtractor.Instance.GetWords(letters).ToList();
         var blocks = JoinSplitLines(DocstrumBoundingBoxes.Instance.GetBlocks(words).ToList(), rejoined);
         var ordered = new List<TextBlock>();
         foreach (var block in UnsupervisedReadingOrderDetector.Instance.Get(blocks))
         {
-            var box = block.BoundingBox;
-            // After every block that stands above it, before the first one below it.
-            var above = ordered.FindLastIndex(other => other.BoundingBox.Bottom > box.Top);
-            var below = ordered.FindIndex(above + 1, other => other.BoundingBox.Top < box.Bottom
-                && (Math.Min(other.BoundingBox.Right, box.Right) - Math.Max(other.BoundingBox.Left, box.Left) > Math.Min(other.BoundingBox.Width, box.Width) * 0.5
-                    || box.Right <= other.BoundingBox.Left));
-            ordered.Insert(below < 0 ? ordered.Count : below, block);
+            InsertByPlace(ordered, block);
         }
 
         return ordered;
+    }
+
+    // A block wholly above one read before it, and over most of its width or wholly to its
+    // left, is read first (a block of another column to the right stays after): it goes
+    // after every block that stands above it, before the first one below it.
+    private static void InsertByPlace(List<TextBlock> ordered, TextBlock block)
+    {
+        var box = block.BoundingBox;
+        var above = ordered.FindLastIndex(other => other.BoundingBox.Bottom > box.Top);
+        var below = ordered.FindIndex(above + 1, other => other.BoundingBox.Top < box.Bottom
+            && (Math.Min(other.BoundingBox.Right, box.Right) - Math.Max(other.BoundingBox.Left, box.Left) > Math.Min(other.BoundingBox.Width, box.Width) * 0.5
+                || box.Right <= other.BoundingBox.Left));
+        ordered.Insert(below < 0 ? ordered.Count : below, block);
     }
 
     // Labels around a figure (a chart's "男児" and "0", a title set beside it) cannot keep
@@ -735,18 +842,22 @@ internal static partial class PdfImport
     // every line stands alone. Wrapped lines are joined.
     // A line in a monospaced typeface is a line of code: it keeps its spaces and stands
     // alone (CodeBlock puts the lines back together).
-    private static IEnumerable<Item> Paragraphs(TextBlock block, int page, double textWidth, HashSet<Word> rejoined, PageShapes shapes)
+    // On a tagged page, a paragraph also ends where its element in the tags does, and a line
+    // that holds the start of a list item in the tags starts a list item.
+    private static IEnumerable<Item> Paragraphs(TextBlock block, int page, double textWidth, HashSet<Word> rejoined, PageShapes shapes, PageTags? tags)
     {
         var split = SplitLines(block);
         var lines = split.Select(words => ReadLine(words) with { Rejoined = words.Any(rejoined.Contains) }).ToList();
         // On a code background, a line of Japanese with a monospaced start (a diff's "- 保存") is code.
         var code = split.Select(words => CodeLine(words, shapes.CodeFrames.Contains(FrameAt(shapes, words.Min(word => word.BoundingBox.Left) + 1, words.Max(word => word.BoundingBox.Top) - 1)))).ToList();
+        var lineTags = split.Select(words => tags is null ? null : TagOf(tags, words.SelectMany(word => word.Letters))).ToList();
         for (var i = lines.Count - 1; i >= 0; i--)
         {
             if (lines[i].Text.Length == 0)
             {
                 lines.RemoveAt(i);
                 code.RemoveAt(i);
+                lineTags.RemoveAt(i);
             }
         }
         var blockRight = block.BoundingBox.Right;
@@ -768,6 +879,8 @@ internal static partial class PdfImport
         var firstBold = false;
         var firstFamily = string.Empty;
         double firstLeft = 0;
+        var firstHeading = -1;
+        Tag? previousTag = null;
 
         IEnumerable<Item> Flush()
         {
@@ -781,7 +894,7 @@ internal static partial class PdfImport
             // Where the first line ends, for text that flows around a picture.
             var right = current[0].Right;
             current.Clear();
-            yield return new Item(text, firstSize, firstBold, kind, firstTop, page, mathInItem, firstFamily, Left: firstLeft, Right: right);
+            yield return new Item(text, firstSize, firstBold, kind, firstTop, page, mathInItem, firstFamily, Left: firstLeft, Right: right, Heading: firstHeading);
         }
 
         for (var index = 0; index < lines.Count; index++)
@@ -816,13 +929,22 @@ internal static partial class PdfImport
             {
                 (lineKind, rest) = (ItemKind.Bullet, mark.CheckBox ? (mark.Checked ? "[x] " : "[ ] ") + line.Text : line.Text);
             }
+
+            var lineTag = lineTags[index];
+            var newElement = lineTag is not null && previousTag is not null && lineTag.Block != previousTag.Block;
+            if (lineKind == ItemKind.Paragraph && lineTag is not null && lineTag.ListItem != previousTag?.ListItem && tags!.StartsListItem(lineTag))
+            {
+                (lineKind, rest) = (ItemKind.Bullet, line.Text.TrimStart('・', '･', '•', '●', '○', '◦', '▪', '■', '□', '◆', '◇', '‣', '⁃', '-', ' ', '\u3000'));
+            }
+
+            previousTag = lineTag ?? previousTag;
             var sizeChanged = current.Count > 0 && Math.Abs(line.Size - firstSize) > firstSize * 0.1;
             var fontChanged = current.Count > 0 && line.Family != firstFamily;
             var endedEarly = previousLine is not null && blockRight - previousLine.Right > shortLine;
             // A line put back together across a wide gap is a form line or a table row, not
             // prose: it stands alone.
             var standsAlone = line.Rejoined || previousLine?.Rejoined == true;
-            if (current.Count > 0 && (sizeChanged || fontChanged || endedEarly || standsAlone || lineKind != ItemKind.Paragraph))
+            if (current.Count > 0 && (sizeChanged || fontChanged || endedEarly || standsAlone || newElement || lineKind != ItemKind.Paragraph))
             {
                 foreach (var item in Flush()) yield return item;
             }
@@ -837,6 +959,7 @@ internal static partial class PdfImport
                 firstTop = line.Top;
                 firstFamily = line.Family;
                 firstLeft = line.Left;
+                firstHeading = tags is null ? -1 : lineTag?.Heading ?? -1;
             }
 
             current.Add(line with { Text = lineKind == ItemKind.Bullet ? rest : line.Text });
@@ -856,7 +979,7 @@ internal static partial class PdfImport
                      .Where(word => word.Text.Trim().Length > 0)
                      .OrderByDescending(word => word.BoundingBox.Bottom))
         {
-            var height = Math.Max(word.BoundingBox.Height, 1);
+            var height = LineHeight(word);
             var line = lines.LastOrDefault();
             if (line is not null && Math.Abs(line[0].BoundingBox.Bottom - word.BoundingBox.Bottom) < height * 0.5)
             {
@@ -875,6 +998,12 @@ internal static partial class PdfImport
 
         return lines;
     }
+
+    // How tall a word stands, for telling lines apart: its box, or half its letters' size
+    // when the box is flatter (letters in a Type 3 font, as a browser printing without the
+    // fonts writes them, can have boxes of no height).
+    private static double LineHeight(Word word) =>
+        Math.Max(Math.Max(word.BoundingBox.Height, word.Letters.Count == 0 ? 0 : word.Letters.Max(letter => letter.PointSize) * 0.5), 1);
 
     private static Line ReadLine(List<Word> words)
     {

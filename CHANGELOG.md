@@ -12,6 +12,14 @@
 
 The version number lives in [VERSION](./VERSION). Add each new version at the top, with a `## version — date` heading (used as the GitHub Release notes).
 
+## 1.0.18 — 2026-10-25
+
+- タグ付きの PDF（Word・Acrobat・LibreOffice・ブラウザーなどで作ったもの）を開いたときに、PDF の中のタグ（見出し・段落・箇条書き・表と、その読む順）を使うようにした。ページの文字のほとんどがタグに入っていれば、読む順・段落の区切り・見出しの段階（H1〜H6）・箇条書きをタグのとおりにし、罫線のない表も Markdown の表に戻し、柱やページ番号として印の付いた文字は省く。次のページに続いた箇条書きや段落の続きも、正しい場所に読む。タグのない PDF や、タグが文字を覆っていないページは、これまでどおり文字の位置から読む。図・数式・罫線のある表・コードは、タグがあってもこれまでどおり。
+- PDF で、文字の箱に高さがない書体（ブラウザーがフォントなしで印刷した Type 3 の書体）や絵文字の行が、2 行に分かれて順番が入れ替わることがあったのを直した。
+
+- Opening a tagged PDF (one made by Word, Acrobat, LibreOffice, or a browser, for example) now uses the tags in it: what is a heading, a paragraph, a list item, or a table, and the order they are read in. Where the tags hold nearly all of a page's text, they decide the reading order, where paragraphs end, the heading levels (H1 to H6), and the list items; a table without cell borders comes back as a Markdown table, and running titles and page numbers marked as such are left out. A list item or paragraph that goes on to the next page is read in its place. A PDF without tags, and a page whose tags do not hold its text, is read from where the letters stand as before. Figures, math, ruled tables, and code are found as before, tags or not.
+- PDF: a line in a typeface whose letters have boxes of no height (a Type 3 font, as a browser printing without the fonts writes them), or a line with emoji, could be read as two lines in the wrong order; it is now read as one.
+
 ## 1.0.17 — 2026-10-25
 
 - PDF を開いたときに、罫線のある表を Markdown の表に、等幅の書体（Consolas など）の行をコードのブロック（字下げと空行を保つ。日本語のコメントの行も含む）に、図形で描いた箇条書きの印とチェックボックス（ブラウザーや mdEditor で保存した PDF など）を箇条書き（入れ子と `[x]` を含む）にするようにした。線や図形で描いた図（Mermaid・Graphviz のダイアグラムやグラフなど）は、線・図形・色・図の中の文字から SVG の画像に描き直して「名前_files」に保存する（直線に沿ったグラデーションはそのまま、それ以外の模様は灰色になる）。罫線の上下だけがページに入った表の続きも、表として読む。KaTeX や LaTeX（Computer Modern）で組んだ数式も画像に描き直す（1 行に単独の数式は中央寄せ、文中の数式はその位置。数式の文字を画像の説明に入れる）。これまで数式が別の場所（後の見出しの下など）に出たり、分数の中の日本語が見出しになったりしていたのも直った。画像は、元の大きさと違う大きさ（`width`）・中央・右寄せ・文章の回り込み（`align` と `<br clear="all">`）を戻す。読み込んでいなかったインターネット上の動画の注記は、アドレスだけの行に戻す。和文の中に等幅の語（`align="left"` など）がある行を、コードとして読まないようにした（コードの背景の中の行は、和文が多くてもコードのまま。diff の `- 保存` など）。文字を制御文字（NUL）に対応づけた PDF で、プレビューに � が出たり、空の見出しができたりしたのを直した。ページ番号がページの下にある PDF で、そのページの図と表が本文より前に出ていたのを直した。グラフの軸の数字・凡例・横のラベルのように図のまわりにある短い文字は、本文に置くと順番が崩れて意味が通じなくなるため、図と一緒に画像に描き直す（見出しと長い文は本文に残す）。並んだグラフは 1 枚の画像になる。図の半透明の塗り（Mermaid のガントチャートのセクションの色など）は半透明のまま描き、透明な図形は描かない。図の線の太さを、ページでの実際の太さで描く（これまでは推定で、太い線は図の高さの 4 分の 1 までに抑えていたため、サンキー図の帯が細くなっていた）。文中のキー（`<kbd>`）・上付き（`<sup>`）・下付き（`<sub>`）・マーカー（`<mark>`）を戻す（これまで上付きの文字は別の行に出ていた）。段組みの配置と罫線のない表は、これまでどおり文字だけが残る。お知らせ欄の説明も合わせた。
