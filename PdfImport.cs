@@ -92,6 +92,11 @@ internal static partial class PdfImport
                 blocks.Remove(bullet);
             }
 
+            foreach (var label in TakeLabels(shapes.Figures, blocks, shapes.Tables.Select(table => table.Box).Concat(shapes.Formulas.Select(formula => formula.Box)), page.Letters))
+            {
+                blocks.Remove(label);
+            }
+
             var textWidth = blocks.Count == 0 ? 0 : blocks.Max(block => block.BoundingBox.Width);
             foreach (var block in blocks)
             {
@@ -424,6 +429,114 @@ internal static partial class PdfImport
         var words = NearestNeighbourWordExtractor.Instance.GetWords(letters).ToList();
         var blocks = JoinSplitLines(DocstrumBoundingBoxes.Instance.GetBlocks(words).ToList(), rejoined);
         return UnsupervisedReadingOrderDetector.Instance.Get(blocks);
+    }
+
+    // Labels around a figure (a chart's "男児" and "0", a title set beside it) cannot keep
+    // their place in running text: one beside a figure comes before or after all of it, and
+    // labels between charts lose the chart they belong to. Short text beside a figure, and a
+    // short line close to it, goes into the figure's picture instead: the figure grows to
+    // take it in, and figures that then meet, or stand side by side, become one. Headings
+    // and longer text stay text, and a figure that would grow over other text, a table, or a
+    // formula stays as it is. The blocks taken are returned.
+    private static List<TextBlock> TakeLabels(List<PdfRectangle> figures, List<TextBlock> blocks, IEnumerable<PdfRectangle> keepOut, IReadOnlyList<Letter> letters)
+    {
+        var taken = new HashSet<TextBlock>(ReferenceEqualityComparer.Instance);
+        var others = keepOut.ToList();
+        int Longest(TextBlock block) => block.TextLines.Max(line => line.Text.Count(c => !char.IsWhiteSpace(c)));
+        double BlockSize(TextBlock block) => block.TextLines.SelectMany(line => line.Words).SelectMany(word => word.Letters).Max(letter => letter.PointSize);
+        double LabelSize(PdfRectangle figure)
+        {
+            var sizes = letters.Where(letter => Contains(figure, letter) && !IsBlank(letter)).Select(letter => letter.PointSize).Order().ToList();
+            return sizes.Count > 0 ? sizes[sizes.Count / 2] : 0;
+        }
+
+        // Inline formulas stand in the text as private-use letters.
+        bool IsLabel(TextBlock block) => Longest(block) <= 16 && !block.Text.Any(c => c >= (char)0xE000 && c <= (char)0xF8FF);
+
+        // A grown box takes along the labels it reaches (axis numbers stand side by side, each
+        // in reach of the next); it fails if it reaches other text, a table, or a formula.
+        List<TextBlock>? Reach(ref PdfRectangle grown, PdfRectangle[] before)
+        {
+            var along = new List<TextBlock>();
+            while (true)
+            {
+                var box = grown;
+                // Text that already overlapped the figure is not the growing's doing.
+                var hit = blocks.Where(other => !taken.Contains(other) && !along.Contains(other) && Overlaps(box, other.BoundingBox)
+                    && (IsLabel(other) || !before.Any(old => Overlaps(old, other.BoundingBox)))).ToList();
+                if (hit.Count == 0)
+                {
+                    return others.Any(other => Overlaps(box, other) && !before.Any(old => Overlaps(old, other))) ? null : along;
+                }
+
+                if (!hit.All(IsLabel))
+                {
+                    return null;
+                }
+
+                along.AddRange(hit);
+                grown = Union(hit.Select(other => other.BoundingBox).Append(box));
+            }
+        }
+
+        for (var changed = figures.Count > 0; changed;)
+        {
+            changed = false;
+            foreach (var block in blocks.Where(block => !taken.Contains(block) && IsLabel(block)))
+            {
+                var box = block.BoundingBox;
+                var longest = Longest(block);
+                var height = Math.Max(block.TextLines.Max(line => line.BoundingBox.Height), 1);
+                var at = figures.FindIndex(figure =>
+                {
+                    var gapX = Math.Max(0, Math.Max(figure.Left - box.Right, box.Left - figure.Right));
+                    var gapY = Math.Max(0, Math.Max(figure.Bottom - box.Top, box.Bottom - figure.Top));
+                    var level = Math.Min(figure.Top, box.Top) - Math.Max(figure.Bottom, box.Bottom) > 0;
+                    // A short line close to a figure (a legend, a chart's title) belongs to it
+                    // when set no larger than the figure's own labels; a heading is larger.
+                    var near = gapX <= height * 1.2 && gapY <= height * 1.2
+                        && (longest <= 4 || longest <= 8 && LabelSize(figure) is var size && size > 0 && BlockSize(block) <= size * 1.5);
+                    return (level && gapX <= height * 3) || near;
+                });
+                if (at < 0)
+                {
+                    continue;
+                }
+
+                var grown = Union([figures[at], box]);
+                if (Reach(ref grown, [figures[at], box]) is not { } along)
+                {
+                    continue;
+                }
+
+                taken.Add(block);
+                taken.UnionWith(along);
+                figures[at] = grown;
+                changed = true;
+                break;
+            }
+
+            for (var i = 0; i < figures.Count; i++)
+            {
+                for (var j = figures.Count - 1; j > i; j--)
+                {
+                    // Charts set side by side, half an inch apart or less, stay side by side.
+                    var (a, b) = (figures[i], figures[j]);
+                    var row = Math.Min(a.Top, b.Top) - Math.Max(a.Bottom, b.Bottom) > Math.Min(a.Height, b.Height) * 0.5
+                        && Math.Max(a.Left - b.Right, b.Left - a.Right) <= 36;
+                    var joined = Union([a, b]);
+                    if ((Overlaps(a, b) || row) && Reach(ref joined, [a, b]) is { } along)
+                    {
+                        taken.UnionWith(along);
+                        figures[i] = joined;
+                        figures.RemoveAt(j);
+                        changed = true;
+                    }
+                }
+            }
+        }
+
+        return blocks.Where(taken.Contains).ToList();
     }
 
     // A line with a wide gap ("File Number: E46769   Type dsg: 1494V-0") can be cut into two
