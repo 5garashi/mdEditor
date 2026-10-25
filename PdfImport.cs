@@ -125,6 +125,12 @@ internal static partial class PdfImport
                 pageItems.InsertRange(Math.Min(first, pageItems.Count), group);
             }
 
+            // A page number sits alone near the top or bottom edge; numbers elsewhere (a
+            // table's figures) stay. It goes first: one at the foot of the page can come
+            // first in reading order, and the figures would be placed before it.
+            var margin = page.Height * 0.08;
+            pageItems.RemoveAll(item => IsPageNumber(item.Text) && (item.Top > page.Height - margin || item.Top < margin));
+
             // Each table and figure goes before the first text that starts below its top.
             void Place(Item item)
             {
@@ -145,11 +151,6 @@ internal static partial class PdfImport
                 Place(new Item(SaveSvg(FigureSvg(page, box, isFormula)), 0, false, ItemKind.Image, box.Top, number,
                     Left: box.Left, Right: box.Right, Bottom: box.Bottom, Natural: box.Width * 4 / 3, Alt: alt));
             }
-
-            // A page number sits alone near the top or bottom edge; numbers elsewhere (a
-            // table's figures) stay.
-            var margin = page.Height * 0.08;
-            pageItems.RemoveAll(item => IsPageNumber(item.Text) && (item.Top > page.Height - margin || item.Top < margin));
 
             // A long contents entry wraps: its first line has no leader dots and comes out as
             // a paragraph right above, starting at the same place. It is joined to its entry.
