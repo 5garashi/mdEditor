@@ -30,7 +30,7 @@ internal static partial class PdfImport
 
     public sealed record Result(string Markdown, int Images, int Pages, int ReadPages, bool HasText, int Headings);
 
-    private sealed record Line(string Text, double Size, bool Bold, double Top, double Right, bool MathFont, string Family, double Left = 0);
+    private sealed record Line(string Text, double Size, bool Bold, double Top, double Right, bool MathFont, string Family, double Left = 0, bool Rejoined = false);
 
     private sealed record Item(string Text, double Size, bool Bold, ItemKind Kind, double Top, int Page, bool Math = false, string Family = "", bool Toc = false, double Left = 0);
 
@@ -46,11 +46,12 @@ internal static partial class PdfImport
         {
             var page = document.GetPage(number);
             var pageItems = new List<Item>();
-            var blocks = Blocks(page).ToList();
+            var rejoined = new HashSet<Word>(ReferenceEqualityComparer.Instance);
+            var blocks = Blocks(page, rejoined).ToList();
             var textWidth = blocks.Count == 0 ? 0 : blocks.Max(block => block.BoundingBox.Width);
             foreach (var block in blocks)
             {
-                pageItems.AddRange(Paragraphs(block, number, textWidth));
+                pageItems.AddRange(Paragraphs(block, number, textWidth, rejoined));
             }
 
             // A page number sits alone near the top or bottom edge; numbers elsewhere (a
@@ -171,7 +172,7 @@ internal static partial class PdfImport
     }
 
     // Text blocks of a page in reading order (columns are read one after another).
-    private static IEnumerable<TextBlock> Blocks(Page page)
+    private static IEnumerable<TextBlock> Blocks(Page page, HashSet<Word> rejoined)
     {
         if (page.Letters.Count == 0)
         {
@@ -179,8 +180,53 @@ internal static partial class PdfImport
         }
 
         var words = NearestNeighbourWordExtractor.Instance.GetWords(page.Letters).ToList();
-        var blocks = DocstrumBoundingBoxes.Instance.GetBlocks(words);
+        var blocks = JoinSplitLines(DocstrumBoundingBoxes.Instance.GetBlocks(words).ToList(), rejoined);
         return UnsupervisedReadingOrderDetector.Instance.Get(blocks);
+    }
+
+    // A line with a wide gap ("File Number: E46769   Type dsg: 1494V-0") can be cut into two
+    // blocks, and its right part would then be read after the lines below its left part. A
+    // block of one line that goes on from a line of another block, on the same baseline and
+    // across a gap narrower than a column gap (2.5 line heights), goes back into that block.
+    // Its words are added to rejoined.
+    private static List<TextBlock> JoinSplitLines(List<TextBlock> blocks, HashSet<Word> rejoined)
+    {
+        for (var i = 0; i < blocks.Count; i++)
+        {
+            var piece = SplitLines(blocks[i]);
+            // A lone bullet is put back with its text later, as a list item.
+            if (piece.Count != 1 || LoneBulletPattern().IsMatch(ReadLine(piece[0]).Text))
+            {
+                continue;
+            }
+
+            var bottom = piece[0][0].BoundingBox.Bottom;
+            var left = piece[0].Min(word => word.BoundingBox.Left);
+            var height = Math.Max(piece[0].Max(word => word.BoundingBox.Height), 1);
+            var owner = blocks.FindIndex(block => !ReferenceEquals(block, blocks[i]) && SplitLines(block).Any(line =>
+            {
+                var gap = left - line.Max(word => word.BoundingBox.Right);
+                return Math.Abs(line[0].BoundingBox.Bottom - bottom) < height * 0.5 && gap > 0 && gap < height * 2.5
+                    && !LoneBulletPattern().IsMatch(ReadLine(line).Text);
+            }));
+            if (owner < 0)
+            {
+                continue;
+            }
+
+            // Only a piece that reaches past the block's right edge makes a form line (or a
+            // table row); a piece inside a paragraph's width is part of a wrapped line.
+            if (piece[0].Max(word => word.BoundingBox.Right) > blocks[owner].BoundingBox.Right + height)
+            {
+                rejoined.UnionWith(piece[0]);
+            }
+
+            blocks[owner] =new TextBlock(blocks[owner].TextLines.Concat(blocks[i].TextLines).ToList());
+            blocks.RemoveAt(i);
+            i = -1;
+        }
+
+        return blocks;
     }
 
     // The paragraphs of a block: a new one starts where the size changes, a line starts a
@@ -188,9 +234,10 @@ internal static partial class PdfImport
     // not wrapped: the last line of a paragraph, or a short item such as a checklist line).
     // In a block much narrower than the page's text (a list of short items, table cells),
     // every line stands alone. Wrapped lines are joined.
-    private static IEnumerable<Item> Paragraphs(TextBlock block, int page, double textWidth)
+    private static IEnumerable<Item> Paragraphs(TextBlock block, int page, double textWidth, HashSet<Word> rejoined)
     {
-        var lines = SplitLines(block).Select(ReadLine).Where(line => line.Text.Length > 0).ToList();
+        var lines = SplitLines(block).Select(words => ReadLine(words) with { Rejoined = words.Any(rejoined.Contains) })
+            .Where(line => line.Text.Length > 0).ToList();
         var blockRight = block.BoundingBox.Right;
         var shortLine = block.BoundingBox.Width < textWidth * 0.5 ? -1 : block.BoundingBox.Width * 0.2;
         Line? previousLine = null;
@@ -243,7 +290,10 @@ internal static partial class PdfImport
             var sizeChanged = current.Count > 0 && Math.Abs(line.Size - firstSize) > firstSize * 0.1;
             var fontChanged = current.Count > 0 && line.Family != firstFamily;
             var endedEarly = previousLine is not null && blockRight - previousLine.Right > shortLine;
-            if (current.Count > 0 && (sizeChanged || fontChanged || endedEarly || lineKind != ItemKind.Paragraph))
+            // A line put back together across a wide gap is a form line or a table row, not
+            // prose: it stands alone.
+            var standsAlone = line.Rejoined || previousLine?.Rejoined == true;
+            if (current.Count > 0 && (sizeChanged || fontChanged || endedEarly || standsAlone || lineKind != ItemKind.Paragraph))
             {
                 foreach (var item in Flush()) yield return item;
             }
