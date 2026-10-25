@@ -16,7 +16,8 @@ namespace MdEditor;
 // shapes in the PDF. They are found from the page's paths before its text is read:
 // - a grid of thin lines (cell borders) that holds text is a table, read cell by cell;
 // - a cluster of shapes that are not boxes (curves, slanted lines, arrowheads) is a figure:
-//   its text (labels) is left out and a marker takes its place;
+//   it is drawn again as an SVG picture with its labels (PdfFigure.cs), so they are left
+//   out of the text;
 // - a small shape or a small square just before the start of a line is a bullet or a check
 //   box, so the line becomes a list item.
 // Boxes behind text (code, notes) and lines under headings are none of these.
@@ -158,13 +159,17 @@ internal static partial class PdfImport
             var group = cluster.Select(index => segments[index]).ToList();
             var columns = Distinct(group.Where(segment => !segment.Horizontal).Select(segment => segment.At));
             var rows = Distinct(group.Where(segment => segment.Horizontal).Select(segment => segment.At));
-            if (columns.Count < 3 || rows.Count < 3)
+            var box = Union(cluster.Select(index => boxes[index]));
+            // One row is a table too when its column lines run its full height (the rest of a
+            // table that goes on from the page before).
+            var oneRow = rows.Count == 2 && group.Where(segment => !segment.Horizontal)
+                .All(segment => segment.From <= box.Bottom + 3 && segment.To >= box.Top - 3);
+            if (columns.Count < 3 || (rows.Count < 3 && !oneRow))
             {
                 continue;
             }
 
             rows.Reverse();
-            var box = Union(cluster.Select(index => boxes[index]));
             if (!letters.Any(letter => Contains(box, letter)))
             {
                 continue;

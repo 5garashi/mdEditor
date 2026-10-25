@@ -25,7 +25,7 @@ Open PDF and Word files as Markdown, fix them, and save them as PDF or Word. Off
 Turn PDFs, Word files, e-mails, and web pages into clean Markdown, and back into PDF or Word, offline on Windows. Open a file and its text, headings, lists, and pictures come back as Markdown you can read and fix right away, beside a live preview. There is nothing else to set up: no Python, no command line, no account. Your documents stay on your PC, with no ads.
 
 Open as Markdown
-- PDF: the text comes back in reading order, wrapped lines join into paragraphs, and headings (from text size and numbering), lists, the table of contents, and pictures come back. Ruled tables and code come back too. A diagram or chart becomes a "(Figure)" marker; math, column layout, and tables without cell borders do not come back (their text remains), and a scanned PDF has no text to take.
+- PDF: the text comes back in reading order, wrapped lines join into paragraphs, and headings (from text size and numbering), lists, the table of contents, and pictures come back. Ruled tables and code come back too. A diagram or chart is redrawn as a picture from its lines and labels; math, column layout, and tables without cell borders do not come back (their text remains), and a scanned PDF has no text to take.
 - Word: headings, lists, tables, links, and pictures come back (colors and layout do not). When a document has no heading styles, headings are guessed from text size.
 - Also HTML, web pages, e-mail (.eml), CSV, TSV, JSON, XML, Jupyter Notebooks, and images. The original file is never changed.
 - Check and fix the result before you share it or paste it into an AI chat.
@@ -61,7 +61,7 @@ Made for everyone
 Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Design Office. Open About in the app for the company, support, and privacy policy links.
 
 **What's new in this version:**
-- Open PDFs as Markdown, on your PC: text, headings, lists, the table of contents, ruled tables, code, and pictures come back, and diagrams become a "(Figure)" marker. Math and column layout do not come back.
+- Open PDFs as Markdown, on your PC: text, headings, lists, the table of contents, ruled tables, code, and pictures come back, and diagrams are redrawn as pictures. Math and column layout do not come back.
 - Word documents without heading styles get their headings from text size.
 - Read aloud reads only the text you select.
 - Simplified Chinese: choose Japanese, English, or Chinese from the Language list.
@@ -140,7 +140,7 @@ PDF や Word を Markdown として開いて直し、PDF や Word で渡せま�
 PDF・Word・メール・Web ページを、PC の中だけで Markdown にできます。直したら、PDF や Word で渡せます。ファイルを開くと、文字・見出し・箇条書き・画像が Markdown になり、横のプレビューで確かめながら、その場で直せます。Python もコマンドもアカウントも要りません。文書は PC の外に出ず、広告もありません。
 
 Markdown として開く
-- PDF: 文字を読む順に取り出し、折り返した行を段落にまとめます。見出し（文字の大きさと番号から推測）・箇条書き・目次・画像も戻ります。罫線のある表とコードも戻ります。図は「（図）」の印に置き換わり、数式・段組みの配置・罫線のない表は戻りません（文字は残ります）。スキャンした画像だけの PDF からは、文字を取り出せません。
+- PDF: 文字を読む順に取り出し、折り返した行を段落にまとめます。見出し（文字の大きさと番号から推測）・箇条書き・目次・画像も戻ります。罫線のある表とコードも戻ります。図は線と文字から画像に描き直し、数式・段組みの配置・罫線のない表は戻りません（文字は残ります）。スキャンした画像だけの PDF からは、文字を取り出せません。
 - Word: 見出し・箇条書き・表・リンク・画像が戻ります（色や配置は戻りません）。見出しのスタイルがない文書は、文字の大きさから見出しを推測します。
 - HTML・Web ページ・メール（.eml）・CSV・TSV・JSON・XML・Jupyter Notebook・画像も開けます。元のファイルは書き換えません。
 - 取り込んだ結果は、人に渡す前や AI のチャットに貼る前に、確かめて直せます。
@@ -176,7 +176,7 @@ PDF や Word で保存する
 日本語・英語・簡体字中国語に対応します。5garashi.com Design Office が作りました。会社紹介・サポート・プライバシーポリシーは、アプリの「このアプリについて」から開けます。
 
 **このバージョンの新機能:**
-- PDF を Markdown として開けるようになりました（PC の中で変換します）。文字・見出し・箇条書き・目次・罫線のある表・コード・画像が戻り、図は「（図）」の印になります。数式と段組みの配置は戻りません。
+- PDF を Markdown として開けるようになりました（PC の中で変換します）。文字・見出し・箇条書き・目次・罫線のある表・コード・画像が戻り、図は画像に描き直します。数式と段組みの配置は戻りません。
 - 見出しのスタイルがない Word 文書は、文字の大きさから見出しを推測します。
 - 読み上げで、選んだ部分だけを読めるようになりました。
 - 簡体字中国語に対応しました。「Language」の一覧で、日本語・英語・中国語を選べます。
@@ -237,7 +237,7 @@ PDF や Word で保存する
 在 Windows 上离线把 PDF、Word、电子邮件和网页变成整洁的 Markdown，改好后再保存为 PDF 或 Word。打开文件后，文字、标题、列表和图片会变成 Markdown，可以一边看旁边的预览一边当场修改。不需要 Python、命令行或账户。文档留在你的电脑中，没有广告。
 
 作为 Markdown 打开
-- PDF：按阅读顺序取出文字，把折行合并为段落，标题（根据文字大小和编号推测）、列表、目录和图片也会取出。有边框的表格和代码也会取出。图表替换为“（图）”标记，公式、分栏排版和没有边框的表格不会恢复（文字会保留）。扫描得到的纯图像 PDF 无法取出文字。
+- PDF：按阅读顺序取出文字，把折行合并为段落，标题（根据文字大小和编号推测）、列表、目录和图片也会取出。有边框的表格和代码也会取出。图表会根据线条和文字重新绘制为图片，公式、分栏排版和没有边框的表格不会恢复（文字会保留）。扫描得到的纯图像 PDF 无法取出文字。
 - Word：标题、列表、表格、链接和图片会取出（颜色和排版不会保留）。没有使用标题样式的文档，会根据文字大小推测标题。
 - 也可以打开 HTML、网页、电子邮件（.eml）、CSV、TSV、JSON、XML、Jupyter Notebook 和图像。原文件不会被改写。
 - 在分享给别人或粘贴到 AI 聊天之前，可以先检查并修改取出的结果。
@@ -273,7 +273,7 @@ PDF や Word で保存する
 支持日语、英语和简体中文。由 5garashi.com Design Office 制作。公司介绍、支持和隐私政策的链接，可以在应用的“关于此应用”中打开。
 
 **此版本的新功能:**
-- 可以把 PDF 作为 Markdown 打开（在你的电脑中转换）。文字、标题、列表、目录、有边框的表格、代码和图片会取出，图表成为“（图）”标记；公式和分栏排版不会恢复。
+- 可以把 PDF 作为 Markdown 打开（在你的电脑中转换）。文字、标题、列表、目录、有边框的表格、代码和图片会取出，图表重新绘制为图片；公式和分栏排版不会恢复。
 - 没有标题样式的 Word 文档，会根据文字大小推测标题。
 - 朗读可以只朗读选中的文字。
 - 支持简体中文。可以在“Language”列表中选择日语、英语或中文。

@@ -36,8 +36,8 @@ internal static partial class PdfImport
 
     private sealed record Item(string Text, double Size, bool Bold, ItemKind Kind, double Top, int Page, bool Math = false, string Family = "", bool Toc = false, double Left = 0, double Advance = 0, int Frame = -1);
 
-    // Code is one item per line; Table and Figure items hold their Markdown.
-    private enum ItemKind { Paragraph, Bullet, Numbered, Image, Code, Table, Figure }
+    // Code is one item per line; a Table item holds its Markdown.
+    private enum ItemKind { Paragraph, Bullet, Numbered, Image, Code, Table }
 
     public static Result ToMarkdown(string path, string assets, string imagesName)
     {
@@ -106,9 +106,14 @@ internal static partial class PdfImport
                 Place(new Item(TableMarkdown(table, page.Letters), 0, false, ItemKind.Table, table.Box.Top, number));
             }
 
+            // A figure is drawn again as an SVG picture (PdfFigure.cs).
             foreach (var figure in shapes.Figures)
             {
-                Place(new Item(Strings.Tr("（図）"), 0, false, ItemKind.Figure, figure.Top, number));
+                images++;
+                var file = $"image{images}.svg";
+                Directory.CreateDirectory(Path.Combine(assets, imagesName));
+                File.WriteAllText(Path.Combine(assets, imagesName, file), FigureSvg(page, figure));
+                Place(new Item(file, 0, false, ItemKind.Image, figure.Top, number));
             }
 
             // A page number sits alone near the top or bottom edge; numbers elsewhere (a
@@ -148,7 +153,8 @@ internal static partial class PdfImport
                 pageItems.Remove(bullet);
             }
 
-            foreach (var image in page.GetImages())
+            // A picture inside a figure is part of its SVG.
+            foreach (var image in page.GetImages().Where(image => !shapes.Figures.Any(figure => Contains(figure, image.BoundingBox))))
             {
                 if (SaveImage(image, assets, imagesName, images + 1) is { } file)
                 {
@@ -167,12 +173,12 @@ internal static partial class PdfImport
         var text = items.Where(item => item.Kind != ItemKind.Image).ToList();
         // The body typeface is the one most of the text is set in; a heading set in another
         // (Gothic over Mincho, for example) stands out even at the body size.
-        var bodyFamily = text.Where(item => item.Kind is not (ItemKind.Code or ItemKind.Table or ItemKind.Figure)).GroupBy(item => item.Family)
+        var bodyFamily = text.Where(item => item.Kind is not (ItemKind.Code or ItemKind.Table)).GroupBy(item => item.Family)
             .OrderByDescending(group => group.Sum(item => item.Text.Length))
             .Select(group => group.Key).FirstOrDefault() ?? string.Empty;
         var levels = HeadingGuess.Levels(text.Select(item => new SizedParagraph(
             item.Text, item.Size, item.Bold,
-            item.Kind is ItemKind.Bullet or ItemKind.Code or ItemKind.Table or ItemKind.Figure || item.Math || item.Toc,
+            item.Kind is ItemKind.Bullet or ItemKind.Code or ItemKind.Table || item.Math || item.Toc,
             item.Family.Length > 0 && item.Family != bodyFamily)).ToList());
         var headingOf = new Dictionary<Item, int>(ReferenceEqualityComparer.Instance);
         for (var i = 0; i < text.Count; i++)
@@ -252,7 +258,6 @@ internal static partial class PdfImport
                     lists.Add((item.Left, indent + marker.Length));
                     break;
                 case ItemKind.Table:
-                case ItemKind.Figure:
                     markdown.Append(item.Text);
                     break;
                 default:
