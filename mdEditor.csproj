@@ -27,19 +27,20 @@
          code is compiled while the window opens. -->
     <PublishReadyToRun>true</PublishReadyToRun>
   </PropertyGroup>
-  <!-- The Windows projection (Windows.Data.Pdf and the rest of Windows' own API, 24 MB) is used
-       only to draw a PDF page. The single-file exe compiles everything into one composite image
-       ahead of time, which would add about 40 MB more for it, and PublishReadyToRunExclude does
-       not reach the composite: it is taken out of the compile lists and only referenced, so it
-       ships as it is. -->
+  <!-- The Windows projection (Windows.Data.Pdf and the rest of Windows' own API: 24 MB, with
+       the C#/WinRT runtime) is used only to draw a PDF page. Windows SDK's terms let it be
+       distributed only unmodified, and the single-file exe would compile it into its one
+       composite image ahead of time (about 40 MB more; PublishReadyToRunExclude does not reach
+       the composite). It is taken out of the compile lists and only referenced, so it ships as
+       it is. -->
   <Target Name="KeepWindowsProjectionAsIs" AfterTargets="_PrepareForReadyToRunCompilation">
     <ItemGroup>
-      <_WindowsProjection Include="@(_ReadyToRunCompositeBuildInput)" Condition="'%(Filename)%(Extension)' == 'Microsoft.Windows.SDK.NET.dll'" />
+      <_WindowsProjection Include="@(_ReadyToRunCompositeBuildInput)" Condition="'%(Filename)%(Extension)' == 'Microsoft.Windows.SDK.NET.dll' or '%(Filename)%(Extension)' == 'WinRT.Runtime.dll'" />
       <_ReadyToRunCompositeBuildInput Remove="@(_WindowsProjection)" />
       <_ReadyToRunCompositeUnrootedBuildInput Remove="@(_WindowsProjection)" />
       <_ReadyToRunCompositeBuildReferences Include="@(_WindowsProjection)" />
-      <_ReadyToRunCompileList Remove="@(_ReadyToRunCompileList)" Condition="'%(Filename)%(Extension)' == 'Microsoft.Windows.SDK.NET.dll'" />
-      <_ReadyToRunFilesToPublish Remove="@(_ReadyToRunFilesToPublish)" Condition="'%(Filename)%(Extension)' == 'Microsoft.Windows.SDK.NET.dll'" />
+      <_ReadyToRunCompileList Remove="@(_ReadyToRunCompileList)" Condition="'%(Filename)%(Extension)' == 'Microsoft.Windows.SDK.NET.dll' or '%(Filename)%(Extension)' == 'WinRT.Runtime.dll'" />
+      <_ReadyToRunFilesToPublish Remove="@(_ReadyToRunFilesToPublish)" Condition="'%(Filename)%(Extension)' == 'Microsoft.Windows.SDK.NET.dll' or '%(Filename)%(Extension)' == 'WinRT.Runtime.dll'" />
     </ItemGroup>
   </Target>
   <ItemGroup>
