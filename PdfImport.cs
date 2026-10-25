@@ -32,14 +32,16 @@ namespace MdEditor;
 // headings, list items, and tables without borders where they hold a page's text
 // (PdfTags.cs). Column layout comes back only as its text. A page whose text cannot be
 // read in order (vertical writing, text set over text) comes back as one picture of the
-// whole page (PicturePage).
+// whole page (PicturePage), and a page whose letters cannot be read (fonts without a table
+// to characters) as a picture Windows draws of it (PdfRender.cs).
 // Nothing is sent anywhere, and the PDF itself is never written.
 internal static partial class PdfImport
 {
     public const int MaxPages = 500;
 
-    // PicturePages: the pages that came back as a picture of the whole page.
-    public sealed record Result(string Markdown, int Images, int Pages, int ReadPages, bool HasText, int Headings, IReadOnlyList<int> PicturePages);
+    // PicturePages: the pages that came back as a picture of the whole page; ImagePages, those
+    // whose letters could not be read, drawn by Windows.
+    public sealed record Result(string Markdown, int Images, int Pages, int ReadPages, bool HasText, int Headings, IReadOnlyList<int> PicturePages, IReadOnlyList<int> ImagePages);
 
     private sealed record Line(string Text, double Size, bool Bold, double Top, double Right, bool MathFont, string Family, double Left = 0, bool Rejoined = false);
 
@@ -59,6 +61,7 @@ internal static partial class PdfImport
         var structure = ReadStructure(document);
         var items = new List<Item>();
         var picturePages = new List<int>();
+        var imagePages = new List<int>();
         var images = 0;
         // Formulas in a line of text: each stands in the text as one private-use character,
         // replaced with its picture at the end.
@@ -78,6 +81,17 @@ internal static partial class PdfImport
         for (var number = 1; number <= readPages; number++)
         {
             var page = document.GetPage(number);
+            if (UnreadablePage(document, page) && RenderPage(path, number, page.Width) is { } png)
+            {
+                images++;
+                var file = $"image{images}.png";
+                Directory.CreateDirectory(Path.Combine(assets, imagesName));
+                File.WriteAllBytes(Path.Combine(assets, imagesName, file), png);
+                items.Add(new Item(file, 0, false, ItemKind.Image, page.Height, number, Left: 0, Right: page.Width, Bottom: 0, Natural: page.Width * 4 / 3 * 2));
+                imagePages.Add(number);
+                continue;
+            }
+
             var pageItems = new List<Item>();
             var rejoined = new HashSet<Word>(ReferenceEqualityComparer.Instance);
             var shapes = FindShapes(page);
@@ -419,7 +433,7 @@ internal static partial class PdfImport
 
         var headings = levels.Count(level => level > 0);
         return new Result(markdown.Length > 0 ? markdown.Append('\n').ToString() : string.Empty,
-            images, document.NumberOfPages, readPages, text.Count > 0, headings, picturePages);
+            images, document.NumberOfPages, readPages, text.Count > 0 || imagePages.Count > 0, headings, picturePages, imagePages);
     }
 
     // Whether a page's running text (figures, tables, and formulas apart) cannot be read in

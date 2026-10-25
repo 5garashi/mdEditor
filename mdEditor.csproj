@@ -9,7 +9,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net10.0-windows</TargetFramework>
+    <!-- Windows 10 2004 SDK for Windows' own PDF renderer (Windows.Data.Pdf, PdfRender.cs); the
+         app still runs on Windows 10 1809 and later, as the Store manifest says. -->
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
     <UseWPF>true</UseWPF>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -24,6 +27,21 @@
          code is compiled while the window opens. -->
     <PublishReadyToRun>true</PublishReadyToRun>
   </PropertyGroup>
+  <!-- The Windows projection (Windows.Data.Pdf and the rest of Windows' own API, 24 MB) is used
+       only to draw a PDF page. The single-file exe compiles everything into one composite image
+       ahead of time, which would add about 40 MB more for it, and PublishReadyToRunExclude does
+       not reach the composite: it is taken out of the compile lists and only referenced, so it
+       ships as it is. -->
+  <Target Name="KeepWindowsProjectionAsIs" AfterTargets="_PrepareForReadyToRunCompilation">
+    <ItemGroup>
+      <_WindowsProjection Include="@(_ReadyToRunCompositeBuildInput)" Condition="'%(Filename)%(Extension)' == 'Microsoft.Windows.SDK.NET.dll'" />
+      <_ReadyToRunCompositeBuildInput Remove="@(_WindowsProjection)" />
+      <_ReadyToRunCompositeUnrootedBuildInput Remove="@(_WindowsProjection)" />
+      <_ReadyToRunCompositeBuildReferences Include="@(_WindowsProjection)" />
+      <_ReadyToRunCompileList Remove="@(_ReadyToRunCompileList)" Condition="'%(Filename)%(Extension)' == 'Microsoft.Windows.SDK.NET.dll'" />
+      <_ReadyToRunFilesToPublish Remove="@(_ReadyToRunFilesToPublish)" Condition="'%(Filename)%(Extension)' == 'Microsoft.Windows.SDK.NET.dll'" />
+    </ItemGroup>
+  </Target>
   <ItemGroup>
     <!-- WebView2 serves these from a real folder, so keep them beside the single-file exe. -->
     <Content Include="wwwroot\**\*">

@@ -1580,6 +1580,12 @@ public partial class MainWindow : Window
             notices.Add(string.Format(Strings.Tr("ページが多いため、最初の {0} ページだけを開きました（全部で {1} ページ）。"), result.ReadPages, result.Pages));
         }
 
+        if (result.ImagePages.Count > 0)
+        {
+            notices.Add(string.Format(Strings.Tr("{0} ページ目は、文字を読み取れない書体（文字化けする書体）で書かれているため、ページ全体を画像（PNG）にしました。"),
+                string.Join(", ", result.ImagePages)));
+        }
+
         if (result.PicturePages.Count > 0)
         {
             notices.Add(string.Format(Strings.Tr("{0} ページ目は、文字の並び（縦書き・重なった文字など）を読み取れないため、ページ全体を画像（SVG）にしました。"),
