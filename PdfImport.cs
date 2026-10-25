@@ -72,7 +72,8 @@ internal static partial class PdfImport
             var rejoined = new HashSet<Word>(ReferenceEqualityComparer.Instance);
             var shapes = FindShapes(page);
             // The text of tables, figures, and formulas is read with them, not in the running text.
-            var letters = page.Letters.Where(letter => !shapes.Tables.Any(table => Contains(table.Box, letter))
+            // Some PDFs map glyphs to control characters (NUL); they show nothing.
+            var letters = page.Letters.Where(letter => !letter.Value.All(char.IsControl) && !shapes.Tables.Any(table => Contains(table.Box, letter))
                 && !shapes.Figures.Any(figure => Contains(figure, letter))
                 && !shapes.Formulas.Any(formula => Contains(formula.Box, letter))).ToList();
             foreach (var formula in shapes.Formulas.Where(formula => !formula.Display))
@@ -377,7 +378,8 @@ internal static partial class PdfImport
             return $"![{EscapeAlt(item.Alt)}]({source})";
         }
 
-        var alt = System.Net.WebUtility.HtmlEncode(item.Alt);
+        // Only what HTML needs escaped (µ and the like stay readable).
+        var alt = item.Alt.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;").Replace("\"", "&quot;");
         var image = $"<img src=\"{source}\" alt=\"{alt}\"" + (size is null ? string.Empty : $" width=\"{size}\"")
             + (item.Float.Length > 0 ? $" align=\"{item.Float}\" hspace=\"16\"" : string.Empty) + ">";
         return align is null ? image : $"<p align=\"{align}\">{image}</p>";
@@ -391,7 +393,7 @@ internal static partial class PdfImport
 
     // A formula's letters left to right (zero-width ones left out), as its description.
     private static string FormulaText(Formula formula) => Normalize(string.Concat(formula.Letters
-        .Where(letter => letter.BoundingBox.Width > 0.5 && !string.IsNullOrWhiteSpace(letter.Value))
+        .Where(letter => letter.BoundingBox.Width > 0.5 && !IsBlank(letter))
         .OrderBy(letter => letter.StartBaseLine.X).Select(letter => letter.Value)));
 
     // The one letter an inline formula stands as: as wide as the formula, on the baseline
@@ -399,7 +401,7 @@ internal static partial class PdfImport
     private static Letter Placeholder(Formula formula, char mark, IEnumerable<Letter> letters)
     {
         var box = formula.Box;
-        var near = letters.Where(letter => !IsMathLetter(letter) && letter.BoundingBox.Width > 0.5 && !string.IsNullOrWhiteSpace(letter.Value)
+        var near = letters.Where(letter => !IsMathLetter(letter) && letter.BoundingBox.Width > 0.5 && !IsBlank(letter)
                 && letter.GetFont() is not null && !Contains(box, letter) && letter.BoundingBox.Bottom < box.Top && letter.BoundingBox.Top > box.Bottom)
             .OrderBy(letter => Math.Min(Math.Abs(letter.BoundingBox.Left - box.Right), Math.Abs(box.Left - letter.BoundingBox.Right)))
             .FirstOrDefault() ?? formula.Letters.Where(letter => letter.GetFont() is not null).OrderByDescending(letter => letter.PointSize).FirstOrDefault()
@@ -479,7 +481,8 @@ internal static partial class PdfImport
     {
         var split = SplitLines(block);
         var lines = split.Select(words => ReadLine(words) with { Rejoined = words.Any(rejoined.Contains) }).ToList();
-        var code = split.Select(CodeLine).ToList();
+        // On a code background, a line of Japanese with a monospaced start (a diff's "- 保存") is code.
+        var code = split.Select(words => CodeLine(words, shapes.CodeFrames.Contains(FrameAt(shapes, words.Min(word => word.BoundingBox.Left) + 1, words.Max(word => word.BoundingBox.Top) - 1)))).ToList();
         for (var i = lines.Count - 1; i >= 0; i--)
         {
             if (lines[i].Text.Length == 0)
@@ -638,7 +641,7 @@ internal static partial class PdfImport
             last = text;
         }
 
-        var letters = words.SelectMany(word => word.Letters).Where(letter => !string.IsNullOrWhiteSpace(letter.Value)).ToList();
+        var letters = words.SelectMany(word => word.Letters).Where(letter => !IsBlank(letter)).ToList();
         var size = letters.Count == 0 ? 0 : letters.Select(letter => letter.PointSize).OrderBy(value => value).ElementAt(letters.Count / 2);
         var bold = letters.Count > 0 && letters.Count(IsBold) * 2 > letters.Count;
         var mathFont = letters.Any(letter => (letter.FontName ?? string.Empty).Contains("KaTeX", StringComparison.OrdinalIgnoreCase)
@@ -653,16 +656,16 @@ internal static partial class PdfImport
 
     // A line set (almost) all in a monospaced typeface, with its spaces put back from where
     // the letters stand (one space per letter width); null for any other line.
-    private static CodeText? CodeLine(List<Word> words)
+    private static CodeText? CodeLine(List<Word> words, bool framed)
     {
-        var letters = words.SelectMany(word => word.Letters).Where(letter => !string.IsNullOrWhiteSpace(letter.Value))
+        var letters = words.SelectMany(word => word.Letters).Where(letter => !IsBlank(letter))
             .OrderBy(letter => letter.StartBaseLine.X).ToList();
         // Japanese and Chinese in code (comments, strings) are set in another typeface. A line
         // of prose with code words in it starts with prose or is mostly Japanese or Chinese (a
         // long comment on a code background is code all the same; see ToMarkdown).
         var latin = letters.Where(letter => !letter.Value.Any(IsCjk)).ToList();
         if (latin.Count == 0 || latin.Count(letter => IsMonospaced(letter.FontName)) < latin.Count * 0.8
-            || !IsMonospaced(letters[0].FontName) || letters.Count - latin.Count > latin.Count)
+            || !IsMonospaced(letters[0].FontName) || (!framed && letters.Count - latin.Count > latin.Count))
         {
             return null;
         }

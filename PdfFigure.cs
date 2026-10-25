@@ -219,7 +219,7 @@ internal static partial class PdfImport
 
         foreach (var letter in page.Letters)
         {
-            if (string.IsNullOrWhiteSpace(letter.Value) || letter.RenderingMode == TextRenderingMode.Neither || !Contains(area, letter))
+            if (IsBlank(letter) || letter.RenderingMode == TextRenderingMode.Neither || !Contains(area, letter))
             {
                 continue;
             }

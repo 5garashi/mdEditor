@@ -34,9 +34,10 @@ internal static partial class PdfImport
     private sealed record Formula(PdfRectangle Box, bool Display, List<Letter> Letters);
 
     // Frames are the wide boxes behind text (a code block's background, a note).
-    private sealed record PageShapes(List<Grid> Tables, List<PdfRectangle> Figures, List<Mark> Marks, List<PdfRectangle> Frames, List<Formula> Formulas)
+    // Code frames are the frames whose Latin letters are (almost) all in a monospaced typeface.
+    private sealed record PageShapes(List<Grid> Tables, List<PdfRectangle> Figures, List<Mark> Marks, List<PdfRectangle> Frames, List<Formula> Formulas, HashSet<int> CodeFrames)
     {
-        public static readonly PageShapes None = new([], [], [], [], []);
+        public static readonly PageShapes None = new([], [], [], [], [], []);
     }
 
     private sealed record Segment(bool Horizontal, double At, double From, double To);
@@ -94,7 +95,7 @@ internal static partial class PdfImport
             }
         }
 
-        var letters = page.Letters.Where(letter => !string.IsNullOrWhiteSpace(letter.Value)).ToList();
+        var letters = page.Letters.Where(letter => !IsBlank(letter)).ToList();
         var (tables, used) = FindTables(segments, letters);
         var marks = FindMarks(shapes, letters);
         // A wide box (behind code, a note, or the front matter) frames text, not a figure.
@@ -141,7 +142,12 @@ internal static partial class PdfImport
         marks.RemoveAll(mark => figures.Any(figure => Contains(figure, mark.Box)));
         var frames = shapes.Where(shape => shape.BoxLike && shape.Box.Width > page.Width * 0.45 && !figures.Any(figure => Overlaps(figure, shape.Box)))
             .Select(shape => shape.Box).ToList();
-        return new PageShapes(tables, figures, marks, frames, FindFormulas(letters, shapes, segments, figures, tables));
+        var codeFrames = Enumerable.Range(0, frames.Count).Where(i =>
+        {
+            var latin = letters.Where(letter => Contains(frames[i], letter) && !letter.Value.Any(IsCjk)).ToList();
+            return latin.Count > 0 && latin.Count(letter => IsMonospaced(letter.FontName)) >= latin.Count * 0.8;
+        }).ToHashSet();
+        return new PageShapes(tables, figures, marks, frames, FindFormulas(letters, shapes, segments, figures, tables), codeFrames);
     }
 
     // Math letters close together make a formula, which takes in the lines drawn over or
@@ -199,7 +205,7 @@ internal static partial class PdfImport
         }
 
         var boxes = Merge(Clusters(math.Select(letter => letter.BoundingBox).ToList(), gap)
-            .Select(cluster => Grow(Union(cluster.Select(index => math[index].BoundingBox)), _ => false)).ToList());
+            .Select(cluster => Grow(Union(cluster.Select(index => math[index].BoundingBox)), IsTexMathText)).ToList());
         // Japanese or Chinese in a formula (\text{売上}) is set in the system's typeface; such
         // letters belong to the formula when they touch it and sit off the line of the text
         // right beside it (a fraction's parts, a subscript). With no text beside it (display
@@ -207,27 +213,45 @@ internal static partial class PdfImport
         boxes = Merge(boxes.Select(box =>
         {
             var size = math.Where(letter => Contains(box, letter)).Select(letter => letter.PointSize).DefaultIfEmpty(gap / 0.6).Max();
-            var beside = others.Where(letter => !Contains(box, letter) && letter.BoundingBox.Bottom < box.Top && letter.BoundingBox.Top > box.Bottom
+            var beside = others.Where(letter => !IsTexMathText(letter) && !Contains(box, letter) && letter.BoundingBox.Bottom < box.Top && letter.BoundingBox.Top > box.Bottom
                     && ((letter.BoundingBox.Right <= box.Left + 1 && box.Left - letter.BoundingBox.Right < gap * 2)
                         || (letter.BoundingBox.Left >= box.Right - 1 && letter.BoundingBox.Left - box.Right < gap * 2)))
                 .OrderBy(letter => Math.Min(Math.Abs(box.Left - letter.BoundingBox.Right), Math.Abs(letter.BoundingBox.Left - box.Right)))
                 .FirstOrDefault();
-            return Grow(box, letter => beside is null || Math.Abs(letter.StartBaseLine.Y - beside.StartBaseLine.Y) > size * 0.3);
+            return Grow(box, letter => beside is null || IsTexMathText(letter) || Math.Abs(letter.StartBaseLine.Y - beside.StartBaseLine.Y) > size * 0.3);
         }).ToList());
         // Display math: no text but math level with it (zero-width letters do not count). Its
         // pieces on one line (a matrix's columns, a root apart from the "=") are one formula.
-        bool Display(PdfRectangle box) => !letters.Any(letter => !IsMathLetter(letter) && !Contains(box, letter) && letter.BoundingBox.Width > 0.5
+        bool Display(PdfRectangle box) => !letters.Any(letter => !IsMathLetter(letter) && !IsTexMathText(letter) && !Contains(box, letter) && letter.BoundingBox.Width > 0.5
             && (letter.BoundingBox.Top + letter.BoundingBox.Bottom) / 2 is var middle && middle > box.Bottom && middle < box.Top);
         var display = boxes.Where(Display).ToList();
         var lines = Clusters(display.Select(box => new PdfRectangle(0, box.Bottom, 1, box.Top)).ToList(), 0)
             .Select(cluster => Union(cluster.Select(index => display[index]))).ToList();
         return boxes.Where(box => !Display(box)).Select(box => (Box: box, Display: false)).Concat(lines.Select(box => (Box: box, Display: true)))
             .Select(formula => new Formula(formula.Box, formula.Display, letters.Where(letter => Contains(formula.Box, letter)).ToList()))
-            .Where(formula => formula.Letters.Count > 0).ToList();
+            // One symbol alone (a footnote mark, an asterisk in an index) stays text.
+            .Where(formula => formula.Letters.Count(letter => letter.BoundingBox.Width > 0.5) >= 2).ToList();
     }
 
-    private static bool IsMathLetter(Letter letter) =>
-        (letter.FontName ?? string.Empty).Contains("KaTeX", StringComparison.OrdinalIgnoreCase);
+    // Typefaces made for math: KaTeX's, TeX's math fonts (Computer Modern math italic,
+    // symbols, and large symbols; the AMS symbols), MathJax's, and OpenType math fonts
+    // (Cambria Math, STIX Two Math, Latin Modern Math).
+    private static bool IsMathLetter(Letter letter) => MathFontPattern().IsMatch(letter.FontName ?? string.Empty);
+
+    // TeX sets the digits, brackets, and signs of math in its text typeface (Computer Modern
+    // Roman); they belong to a formula they touch. Words in that typeface do not.
+    private static bool IsTexMathText(Letter letter) => TexTextFontPattern().IsMatch(letter.FontName ?? string.Empty)
+        && letter.Value.Length > 0 && letter.Value.All(c => !char.IsLetter(c));
+
+    // A letter with nothing to show: a space, or a control character some PDFs map their
+    // glyphs to.
+    private static bool IsBlank(Letter letter) => letter.Value.All(c => char.IsWhiteSpace(c) || char.IsControl(c));
+
+    [System.Text.RegularExpressions.GeneratedRegex(@"KaTeX|(^|\+)(CMMI|CMSY|CMEX|MSAM|MSBM|EUFM|EUSM|MJX)|Math", System.Text.RegularExpressions.RegexOptions.IgnoreCase)]
+    private static partial System.Text.RegularExpressions.Regex MathFontPattern();
+
+    [System.Text.RegularExpressions.GeneratedRegex(@"(^|\+)(CMR|LMRoman)\d", System.Text.RegularExpressions.RegexOptions.IgnoreCase)]
+    private static partial System.Text.RegularExpressions.Regex TexTextFontPattern();
 
     // A rectangle, or one with rounded corners: straight lines only across or down, and
     // curves only as small corners. A small circle (curves only) is not a box.
@@ -321,7 +345,7 @@ internal static partial class PdfImport
     // is escaped.
     private static string TableMarkdown(Grid grid, IReadOnlyList<Letter> letters)
     {
-        var inside = letters.Where(letter => !string.IsNullOrWhiteSpace(letter.Value) && Contains(grid.Box, letter)).ToList();
+        var inside = letters.Where(letter => !IsBlank(letter) && Contains(grid.Box, letter)).ToList();
         var words = UglyToad.PdfPig.DocumentLayoutAnalysis.WordExtractor.NearestNeighbourWordExtractor.Instance.GetWords(inside).ToList();
         var cells = new string[grid.Rows.Count - 1, grid.Columns.Count - 1];
         for (var row = 0; row < grid.Rows.Count - 1; row++)
