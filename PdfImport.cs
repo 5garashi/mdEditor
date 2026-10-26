@@ -101,8 +101,11 @@ internal static partial class PdfImport
             // The text of tables, figures, and formulas is read with them, not in the running text.
             // Some PDFs map glyphs to control characters (NUL); they show nothing. What the tags
             // mark as not the text (running titles, page numbers) is left out.
+            // A line that runs on out of a figure (a paragraph beside an illustration whose area
+            // reaches into it) stays text as a whole.
+            var crossing = CrossingLetters(page.Letters, shapes.Figures);
             var letters = page.Letters.Where(letter => !letter.Value.All(char.IsControl) && !shapes.Tables.Any(table => Contains(table.Box, letter))
-                && !shapes.Figures.Any(figure => Contains(figure, letter))
+                && (crossing.Contains(letter) || !shapes.Figures.Any(figure => Contains(figure, letter)))
                 && !shapes.Formulas.Any(formula => Contains(formula.Box, letter)) && tags?.IsFurniture(letter) != true).ToList();
             if (PicturePage(letters))
             {
@@ -139,10 +142,15 @@ internal static partial class PdfImport
                 blocks.Remove(bullet);
             }
 
-            foreach (var label in TakeLabels(shapes.Figures, blocks, shapes.Tables.Select(table => table.Box).Concat(shapes.Formulas.Select(formula => formula.Box)), page.Letters))
+            var pictures = page.GetImages().Select(image => image.BoundingBox).Where(box => !shapes.Figures.Any(figure => Contains(figure, box))).ToList();
+            foreach (var label in TakeLabels(shapes.Figures, blocks, shapes.Tables.Select(table => table.Box).Concat(shapes.Formulas.Select(formula => formula.Box)), page.Letters, pictures))
             {
                 blocks.Remove(label);
             }
+
+            // What stays text is not drawn again in a figure that has grown over it.
+            var running = new HashSet<Letter>(blocks.SelectMany(block => block.TextLines).SelectMany(line => line.Words).SelectMany(word => word.Letters),
+                ReferenceEqualityComparer.Instance);
 
             var textWidth = blocks.Count == 0 ? 0 : blocks.Max(block => block.BoundingBox.Width);
             foreach (var block in blocks)
@@ -216,7 +224,7 @@ internal static partial class PdfImport
                          .Concat(shapes.Formulas.Where(formula => formula.Display).Select(formula => (formula.Box, FormulaText(formula), true)))
                          .OrderByDescending(entry => Math.Round(entry.Item1.Top)).ThenBy(entry => entry.Item1.Left))
             {
-                Place(new Item(SaveSvg(FigureSvg(page, box, states.Value, isFormula)), 0, false, ItemKind.Image, box.Top, number,
+                Place(new Item(SaveSvg(FigureSvg(page, box, states.Value, isFormula, running)), 0, false, ItemKind.Image, box.Top, number,
                     Left: box.Left, Right: box.Right, Bottom: box.Bottom, Natural: box.Width * 4 / 3, Alt: alt));
             }
 
@@ -775,7 +783,13 @@ internal static partial class PdfImport
     // take it in, and figures that then meet, or stand side by side, become one. Headings
     // and longer text stay text, and a figure that would grow over other text, a table, or a
     // formula stays as it is. The blocks taken are returned.
-    private static List<TextBlock> TakeLabels(List<PdfRectangle> figures, List<TextBlock> blocks, IEnumerable<PdfRectangle> keepOut, IReadOnlyList<Letter> letters)
+    // A picture that a figure's lines reach into (an illustration with its parts named around
+    // it, each name drawn to its place with a line) becomes one figure with them, and its
+    // callouts go in with it: lines of up to 32 letters set no larger than the page's text
+    // (a short name up to a quarter larger), within three lines of the picture and the lines
+    // that reach it.
+    private static List<TextBlock> TakeLabels(List<PdfRectangle> figures, List<TextBlock> blocks, IEnumerable<PdfRectangle> keepOut, IReadOnlyList<Letter> letters,
+        IReadOnlyList<PdfRectangle> pictures)
     {
         var taken = new HashSet<TextBlock>(ReferenceEqualityComparer.Instance);
         var others = keepOut.ToList();
@@ -787,12 +801,60 @@ internal static partial class PdfImport
             return sizes.Count > 0 ? sizes[sizes.Count / 2] : 0;
         }
 
+        // A label's box, with room for the letters that reach below the baseline.
+        static PdfRectangle Padded(TextBlock block)
+        {
+            var box = block.BoundingBox;
+            var height = block.TextLines.Max(line => line.BoundingBox.Height);
+            return new PdfRectangle(box.Left, box.Bottom - height * 0.3, box.Right, box.Top);
+        }
+
+        // The size most of the page's letters are set in.
+        var textSize = letters.Where(letter => !IsBlank(letter)).GroupBy(letter => Math.Round(letter.PointSize * 2) / 2)
+            .OrderByDescending(group => group.Count()).Select(group => group.Key).FirstOrDefault();
+        var callouts = figures.Select(_ => (PdfRectangle?)null).ToList();
+        foreach (var picture in pictures)
+        {
+            var reaching = Enumerable.Range(0, figures.Count).Where(i => Overlaps(figures[i], picture)).ToList();
+            if (reaching.Count == 0)
+            {
+                continue;
+            }
+
+            var whole = Union(reaching.Select(i => figures[i]).Append(picture));
+            foreach (var i in reaching.OrderDescending())
+            {
+                figures.RemoveAt(i);
+                callouts.RemoveAt(i);
+            }
+
+            figures.Add(whole);
+            callouts.Add(whole);
+        }
+
         // Inline formulas stand in the text as private-use letters.
-        bool IsLabel(TextBlock block) => Longest(block) <= 16 && !block.Text.Any(c => c >= (char)0xE000 && c <= (char)0xF8FF);
+        bool IsLabel(TextBlock block, PdfRectangle? callout = null)
+        {
+            if (block.Text.Any(c => c >= (char)0xE000 && c <= (char)0xF8FF))
+            {
+                return false;
+            }
+
+            var longest = Longest(block);
+            if (longest <= 16 || callout is not { } core || textSize <= 0)
+            {
+                return longest <= 16;
+            }
+
+            var box = block.BoundingBox;
+            var reach = block.TextLines.Max(line => line.BoundingBox.Height) * 3;
+            return Math.Max(core.Left - box.Right, box.Left - core.Right) <= reach && Math.Max(core.Bottom - box.Top, box.Bottom - core.Top) <= reach
+                && (longest <= 8 && BlockSize(block) <= textSize * 1.25 || longest <= 32 && BlockSize(block) <= textSize + 0.1);
+        }
 
         // A grown box takes along the labels it reaches (axis numbers stand side by side, each
         // in reach of the next); it fails if it reaches other text, a table, or a formula.
-        List<TextBlock>? Reach(ref PdfRectangle grown, PdfRectangle[] before)
+        List<TextBlock>? Reach(ref PdfRectangle grown, PdfRectangle[] before, PdfRectangle? callout)
         {
             var along = new List<TextBlock>();
             while (true)
@@ -800,48 +862,54 @@ internal static partial class PdfImport
                 var box = grown;
                 // Text that already overlapped the figure is not the growing's doing.
                 var hit = blocks.Where(other => !taken.Contains(other) && !along.Contains(other) && Overlaps(box, other.BoundingBox)
-                    && (IsLabel(other) || !before.Any(old => Overlaps(old, other.BoundingBox)))).ToList();
+                    && (IsLabel(other, callout) || !before.Any(old => Overlaps(old, other.BoundingBox)))).ToList();
                 if (hit.Count == 0)
                 {
                     return others.Any(other => Overlaps(box, other) && !before.Any(old => Overlaps(old, other))) ? null : along;
                 }
 
-                if (!hit.All(IsLabel))
+                if (!hit.All(other => IsLabel(other, callout)))
                 {
                     return null;
                 }
 
                 along.AddRange(hit);
-                grown = Union(hit.Select(other => other.BoundingBox).Append(box));
+                grown = Union(hit.Select(Padded).Append(box));
             }
         }
 
         for (var changed = figures.Count > 0; changed;)
         {
             changed = false;
-            foreach (var block in blocks.Where(block => !taken.Contains(block) && IsLabel(block)))
+            foreach (var block in blocks.Where(block => !taken.Contains(block) && (callouts.Any(callout => IsLabel(block, callout)))))
             {
                 var box = block.BoundingBox;
                 var longest = Longest(block);
                 var height = Math.Max(block.TextLines.Max(line => line.BoundingBox.Height), 1);
-                var at = figures.FindIndex(figure =>
+                var at = Enumerable.Range(0, figures.Count).FirstOrDefault(i =>
                 {
+                    var figure = figures[i];
+                    if (!IsLabel(block, callouts[i]))
+                    {
+                        return false;
+                    }
+
                     var gapX = Math.Max(0, Math.Max(figure.Left - box.Right, box.Left - figure.Right));
                     var gapY = Math.Max(0, Math.Max(figure.Bottom - box.Top, box.Bottom - figure.Top));
                     var level = Math.Min(figure.Top, box.Top) - Math.Max(figure.Bottom, box.Bottom) > 0;
                     // A short line close to a figure (a legend, a chart's title) belongs to it
                     // when set no larger than the figure's own labels; a heading is larger.
                     var near = gapX <= height * 1.2 && gapY <= height * 1.2
-                        && (longest <= 4 || longest <= 8 && LabelSize(figure) is var size && size > 0 && BlockSize(block) <= size * 1.5);
+                        && (callouts[i] is not null && BlockSize(block) <= textSize * 1.25 || longest <= 4 || longest <= 8 && LabelSize(figure) is var size && size > 0 && BlockSize(block) <= size * 1.5);
                     return (level && gapX <= height * 3) || near;
-                });
+                }, -1);
                 if (at < 0)
                 {
                     continue;
                 }
 
-                var grown = Union([figures[at], box]);
-                if (Reach(ref grown, [figures[at], box]) is not { } along)
+                var grown = Union([figures[at], Padded(block)]);
+                if (Reach(ref grown, [figures[at], box], callouts[at]) is not { } along)
                 {
                     continue;
                 }
@@ -862,11 +930,14 @@ internal static partial class PdfImport
                     var (a, b) = (figures[i], figures[j]);
                     var row = Math.Min(a.Top, b.Top) - Math.Max(a.Bottom, b.Bottom) > Math.Min(a.Height, b.Height) * 0.5;
                     var joined = Union([a, b]);
-                    if ((Overlaps(a, b) || row) && Reach(ref joined, [a, b]) is { } along)
+                    var callout = callouts[i] ?? callouts[j];
+                    if ((Overlaps(a, b) || row) && Reach(ref joined, [a, b], callout) is { } along)
                     {
                         taken.UnionWith(along);
                         figures[i] = joined;
+                        callouts[i] = callout;
                         figures.RemoveAt(j);
+                        callouts.RemoveAt(j);
                         changed = true;
                     }
                 }
@@ -874,6 +945,47 @@ internal static partial class PdfImport
         }
 
         return blocks.Where(taken.Contains).ToList();
+    }
+
+    // The letters in a figure's area whose line goes on outside every figure: letters on one
+    // baseline, no farther apart than one and a half letters, with some inside and some out.
+    private static HashSet<Letter> CrossingLetters(IReadOnlyList<Letter> letters, List<PdfRectangle> figures)
+    {
+        var crossing = new HashSet<Letter>(ReferenceEqualityComparer.Instance);
+        if (figures.Count == 0)
+        {
+            return crossing;
+        }
+
+        bool Inside(Letter letter) => figures.Any(figure => Contains(figure, letter));
+        foreach (var line in letters.Where(letter => Math.Abs(letter.EndBaseLine.Y - letter.StartBaseLine.Y) < 0.01)
+                     .GroupBy(letter => Math.Round(letter.StartBaseLine.Y)))
+        {
+            var run = new List<Letter>();
+            void Flush()
+            {
+                if (run.Any(Inside) && !run.All(Inside))
+                {
+                    crossing.UnionWith(run);
+                }
+
+                run.Clear();
+            }
+
+            foreach (var letter in line.OrderBy(letter => letter.BoundingBox.Left))
+            {
+                if (run.Count > 0 && letter.BoundingBox.Left - run[^1].BoundingBox.Right > Math.Max(letter.PointSize, run[^1].PointSize) * 1.5)
+                {
+                    Flush();
+                }
+
+                run.Add(letter);
+            }
+
+            Flush();
+        }
+
+        return crossing;
     }
 
     // A line with a wide gap ("File Number: E46769   Type dsg: 1494V-0") can be cut into two
@@ -1490,7 +1602,7 @@ internal static partial class PdfImport
         text.Length > 0 && "#>-+*|".Contains(text[0]) ? "\\" + text : text;
 
     private static bool IsCjk(char c) =>
-        c is >= '　' and <= 'ヿ' or >= '㐀' and <= '䶿' or >= '一' and <= '鿿'
+        c is >= '⺀' and <= 'ヿ' or >= '㐀' and <= '䶿' or >= '一' and <= '鿿'
             or >= '豈' and <= '﫿' or >= '＀' and <= '￯';
 
     private static string? SaveImage(IPdfImage image, string assets, string imagesName, int number)

@@ -29,8 +29,9 @@ namespace MdEditor;
 // written out again as SVG (in points, shown at the size the page had), so the figure comes
 // back as a picture that stays sharp. Labels are set in a typeface of the same kind (sans
 // serif, serif, or monospaced), each letter where the PDF put it. Shadings, clipping inside
-// the figure, and the drawing order of text and shapes are not kept: shapes come first,
-// then pictures, then text.
+// the figure, and the drawing order of text and shapes are not kept: shapes that hold a
+// picture (its background or frame) come first, then pictures, then the other shapes (lines
+// and names drawn over an illustration), then text.
 internal static partial class PdfImport
 {
     // How each shape the page paints was drawn, in the order of page.Paths without the
@@ -124,8 +125,9 @@ internal static partial class PdfImport
     }
 
     // A formula's picture also takes lines that reach out of it (KaTeX draws a root sign as a
-    // very long line that the page cuts off), cut off at its edge.
-    private static string FigureSvg(Page page, PdfRectangle area, IReadOnlyList<PaintState>? states, bool formula = false)
+    // very long line that the page cuts off), cut off at its edge. Letters that stay in the
+    // running text (text) are not drawn.
+    private static string FigureSvg(Page page, PdfRectangle area, IReadOnlyList<PaintState>? states, bool formula = false, IReadOnlySet<Letter>? text = null)
     {
         // Italic letters reach a little past their boxes.
         if (formula)
@@ -185,6 +187,8 @@ internal static partial class PdfImport
             return Color(color);
         }
 
+        var pictures = page.GetImages().Where(image => Contains(area, image.BoundingBox)).ToList();
+        var front = new StringBuilder();
         var painted = -1;
         foreach (var path in page.Paths)
         {
@@ -253,6 +257,7 @@ internal static partial class PdfImport
             var strokePattern = 1.0;
             var fill = filled ? Paint(path.FillColor, state, out fillPattern) : "none";
             var stroke = stroked ? Paint(path.StrokeColor, state, out strokePattern) : "none";
+            var start = svg.Length;
             svg.Append("<path d=\"").Append(d).Append('"');
             svg.Append(" fill=\"").Append(fill).Append('"');
             var fillOpacity = fillAlpha * fillPattern;
@@ -283,16 +288,17 @@ internal static partial class PdfImport
             }
 
             svg.Append("/>\n");
+            // Only a shape that holds a picture (its background or frame) goes under it.
+            if (!pictures.Any(image => Contains(box, image.BoundingBox)))
+            {
+                front.Append(svg, start, svg.Length - start);
+                svg.Length = start;
+            }
         }
 
-        foreach (var image in page.GetImages())
+        foreach (var image in pictures)
         {
             var bounds = image.BoundingBox;
-            if (!Contains(area, bounds))
-            {
-                continue;
-            }
-
             string data;
             if (image.TryGetPng(out var png))
             {
@@ -309,6 +315,8 @@ internal static partial class PdfImport
 
             svg.Append($"<image x=\"{X(bounds.Left)}\" y=\"{Y(bounds.Top)}\" width=\"{N(bounds.Width)}\" height=\"{N(bounds.Height)}\" preserveAspectRatio=\"none\" href=\"data:{data}\"/>\n");
         }
+
+        svg.Append(front);
 
         // Letters in runs: those on one baseline, in one size, color, and typeface are one
         // text element with each letter's own position.
@@ -368,7 +376,7 @@ internal static partial class PdfImport
 
         foreach (var letter in page.Letters)
         {
-            if (IsBlank(letter) || letter.RenderingMode == TextRenderingMode.Neither || !Contains(area, letter))
+            if (IsBlank(letter) || letter.RenderingMode == TextRenderingMode.Neither || !Contains(area, letter) || text?.Contains(letter) == true)
             {
                 continue;
             }

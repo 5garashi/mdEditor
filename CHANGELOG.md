@@ -25,6 +25,10 @@ The version number lives in [VERSION](./VERSION). Add each new version at the to
 - PDF を開いたときのお知らせ欄を、「できる範囲で変換したもので、元の PDF を Markdown で忠実に再現したものではありません」という説明に改めた（取り出す内容の説明と「PDF ファイルは変わりません」は省いた）。
 - PDF で、文字をはさまずに並んだ図が、ページの順（上から、左から）でなく見つけた順に出ていた（069 の「主な摂取量」の折れ線グラフが、後の「おやつ」のグラフの下に出ていた）のを直した。横に並んだグラフは、間にラベルしかなければ離れていても 1 枚の画像にする（これまでは 0.5 インチまで）。
 - ファイルをドラッグしているとき、編集画面の上で表示する「カーソルの位置に入れる」と編集画面の枠を赤（ボルト）にして、「ファイルとして開く」と見分けやすくした。
+- エクスプローラーからファイルをドロップしたときの確認や案内（「保存しますか？」など）が、エクスプローラーの裏に隠れることがあったのを直した。ドロップを受けたウィンドウを前面に出してから表示する。
+- PDF で、写真やイラストに線で名前を付けた図（069 の家の間取りの「寝室」「キッチン」など）が、名前と線だけの図・本文の文字・イラストの 3 つに分かれていたのを直し、名前と説明をイラストの上の元の位置に置いた 1 枚の画像にした（名前の札がイラストの下に隠れないよう、イラストの上に描く）。並んだイラストと見出しの帯も 1 枚になる。
+- PDF で、図の範囲に一部がかかった本文の行が、図の画像の中と本文の両方に出て、本文の側は途中で切れていた（Smallpdf の案内の「… share digital d」）のを直した。図の外へ続く行は本文に残し、図の画像には描かない。これまで抜けていた段落（「Enhance Documents in One Click …」）も出る。
+- PDF で、部首の形の文字（「⼀」「⽂」など、ブラウザーで作った PDF に多い）を和文・中文の文字として数えていなかったため、等幅の語で始まる中文の行がコードのブロックになったり、和文の間に空白が入ったりしていたのを直した。
 - PDF に書き出すと、タグ付きの PDF になるようにした。見出し・段落・箇条書き・表の区別が PDF に残り、読み上げソフトがたどれるほか、mdEditor で開き直すとタグのとおりに戻る（数式・図・コードの読み方は変わらない）。タグ付きで書き出せないときは、これまでどおりの PDF にする。
 
 - Opening a tagged PDF (one made by Word, Acrobat, LibreOffice, or a browser, for example) now uses the tags in it: what is a heading, a paragraph, a list item, or a table, and the order they are read in. Where the tags hold nearly all of a page's text, they decide the reading order, where paragraphs end, the heading levels (H1 to H6), and the list items; a table without cell borders comes back as a Markdown table, and running titles and page numbers marked as such are left out. A list item or paragraph that goes on to the next page is read in its place. A PDF without tags, and a page whose tags do not hold its text, is read from where the letters stand as before. Figures, math, ruled tables, and code are found as before, tags or not.
@@ -38,6 +42,10 @@ The version number lives in [VERSION](./VERSION). Add each new version at the to
 - The notice bar shown on opening a PDF now says the conversion is best-effort, not a faithful copy of the PDF in Markdown (the list of what comes back and "the PDF stays as it is" are gone).
 - PDF: figures with no text between them came out in the order they were found, not the page's order (top to bottom, then left to right); in 069, the line charts under "主な摂取量" landed below the later charts. Charts side by side become one picture however far apart they are when only their labels stand between them (half an inch at most before).
 - While files are dragged over the editor, the "Insert at the cursor" label and the editor's frame turn red (volt), so it is not taken for "Open as a file".
+- A question or notice after a file is dropped from File Explorer ("Save changes?", for example) could open behind Explorer; the window the file was dropped on now comes to the front first.
+- PDF: a picture with its parts named around it and drawn to them with lines (the rooms of the house in 069, "寝室", "キッチン", and so on) came apart into a drawing of the names and lines, running text, and the picture; it is now one picture, with the names and notes where they stand on the page (drawn over the picture, so their labels are not hidden under it). Pictures set together with a banner become one picture too.
+- PDF: a line of running text that a figure's area reached into came out both in the figure's picture and, cut short, in the text ("… share digital d" in the Smallpdf guide); a line that goes on outside the figure now stays text and is not drawn in the picture. A paragraph that was missing ("Enhance Documents in One Click …") comes back.
+- PDF: letters in radical forms ("⼀", "⽂", common in PDFs made by browsers) were not counted as Japanese or Chinese, so a Chinese line starting with a monospaced word could become a code block, and a space could appear inside Japanese text.
 - Export to PDF now writes a tagged PDF: what is a heading, a paragraph, a list, or a table stays in the PDF, so screen readers can follow it, and opening it again in mdEditor reads it by its tags (math, figures, and code are read as before). When a tagged PDF cannot be written, the PDF is written as before.
 
 ## 1.0.17 — 2026-10-25

@@ -230,6 +230,55 @@ public partial class MainWindow : Window
     [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
     private static extern int SHFileOperation(ref ShFileOperationInfo operation);
 
+    [DllImport("user32.dll")]
+    private static extern IntPtr GetForegroundWindow();
+
+    [DllImport("user32.dll")]
+    private static extern uint GetWindowThreadProcessId(IntPtr hwnd, IntPtr processId);
+
+    [DllImport("kernel32.dll")]
+    private static extern uint GetCurrentThreadId();
+
+    [DllImport("user32.dll")]
+    private static extern bool AttachThreadInput(uint thread, uint toThread, bool attach);
+
+    [DllImport("user32.dll")]
+    private static extern bool SetForegroundWindow(IntPtr hwnd);
+
+    // Brings a window to the front before it asks or tells something. A file dropped from
+    // File Explorer leaves Explorer the foreground window (the drop itself goes to
+    // WebView2's process), and Windows then keeps this app's message boxes behind it.
+    // Joining the foreground window's input for a moment lets this window take the front.
+    private static void BringToFront(Window window)
+    {
+        if (window.WindowState == WindowState.Minimized)
+        {
+            window.WindowState = WindowState.Normal;
+        }
+
+        if (window.Activate() && window.IsActive)
+        {
+            return;
+        }
+
+        var hwnd = new WindowInteropHelper(window).Handle;
+        var foreground = GetWindowThreadProcessId(GetForegroundWindow(), IntPtr.Zero);
+        var current = GetCurrentThreadId();
+        var attached = foreground != 0 && foreground != current && AttachThreadInput(current, foreground, true);
+        try
+        {
+            SetForegroundWindow(hwnd);
+            window.Activate();
+        }
+        finally
+        {
+            if (attached)
+            {
+                AttachThreadInput(current, foreground, false);
+            }
+        }
+    }
+
     public MainWindow(string? initialPath, string? initialAnchor = null, bool paste = false)
     {
         InitializeComponent();
@@ -771,8 +820,10 @@ public partial class MainWindow : Window
     // On the editor, dropped files go in at the cursor: images and videos as
     // pictures, files mdEditor opens as their content (converted as Open does),
     // and other files as links. Anywhere else, one file mdEditor opens is opened.
-    private async Task HandleDropAsync(CoreWebView2WebMessageReceivedEventArgs e, bool onEditor)
+    private async Task HandleDropAsync(CoreWebView2WebMessageReceivedEventArgs e, bool onEditor, Window? target = null)
     {
+        // Questions and notices about the drop come up in front, over File Explorer.
+        BringToFront(target ?? this);
         var paths = (e.AdditionalObjects ?? []).OfType<CoreWebView2File>().Select(file => file.Path).ToList();
         if (paths.Count > 0 && !paths.Any(Directory.Exists))
         {
@@ -4583,7 +4634,7 @@ public partial class MainWindow : Window
                 window.Fullscreen.Set(window, false);
                 break;
             case "dropFile":
-                await HandleDropAsync(e, false);
+                await HandleDropAsync(e, false, window);
                 break;
         }
     }
