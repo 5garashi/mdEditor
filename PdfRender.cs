@@ -1,6 +1,6 @@
 /*
   ファイル名 / File: PdfRender.cs
-  概要 / Description: Finds PDF pages whose letters cannot be read and draws them as pictures with PDFium
+  概要 / Description: Finds PDF pages whose letters cannot be read (or are drawn as shapes) and draws them as pictures with PDFium
   作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
   作成日 / Created: 2026-10-26
   ライセンス / License: MIT
@@ -98,6 +98,13 @@ internal static partial class PdfImport
         var fonts = UnreadableFonts(document, page);
         return fonts.Count > 0 && text.Count(letter => letter.FontName is { } name && fonts.Contains(name)) * 10 >= text.Count * 3;
     }
+
+    // Whether a page draws its text as shapes (a printer driver can turn letters into
+    // outlines): no letters, but 200 or more shapes. Nothing of its text can be read, and its
+    // shapes would come apart as figures, so it is drawn as a picture too.
+    private static bool OutlinePage(Page page) =>
+        !page.Letters.Any(letter => !IsBlank(letter) && !letter.Value.All(char.IsControl))
+        && page.Paths.Where(path => !path.IsClipping).Sum(path => path.Count()) >= 200;
 
     // A page drawn as a PNG picture by PDFium, twice as wide as it is shown (sharp on a
     // high-resolution screen), on white; null when PDFium cannot draw it.

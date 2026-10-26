@@ -40,8 +40,10 @@ internal static partial class PdfImport
     public const int MaxPages = 500;
 
     // PicturePages: the pages that came back as a picture of the whole page; ImagePages, those
-    // whose letters could not be read, drawn by Windows.
-    public sealed record Result(string Markdown, int Images, int Pages, int ReadPages, bool HasText, int Headings, IReadOnlyList<int> PicturePages, IReadOnlyList<int> ImagePages);
+    // whose letters could not be read, and OutlinePages, those whose text is drawn as shapes,
+    // drawn by PDFium.
+    public sealed record Result(string Markdown, int Images, int Pages, int ReadPages, bool HasText, int Headings, IReadOnlyList<int> PicturePages, IReadOnlyList<int> ImagePages,
+        IReadOnlyList<int> OutlinePages);
 
     private sealed record Line(string Text, double Size, bool Bold, double Top, double Right, bool MathFont, string Family, double Left = 0, bool Rejoined = false);
 
@@ -62,6 +64,7 @@ internal static partial class PdfImport
         var items = new List<Item>();
         var picturePages = new List<int>();
         var imagePages = new List<int>();
+        var outlinePages = new List<int>();
         var images = 0;
         // Formulas in a line of text: each stands in the text as one private-use character,
         // replaced with its picture at the end.
@@ -81,14 +84,15 @@ internal static partial class PdfImport
         for (var number = 1; number <= readPages; number++)
         {
             var page = document.GetPage(number);
-            if (UnreadablePage(document, page) && RenderPage(path, number, page.Width) is { } png)
+            var unreadable = UnreadablePage(document, page);
+            if ((unreadable || OutlinePage(page)) && RenderPage(path, number, page.Width) is { } png)
             {
                 images++;
                 var file = $"image{images}.png";
                 Directory.CreateDirectory(Path.Combine(assets, imagesName));
                 File.WriteAllBytes(Path.Combine(assets, imagesName, file), png);
                 items.Add(new Item(file, 0, false, ItemKind.Image, page.Height, number, Left: 0, Right: page.Width, Bottom: 0, Natural: page.Width * 4 / 3 * 2));
-                imagePages.Add(number);
+                (unreadable ? imagePages : outlinePages).Add(number);
                 continue;
             }
 
@@ -441,7 +445,7 @@ internal static partial class PdfImport
 
         var headings = levels.Count(level => level > 0);
         return new Result(markdown.Length > 0 ? markdown.Append('\n').ToString() : string.Empty,
-            images, document.NumberOfPages, readPages, text.Count > 0 || imagePages.Count > 0, headings, picturePages, imagePages);
+            images, document.NumberOfPages, readPages, text.Count > 0 || imagePages.Count > 0, headings, picturePages, imagePages, outlinePages);
     }
 
     // Whether a page's running text (figures, tables, and formulas apart) cannot be read in
@@ -686,9 +690,10 @@ internal static partial class PdfImport
         if (tags is null)
         {
             var ordered = new List<TextBlock>();
-            foreach (var block in TextBlocks(letters, rejoined, frames))
+            var all = TextBlocks(letters, rejoined, frames).ToList();
+            foreach (var block in all)
             {
-                InsertByPlace(ordered, block);
+                InsertByPlace(ordered, block, all);
             }
 
             return ordered;
@@ -757,7 +762,7 @@ internal static partial class PdfImport
         var ordered = new List<TextBlock>();
         foreach (var block in UnsupervisedReadingOrderDetector.Instance.Get(blocks))
         {
-            InsertByPlace(ordered, block);
+            InsertByPlace(ordered, block, blocks);
         }
 
         return ordered;
@@ -765,13 +770,20 @@ internal static partial class PdfImport
 
     // A block wholly above one read before it, and over most of its width or wholly to its
     // left, is read first (a block of another column to the right stays after): it goes
-    // after every block that stands above it, before the first one below it.
-    private static void InsertByPlace(List<TextBlock> ordered, TextBlock block)
+    // after every block that stands above it, before the first one below it. A block with
+    // no other block of the page beside it (page lists them) is in no column: it goes before
+    // the first one below it wherever that stands (a letterhead or a centered title on the
+    // right, drawn after the text below it).
+    private static void InsertByPlace(List<TextBlock> ordered, TextBlock block, IReadOnlyList<TextBlock>? page = null)
     {
         var box = block.BoundingBox;
+        bool Beside(TextBlock other) => !ReferenceEquals(other, block)
+            && Math.Min(other.BoundingBox.Top, box.Top) - Math.Max(other.BoundingBox.Bottom, box.Bottom) > Math.Min(other.BoundingBox.Height, box.Height) * 0.5
+            && (other.BoundingBox.Right <= box.Left || other.BoundingBox.Left >= box.Right);
+        var alone = page is not null && !page.Any(Beside);
         var above = ordered.FindLastIndex(other => other.BoundingBox.Bottom > box.Top);
         var below = ordered.FindIndex(above + 1, other => other.BoundingBox.Top < box.Bottom
-            && (Math.Min(other.BoundingBox.Right, box.Right) - Math.Max(other.BoundingBox.Left, box.Left) > Math.Min(other.BoundingBox.Width, box.Width) * 0.5
+            && (alone || Math.Min(other.BoundingBox.Right, box.Right) - Math.Max(other.BoundingBox.Left, box.Left) > Math.Min(other.BoundingBox.Width, box.Width) * 0.5
                 || box.Right <= other.BoundingBox.Left));
         ordered.Insert(below < 0 ? ordered.Count : below, block);
     }

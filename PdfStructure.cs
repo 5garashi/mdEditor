@@ -96,7 +96,7 @@ internal static partial class PdfImport
         }
 
         var letters = page.Letters.Where(letter => !IsBlank(letter)).ToList();
-        var (tables, used) = FindTables(segments, letters);
+        var (tables, used) = FindTables(segments, letters, shapes);
         var marks = FindMarks(shapes, letters);
         // A wide box (behind code, a note, or the front matter) frames text, not a figure.
         // Boxes and table lines are part of a figure but do not make one. Marks count too
@@ -264,7 +264,11 @@ internal static partial class PdfImport
 
     // Thin lines that cross each other make a grid; one with at least two columns and two
     // rows that holds text is a table.
-    private static (List<Grid> Tables, HashSet<Segment> Used) FindTables(List<Segment> segments, List<Letter> letters)
+    // A table can also have lines between its rows only, across its full width, with lines
+    // down between its columns but none at its sides (an invoice's items): its sides are where
+    // the row lines end, and a filled band as wide (the header, the rows' background) adds
+    // its edges as rows.
+    private static (List<Grid> Tables, HashSet<Segment> Used) FindTables(List<Segment> segments, List<Letter> letters, List<Shape> shapes)
     {
         var tables = new List<Grid>();
         var used = new HashSet<Segment>();
@@ -275,6 +279,25 @@ internal static partial class PdfImport
             var columns = Distinct(group.Where(segment => !segment.Horizontal).Select(segment => segment.At));
             var rows = Distinct(group.Where(segment => segment.Horizontal).Select(segment => segment.At));
             var box = Union(cluster.Select(index => boxes[index]));
+            var across = group.Where(segment => segment.Horizontal && segment.From <= box.Left + 3 && segment.To >= box.Right - 3).ToList();
+            if (columns.Count is 1 or 2 && across.Count >= 2 && box.Width > 100
+                && columns.All(x => x > box.Left + 10 && x < box.Right - 10))
+            {
+                columns = Distinct(columns.Append(box.Left).Append(box.Right));
+                for (var grown = true; grown;)
+                {
+                    grown = false;
+                    foreach (var band in shapes.Where(shape => shape.Filled && shape.BoxLike && Math.Abs(shape.Box.Left - box.Left) < 3 && Math.Abs(shape.Box.Right - box.Right) < 3
+                                 && shape.Box.Top >= box.Bottom - 3 && shape.Box.Bottom <= box.Top + 3 && (shape.Box.Top > box.Top + 3 || shape.Box.Bottom < box.Bottom - 3)))
+                    {
+                        box = Union([box, band.Box]);
+                        rows = Distinct(rows.Append(band.Box.Top).Append(band.Box.Bottom));
+                        grown = true;
+                    }
+                }
+            }
+
+
             // One row is a table too when its column lines run its full height (the rest of a
             // table that goes on from the page before).
             var oneRow = rows.Count == 2 && group.Where(segment => !segment.Horizontal)

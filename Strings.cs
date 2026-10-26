@@ -210,6 +210,8 @@ internal static partial class Strings
             "No text could be taken from this PDF. It may be made of images only (a scan, for example).",
         ["ページが多いため、最初の {0} ページだけを開きました（全部で {1} ページ）。"] =
             "The PDF is long, so only the first {0} pages were opened ({1} pages in all).",
+        ["{0} ページ目は、文字が図形として描かれていて取り出せないため、ページ全体を画像（PNG）にしました。"] =
+            "Page {0} draws its text as shapes, so no text could be taken from it, and the whole page became a picture (PNG).",
         ["{0} ページ目は、文字を読み取れない書体（文字化けする書体）で書かれているため、ページ全体を画像（PNG）にしました。"] =
             "Page {0} is set in fonts whose letters cannot be read (they would come out garbled), so the whole page became a picture (PNG).",
         ["{0} ページ目は、文字の並び（縦書き・重なった文字など）を読み取れないため、ページ全体を画像（SVG）にしました。"] =

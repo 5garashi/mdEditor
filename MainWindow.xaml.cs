@@ -1621,7 +1621,7 @@ public partial class MainWindow : Window
         {
             Strings.Tr("PDF を Markdown に変換して開きました。できる範囲で変換したもので、元の PDF を Markdown で忠実に再現したものではありません。")
         };
-        if (!result.HasText)
+        if (!result.HasText && result.OutlinePages.Count == 0)
         {
             notices.Add(Strings.Tr("この PDF からは文字を取り出せませんでした。画像だけでできた PDF（スキャンしたものなど）の可能性があります。"));
         }
@@ -1635,6 +1635,12 @@ public partial class MainWindow : Window
         {
             notices.Add(string.Format(Strings.Tr("{0} ページ目は、文字を読み取れない書体（文字化けする書体）で書かれているため、ページ全体を画像（PNG）にしました。"),
                 string.Join(", ", result.ImagePages)));
+        }
+
+        if (result.OutlinePages.Count > 0)
+        {
+            notices.Add(string.Format(Strings.Tr("{0} ページ目は、文字が図形として描かれていて取り出せないため、ページ全体を画像（PNG）にしました。"),
+                string.Join(", ", result.OutlinePages)));
         }
 
         if (result.PicturePages.Count > 0)
