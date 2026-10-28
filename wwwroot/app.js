@@ -131,6 +131,10 @@
       zoomNote: "Ctrl + マウスホイール、Ctrl + プラス／マイナス、Ctrl + 0 でも変えられます。倍率は次回の起動でも使います。",
       settingsFullWidth: "プレビューの本文の幅を制限しない（広い画面で1行を長くする）",
       settingsEditor: "編集欄", settingsActiveLine: "いまの行を強調する", settingsThickCaret: "カーソルを太くする",
+      settingsLint: "Markdown の書き方を確かめる（問題のある所に波線を引く）",
+      lintStatus: (count) => `書き方の問題 ${count} 件（押すと一覧を表示）`,
+      lintPhrases: {"Diagnostics": "書き方の確認", "No diagnostics": "問題は見つかりませんでした", "close": "閉じる"},
+      lint: {"MD001": "見出しの段階が飛んでいます（# の次に ### など）。1 段ずつ下げてください。", "MD011": "リンクの書き方が逆です。[文字](アドレス) の順に書きます。", "MD018": "見出しの # の後に空白がありません（#見出し → # 見出し）。", "MD023": "見出しが行の先頭から始まっていません。前の空白を消してください。", "MD024": "同じ階層に同じ名前の見出しがあります。目次やリンクで見分けられません。", "MD037": "強調の記号（* や _）の内側に空白があり、強調になりません。", "MD038": "コード（`）の内側の前後に空白があります。", "MD039": "リンクの文字の前後に空白があります。", "MD042": "リンク先が空です。", "MD045": "画像に説明（代替テキスト）がありません。![説明](…) と書くと、画面読み上げでも伝わります。", "MD051": "ページ内リンク（#…）の行き先の見出しが見つかりません。", "MD052": "参照リンク [文字][名前] の名前が、どこにも定義されていません。", "MD056": "表のこの行の列の数が、見出しの行と違います。", "MD058": "表の前後に空行がありません。表として表示されないことがあります。", "fence": "コードブロック（``` や ~~~）が閉じられていません。文書の最後までコードになります。", "missing": "リンク先のファイルが見つかりません: "},
       settingsReader: "読み上げ", settingsReaderOn: "読み上げ機能を使う（プレビューの見出しに操作ボタンを表示）",
       settingsReaderRate: "速さ", rateSlow: "ゆっくり", rateSlower: "少しゆっくり", rateNormal: "ふつう",
       rateFaster: "少し速い", rateFast: "速い", settingsReaderPause: "段落の間", pauseNone: "間を空けない",
@@ -300,6 +304,10 @@
       zoomNote: "也可以用 Ctrl + 鼠标滚轮、Ctrl + 加号／减号、Ctrl + 0 更改。下次启动时会保留缩放比例。",
       settingsFullWidth: "不限制预览正文的宽度（在宽屏上每行更长）",
       settingsEditor: "编辑区", settingsActiveLine: "突出显示当前行", settingsThickCaret: "加粗光标",
+      settingsLint: "检查 Markdown 写法（在有问题的地方画波浪线）",
+      lintStatus: (count) => `写法问题 ${count} 个（按下显示列表）`,
+      lintPhrases: {"Diagnostics": "写法检查", "No diagnostics": "没有发现问题", "close": "关闭"},
+      lint: {"MD001": "标题级别跳跃了（例如 # 之后是 ###）。请逐级降低。", "MD011": "链接的写法反了。请按 [文字](地址) 的顺序书写。", "MD018": "标题的 # 后面没有空格（#标题 → # 标题）。", "MD023": "标题没有从行首开始。请删除前面的空格。", "MD024": "同一级别中有同名的标题，目录和链接无法区分。", "MD037": "强调符号（* 或 _）内侧有空格，不会显示为强调。", "MD038": "代码（`）内侧的前后有空格。", "MD039": "链接文字的前后有空格。", "MD042": "链接目标为空。", "MD045": "图像没有说明（替代文字）。写成 ![说明](…)，屏幕阅读器也能读出。", "MD051": "找不到页内链接（#…）指向的标题。", "MD052": "引用链接 [文字][名称] 的名称没有定义。", "MD056": "表格这一行的列数与标题行不同。", "MD058": "表格前后没有空行，可能不会显示为表格。", "fence": "代码块（``` 或 ~~~）没有结束，文档末尾之前都会成为代码。", "missing": "找不到链接的文件："},
       settingsReader: "朗读", settingsReaderOn: "使用朗读功能（在预览的标题栏显示操作按钮）",
       settingsReaderRate: "速度", rateSlow: "慢", rateSlower: "稍慢", rateNormal: "正常",
       rateFaster: "稍快", rateFast: "快", settingsReaderPause: "段落间隔", pauseNone: "不停顿",
@@ -469,6 +477,10 @@
       zoomNote: "Ctrl + mouse wheel, Ctrl + plus/minus, and Ctrl + 0 also work. The zoom level is remembered.",
       settingsFullWidth: "Don't limit the preview text width (longer lines on wide screens)",
       settingsEditor: "Editor", settingsActiveLine: "Highlight the current line", settingsThickCaret: "Use a thick cursor",
+      settingsLint: "Check how Markdown is written (underline problems)",
+      lintStatus: (count) => `${count} Markdown problem${count === 1 ? "" : "s"} (press to list them)`,
+      lintPhrases: {},
+      lint: {"MD001": "A heading level is skipped (### after #, for example). Go down one level at a time.", "MD011": "The link is written the wrong way round. Write [text](address).", "MD018": "There is no space after the heading's # (#Heading → # Heading).", "MD023": "The heading does not start at the beginning of the line. Remove the spaces before it.", "MD024": "Another heading at the same level has the same name; contents and links cannot tell them apart.", "MD037": "There are spaces inside the emphasis marks (* or _), so the text is not emphasized.", "MD038": "There are spaces just inside the code marks (`).", "MD039": "There are spaces around the link text.", "MD042": "The link goes nowhere.", "MD045": "The image has no description (alternative text). Write ![description](…) so screen readers can say what it shows.", "MD051": "The heading this link on the page (#…) points to cannot be found.", "MD052": "The name of the reference link [text][name] is not defined anywhere.", "MD056": "This row of the table has a different number of columns from the header row.", "MD058": "There is no empty line before or after the table, so it may not show as a table.", "fence": "The code block (``` or ~~~) is never closed; everything to the end becomes code.", "missing": "The linked file cannot be found: "},
       settingsReader: "Read aloud", settingsReaderOn: "Use read-aloud (shows controls in the preview heading)",
       settingsReaderRate: "Speed", rateSlow: "Slow", rateSlower: "A little slow", rateNormal: "Normal",
       rateFaster: "A little fast", rateFast: "Fast", settingsReaderPause: "Pause between paragraphs", pauseNone: "No pause",
@@ -600,9 +612,9 @@
   // The editor is CodeMirror 6 rather than a textarea: it keeps only the visible
   // lines in the DOM, so screen readers stay responsive on long documents (a
   // textarea made Narrator stall for 20+ seconds on each selection change).
-  const { Compartment, EditorSelection, EditorState, EditorView, defaultKeymap, drawSelection, highlightActiveLine, history, historyKeymap, keymap } = window.CodeMirror;
+  const { Compartment, EditorSelection, EditorState, EditorView, closeLintPanel, defaultKeymap, drawSelection, forceLinting, highlightActiveLine, history, historyKeymap, keymap, linter, openLintPanel } = window.CodeMirror;
   const displayDefaults = {
-    font: "standard", size: "1", spacing: "1.7", fullWidth: false, htmlSource: false, activeLine: false, thickCaret: false,
+    font: "standard", size: "1", spacing: "1.7", fullWidth: false, htmlSource: false, activeLine: false, thickCaret: false, lint: true,
     reader: false, rate: "1", pause: "0.5", readerLang: "auto", readerVoice: "", mapBackground: "ask", videoAutoplay: "auto"
   };
   const displayStorageKey = "mdeditor-display";
@@ -616,16 +628,125 @@
   const saveDisplaySettings = () => {
     try { localStorage.setItem(displayStorageKey, JSON.stringify(displaySettings)); } catch { /* kept for this session */ }
   };
-  // Optional editor aids: a highlighted current line, and a drawn (thicker) cursor.
+  // Markdown check: markdownlint (loaded the first time it is needed) with the rules that
+  // point at mistakes rather than at style, plus two checks of mdEditor's own: a code fence
+  // never closed, and a linked file that is not there (the host looks, beside the document).
+  // Problems are underlined, and the strip under the editor lists them. Rules that would flag what mdEditor itself
+  // writes (HTML, long lines, several top headings in an imported PDF) are left out.
+  const lintRules = {
+    default: false, MD001: true, MD011: true, MD018: true, MD023: true, MD024: { siblings_only: true }, MD037: true, MD038: true,
+    MD039: true, MD042: true, MD045: true, MD051: true, MD052: true, MD056: true, MD058: true
+  };
+  // Shown as hints rather than warnings: worth knowing, often on purpose.
+  const lintHints = new Set(["MD024", "MD038", "MD045"]);
+  let markdownlintLoading = null;
+  const loadMarkdownlint = () => markdownlintLoading ??= loadScript("lib/markdownlint/markdownlint.min.js").then(() => window.markdownlint);
+  let linkCheckId = 0;
+  const linkChecks = new Map();
+  // The text with code blanked out (fenced blocks and `code` spans, kept the same length),
+  // so examples written as code are not checked as links.
+  const withoutCode = (text) => {
+    let fence = null;
+    const lines = text.split("\n").map((line) => {
+      const mark = /^ {0,3}(`{3,}|~{3,})/.exec(line)?.[1];
+      if (fence) {
+        if (mark && mark[0] === fence[0] && mark.length >= fence.length && /^ {0,3}[`~]+\s*$/.test(line)) fence = null;
+        return " ".repeat(line.length);
+      }
+      if (mark) { fence = mark; return " ".repeat(line.length); }
+      return line;
+    });
+    return lines.join("\n").replace(/(`+)[^`\n]*?\1/g, (code) => " ".repeat(code.length));
+  };
+  // Relative links and pictures, which the host checks are there: [text](path), ![](path),
+  // and src="path" / href="path" in HTML. Addresses, mail links, and #anchors are left out.
+  const localTargets = (text) => {
+    text = withoutCode(text);
+    const targets = [];
+    const pattern = /\]\(\s*<?([^)\s>]+)>?(?:\s+["'(][^)]*)?\)|\b(?:src|href)\s*=\s*["']([^"']+)["']/g;
+    for (const match of text.matchAll(pattern)) {
+      const target = match[1] ?? match[2];
+      if (!target || /^([a-z][a-z0-9+.-]*:|#|\/\/)/i.test(target)) continue;
+      const at = match.index + match[0].indexOf(target);
+      targets.push({ target, from: at, to: at + target.length });
+    }
+    return targets;
+  };
+  const missingTargets = (targets) => new Promise((resolve) => {
+    if (targets.length === 0) { resolve([]); return; }
+    const id = ++linkCheckId;
+    linkChecks.set(id, resolve);
+    post({ type: "checkLinks", id, targets: [...new Set(targets.map((item) => item.target))] });
+    setTimeout(() => { if (linkChecks.delete(id)) resolve([]); }, 5000);
+  });
+  // The first code fence that is never closed, as its line, or null.
+  const unclosedFence = (doc) => {
+    let open = null;
+    for (let number = 1; number <= doc.lines; number++) {
+      const text = doc.line(number).text;
+      const fence = /^ {0,3}(`{3,}|~{3,})/.exec(text);
+      if (!fence) continue;
+      if (!open) open = { mark: fence[1], number };
+      else if (fence[1][0] === open.mark[0] && fence[1].length >= open.mark.length && /^ {0,3}[`~]+\s*$/.test(text)) open = null;
+    }
+    return open && doc.line(open.number);
+  };
+  const decodeTarget = (value) => { try { return decodeURIComponent(value); } catch { return value; } };
+  const markdownDiagnostics = async (editor) => {
+    const doc = editor.state.doc;
+    const text = doc.toString();
+    const messages = t("lint");
+    const diagnostics = [];
+    try {
+      const markdownlint = await loadMarkdownlint();
+      const results = markdownlint.lint({ strings: { document: text }, config: lintRules }).document ?? [];
+      for (const result of results) {
+        const rule = result.ruleNames[0];
+        if (result.lineNumber > doc.lines) continue;
+        const line = doc.line(result.lineNumber);
+        const from = result.errorRange ? Math.min(line.from + result.errorRange[0] - 1, line.to) : line.from;
+        const to = result.errorRange ? Math.min(from + result.errorRange[1], line.to) : line.to;
+        diagnostics.push({ from, to: Math.max(to, from), severity: lintHints.has(rule) ? "info" : "warning", source: rule, message: messages[rule] ?? result.ruleDescription });
+      }
+    } catch {
+      // Without markdownlint the checks of mdEditor's own still run.
+    }
+    const fence = unclosedFence(doc);
+    if (fence) diagnostics.push({ from: fence.from, to: fence.to, severity: "warning", message: messages.fence });
+    const targets = localTargets(text);
+    const missing = new Set(await missingTargets(targets));
+    for (const item of targets) {
+      if (missing.has(item.target)) diagnostics.push({ from: item.from, to: item.to, severity: "warning", message: messages.missing + decodeTarget(item.target) });
+    }
+    showLintCount(diagnostics.length);
+    return diagnostics;
+  };
+  // The strip under the editor says how many problems there are; it opens the list.
+  let lintCount = 0;
+  const showLintCount = (count) => {
+    lintCount = count;
+    const status = document.getElementById("lint-status");
+    status.textContent = t("lintStatus")(count);
+    status.hidden = count === 0 || !displaySettings.lint;
+  };
+  const markdownCheck = () => linter(markdownDiagnostics, { delay: 800 });
+
+  // Optional editor aids: a highlighted current line, a drawn (thicker) cursor, and the
+  // Markdown check.
   const editorExtras = new Compartment();
   const editorExtrasFor = (settings) => [
     settings.activeLine ? highlightActiveLine() : [],
-    settings.thickCaret ? drawSelection() : []
+    settings.thickCaret ? drawSelection() : [],
+    settings.lint ? markdownCheck() : []
   ];
   const editorAttributes = new Compartment();
-  const editorAttributeValues = () => EditorView.contentAttributes.of({
-    "aria-label": t("editorLabel"), spellcheck: "false", autocorrect: "off", autocapitalize: "off"
-  });
+  // The editor's label, and the words of the problem list in the page's language.
+  const editorAttributeValues = () => [
+    EditorView.contentAttributes.of({
+      "aria-label": t("editorLabel"), spellcheck: "false", autocorrect: "off", autocapitalize: "off"
+    }),
+    EditorState.phrases.of(t("lintPhrases"))
+  ];
   const editorExtensions = () => [
     history(),
     keymap.of([...defaultKeymap, ...historyKeymap]),
@@ -1590,6 +1711,7 @@
     htmlSource: document.getElementById("setting-html-source"),
     activeLine: document.getElementById("setting-active-line"),
     thickCaret: document.getElementById("setting-thick-caret"),
+    lint: document.getElementById("setting-lint"),
     reader: document.getElementById("setting-reader"),
     rate: document.getElementById("setting-reader-rate"),
     pause: document.getElementById("setting-reader-pause"),
@@ -1621,6 +1743,7 @@
     root.style.setProperty("--doc-line-height", displaySettings.spacing);
     root.classList.toggle("preview-full-width", Boolean(displaySettings.fullWidth));
     view.dispatch({ effects: editorExtras.reconfigure(editorExtrasFor(displaySettings)) });
+    showLintCount(displaySettings.lint ? lintCount : 0);
     readerControls.hidden = !displaySettings.reader;
     if (!displaySettings.reader) stopReading();
     updateVoiceNote();
@@ -1648,7 +1771,16 @@
     });
   }
   backupCheckbox.addEventListener("change", () => post({ type: "setAutoBackup", enabled: backupCheckbox.checked }));
-  // Closer to GitHub changes how the host reads Markdown, so the host keeps it.
+  // The strip opens the list of problems the Markdown check found (closes it when open).
+  document.getElementById("lint-status").addEventListener("click", () => {
+    if (view.dom.querySelector(".cm-panel-lint")) {
+      closeLintPanel(view);
+      view.focus();
+    } else {
+      forceLinting(view);
+      openLintPanel(view);
+    }
+  });
   // PDF import: the host keeps these and uses them when a PDF is opened.
   const pdfFigureTextSelect = document.getElementById("setting-pdf-figure-text");
   const pdfAlignCheckbox = document.getElementById("setting-pdf-align");
@@ -1662,6 +1794,7 @@
     updateNotice();
     post({ type: "reopenPdf" });
   });
+  // Closer to GitHub changes how the host reads Markdown, so the host keeps it.
   const nearGitHubCheckbox = document.getElementById("setting-near-github");
   nearGitHubCheckbox.addEventListener("change", () => post({ type: "setNearGitHub", enabled: nearGitHubCheckbox.checked }));
   document.getElementById("zoom-in").addEventListener("click", () => post({ type: "zoom", action: "in" }));
@@ -3418,6 +3551,9 @@
       zoomValue.textContent = `${Math.round(message.factor * 100)}%`;
     } else if (message.type === "autoBackup") {
       backupCheckbox.checked = Boolean(message.enabled);
+    } else if (message.type === "missingLinks") {
+      const resolve = linkChecks.get(message.id);
+      if (linkChecks.delete(message.id)) resolve(message.targets ?? []);
     } else if (message.type === "pdfOptions") {
       pdfFigureTextSelect.value = message.figureText;
       pdfAlignCheckbox.checked = Boolean(message.align);

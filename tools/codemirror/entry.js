@@ -10,8 +10,10 @@
 import { EditorView, drawSelection, highlightActiveLine, keymap } from "@codemirror/view";
 import { Compartment, EditorSelection, EditorState } from "@codemirror/state";
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
+import { closeLintPanel, forceLinting, linter, lintGutter, lintKeymap, openLintPanel } from "@codemirror/lint";
 
 window.CodeMirror = {
   Compartment, EditorSelection, EditorState, EditorView,
-  defaultKeymap, drawSelection, highlightActiveLine, history, historyKeymap, keymap
+  defaultKeymap, drawSelection, highlightActiveLine, history, historyKeymap, keymap,
+  closeLintPanel, forceLinting, linter, lintGutter, lintKeymap, openLintPanel
 };

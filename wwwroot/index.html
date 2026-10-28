@@ -111,6 +111,7 @@
       </div>
       <!-- CodeMirror 6 mounts here (app.js); its content element carries the label. -->
       <div id="editor" class="editor-host"></div>
+      <button id="lint-status" class="lint-status" type="button" hidden></button>
     </section>
     <div id="pane-divider"
          class="pane-divider"
@@ -209,6 +210,7 @@
       <legend data-i18n="settingsEditor">編集欄</legend>
       <label class="settings-check"><input id="setting-active-line" type="checkbox"> <span data-i18n="settingsActiveLine">いまの行を強調する</span></label>
       <label class="settings-check"><input id="setting-thick-caret" type="checkbox"> <span data-i18n="settingsThickCaret">カーソルを太くする</span></label>
+      <label class="settings-check"><input id="setting-lint" type="checkbox" checked> <span data-i18n="settingsLint">Markdown の書き方を確かめる（問題のある所に波線を引く）</span></label>
     </fieldset>
     <fieldset class="settings-group">
       <legend data-i18n="settingsReader">読み上げ</legend>

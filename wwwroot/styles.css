@@ -1074,6 +1074,82 @@ body.capture-export .preview-content {
   border-left: 3px solid var(--document-foreground);
 }
 
+/* The Markdown check: mistakes underlined in volt, hints dotted in steel, and the list of
+   problems under the editor in the app's colors. */
+#editor .cm-lintRange-warning,
+#editor .cm-lintRange-info {
+  background-image: none;
+  text-decoration-skip-ink: none;
+  text-underline-offset: 3px;
+}
+
+#editor .cm-lintRange-warning {
+  text-decoration: underline wavy var(--volt) 1.5px;
+}
+
+#editor .cm-lintRange-info {
+  text-decoration: underline dotted var(--steel) 2px;
+}
+
+#editor .cm-panels {
+  background: var(--card);
+  color: var(--ink);
+}
+
+#editor .cm-panels-bottom {
+  border-top: 2px solid var(--line);
+}
+
+#editor .cm-panel.cm-panel-lint ul {
+  max-height: 30vh;
+}
+
+#editor .cm-panel.cm-panel-lint ul [aria-selected] {
+  background: var(--head);
+  color: var(--ink);
+}
+
+#editor .cm-panel.cm-panel-lint ul:focus [aria-selected] {
+  background: var(--ink);
+  color: var(--card);
+}
+
+#editor .cm-panel.cm-panel-lint button[name="close"] {
+  color: var(--ink);
+}
+
+#editor .cm-diagnostic-warning {
+  border-left-color: var(--volt);
+}
+
+#editor .cm-diagnostic-info {
+  border-left-color: var(--steel);
+}
+
+/* The strip under the editor with the number of problems. */
+.lint-status {
+  flex: 0 0 auto;
+  margin: 0;
+  border: 0;
+  border-top: 2px solid var(--line);
+  border-radius: 0;
+  padding: 4px 12px;
+  background: var(--card);
+  color: var(--volt-deep);
+  text-align: left;
+  font-size: 0.85rem;
+}
+
+.lint-status:hover {
+  background: var(--head);
+}
+
+#editor .cm-tooltip.cm-tooltip-lint {
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
 /* Same thick focus ring as the rest of the app (Identity 7-3 (2)), drawn inside. */
 #editor .cm-editor.cm-focused {
   outline: 3px solid var(--volt);

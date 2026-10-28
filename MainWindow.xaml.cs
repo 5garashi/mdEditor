@@ -498,6 +498,14 @@ public partial class MainWindow : Window
             case "reopenPdf":
                 await ReopenPdfAsync();
                 break;
+            case "checkLinks":
+                SendToPage(new
+                {
+                    type = "missingLinks",
+                    id = root.GetProperty("id").GetInt32(),
+                    targets = MissingLinkTargets(root.GetProperty("targets").EnumerateArray().Select(item => item.GetString() ?? string.Empty))
+                });
+                break;
             case "setNearGitHub":
                 _nearGitHub = root.GetProperty("enabled").GetBoolean();
                 SaveSetting("NearGitHub", _nearGitHub ? "on" : "off");
@@ -1722,6 +1730,43 @@ public partial class MainWindow : Window
         _lastPdfInPicture = result.InPicture;
         _suggestFolder = Path.GetDirectoryName(path);
         _importAssets = result.Images > 0 ? Path.Combine(assets, name + FilesSuffix) : null;
+    }
+
+    // For the Markdown check: the relative links and pictures of the document whose file is
+    // not there, looked for from the document's folder (or the folder it was imported from).
+    // A document never saved has no folder, so nothing is reported.
+    private List<string> MissingLinkTargets(IEnumerable<string> targets)
+    {
+        var missing = new List<string>();
+        var baseFolder = _filePath is null ? _importFolder : Path.GetDirectoryName(_filePath);
+        if (baseFolder is null)
+        {
+            return missing;
+        }
+
+        foreach (var target in targets.Distinct().Take(500))
+        {
+            var pathPart = target.Split('#', 2)[0].Split('?', 2)[0];
+            if (pathPart.Length == 0)
+            {
+                continue;
+            }
+
+            try
+            {
+                var full = Path.GetFullPath(Path.Combine(baseFolder, Uri.UnescapeDataString(pathPart).Replace('/', Path.DirectorySeparatorChar)));
+                if (!File.Exists(full) && !Directory.Exists(full))
+                {
+                    missing.Add(target);
+                }
+            }
+            catch (Exception ex) when (ex is ArgumentException or NotSupportedException or PathTooLongException or UriFormatException)
+            {
+                // A target that is no path at all is not this check's to report.
+            }
+        }
+
+        return missing;
     }
 
     private void SendPdfOptions() =>

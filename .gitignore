@@ -10,6 +10,7 @@ artifacts/
 
 # CodeMirror build tooling
 tools/codemirror/node_modules/
+tools/markdownlint/node_modules/
 tools/graphics/node_modules/
 
 # Screenshots, exported PDFs, and other working files kept only on this PC

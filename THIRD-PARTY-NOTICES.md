@@ -41,7 +41,8 @@ The 5garashi.com logotype and symbol mark in `wwwroot/assets/` are not covered b
 | d3-geo | 3.1.1 | ISC | Copyright 2010-2024 Mike Bostock | https://github.com/d3/d3-geo |
 | topojson-client | 3.1.0 | ISC | Copyright 2012-2019 Michael Bostock | https://github.com/topojson/topojson-client |
 | world-atlas (countries-110m, from Natural Earth, public domain) | 2.0.2 | ISC | Copyright 2013-2019 Michael Bostock | https://github.com/topojson/world-atlas |
-| CodeMirror 6 (view 6.43.12, state 6.7.6, commands 6.11.1) | 6 | MIT | Copyright (C) 2018-2021 by Marijn Haverbeke and others | https://codemirror.net/ |
+| CodeMirror 6 (view 6.43.12, state 6.7.6, commands 6.11.1, lint 6.9.7) | 6 | MIT | Copyright (C) 2018-2021 by Marijn Haverbeke and others | https://codemirror.net/ |
+| markdownlint (the Markdown check; with micromark and the packages listed below) | 0.41.1 | MIT | Copyright (c) David Anson | https://github.com/DavidAnson/markdownlint |
 
 Microsoft Edge WebView2 Runtime is not distributed with mdEditor; it is provided by Windows or installed separately under Microsoft's terms. The .NET runtime's own third-party notices are at https://github.com/dotnet/runtime/blob/main/THIRD-PARTY-NOTICES.TXT.
 
@@ -54,6 +55,7 @@ Microsoft Edge WebView2 Runtime is not distributed with mdEditor; it is provided
 | @codemirror/view | 6.43.12 | MIT | Copyright (C) 2018-2021 by Marijn Haverbeke and others |
 | @codemirror/state | 6.7.6 | MIT | Copyright (C) 2018-2021 by Marijn Haverbeke and others |
 | @codemirror/commands | 6.11.1 | MIT | Copyright (C) 2018-2021 by Marijn Haverbeke and others |
+| @codemirror/lint | 6.9.7 | MIT | Copyright (C) 2018-2021 by Marijn Haverbeke and others |
 | @codemirror/language | 6.13.1 | MIT | Copyright (C) 2018-2021 by Marijn Haverbeke and others |
 | @lezer/common | 1.5.3 | MIT | Copyright (C) 2018 by Marijn Haverbeke and others |
 | @lezer/highlight | 1.2.5 | MIT | Copyright (C) 2018 by Marijn Haverbeke and others |
@@ -62,6 +64,50 @@ Microsoft Edge WebView2 Runtime is not distributed with mdEditor; it is provided
 | crelt | 1.0.7 | MIT | Copyright (C) 2020 by Marijn Haverbeke |
 | style-mod | 4.1.4 | MIT | Copyright (C) 2018 by Marijn Haverbeke and others |
 | w3c-keyname | 2.2.8 | MIT | Copyright (C) 2016 by Marijn Haverbeke and others |
+
+## Libraries bundled inside the markdownlint build / markdownlint に含まれるライブラリ
+
+`wwwroot/lib/markdownlint/markdownlint.min.js` is built from unmodified npm packages with `tools/markdownlint` (esbuild). It contains:
+
+| Library | Version | License | Copyright |
+| :--- | :--- | :--- | :--- |
+| ansi-regex | 6.4.0 | MIT | Copyright (c) Sindre Sorhus |
+| character-entities-legacy | 3.0.0 | MIT | Copyright (c) 2015 Titus Wormer |
+| character-reference-invalid | 2.0.1 | MIT | Copyright (c) 2015 Titus Wormer |
+| decode-named-character-reference | 1.3.0 | MIT | Copyright (c) Titus Wormer |
+| get-east-asian-width | 1.7.0 | MIT | Copyright (c) Sindre Sorhus |
+| is-alphabetical | 2.0.1 | MIT | Copyright (c) 2016 Titus Wormer |
+| is-alphanumerical | 2.0.1 | MIT | Copyright (c) 2016 Titus Wormer |
+| is-decimal | 2.0.1 | MIT | Copyright (c) 2016 Titus Wormer |
+| is-hexadecimal | 2.0.1 | MIT | Copyright (c) 2016 Titus Wormer |
+| katex | 0.16.47 | MIT | Copyright (c) 2013-2020 Khan Academy and other contributors |
+| markdownlint | 0.41.1 | MIT | Copyright (c) David Anson |
+| micromark | 4.0.2 | MIT | Copyright (c) Titus Wormer |
+| micromark-core-commonmark | 2.0.3 | MIT | Copyright (c) Titus Wormer |
+| micromark-extension-directive | 4.0.0 | MIT | Copyright (c) Titus Wormer |
+| micromark-extension-gfm-autolink-literal | 2.1.0 | MIT | Copyright (c) 2020 Titus Wormer |
+| micromark-extension-gfm-footnote | 2.1.0 | MIT | Copyright (c) 2021 Titus Wormer |
+| micromark-extension-gfm-table | 2.1.1 | MIT | Copyright (c) Titus Wormer |
+| micromark-extension-math | 3.1.0 | MIT | Copyright (c) 2020 Titus Wormer |
+| micromark-factory-destination | 2.0.1 | MIT | Copyright (c) Titus Wormer |
+| micromark-factory-label | 2.0.1 | MIT | Copyright (c) Titus Wormer |
+| micromark-factory-space | 2.1.0 | MIT | Copyright (c) Titus Wormer |
+| micromark-factory-title | 2.0.1 | MIT | Copyright (c) Titus Wormer |
+| micromark-factory-whitespace | 2.0.1 | MIT | Copyright (c) Titus Wormer |
+| micromark-util-character | 2.1.1 | MIT | Copyright (c) Titus Wormer |
+| micromark-util-chunked | 2.0.1 | MIT | Copyright (c) Titus Wormer |
+| micromark-util-classify-character | 2.0.1 | MIT | Copyright (c) Titus Wormer |
+| micromark-util-combine-extensions | 2.0.1 | MIT | Copyright (c) Titus Wormer |
+| micromark-util-decode-numeric-character-reference | 2.0.2 | MIT | Copyright (c) Titus Wormer |
+| micromark-util-encode | 2.0.1 | MIT | Copyright (c) Titus Wormer |
+| micromark-util-html-tag-name | 2.0.1 | MIT | Copyright (c) Titus Wormer |
+| micromark-util-normalize-identifier | 2.0.1 | MIT | Copyright (c) Titus Wormer |
+| micromark-util-resolve-all | 2.0.1 | MIT | Copyright (c) Titus Wormer |
+| micromark-util-sanitize-uri | 2.0.1 | MIT | Copyright (c) Titus Wormer |
+| micromark-util-subtokenize | 2.1.0 | MIT | Copyright (c) Titus Wormer |
+| parse-entities | 4.0.2 | MIT | Copyright (c) Titus Wormer |
+| string-width | 8.2.1 | MIT | Copyright (c) Sindre Sorhus |
+| strip-ansi | 7.2.0 | MIT | Copyright (c) Sindre Sorhus |
 
 ## Libraries bundled inside Mermaid / Mermaid に含まれるライブラリ
 
@@ -97,7 +143,7 @@ Microsoft Edge WebView2 Runtime is not distributed with mdEditor; it is provided
 
 ## MIT License
 
-Applies to: .NET Runtime, HtmlSanitizer, AngleSharp, AngleSharp.Css, ReverseMarkdown, MimeKitLite, YamlDotNet, three.js, Viz.js, Expat, DocumentFormat.OpenXml, Mermaid, KaTeX, CodeMirror, and the MIT-licensed libraries above. Each component's copyright notice is listed in the tables above.
+Applies to: .NET Runtime, HtmlSanitizer, AngleSharp, AngleSharp.Css, ReverseMarkdown, MimeKitLite, YamlDotNet, three.js, Viz.js, Expat, DocumentFormat.OpenXml, Mermaid, KaTeX, CodeMirror, markdownlint, and the MIT-licensed libraries above. Each component's copyright notice is listed in the tables above.
 
 ```text
 Copyright (c) <year> <copyright holders>
