@@ -76,6 +76,7 @@
     <button id="notice-encoding" type="button" data-i18n="noticeChoose">文字コードを選ぶ</button>
     <button id="notice-action" type="button" data-i18n="loadExternal" hidden>画像を読み込む</button>
     <button id="notice-maps" type="button" data-i18n="loadMaps" hidden>詳細な地図を読み込む</button>
+    <button id="notice-reopen" type="button" hidden></button>
     <button id="notice-close" type="button" data-i18n="close">閉じる</button>
   </div>
   <main class="workspace">
@@ -269,6 +270,19 @@
       <legend data-i18n="settingsMarkdown">Markdown の書き方</legend>
       <label class="settings-check"><input id="setting-near-github" type="checkbox"> <span data-i18n="settingsNearGitHub">GitHub での表示に近づける（mdEditor 独自の書き方を使わない）</span></label>
       <p class="settings-note" data-i18n="settingsNearGitHubNote"></p>
+    </fieldset>
+    <fieldset class="settings-group">
+      <legend data-i18n="settingsPdf">PDF の取り込み</legend>
+      <label class="settings-row"><span data-i18n="settingsPdfFigureText">図のまわりの文字</span>
+        <select id="setting-pdf-figure-text">
+          <option value="picture" data-i18n="pdfFigureTextPicture">図に入れる（見た目優先・初期設定）</option>
+          <option value="text" data-i18n="pdfFigureTextText">文字として残す（編集優先）</option>
+        </select></label>
+      <p class="settings-note" data-i18n="settingsPdfFigureTextNote"></p>
+      <label class="settings-check"><input id="setting-pdf-align" type="checkbox" checked> <span data-i18n="settingsPdfAlign">右寄せ・中央寄せの文を HTML（align）で書いて、位置を残す</span></label>
+      <label class="settings-check"><input id="setting-pdf-page-pictures" type="checkbox" checked> <span data-i18n="settingsPdfPagePictures">文字を読み取れないページ（縦書き・文字化けする書体・図形で描いた文字）を、ページ全体の画像にする</span></label>
+      <div class="settings-row"><button id="setting-pdf-file" type="button" data-i18n="settingsPdfFile">詳細な数値を開く</button></div>
+      <p class="settings-note"><span data-i18n="settingsPdfFileNote"></span> <span id="setting-pdf-file-path"></span></p>
     </fieldset>
     <fieldset class="settings-group">
       <legend data-i18n="settingsExport">書き出し</legend>

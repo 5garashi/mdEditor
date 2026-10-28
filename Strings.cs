@@ -222,6 +222,16 @@ internal static partial class Strings
             "{0} tables became Markdown tables.",
         ["右寄せ・中央寄せの {0} か所は、HTML（align）で書きました。"] =
             "{0} right-aligned or centered paragraphs were written as HTML (align).",
+        ["図のまわりの文字 {0} か所を、図の画像に入れました（見た目優先）。"] =
+            "{0} blocks of text around figures went into the figures' pictures (looks like the page).",
+        ["図のまわりの文字 {0} か所を、文字として残しました（編集優先）。"] =
+            "{0} blocks of text around figures were kept as text (can be edited).",
+        ["図のまわりの文字を文字として残す（編集優先）"] =
+            "Keep text around figures as text (can be edited)",
+        ["図のまわりの文字を図に入れる（見た目優先・既定）"] =
+            "Put text around figures in their pictures (looks like the page, default)",
+        ["PDF の詳細設定ファイルを開けませんでした。"] =
+            "The PDF import settings file could not be opened.",
         ["{0} ページ目は、文字が図形として描かれていて取り出せないため、ページ全体を画像（PNG）にしました。"] =
             "Page {0} draws its text as shapes, so no text could be taken from it, and the whole page became a picture (PNG).",
         ["{0} ページ目は、文字を読み取れない書体（文字化けする書体）で書かれているため、ページ全体を画像（PNG）にしました。"] =

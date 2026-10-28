@@ -42,6 +42,17 @@ public partial class MainWindow : Window
     private readonly bool _initialPaste;
     // "Closer to GitHub" (Settings > Markdown) leaves out mdEditor's own syntax.
     private bool _nearGitHub = LoadSetting("NearGitHub") == "on";
+    // PDF import (Settings): text around a figure in its picture ("picture") or kept as text
+    // ("text"), alignment as HTML, and pages that cannot be read as pictures of themselves.
+    private string _pdfFigureText = LoadSetting("PdfFigureText") == "text" ? "text" : "picture";
+    private bool _pdfAlign = LoadSetting("PdfAlign") != "off";
+    private bool _pdfPagePictures = LoadSetting("PdfPagePictures") != "off";
+    // The last PDF opened, its Markdown, and which way its figures' text went, for reopening
+    // it the other way from the notice (_pdfFigureTextOnce, for that one opening).
+    private string? _lastPdf;
+    private string? _lastPdfMarkdown;
+    private bool _lastPdfInPicture;
+    private bool? _pdfFigureTextOnce;
     private MarkdownPipeline _markdownPipeline = MarkdownPipelines.Build(LoadSetting("NearGitHub") == "on");
     private readonly HtmlSanitizer _htmlSanitizer = new();
     private readonly DispatcherTimer _previewTimer = new()
@@ -430,6 +441,7 @@ public partial class MainWindow : Window
                 SendZoom();
                 SendToPage(new { type = "autoBackup", enabled = _autoBackup });
                 SendToPage(new { type = "nearGitHub", enabled = _nearGitHub });
+                SendPdfOptions();
                 SendToPage(new { type = "appInfo", version = AppVersion });
                 SendToPage(new { type = "externalImages", value = _externalImages });
                 if (await OfferRecoveryAsync())
@@ -467,6 +479,24 @@ public partial class MainWindow : Window
                 _theme = NormalizeTheme(root.GetProperty("theme").GetString());
                 SaveSetting("Theme", _theme);
                 ApplyTheme();
+                break;
+            case "setPdfFigureText":
+                _pdfFigureText = root.GetProperty("value").GetString() == "text" ? "text" : "picture";
+                SaveSetting("PdfFigureText", _pdfFigureText);
+                break;
+            case "setPdfAlign":
+                _pdfAlign = root.GetProperty("enabled").GetBoolean();
+                SaveSetting("PdfAlign", _pdfAlign ? "on" : "off");
+                break;
+            case "setPdfPagePictures":
+                _pdfPagePictures = root.GetProperty("enabled").GetBoolean();
+                SaveSetting("PdfPagePictures", _pdfPagePictures ? "on" : "off");
+                break;
+            case "openPdfOptionsFile":
+                OpenPdfOptionsFile();
+                break;
+            case "reopenPdf":
+                await ReopenPdfAsync();
                 break;
             case "setNearGitHub":
                 _nearGitHub = root.GetProperty("enabled").GetBoolean();
@@ -1616,7 +1646,12 @@ public partial class MainWindow : Window
     {
         var name = Path.GetFileNameWithoutExtension(path);
         var assets = NewImportFolder();
-        var result = PdfImport.ToMarkdown(path, assets, name + FilesSuffix);
+        var options = PdfImportOptions.Load();
+        options.FigureTextInPicture = _pdfFigureTextOnce ?? _pdfFigureText == "picture";
+        options.Align = _pdfAlign;
+        options.PagePictures = _pdfPagePictures;
+        _pdfFigureTextOnce = null;
+        var result = PdfImport.ToMarkdown(path, assets, name + FilesSuffix, options);
         var notices = new List<string>
         {
             Strings.Tr("PDF を Markdown に変換して開きました。できる範囲で変換したもので、元の PDF を Markdown で忠実に再現したものではありません。")
@@ -1672,9 +1707,52 @@ public partial class MainWindow : Window
             }
         }
 
-        ApplyImported(result.Markdown, assets, name + ".md", false, string.Join(Strings.SentenceJoin, notices));
+        // Text around figures: the notice says which way it went, and its button reopens the
+        // PDF the other way.
+        string? reopen = null;
+        if (result.FigureText > 0)
+        {
+            notices.Add(string.Format(Strings.Tr(result.InPicture ? "図のまわりの文字 {0} か所を、図の画像に入れました（見た目優先）。" : "図のまわりの文字 {0} か所を、文字として残しました（編集優先）。"), result.FigureText));
+            reopen = Strings.Tr(result.InPicture ? "図のまわりの文字を文字として残す（編集優先）" : "図のまわりの文字を図に入れる（見た目優先・既定）");
+        }
+
+        ApplyImported(result.Markdown, assets, name + ".md", false, string.Join(Strings.SentenceJoin, notices), reopen);
+        _lastPdf = path;
+        _lastPdfMarkdown = result.Markdown;
+        _lastPdfInPicture = result.InPicture;
         _suggestFolder = Path.GetDirectoryName(path);
         _importAssets = result.Images > 0 ? Path.Combine(assets, name + FilesSuffix) : null;
+    }
+
+    private void SendPdfOptions() =>
+        SendToPage(new { type = "pdfOptions", figureText = _pdfFigureText, align = _pdfAlign, pagePictures = _pdfPagePictures, file = PdfImportOptions.FilePath });
+
+    // The advanced numbers of PDF import, in pdf-import.json: written with the defaults when
+    // there is none, and opened in Notepad (mdEditor would open JSON as a document).
+    private void OpenPdfOptionsFile()
+    {
+        try
+        {
+            PdfImportOptions.WriteDefaults();
+            Process.Start(new ProcessStartInfo("notepad.exe", $"\"{PdfImportOptions.FilePath}\"") { UseShellExecute = false });
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or System.ComponentModel.Win32Exception)
+        {
+            MessageBox.Show($"{Strings.Tr("PDF の詳細設定ファイルを開けませんでした。")}\n\n{ex.Message}", "mdEditor", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+    }
+
+    // The notice's button: the PDF just opened is opened again with its figures' text the
+    // other way (this once; Settings keep the default). Changes made since are asked about.
+    private async Task ReopenPdfAsync()
+    {
+        if (_lastPdf is not { } path || !File.Exists(path) || _text != _lastPdfMarkdown && !await ConfirmSaveChangesAsync())
+        {
+            return;
+        }
+
+        _pdfFigureTextOnce = !_lastPdfInPicture;
+        await LoadDocumentAsync(path);
     }
 
     private static string NewImportFolder() =>
@@ -2408,8 +2486,9 @@ public partial class MainWindow : Window
         _suggestFolder = null;
     }
 
-    private void ApplyImported(string markdown, string? folder, string name, bool allowExternal, string? notice)
+    private void ApplyImported(string markdown, string? folder, string name, bool allowExternal, string? notice, string? reopen = null)
     {
+        _lastPdf = null;
         RememberLeftDocument(null);
         DeleteRecoveryCopy();
         _filePath = null;
@@ -2430,7 +2509,7 @@ public partial class MainWindow : Window
         SendEncodingNotice();
         if (notice is not null)
         {
-            SendToPage(new { type = "notice", text = notice });
+            SendToPage(new { type = "notice", text = notice, reopen });
         }
 
         SendPreview();

@@ -36,6 +36,15 @@
       toolbar: "文書操作",
       sample: "サンプル", sampleHeading: "サンプルを開く",
       sampleIntro: "図と数式を含む文書を、編集欄に入れて試せます。短い例のほかに、使えるすべての図・チャート・数式を確かめる長い文書（日本語・英語・中国語）もあります。選んだときだけ入ります。",
+      settingsPdf: "PDF の取り込み",
+      settingsPdfFigureText: "図のまわりの文字",
+      pdfFigureTextPicture: "図に入れる（見た目優先・初期設定）",
+      pdfFigureTextText: "文字として残す（編集優先）",
+      settingsPdfFigureTextNote: "図の範囲にかかる文字（イラストの横の説明など）を、図の画像に入れて見た目を保つか、文字として残して編集できるようにするかを選びます。PDF を開いたあと、お知らせ欄のボタンで、もう一方の方法で開き直すこともできます。",
+      settingsPdfAlign: "右寄せ・中央寄せの文を HTML（align）で書いて、位置を残す",
+      settingsPdfPagePictures: "文字を読み取れないページ（縦書き・文字化けする書体・図形で描いた文字）を、ページ全体の画像にする",
+      settingsPdfFile: "詳細な数値を開く",
+      settingsPdfFileNote: "取り込みの細かい数値（図とみなす線の間隔、ラベルの文字数、右寄せとみなす位置など）は、詳細設定ファイルで変えられます。メモ帳で開きます。変えた数値は、次に PDF を開いたときから使います。ファイル:",
       settingsExport: "書き出し",
       settingsMarkdown: "Markdown の書き方",
       settingsNearGitHub: "GitHub での表示に近づける（mdEditor 独自の書き方を使わない）",
@@ -196,6 +205,15 @@
       toolbar: "文档操作",
       sample: "示例", sampleHeading: "打开示例",
       sampleIntro: "可以把包含图表和公式的文档放入编辑区试用。除了简短的示例，还有用来检查所有图表、图形和公式的长文档（日语、英语、中文）。只有选择时才会放入。",
+      settingsPdf: "PDF 导入",
+      settingsPdfFigureText: "图表周围的文字",
+      pdfFigureTextPicture: "放入图片（外观优先・默认）",
+      pdfFigureTextText: "保留为文字（编辑优先）",
+      settingsPdfFigureTextNote: "选择把延伸到图表范围内的文字（插图旁边的说明等）放入图表的图片以保持外观，还是保留为文字以便编辑。打开 PDF 后，也可以用通知栏中的按钮以另一种方式重新打开。",
+      settingsPdfAlign: "用 HTML（align）写出靠右和居中的文字，保留位置",
+      settingsPdfPagePictures: "将无法读取文字的页面（竖排、乱码字体、以图形绘制的文字）作为整页图片",
+      settingsPdfFile: "打开详细数值",
+      settingsPdfFileNote: "导入时的细节数值（视为图表的线条间距、标签的字数、视为靠右的位置等）可以在详细设置文件中更改。用记事本打开。更改的数值从下次打开 PDF 时开始使用。文件：",
       settingsExport: "导出",
       settingsMarkdown: "Markdown 写法",
       settingsNearGitHub: "显示效果接近 GitHub（不使用 mdEditor 独有的写法）",
@@ -356,6 +374,15 @@
       toolbar: "Document actions",
       sample: "Samples", sampleHeading: "Open a sample",
       sampleIntro: "Try a document with diagrams and math. Besides the short examples, there are long tests of every supported diagram, chart, and formula (Japanese, English, and Chinese). Nothing is inserted until you choose one.",
+      settingsPdf: "Opening PDFs",
+      settingsPdfFigureText: "Text around figures",
+      pdfFigureTextPicture: "Put in the picture (looks like the page, default)",
+      pdfFigureTextText: "Keep as text (can be edited)",
+      settingsPdfFigureTextNote: "Choose whether text that reaches into a figure (a description beside an illustration, say) goes into the figure's picture, keeping the look, or stays text you can edit. After a PDF opens, the button in the notice bar opens it again the other way.",
+      settingsPdfAlign: "Keep right-aligned and centered text in place, written as HTML (align)",
+      settingsPdfPagePictures: "Make a page whose text cannot be read (vertical writing, garbled fonts, text drawn as shapes) one picture of the whole page",
+      settingsPdfFile: "Open detailed values",
+      settingsPdfFileNote: "The finer values of PDF import (how close lines must be to make a figure, how long a label may be, where text counts as right-aligned, and so on) are in an advanced settings file, opened in Notepad. Changed values are used from the next PDF you open. File:",
       settingsExport: "Export",
       settingsMarkdown: "Markdown syntax",
       settingsNearGitHub: "Show documents closer to GitHub (no mdEditor-only syntax)",
@@ -786,12 +813,16 @@
     noticeText.textContent = [main, askMaps ? t("noticeMaps")(mapsWaiting) : ""].filter(Boolean).join(language === "en" ? " " : "");
     document.getElementById("notice-encoding").hidden = !noticeState || noticeState.kind === "message" || noticeState.kind === "external";
     document.getElementById("notice-action").hidden = noticeState?.kind !== "external";
+    const reopen = document.getElementById("notice-reopen");
+    reopen.hidden = !(noticeState?.kind === "message" && noticeState.reopen);
+    reopen.textContent = noticeState?.reopen ?? "";
     notice.classList.toggle("notice-strong", noticeState?.kind === "lossy");
     notice.hidden = false;
   };
 
-  const showNoticeMessage = (text) => {
-    noticeState = { kind: "message", text };
+  // reopen: the label of a button that opens the PDF again the other way (see the host).
+  const showNoticeMessage = (text, reopen) => {
+    noticeState = { kind: "message", text, reopen };
     updateNotice();
   };
 
@@ -1618,6 +1649,19 @@
   }
   backupCheckbox.addEventListener("change", () => post({ type: "setAutoBackup", enabled: backupCheckbox.checked }));
   // Closer to GitHub changes how the host reads Markdown, so the host keeps it.
+  // PDF import: the host keeps these and uses them when a PDF is opened.
+  const pdfFigureTextSelect = document.getElementById("setting-pdf-figure-text");
+  const pdfAlignCheckbox = document.getElementById("setting-pdf-align");
+  const pdfPagePicturesCheckbox = document.getElementById("setting-pdf-page-pictures");
+  pdfFigureTextSelect.addEventListener("change", () => post({ type: "setPdfFigureText", value: pdfFigureTextSelect.value }));
+  pdfAlignCheckbox.addEventListener("change", () => post({ type: "setPdfAlign", enabled: pdfAlignCheckbox.checked }));
+  pdfPagePicturesCheckbox.addEventListener("change", () => post({ type: "setPdfPagePictures", enabled: pdfPagePicturesCheckbox.checked }));
+  document.getElementById("setting-pdf-file").addEventListener("click", () => post({ type: "openPdfOptionsFile" }));
+  document.getElementById("notice-reopen").addEventListener("click", () => {
+    noticeState = null;
+    updateNotice();
+    post({ type: "reopenPdf" });
+  });
   const nearGitHubCheckbox = document.getElementById("setting-near-github");
   nearGitHubCheckbox.addEventListener("change", () => post({ type: "setNearGitHub", enabled: nearGitHubCheckbox.checked }));
   document.getElementById("zoom-in").addEventListener("click", () => post({ type: "zoom", action: "in" }));
@@ -3364,7 +3408,7 @@
       }
       updateNotice();
     } else if (message.type === "notice") {
-      showNoticeMessage(message.text);
+      showNoticeMessage(message.text, message.reopen);
     } else if (message.type === "appInfo") {
       document.getElementById("app-version").textContent = message.version;
     } else if (message.type === "scrollToAnchor") {
@@ -3374,6 +3418,11 @@
       zoomValue.textContent = `${Math.round(message.factor * 100)}%`;
     } else if (message.type === "autoBackup") {
       backupCheckbox.checked = Boolean(message.enabled);
+    } else if (message.type === "pdfOptions") {
+      pdfFigureTextSelect.value = message.figureText;
+      pdfAlignCheckbox.checked = Boolean(message.align);
+      pdfPagePicturesCheckbox.checked = Boolean(message.pagePictures);
+      document.getElementById("setting-pdf-file-path").textContent = message.file;
     } else if (message.type === "nearGitHub") {
       nearGitHubCheckbox.checked = Boolean(message.enabled);
     } else if (message.type === "encodingNotice") {

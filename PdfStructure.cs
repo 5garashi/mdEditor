@@ -102,15 +102,15 @@ internal static partial class PdfImport
         // Boxes and table lines are part of a figure but do not make one. Marks count too
         // (a chart's points and legend look like bullets); a list's column of bullets is
         // too narrow to be a figure.
-        var parts = shapes.Where(shape => !(shape.BoxLike && shape.Box.Width > page.Width * 0.45))
+        var parts = shapes.Where(shape => !(shape.BoxLike && shape.Box.Width > page.Width * Tune.FrameWidthShare))
             .Select(shape => (shape.Box, Counts: !shape.BoxLike))
             .Concat(segments.Select(segment => (Box: SegmentBox(segment), Counts: !used.Contains(segment))))
             .ToList();
         var figures = new List<PdfRectangle>();
-        foreach (var cluster in Clusters(parts.Select(part => part.Box).ToList(), 6))
+        foreach (var cluster in Clusters(parts.Select(part => part.Box).ToList(), Tune.FigureGap))
         {
             var box = Union(cluster.Select(index => parts[index].Box));
-            if (cluster.Count(index => parts[index].Counts) < 3 || box.Width < 30 || box.Height < 30)
+            if (cluster.Count(index => parts[index].Counts) < Tune.FigureMinParts || box.Width < Tune.FigureMinSize || box.Height < Tune.FigureMinSize)
             {
                 continue;
             }
@@ -140,7 +140,7 @@ internal static partial class PdfImport
 
         tables.RemoveAll(table => figures.Any(figure => Overlaps(figure, table.Box)));
         marks.RemoveAll(mark => figures.Any(figure => Contains(figure, mark.Box)));
-        var frames = shapes.Where(shape => shape.BoxLike && shape.Box.Width > page.Width * 0.45 && !figures.Any(figure => Overlaps(figure, shape.Box)))
+        var frames = shapes.Where(shape => shape.BoxLike && shape.Box.Width > page.Width * Tune.FrameWidthShare && !figures.Any(figure => Overlaps(figure, shape.Box)))
             .Select(shape => shape.Box).ToList();
         var codeFrames = Enumerable.Range(0, frames.Count).Where(i =>
         {

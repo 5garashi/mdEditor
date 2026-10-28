@@ -90,13 +90,13 @@ internal static partial class PdfImport
     private static bool UnreadablePage(PdfDocument document, Page page)
     {
         var text = page.Letters.Where(letter => !IsBlank(letter)).ToList();
-        if (text.Count < 20)
+        if (text.Count < Tune.PageMinLetters)
         {
             return false;
         }
 
         var fonts = UnreadableFonts(document, page);
-        return fonts.Count > 0 && text.Count(letter => letter.FontName is { } name && fonts.Contains(name)) * 10 >= text.Count * 3;
+        return fonts.Count > 0 && text.Count(letter => letter.FontName is { } name && fonts.Contains(name)) >= text.Count * Tune.UnreadableShare;
     }
 
     // Whether a page draws its text as shapes (a printer driver can turn letters into
@@ -104,7 +104,7 @@ internal static partial class PdfImport
     // shapes would come apart as figures, so it is drawn as a picture too.
     private static bool OutlinePage(Page page) =>
         !page.Letters.Any(letter => !IsBlank(letter) && !letter.Value.All(char.IsControl))
-        && page.Paths.Where(path => !path.IsClipping).Sum(path => path.Count()) >= 200;
+        && page.Paths.Where(path => !path.IsClipping).Sum(path => path.Count()) >= Tune.OutlineMinShapes;
 
     // A page drawn as a PNG picture by PDFium, twice as wide as it is shown (sharp on a
     // high-resolution screen), on white; null when PDFium cannot draw it.
@@ -129,9 +129,9 @@ internal static partial class PdfImport
                         return null;
                     }
 
-                    var scale = width * 4 / 3 * 2 / Math.Max(Pdfium.FPDF_GetPageWidthF(page), 1);
+                    var scale = width * 4 / 3 * Tune.RenderScale / Math.Max(Pdfium.FPDF_GetPageWidthF(page), 1);
                     var (pixelWidth, pixelHeight) = ((int)Math.Round(Pdfium.FPDF_GetPageWidthF(page) * scale), (int)Math.Round(Pdfium.FPDF_GetPageHeightF(page) * scale));
-                    if (pixelWidth <= 0 || pixelHeight <= 0 || (long)pixelWidth * pixelHeight > 40_000_000)
+                    if (pixelWidth <= 0 || pixelHeight <= 0 || (long)pixelWidth * pixelHeight > Tune.RenderMaxPixels)
                     {
                         return null;
                     }

@@ -263,7 +263,7 @@ internal static partial class PdfImport
 
         var text = page.Letters.Count(letter => !IsBlank(letter) && !furniture.Contains(letter));
         var tagged = tags.Keys.Count(letter => !IsBlank(letter));
-        return text > 0 && tagged >= text * 0.9 ? new PageTags(tags, furniture, structure.ListStarts) : null;
+        return text > 0 && tagged >= text * Tune.TagCoverage ? new PageTags(tags, furniture, structure.ListStarts) : null;
     }
 
     // The tag most of the letters have.

@@ -43,9 +43,10 @@ internal static partial class PdfImport
     // whose letters could not be read, and OutlinePages, those whose text is drawn as shapes,
     // drawn by PDFium. What else was done, for the notice: figures and formulas drawn again
     // as pictures, tables made, paragraphs placed right or in the middle with HTML, and
-    // whether the PDF's tags were read.
+    // whether the PDF's tags were read; FigureText, how many blocks of text reached into a
+    // figure, put in its picture (InPicture) or kept as text.
     public sealed record Result(string Markdown, int Images, int Pages, int ReadPages, bool HasText, int Headings, IReadOnlyList<int> PicturePages, IReadOnlyList<int> ImagePages,
-        IReadOnlyList<int> OutlinePages, int Figures = 0, int Formulas = 0, int Tables = 0, int Aligned = 0, bool Tagged = false);
+        IReadOnlyList<int> OutlinePages, int Figures = 0, int Formulas = 0, int Tables = 0, int Aligned = 0, bool Tagged = false, int FigureText = 0, bool InPicture = true);
 
     private sealed record Line(string Text, double Size, bool Bold, double Top, double Right, bool MathFont, string Family, double Left = 0, bool Rejoined = false);
 
@@ -60,8 +61,12 @@ internal static partial class PdfImport
     // Code is one item per line; a Table item holds its Markdown.
     private enum ItemKind { Paragraph, Bullet, Numbered, Image, Code, Table }
 
-    public static Result ToMarkdown(string path, string assets, string imagesName)
+    // The options of the import running (PDF import runs on one thread at a time).
+    private static PdfImportOptions Tune = new();
+
+    public static Result ToMarkdown(string path, string assets, string imagesName, PdfImportOptions? options = null)
     {
+        Tune = options ?? new PdfImportOptions();
         using var document = PdfDocument.Open(path);
         var structure = ReadStructure(document);
         var items = new List<Item>();
@@ -69,7 +74,7 @@ internal static partial class PdfImport
         var imagePages = new List<int>();
         var outlinePages = new List<int>();
         var images = 0;
-        int figures = 0, formulas = 0, tables = 0, aligned = 0;
+        int figures = 0, formulas = 0, tables = 0, aligned = 0, figureText = 0;
         var tagged = false;
         // Formulas in a line of text: each stands in the text as one private-use character,
         // replaced with its picture at the end.
@@ -89,14 +94,14 @@ internal static partial class PdfImport
         for (var number = 1; number <= readPages; number++)
         {
             var page = document.GetPage(number);
-            var unreadable = UnreadablePage(document, page);
-            if ((unreadable || OutlinePage(page)) && RenderPage(path, number, page.Width) is { } png)
+            var unreadable = Tune.PagePictures && UnreadablePage(document, page);
+            if ((unreadable || Tune.PagePictures && OutlinePage(page)) && RenderPage(path, number, page.Width) is { } png)
             {
                 images++;
                 var file = $"image{images}.png";
                 Directory.CreateDirectory(Path.Combine(assets, imagesName));
                 File.WriteAllBytes(Path.Combine(assets, imagesName, file), png);
-                items.Add(new Item(file, 0, false, ItemKind.Image, page.Height, number, Left: 0, Right: page.Width, Bottom: 0, Natural: page.Width * 4 / 3 * 2));
+                items.Add(new Item(file, 0, false, ItemKind.Image, page.Height, number, Left: 0, Right: page.Width, Bottom: 0, Natural: page.Width * 4 / 3 * Tune.RenderScale));
                 (unreadable ? imagePages : outlinePages).Add(number);
                 continue;
             }
@@ -117,7 +122,7 @@ internal static partial class PdfImport
             var letters = page.Letters.Where(letter => !letter.Value.All(char.IsControl) && !shapes.Tables.Any(table => Contains(table.Box, letter))
                 && (crossing.Contains(letter) || !shapes.Figures.Any(figure => Contains(figure, letter)))
                 && !shapes.Formulas.Any(formula => Contains(formula.Box, letter)) && tags?.IsFurniture(letter) != true).ToList();
-            if (PicturePage(letters))
+            if (Tune.PagePictures && PicturePage(letters))
             {
                 var whole = new PdfRectangle(0, 0, page.Width, page.Height);
                 items.Add(new Item(SaveSvg(FigureSvg(page, whole, states.Value)), 0, false, ItemKind.Image, page.Height, number,
@@ -158,6 +163,27 @@ internal static partial class PdfImport
                 blocks.Remove(label);
             }
 
+            // Text that reaches into a figure (a paragraph beside an illustration whose area
+            // takes in part of it) goes into the figure's picture whole, as the page shows it,
+            // when enough of it is inside (FigureTextShare), or stays text when the options say
+            // so; it is counted either way. Text that only touches a figure stays text.
+            foreach (var block in blocks.ToList())
+            {
+                var reaching = block.TextLines.SelectMany(line => line.Words).SelectMany(word => word.Letters).ToList();
+                var at = shapes.Figures.FindIndex(figure => reaching.Count(letter => Contains(figure, letter)) >= Math.Max(reaching.Count * Tune.FigureTextShare, 1));
+                if (at < 0)
+                {
+                    continue;
+                }
+
+                figureText++;
+                if (Tune.FigureTextInPicture)
+                {
+                    shapes.Figures[at] = Union([shapes.Figures[at], block.BoundingBox]);
+                    blocks.Remove(block);
+                }
+            }
+
             // What stays text is not drawn again in a figure that has grown over it.
             var running = new HashSet<Letter>(blocks.SelectMany(block => block.TextLines).SelectMany(line => line.Words).SelectMany(word => word.Letters),
                 ReferenceEqualityComparer.Instance);
@@ -167,7 +193,7 @@ internal static partial class PdfImport
             foreach (var block in blocks)
             {
                 pageItems.AddRange(Paragraphs(block, number, textWidth, rejoined, shapes, tags)
-                    .Select(item => item.Kind == ItemKind.Paragraph && !item.Toc && Aligned(item, block, blocks, flowing) is { Length: > 0 } align ? item with { Align = align } : item));
+                    .Select(item => Tune.Align && item.Kind == ItemKind.Paragraph && !item.Toc && Aligned(item, block, blocks, flowing) is { Length: > 0 } align ? item with { Align = align } : item));
                 columnLeft = Math.Min(columnLeft, block.BoundingBox.Left);
                 columnRight = Math.Max(columnRight, block.BoundingBox.Right);
             }
@@ -201,7 +227,7 @@ internal static partial class PdfImport
             // with nothing beyond it (LaTeX sets it an inch and more from the edge); numbers
             // elsewhere (a table's figures) stay. It goes first: one at the foot of the page
             // can come first in reading order, and the figures would be placed before it.
-            var margin = page.Height * 0.08;
+            var margin = page.Height * Tune.PageNumberMargin;
             var highest = pageItems.Count == 0 ? 0 : pageItems.Max(item => item.Top);
             var lowest = pageItems.Count == 0 ? 0 : pageItems.Min(item => item.Top);
             // A running title can share the line at the top.
@@ -464,7 +490,7 @@ internal static partial class PdfImport
         var headings = levels.Count(level => level > 0);
         return new Result(markdown.Length > 0 ? markdown.Append('\n').ToString() : string.Empty,
             images, document.NumberOfPages, readPages, text.Count > 0 || imagePages.Count > 0, headings, picturePages, imagePages, outlinePages,
-            figures, formulas, tables, aligned, tagged);
+            figures, formulas, tables, aligned, tagged, figureText, Tune.FigureTextInPicture);
     }
 
     // Whether a page's running text (figures, tables, and formulas apart) cannot be read in
@@ -475,7 +501,7 @@ internal static partial class PdfImport
     private static bool PicturePage(IReadOnlyList<Letter> letters)
     {
         var text = letters.Where(letter => !IsBlank(letter)).ToList();
-        if (text.Count < 20)
+        if (text.Count < Tune.PageMinLetters)
         {
             return false;
         }
@@ -491,7 +517,7 @@ internal static partial class PdfImport
             }
         }
 
-        if (down * 2 >= text.Count - 1 || text.Count(letter => letter.TextOrientation != TextOrientation.Horizontal) * 10 >= text.Count * 3)
+        if (down >= (text.Count - 1) * Tune.VerticalShare || text.Count(letter => letter.TextOrientation != TextOrientation.Horizontal) >= text.Count * Tune.TurnedShare)
         {
             return true;
         }
@@ -517,7 +543,7 @@ internal static partial class PdfImport
             }
         }
 
-        return over * 100 >= text.Count * 15;
+        return over >= text.Count * Tune.OverlapShare;
     }
 
     // A picture as Markdown, or as HTML when it is shown at another size than its own (the
@@ -872,15 +898,15 @@ internal static partial class PdfImport
             }
 
             var longest = Longest(block);
-            if (longest <= 16 || callout is not { } core || textSize <= 0)
+            if (longest <= Tune.LabelMaxLetters || callout is not { } core || textSize <= 0)
             {
-                return longest <= 16;
+                return longest <= Tune.LabelMaxLetters;
             }
 
             var box = block.BoundingBox;
-            var reach = block.TextLines.Max(line => line.BoundingBox.Height) * 3;
+            var reach = block.TextLines.Max(line => line.BoundingBox.Height) * Tune.CalloutReachLines;
             return Math.Max(core.Left - box.Right, box.Left - core.Right) <= reach && Math.Max(core.Bottom - box.Top, box.Bottom - core.Top) <= reach
-                && (longest <= 8 && BlockSize(block) <= textSize * 1.25 || longest <= 32 && BlockSize(block) <= textSize + 0.1);
+                && (longest <= 8 && BlockSize(block) <= textSize * 1.25 || longest <= Tune.CalloutMaxLetters && BlockSize(block) <= textSize + 0.1);
         }
 
         // A grown box takes along the labels it reaches (axis numbers stand side by side, each
@@ -1040,12 +1066,12 @@ internal static partial class PdfImport
         }
 
         var height = Math.Max(item.Size, 1);
-        if (item.Left > left + width * 0.25 && right - item.Right <= Math.Max(height * 2, width * 0.06))
+        if (item.Left > left + width * Tune.AlignRightIndent && right - item.Right <= Math.Max(height * 2, width * Tune.AlignRightTolerance))
         {
             return "right";
         }
 
-        return Math.Abs((item.Left + item.Right) / 2 - (left + right) / 2) <= Math.Max(height, width * 0.03) && item.Right < right - width * 0.1
+        return Math.Abs((item.Left + item.Right) / 2 - (left + right) / 2) <= Math.Max(height, width * Tune.AlignCenterTolerance) && item.Right < right - width * 0.1
             ? "center" : string.Empty;
     }
 
@@ -1071,9 +1097,9 @@ internal static partial class PdfImport
         {
             var height = Math.Max(part.Max(word => word.BoundingBox.Height), 1);
             var gap = part.Min(word => word.BoundingBox.Left) - line.Max(word => word.BoundingBox.Right);
-            var value = part.Max(word => word.BoundingBox.Right) >= textRight - (textRight - textLeft) * 0.1 && Letters(part) <= 16 && Letters(line) <= 24
-                && gap < (textRight - textLeft) * 0.4;
-            return Math.Abs(line[0].BoundingBox.Bottom - part[0].BoundingBox.Bottom) < height * 0.5 && gap > 0 && (gap < height * 2.5 || value)
+            var value = part.Max(word => word.BoundingBox.Right) >= textRight - (textRight - textLeft) * Tune.ValueEdgeShare
+                && Letters(part) <= Tune.ValueMaxLetters && Letters(line) <= Tune.ValueLabelMaxLetters && gap < (textRight - textLeft) * Tune.ValueGapShare;
+            return Math.Abs(line[0].BoundingBox.Bottom - part[0].BoundingBox.Bottom) < height * 0.5 && gap > 0 && (gap < height * Tune.JoinGapLines || value)
                 && !LoneBulletPattern().IsMatch(ReadLine(line).Text);
         }
 
