@@ -41,9 +41,11 @@ internal static partial class PdfImport
 
     // PicturePages: the pages that came back as a picture of the whole page; ImagePages, those
     // whose letters could not be read, and OutlinePages, those whose text is drawn as shapes,
-    // drawn by PDFium.
+    // drawn by PDFium. What else was done, for the notice: figures and formulas drawn again
+    // as pictures, tables made, paragraphs placed right or in the middle with HTML, and
+    // whether the PDF's tags were read.
     public sealed record Result(string Markdown, int Images, int Pages, int ReadPages, bool HasText, int Headings, IReadOnlyList<int> PicturePages, IReadOnlyList<int> ImagePages,
-        IReadOnlyList<int> OutlinePages);
+        IReadOnlyList<int> OutlinePages, int Figures = 0, int Formulas = 0, int Tables = 0, int Aligned = 0, bool Tagged = false);
 
     private sealed record Line(string Text, double Size, bool Bold, double Top, double Right, bool MathFont, string Family, double Left = 0, bool Rejoined = false);
 
@@ -51,8 +53,9 @@ internal static partial class PdfImport
     // own size in CSS pixels (Natural), its description (Alt), and the side text flows
     // around it on (Float); ClearAfter ends the flow after a paragraph. Heading is the level
     // the tags give (0 for text the tags say is no heading, -1 on a page without tags).
+    // Align is "right" or "center" for text set so on the page (see Aligned).
     private sealed record Item(string Text, double Size, bool Bold, ItemKind Kind, double Top, int Page, bool Math = false, string Family = "", bool Toc = false, double Left = 0, double Advance = 0, int Frame = -1,
-        double Right = 0, double Bottom = 0, double Natural = 0, string Alt = "", string Float = "", bool ClearAfter = false, int Heading = -1);
+        double Right = 0, double Bottom = 0, double Natural = 0, string Alt = "", string Float = "", bool ClearAfter = false, int Heading = -1, string Align = "");
 
     // Code is one item per line; a Table item holds its Markdown.
     private enum ItemKind { Paragraph, Bullet, Numbered, Image, Code, Table }
@@ -66,6 +69,8 @@ internal static partial class PdfImport
         var imagePages = new List<int>();
         var outlinePages = new List<int>();
         var images = 0;
+        int figures = 0, formulas = 0, tables = 0, aligned = 0;
+        var tagged = false;
         // Formulas in a line of text: each stands in the text as one private-use character,
         // replaced with its picture at the end.
         var inlines = new List<string>();
@@ -102,6 +107,7 @@ internal static partial class PdfImport
             // How each shape was drawn (see-through, scaling), read only for a page with figures or formulas.
             var states = new Lazy<IReadOnlyList<PaintState>?>(() => PathStates(document, page));
             var tags = structure is null ? null : ReadPageTags(structure, page);
+            tagged |= tags is not null;
             // The text of tables, figures, and formulas is read with them, not in the running text.
             // Some PDFs map glyphs to control characters (NUL); they show nothing. What the tags
             // mark as not the text (running titles, page numbers) is left out.
@@ -157,9 +163,11 @@ internal static partial class PdfImport
                 ReferenceEqualityComparer.Instance);
 
             var textWidth = blocks.Count == 0 ? 0 : blocks.Max(block => block.BoundingBox.Width);
+            var flowing = shapes.Figures.Concat(page.GetImages().Select(image => image.BoundingBox)).ToList();
             foreach (var block in blocks)
             {
-                pageItems.AddRange(Paragraphs(block, number, textWidth, rejoined, shapes, tags));
+                pageItems.AddRange(Paragraphs(block, number, textWidth, rejoined, shapes, tags)
+                    .Select(item => item.Kind == ItemKind.Paragraph && !item.Toc && Aligned(item, block, blocks, flowing) is { Length: > 0 } align ? item with { Align = align } : item));
                 columnLeft = Math.Min(columnLeft, block.BoundingBox.Left);
                 columnRight = Math.Max(columnRight, block.BoundingBox.Right);
             }
@@ -220,6 +228,9 @@ internal static partial class PdfImport
                 Place(new Item(table, 0, false, ItemKind.Table, box.Top, number));
             }
 
+            figures += shapes.Figures.Count;
+            formulas += shapes.Formulas.Count;
+            tables += shapes.Tables.Count + taggedTables.Count;
             // A figure, and a formula on a line of its own, is drawn again as an SVG picture
             // (PdfFigure.cs) at the size it has on the page.
             // Figures with no text between them keep the page's order: top to bottom, then
@@ -425,6 +436,13 @@ internal static partial class PdfImport
                 case ItemKind.Table:
                     markdown.Append(item.Text);
                     break;
+                case ItemKind.Paragraph when item.Align.Length > 0 && !item.Math && !item.Text.Any(c => c is '<' or '>' or '&' or '*' or '_' or '`' or '[' or (>= (char)0xE000 and <= (char)0xF8FF)):
+                    // Text set right or in the middle keeps its place as HTML (Markdown has no
+                    // way to say it); a heading keeps its level.
+                    var element = level > 0 ? $"h{Math.Min(level, 6)}" : "p";
+                    aligned++;
+                    markdown.Append($"<{element} align=\"{item.Align}\">{item.Text}</{element}>");
+                    break;
                 default:
                     markdown.Append(level > 0 ? new string('#', level) + " " + item.Text : Escape(item.Text));
                     break;
@@ -445,7 +463,8 @@ internal static partial class PdfImport
 
         var headings = levels.Count(level => level > 0);
         return new Result(markdown.Length > 0 ? markdown.Append('\n').ToString() : string.Empty,
-            images, document.NumberOfPages, readPages, text.Count > 0 || imagePages.Count > 0, headings, picturePages, imagePages, outlinePages);
+            images, document.NumberOfPages, readPages, text.Count > 0 || imagePages.Count > 0, headings, picturePages, imagePages, outlinePages,
+            figures, formulas, tables, aligned, tagged);
     }
 
     // Whether a page's running text (figures, tables, and formulas apart) cannot be read in
@@ -1000,19 +1019,61 @@ internal static partial class PdfImport
         return crossing;
     }
 
+    // "right" for a paragraph set flush right, away from the left edge of the page's text (a
+    // letterhead's address, an invoice's totals, flush with its table up to 6% in), "center" for one set in the middle of it
+    // (a title), or "", judged by its first line; no other block may stand beside its block
+    // (a column of a page set in columns is neither), nor a picture or figure (text flowing
+    // around it), and no other line may start where it starts (a column's left edge).
+    private static string Aligned(Item item, TextBlock block, IReadOnlyList<TextBlock> blocks, IReadOnlyList<PdfRectangle> pictures)
+    {
+        var left = blocks.Min(other => other.BoundingBox.Left);
+        var right = blocks.Max(other => other.BoundingBox.Right);
+        var width = right - left;
+        var box = block.BoundingBox;
+        if (width < 100 || item.Left < left + width * 0.1 || item.Right <= item.Left || blocks.Any(other => !ReferenceEquals(other, block)
+                && Math.Min(other.BoundingBox.Top, box.Top) - Math.Max(other.BoundingBox.Bottom, box.Bottom) > Math.Min(other.BoundingBox.Height, box.Height) * 0.5
+                && (other.BoundingBox.Right <= box.Left || other.BoundingBox.Left >= box.Right))
+            || pictures.Any(picture => Math.Min(picture.Top, item.Top) - Math.Max(picture.Bottom, item.Top - Math.Max(item.Size, 1) * 1.2) > 0 && (picture.Right <= item.Left + 1 || picture.Left >= item.Right - 1))
+            || blocks.SelectMany(other => other.TextLines).Count(line => Math.Abs(line.BoundingBox.Left - item.Left) <= 2) > 1)
+        {
+            return string.Empty;
+        }
+
+        var height = Math.Max(item.Size, 1);
+        if (item.Left > left + width * 0.25 && right - item.Right <= Math.Max(height * 2, width * 0.06))
+        {
+            return "right";
+        }
+
+        return Math.Abs((item.Left + item.Right) / 2 - (left + right) / 2) <= Math.Max(height, width * 0.03) && item.Right < right - width * 0.1
+            ? "center" : string.Empty;
+    }
+
     // A line with a wide gap ("File Number: E46769   Type dsg: 1494V-0") can be cut into two
     // blocks, and its right part would then be read after the lines below its left part. A
     // block of one line that goes on from a line of another block, on the same baseline and
     // across a gap narrower than a column gap (2.5 line heights), goes back into that block.
     // So does a column of page numbers that goes on from contents lines ending in leader
-    // dots, one number to a line. Its words are added to rejoined.
+    // dots, one number to a line. Its words are added to rejoined. A short value set near
+    // the right edge of the text (within a tenth of its width), across a wider gap (up to two
+    // fifths of the text's width) from a short label ("小計" and "¥300,000" on an invoice), goes on its line too.
     private static List<TextBlock> JoinSplitLines(List<TextBlock> blocks, HashSet<Word> rejoined)
     {
-        static bool GoesOn(List<Word> line, List<Word> part)
+        if (blocks.Count == 0)
+        {
+            return blocks;
+        }
+
+        var textLeft = blocks.Min(block => block.BoundingBox.Left);
+        var textRight = blocks.Max(block => block.BoundingBox.Right);
+        static int Letters(List<Word> words) => words.Sum(word => word.Text.Count(c => !char.IsWhiteSpace(c)));
+        bool GoesOn(List<Word> line, List<Word> part)
         {
             var height = Math.Max(part.Max(word => word.BoundingBox.Height), 1);
             var gap = part.Min(word => word.BoundingBox.Left) - line.Max(word => word.BoundingBox.Right);
-            return Math.Abs(line[0].BoundingBox.Bottom - part[0].BoundingBox.Bottom) < height * 0.5 && gap > 0 && gap < height * 2.5
+            var value = part.Max(word => word.BoundingBox.Right) >= textRight - (textRight - textLeft) * 0.1 && Letters(part) <= 16 && Letters(line) <= 24
+                && gap < (textRight - textLeft) * 0.4;
+            return Math.Abs(line[0].BoundingBox.Bottom - part[0].BoundingBox.Bottom) < height * 0.5 && gap > 0 && (gap < height * 2.5 || value)
                 && !LoneBulletPattern().IsMatch(ReadLine(line).Text);
         }
 

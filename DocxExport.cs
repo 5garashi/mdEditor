@@ -172,6 +172,23 @@ internal sealed class DocxExport
                     }
                 }
                 break;
+            case HtmlBlock html when AlignedText.Match(html.Lines.ToString()) is { Success: true } aligned
+                                     && PlainTextExport.StripHtml(aligned.Groups["text"].Value) is { } alignedText:
+                // A paragraph or heading placed with HTML (<p align="right">, <h1 align="center">,
+                // as a PDF's letterhead or title opens) keeps its place, and a heading its level.
+                var tag = aligned.Groups["tag"].Value.ToLowerInvariant();
+                foreach (var line in alignedText.Split('\n').Where(line => line.Trim().Length > 0))
+                {
+                    var placedText = Paragraph(tag[0] == 'h' ? $"Heading{tag[1]}" : style, [Run(line.Trim())]);
+                    placedText.ParagraphProperties ??= new ParagraphProperties();
+                    placedText.ParagraphProperties.Justification = new Justification
+                    {
+                        Val = aligned.Groups["align"].Value.Equals("center", StringComparison.OrdinalIgnoreCase) ? JustificationValues.Center : JustificationValues.Right
+                    };
+                    yield return placedText;
+                }
+
+                break;
             case HtmlBlock html:
                 // HTML written in Markdown keeps its text (Word cannot show the HTML itself).
                 if (PlainTextExport.StripHtml(string.Join("\n", html.Lines.Lines.Take(html.Lines.Count).Select(line => line.Slice.ToString()))) is { } htmlText)
@@ -593,6 +610,11 @@ internal sealed class DocxExport
 
     private static readonly System.Text.RegularExpressions.Regex ImageTag =
         new(@"<img\b[^>]*>", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+    // One paragraph or heading of text placed with HTML: <p align="right">…</p>, <h1 align="center">…</h1>.
+    private static readonly System.Text.RegularExpressions.Regex AlignedText =
+        new(@"^\s*<(?<tag>p|h[1-6])\s+align\s*=\s*[""']?(?<align>center|right)[""']?\s*>(?<text>(?:(?!</?(?:p|h[1-6]|img)\b)[\s\S])*)</\k<tag>>\s*$",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 
     // An attribute of an HTML tag, decoded ("a&amp;b" is "a&b"), or null.
     private static string? HtmlAttribute(string tag, string name)

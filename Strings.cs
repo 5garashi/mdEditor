@@ -210,6 +210,18 @@ internal static partial class Strings
             "No text could be taken from this PDF. It may be made of images only (a scan, for example).",
         ["ページが多いため、最初の {0} ページだけを開きました（全部で {1} ページ）。"] =
             "The PDF is long, so only the first {0} pages were opened ({1} pages in all).",
+        ["PDF の中のタグ（見出し・段落・箇条書き・表と、その読む順）を使って読みました。"] =
+            "The PDF's tags (headings, paragraphs, lists, tables, and their order) were used to read it.",
+        ["文字の大きさと番号から、{0} か所を見出しにしました。"] =
+            "{0} lines became headings, from their text size and numbering.",
+        ["図 {0} 個を、線と文字から画像（SVG）に描き直しました。図の中の文字は画像の一部で、編集できません。"] =
+            "{0} figures were redrawn as pictures (SVG) from their lines and labels. The text in a figure is part of its picture and cannot be edited.",
+        ["数式 {0} 個を画像（SVG）にしました。数式の文字は画像の説明（alt）に入れました。"] =
+            "{0} formulas became pictures (SVG). Their text is in each picture's description (alt).",
+        ["表 {0} 個を Markdown の表にしました。"] =
+            "{0} tables became Markdown tables.",
+        ["右寄せ・中央寄せの {0} か所は、HTML（align）で書きました。"] =
+            "{0} right-aligned or centered paragraphs were written as HTML (align).",
         ["{0} ページ目は、文字が図形として描かれていて取り出せないため、ページ全体を画像（PNG）にしました。"] =
             "Page {0} draws its text as shapes, so no text could be taken from it, and the whole page became a picture (PNG).",
         ["{0} ページ目は、文字を読み取れない書体（文字化けする書体）で書かれているため、ページ全体を画像（PNG）にしました。"] =

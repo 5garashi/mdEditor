@@ -1649,6 +1649,29 @@ public partial class MainWindow : Window
                 string.Join(", ", result.PicturePages)));
         }
 
+        if (result.Tagged)
+        {
+            notices.Add(Strings.Tr("PDF の中のタグ（見出し・段落・箇条書き・表と、その読む順）を使って読みました。"));
+        }
+        else if (result.Headings > 0)
+        {
+            notices.Add(string.Format(Strings.Tr("文字の大きさと番号から、{0} か所を見出しにしました。"), result.Headings));
+        }
+
+        foreach (var (count, text) in new[]
+                 {
+                     (result.Figures, "図 {0} 個を、線と文字から画像（SVG）に描き直しました。図の中の文字は画像の一部で、編集できません。"),
+                     (result.Formulas, "数式 {0} 個を画像（SVG）にしました。数式の文字は画像の説明（alt）に入れました。"),
+                     (result.Tables, "表 {0} 個を Markdown の表にしました。"),
+                     (result.Aligned, "右寄せ・中央寄せの {0} か所は、HTML（align）で書きました。"),
+                 })
+        {
+            if (count > 0)
+            {
+                notices.Add(string.Format(Strings.Tr(text), count));
+            }
+        }
+
         ApplyImported(result.Markdown, assets, name + ".md", false, string.Join(Strings.SentenceJoin, notices));
         _suggestFolder = Path.GetDirectoryName(path);
         _importAssets = result.Images > 0 ? Path.Combine(assets, name + FilesSuffix) : null;
