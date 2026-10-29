@@ -56,6 +56,8 @@
       originalShow: "元の PDF を表示",
       originalBack: "編集画面に戻す",
       originalShowFile: "元のファイルを表示",
+      originalBrowser: "ブラウザーで開く",
+      originalBrowserTitle: "いつものブラウザーで開きます。ページのスクリプトが動き、インターネットから地図などを読み込みます。",
       originalFileLabel: "元のファイル（変換する前の内容）",
       originalLabel: "元の PDF（ページの画像）",
       originalPage: "PDF の {0} ページ目",
@@ -244,6 +246,8 @@
       originalShow: "显示原 PDF",
       originalBack: "返回编辑区",
       originalShowFile: "显示原文件",
+      originalBrowser: "在浏览器中打开",
+      originalBrowserTitle: "用平时的浏览器打开。页面的脚本会运行，并从互联网加载地图等内容。",
       originalFileLabel: "原文件（转换前的内容）",
       originalLabel: "原 PDF（页面图像）",
       originalPage: "PDF 第 {0} 页",
@@ -432,6 +436,8 @@
       originalShow: "Show the original PDF",
       originalBack: "Back to the editor",
       originalShowFile: "Show the original file",
+      originalBrowser: "Open in browser",
+      originalBrowserTitle: "Opens in your usual browser, where the page's scripts run and it loads maps and more from the internet.",
       originalFileLabel: "The original file (as it was before conversion)",
       originalLabel: "The original PDF (pictures of its pages)",
       originalPage: "PDF page {0}",
@@ -1045,6 +1051,8 @@
     originalButton.hidden = !(original && noticeState);
     originalButton.textContent = t(originalShown ? "originalBack" : original?.kind === "pdf" ? "originalShow" : "originalShowFile");
     originalButton.setAttribute("aria-pressed", String(originalShown));
+    // An HTML file or a web page can also be seen as it really works, in the browser.
+    document.getElementById("notice-browser").hidden = !(original?.browser && noticeState);
     const reopenTables = document.getElementById("notice-reopen-tables");
     reopenTables.hidden = !(noticeState?.kind === "message" && noticeState.reopenTables);
     reopenTables.textContent = noticeState?.reopenTables ?? "";
@@ -2700,13 +2708,15 @@
   const setOriginal = (value) => {
     if (originalShown) showOriginal(false);
     original = value?.kind === "pdf" ? (value.pages?.length ? { kind: "pdf", url: value.url, pages: value.pages, anchors: value.anchors ?? [] } : null)
-      : value?.kind === "html" ? { kind: "html", html: value.html ?? "", base: value.base ?? null }
+      : value?.kind === "html" ? { kind: "html", html: value.html ?? "", base: value.base ?? null, browser: Boolean(value.browser) }
         : value?.kind === "text" ? { kind: "text", text: value.text ?? "", anchors: value.anchors ?? [] }
           : null;
     originalView.replaceChildren();
     updateNotice();
   };
   document.getElementById("notice-original").addEventListener("click", () => showOriginal(!originalShown));
+  // The host opens what it opened (the file or the page's address), never an address from here.
+  document.getElementById("notice-browser").addEventListener("click", () => post({ type: "openInBrowser" }));
 
   // When the preview has its own window, the position (a source line, not
   // pixels, so different window sizes and displays still match) goes through

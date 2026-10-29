@@ -77,6 +77,8 @@ public partial class MainWindow : Window
     private readonly Dictionary<(int Page, int Pixels), byte[]> _originalPages = [];
     // The pictures inside an e-mail (cid:), served at .../{token}/cid/{n} for its original.
     private List<(string Type, byte[] Data)> _originalParts = [];
+    // What "Open in browser" opens: the HTML file shown as the original, or the web page's address.
+    private string? _originalBrowserTarget;
     private static readonly UTF8Encoding Utf8NoBom = new(false);
     private string _text = string.Empty;
     private string? _filePath;
@@ -523,6 +525,9 @@ public partial class MainWindow : Window
                 break;
             case "openPdfOptionsFile":
                 OpenPdfOptionsFile();
+                break;
+            case "openInBrowser":
+                OpenOriginalInBrowser();
                 break;
             case "reopenPdf":
                 await ReopenPdfAsync(root.TryGetProperty("what", out var what) && what.GetString() == "tables");
@@ -1689,7 +1694,7 @@ public partial class MainWindow : Window
             // Without its stylesheets the page still shows, plainer.
         }
 
-        SendOriginalHtml(original.Html, $"https://{DocumentHost}/", original.Parts);
+        SendOriginalHtml(original.Html, $"https://{DocumentHost}/", original.Parts, path);
     }
 
     // A Word document opens as Markdown through Mammoth (Word to clean HTML) and
@@ -2803,7 +2808,7 @@ public partial class MainWindow : Window
                 final.AbsoluteUri));
             if (!isMarkdown)
             {
-                SendOriginalHtml(text, null);
+                SendOriginalHtml(text, null, browserTarget: final.AbsoluteUri);
             }
         }
         catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or InvalidOperationException or IOException)
@@ -3281,12 +3286,73 @@ public partial class MainWindow : Window
     // the editor (see app.js): the page draws it with no scripts and nothing from the
     // internet. Base is where its relative pictures come from (the document's folder for an
     // HTML file), or null.
-    private void SendOriginalHtml(string html, string? baseAddress, List<(string Type, byte[] Data)>? parts = null)
+    private void SendOriginalHtml(string html, string? baseAddress, List<(string Type, byte[] Data)>? parts = null, string? browserTarget = null)
     {
         _originalPdf = null;
         _originalToken = Guid.NewGuid().ToString("N");
         _originalParts = parts ?? [];
-        SendToPage(new { type = "original", kind = "html", html = html.Replace("cid-part:", $"https://{OriginalHost}/{_originalToken}/cid/"), @base = baseAddress });
+        _originalBrowserTarget = browserTarget;
+        SendToPage(new { type = "original", kind = "html", html = html.Replace("cid-part:", $"https://{OriginalHost}/{_originalToken}/cid/"), @base = baseAddress, browser = browserTarget is not null });
+    }
+
+    // "Open in browser": the HTML file (in the default web browser, not in the program
+    // .html files open with, which can be mdEditor itself) or the web page's address.
+    private void OpenOriginalInBrowser()
+    {
+        if (_originalBrowserTarget is not { } target)
+        {
+            return;
+        }
+
+        if (Uri.TryCreate(target, UriKind.Absolute, out var page) && page.Scheme is "https" or "http")
+        {
+            OpenExternalLink(page.AbsoluteUri);
+            return;
+        }
+
+        var address = new Uri(target).AbsoluteUri;
+        try
+        {
+            if (DefaultBrowserCommand() is var (browser, arguments))
+            {
+                Process.Start(new ProcessStartInfo(browser, arguments.Contains("%1", StringComparison.Ordinal)
+                    ? arguments.Replace("%1", address, StringComparison.Ordinal)
+                    : $"{arguments} \"{address}\"".Trim()) { UseShellExecute = false });
+            }
+            else
+            {
+                Process.Start(new ProcessStartInfo(target) { UseShellExecute = true });
+            }
+        }
+        catch (Exception ex) when (ex is Win32Exception or InvalidOperationException)
+        {
+            MessageBox.Show(
+                $"{Strings.Tr("ブラウザーで開けませんでした。ブラウザーやエクスプローラーから開いてください。")}\n\n{ex.Message}",
+                "mdEditor",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
+    }
+
+    // The program Windows opens https addresses with (the default browser) and the rest of
+    // its command line, from the user's choice in Settings, or null.
+    private static (string Program, string Arguments)? DefaultBrowserCommand()
+    {
+        using var choice = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice");
+        if (choice?.GetValue("ProgId") is not string progId || progId.Length == 0)
+        {
+            return null;
+        }
+
+        using var command = Registry.ClassesRoot.OpenSubKey($@"{progId}\shell\open\command");
+        if (command?.GetValue(null) is not string line)
+        {
+            return null;
+        }
+
+        var match = System.Text.RegularExpressions.Regex.Match(line, @"^\s*(?:""([^""]+)""|(\S+))\s*(.*)$");
+        var program = match.Groups[1].Success ? match.Groups[1].Value : match.Groups[2].Value;
+        return match.Success && File.Exists(program) ? (program, match.Groups[3].Value) : null;
     }
 
     // The original text of a CSV, TSV, JSON, or XML file, with the Markdown line and the file's
