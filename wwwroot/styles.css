@@ -1149,6 +1149,43 @@ body.capture-export .preview-content {
   box-shadow: 0 1px 3px rgb(0 0 0 / 25%);
 }
 
+/* An original drawn from HTML (as tall as its page), and an original file's text, line
+   by line with its line numbers. */
+.original-frame {
+  display: block;
+  width: 100%;
+  min-height: 100%;
+  border: 0;
+  background: #FFFFFF;
+}
+
+.original-text {
+  padding: 8px 12px;
+  background: var(--document-background);
+  color: var(--document-foreground);
+  font-family: Consolas, "Cascadia Mono", monospace;
+  font-size: calc(14px * var(--doc-scale, 1));
+  line-height: 1.6;
+}
+
+.original-line {
+  padding-left: 6ch;
+  text-indent: -6ch;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.original-line::before {
+  content: attr(data-number);
+  display: inline-block;
+  width: 5ch;
+  margin-right: 1ch;
+  text-indent: 0;
+  text-align: right;
+  color: var(--document-muted);
+  user-select: none;
+}
+
 #editor[hidden] {
   display: none;
 }

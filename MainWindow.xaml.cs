@@ -75,6 +75,8 @@ public partial class MainWindow : Window
     private string? _originalPdf;
     private string _originalToken = string.Empty;
     private readonly Dictionary<(int Page, int Pixels), byte[]> _originalPages = [];
+    // The pictures inside an e-mail (cid:), served at .../{token}/cid/{n} for its original.
+    private List<(string Type, byte[] Data)> _originalParts = [];
     private static readonly UTF8Encoding Utf8NoBom = new(false);
     private string _text = string.Empty;
     private string? _filePath;
@@ -1653,6 +1655,8 @@ public partial class MainWindow : Window
         ApplyImported(markdown, folder, Path.GetFileNameWithoutExtension(path) + ".md", false, Strings.Tr(exact
             ? "mdEditor で保存した HTML から、元の Markdown を開きました。保存すると Markdown ファイルになります（HTML ファイルは変わりません）。"
             : "HTML を Markdown に変換して開きました。色や配置、図の絵は元に戻りません。保存すると Markdown ファイルになります（HTML ファイルは変わりません）。"));
+        // Its pictures beside it come from the document's folder, as the preview's do.
+        SendOriginalHtml(decoded.Text, $"https://{DocumentHost}/");
     }
 
     // A Word document opens as Markdown through Mammoth (Word to clean HTML) and
@@ -1775,7 +1779,8 @@ public partial class MainWindow : Window
 
         SendToPage(new
         {
-            type = "originalPdf",
+            type = "original",
+            kind = "pdf",
             url = $"https://{OriginalHost}/{_originalToken}/",
             pages = (result.PageSizes ?? []).Select(size => new { w = size.Width, h = size.Height }),
             anchors = (result.Anchors ?? []).Select(anchor => new { line = anchor.Line, page = anchor.Page, y = anchor.Y })
@@ -1973,6 +1978,10 @@ public partial class MainWindow : Window
         var result = MailImport.ToMarkdown(path, assets, imagesName, Strings.Language);
         ApplyImported(result.Markdown, assets, name + ".md", false, Strings.Tr(
             "メールを Markdown に変換して開きました。件名・差出人・宛先・日付と本文を読み込み、添付ファイルは名前だけを載せました。保存すると Markdown ファイルになります（メールのファイルは変わりません）。"));
+        if (MailOriginalHtml(path) is var (original, parts))
+        {
+            SendOriginalHtml(original, null, parts);
+        }
         _suggestFolder = Path.GetDirectoryName(path);
         _importAssets = result.Images > 0 ? Path.Combine(assets, imagesName) : null;
     }
@@ -1981,9 +1990,19 @@ public partial class MainWindow : Window
     private void ImportTable(string path, DecodedDocument decoded)
     {
         var separator = string.Equals(Path.GetExtension(path), ".tsv", StringComparison.OrdinalIgnoreCase) ? '\t' : ',';
-        ApplyImported(TableFiles.ToMarkdown(decoded.Text, separator), Path.GetDirectoryName(path)!,
+        var markdown = TableFiles.ToMarkdown(decoded.Text, separator);
+        ApplyImported(markdown, Path.GetDirectoryName(path)!,
             Path.GetFileNameWithoutExtension(path) + ".md", false, Strings.Tr(
                 "表のファイルを Markdown の表にして開きました。1 行目を見出しの行にしています。保存すると Markdown ファイルになります（元のファイルは変わりません）。"));
+        // Row by row: the header is line 0 of both, and row n of the table (line n + 1 of the
+        // Markdown, after the line under the header) is line n of the file, when no field
+        // runs over a line of its own.
+        var sourceLines = decoded.Text.Replace("\r\n", "\n").TrimEnd('\n').Split('\n');
+        var tableLines = markdown.TrimEnd('\n').Split('\n');
+        var rowByRow = tableLines.Length == sourceLines.Length + 1;
+        SendOriginalText(decoded.Text, rowByRow
+            ? Enumerable.Range(0, sourceLines.Length).Select(line => (line == 0 ? 0 : line + 1, line))
+            : []);
     }
 
     // An image or a video opens as a new document that shows it, ready for a
@@ -2030,6 +2049,7 @@ public partial class MainWindow : Window
         };
         ApplyImported(markdown, Path.GetDirectoryName(path)!, Path.GetFileNameWithoutExtension(path) + ".md", false,
             Strings.Tr(notice) + Strings.Tr("保存すると Markdown ファイルになります（元のファイルは変わりません）。"));
+        SendOriginalText(decoded.Text, []);
     }
 
     private static string EscapeAlt(string text) => text.Replace("\\", "\\\\").Replace("[", "\\[").Replace("]", "\\]");
@@ -2748,6 +2768,10 @@ public partial class MainWindow : Window
             ApplyImported(markdown, null, name, true, string.Format(
                 Strings.Tr("{0} を開きました。スクリプトは実行しないため、後から読み込まれる内容は入りません。保存すると Markdown ファイルになります。"),
                 final.AbsoluteUri));
+            if (!isMarkdown)
+            {
+                SendOriginalHtml(text, null);
+            }
         }
         catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or InvalidOperationException or IOException)
         {
@@ -3206,10 +3230,69 @@ public partial class MainWindow : Window
         }
     }
 
+    // The original of a document opened from HTML, a web page, or an e-mail, shown in place of
+    // the editor (see app.js): the page draws it with no scripts and nothing from the
+    // internet. Base is where its relative pictures come from (the document's folder for an
+    // HTML file), or null.
+    private void SendOriginalHtml(string html, string? baseAddress, List<(string Type, byte[] Data)>? parts = null)
+    {
+        _originalPdf = null;
+        _originalToken = Guid.NewGuid().ToString("N");
+        _originalParts = parts ?? [];
+        SendToPage(new { type = "original", kind = "html", html = html.Replace("cid-part:", $"https://{OriginalHost}/{_originalToken}/cid/"), @base = baseAddress });
+    }
+
+    // The original text of a CSV, TSV, JSON, or XML file, with the Markdown line and the file's
+    // line of each row where they match (none: they scroll together by position).
+    private void SendOriginalText(string text, IEnumerable<(int Line, int Source)> anchors)
+    {
+        _originalPdf = null;
+        SendToPage(new { type = "original", kind = "text", text, anchors = anchors.Select(anchor => new { line = anchor.Line, source = anchor.Source }) });
+    }
+
+    // An e-mail as a page to show as it was sent: who it is from and to, when, and its subject
+    // above its HTML body (or its text); pictures in the body (cid:) become cid-part:{n},
+    // which SendOriginalHtml turns into addresses it serves (parts).
+    private static (string Html, List<(string Type, byte[] Data)> Parts)? MailOriginalHtml(string path)
+    {
+        try
+        {
+            var message = MimeKit.MimeMessage.Load(path);
+            var body = message.HtmlBody ?? $"<pre style=\"white-space: pre-wrap; font-family: inherit\">{System.Net.WebUtility.HtmlEncode(message.TextBody ?? string.Empty)}</pre>";
+            var parts = new List<(string Type, byte[] Data)>();
+            foreach (var part in message.BodyParts.OfType<MimeKit.MimePart>().Where(part => !string.IsNullOrEmpty(part.ContentId)))
+            {
+                using var data = new MemoryStream();
+                part.Content?.DecodeTo(data);
+                body = body.Replace("cid:" + part.ContentId, $"cid-part:{parts.Count}", StringComparison.OrdinalIgnoreCase);
+                parts.Add((part.ContentType.MimeType, data.ToArray()));
+            }
+
+            string Row(string name, string? value) => string.IsNullOrWhiteSpace(value) ? string.Empty
+                : $"<tr><th style=\"text-align: left; padding-right: 1em\">{System.Net.WebUtility.HtmlEncode(name)}</th><td>{System.Net.WebUtility.HtmlEncode(value)}</td></tr>";
+            var header = "<table style=\"font-family: sans-serif; font-size: 0.9em; margin-bottom: 1em\">"
+                + Row(Strings.Tr("差出人"), message.From.ToString()) + Row(Strings.Tr("宛先"), message.To.ToString())
+                + Row("Cc", message.Cc.ToString()) + Row(Strings.Tr("日付"), message.Date.ToLocalTime().ToString("yyyy-MM-dd HH:mm"))
+                + Row(Strings.Tr("件名"), message.Subject) + "</table><hr>";
+            return ($"<!doctype html><html><head><meta charset=\"utf-8\"></head><body>{header}{body}</body></html>", parts);
+        }
+        catch (Exception ex) when (ex is IOException or FormatException or MimeKit.ParseException or InvalidOperationException or NotSupportedException)
+        {
+            return null;
+        }
+    }
+
     // A page of the original PDF as a PNG, drawn the first time it is asked for at that width
     // (the last 40 are kept); 404 for a PDF no longer open or a page PDFium cannot draw.
     private async Task<CoreWebView2WebResourceResponse> ServeOriginalPageAsync(CoreWebView2Environment environment, Uri uri)
     {
+        var part = System.Text.RegularExpressions.Regex.Match(uri.AbsolutePath, @"^/([0-9a-f]{32})/cid/(\d{1,4})$");
+        if (part.Success && part.Groups[1].Value == _originalToken && int.Parse(part.Groups[2].Value) is var index && index < _originalParts.Count)
+        {
+            var (type, data) = _originalParts[index];
+            return environment.CreateWebResourceResponse(new MemoryStream(data), 200, "OK", $"Content-Type: {type}");
+        }
+
         var match = System.Text.RegularExpressions.Regex.Match(uri.AbsolutePath, @"^/([0-9a-f]{32})/page-(\d{1,4})\.png$");
         var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
         if (!match.Success || match.Groups[1].Value != _originalToken || _originalPdf is not { } path

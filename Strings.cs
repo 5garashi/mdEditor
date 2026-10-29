@@ -169,6 +169,14 @@ internal static partial class Strings
             "Make tables pictures (looks like the page)",
         ["表を Markdown の表にする（編集優先・既定）"] =
             "Make tables Markdown tables (can be edited, default)",
+        ["差出人"] =
+            "From",
+        ["宛先"] =
+            "To",
+        ["日付"] =
+            "Date",
+        ["件名"] =
+            "Subject",
         ["配布用 ZIP の書き出し"] =
             "ZIP for sharing",
         ["「{0}」フォルダーに、文書から参照されていないファイルが {1} 個あります。ごみ箱に移してから ZIP にしますか？\n\n{2}\n\n「いいえ」を選ぶと、ファイルは残したまま、ZIP には入れません。"] =

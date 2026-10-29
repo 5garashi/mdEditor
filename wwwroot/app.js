@@ -55,6 +55,8 @@
       settingsExport: "書き出し",
       originalShow: "元の PDF を表示",
       originalBack: "編集画面に戻す",
+      originalShowFile: "元のファイルを表示",
+      originalFileLabel: "元のファイル（変換する前の内容）",
       originalLabel: "元の PDF（ページの画像）",
       originalPage: "PDF の {0} ページ目",
       settingsZipLinks: "配布用 ZIP に入れるファイル",
@@ -240,6 +242,8 @@
       settingsExport: "导出",
       originalShow: "显示原 PDF",
       originalBack: "返回编辑区",
+      originalShowFile: "显示原文件",
+      originalFileLabel: "原文件（转换前的内容）",
       originalLabel: "原 PDF（页面图像）",
       originalPage: "PDF 第 {0} 页",
       settingsZipLinks: "放入分发用 ZIP 的文件",
@@ -425,6 +429,8 @@
       settingsExport: "Export",
       originalShow: "Show the original PDF",
       originalBack: "Back to the editor",
+      originalShowFile: "Show the original file",
+      originalFileLabel: "The original file (as it was before conversion)",
       originalLabel: "The original PDF (pictures of its pages)",
       originalPage: "PDF page {0}",
       settingsZipLinks: "Files in the ZIP for sharing",
@@ -978,8 +984,9 @@
     reopen.hidden = !(noticeState?.kind === "message" && noticeState.reopen);
     reopen.textContent = noticeState?.reopen ?? "";
     const originalButton = document.getElementById("notice-original");
-    originalButton.hidden = !(original && noticeState?.kind === "message");
-    originalButton.textContent = t(originalShown ? "originalBack" : "originalShow");
+    // With any notice (one about internet pictures can follow the one about the conversion).
+    originalButton.hidden = !(original && noticeState);
+    originalButton.textContent = t(originalShown ? "originalBack" : original?.kind === "pdf" ? "originalShow" : "originalShowFile");
     originalButton.setAttribute("aria-pressed", String(originalShown));
     const reopenTables = document.getElementById("notice-reopen-tables");
     reopenTables.hidden = !(noticeState?.kind === "message" && noticeState.reopenTables);
@@ -2500,27 +2507,112 @@
   // host as they come into view, shown in place of the editor and back with the notice's
   // button. Where each Markdown item came from (anchors: its line, page, and height on the
   // page) lets it scroll with the preview as the editor does.
+  // Three kinds of original: a PDF's pages (pdf), a page drawn from HTML with no scripts and
+  // nothing from the internet (html: an HTML file, a web page, an e-mail), and a file's text
+  // line by line (text: CSV, TSV, JSON, XML).
+  // On top of the app's own policy (which the frame keeps): pictures only from the document's
+  // folder and the host (an e-mail's), nothing from the internet, no scripts.
+  const originalPolicy = "default-src 'none'; img-src https://document.mdeditor.local https://original.mdeditor.local; style-src 'unsafe-inline'";
   const buildOriginal = () => {
-    const pixels = Math.min(3000, Math.ceil(originalView.clientWidth * (window.devicePixelRatio || 1)));
-    originalView.replaceChildren(...original.pages.map((size, index) => {
-      const image = document.createElement("img");
-      image.loading = "lazy";
-      image.decoding = "async";
-      image.alt = t("originalPage").replace("{0}", String(index + 1));
-      image.style.aspectRatio = `${size.w} / ${size.h}`;
-      image.src = `${original.url}page-${index + 1}.png?w=${pixels}`;
-      return image;
-    }));
+    if (original.kind === "pdf") {
+      const pixels = Math.min(3000, Math.ceil(originalView.clientWidth * (window.devicePixelRatio || 1)));
+      originalView.replaceChildren(...original.pages.map((size, index) => {
+        const image = document.createElement("img");
+        image.loading = "lazy";
+        image.decoding = "async";
+        image.alt = t("originalPage").replace("{0}", String(index + 1));
+        image.style.aspectRatio = `${size.w} / ${size.h}`;
+        image.src = `${original.url}page-${index + 1}.png?w=${pixels}`;
+        return image;
+      }));
+    } else if (original.kind === "html") {
+      // The page is drawn in a frame that may not run scripts, submit forms, open windows,
+      // or load anything but its own pictures (the policy); links open nowhere. The frame
+      // is as tall as its page, so the view scrolls it as it scrolls PDF pages.
+      const frame = document.createElement("iframe");
+      frame.className = "original-frame";
+      frame.setAttribute("sandbox", "allow-same-origin");
+      frame.title = t("originalFileLabel");
+      // The app's policy allows no <base>, so addresses are made whole here (pictures beside
+      // an HTML file come from the document's folder), and links get a target of their own.
+      const page = new DOMParser().parseFromString(original.html, "text/html");
+      page.querySelectorAll("base, script, meta[http-equiv]").forEach((element) => element.remove());
+      for (const element of page.querySelectorAll("[src], [poster], [href]")) {
+        for (const name of ["src", "poster", "href"]) {
+          const value = element.getAttribute(name);
+          if (!value || /^([a-z][a-z0-9+.-]*:|#)/i.test(value)) continue;
+          try {
+            element.setAttribute(name, new URL(value, original.base || "https://document.mdeditor.local/").href);
+          } catch {
+            element.removeAttribute(name);
+          }
+        }
+      }
+      page.querySelectorAll("a[href]").forEach((link) => link.setAttribute("target", "_blank"));
+      const policy = page.createElement("meta");
+      policy.setAttribute("http-equiv", "Content-Security-Policy");
+      policy.setAttribute("content", originalPolicy);
+      page.head.prepend(policy);
+      frame.srcdoc = "<!doctype html>" + page.documentElement.outerHTML;
+      const fit = () => {
+        const page = frame.contentDocument?.documentElement;
+        if (page) frame.style.height = `${page.scrollHeight}px`;
+      };
+      frame.addEventListener("load", () => {
+        fit();
+        const body = frame.contentDocument?.body;
+        if (body) new ResizeObserver(fit).observe(body);
+      });
+      originalView.replaceChildren(frame);
+    } else {
+      const text = document.createElement("div");
+      text.className = "original-text";
+      text.replaceChildren(...original.text.replace(/\r\n?/g, "\n").replace(/\n$/, "").split("\n").map((content, index) => {
+        const line = document.createElement("div");
+        line.className = "original-line";
+        line.dataset.number = String(index + 1);
+        line.textContent = content || " ";
+        return line;
+      }));
+      originalView.replaceChildren(text);
+    }
   };
+  // The original's anchors as (line, top) points in the view. A PDF has where each item came
+  // from; a page drawn from HTML, its headings matched in order to the preview's; text, the
+  // file's lines matched to the Markdown's (a table's rows). The view's two ends always match.
   const originalAnchors = () => {
-    const images = originalView.querySelectorAll("img");
     const points = [{ line: 0, top: 0 }];
-    for (const anchor of original?.anchors ?? []) {
-      const image = images[anchor.page - 1];
-      if (!image) continue;
-      const point = { line: anchor.line, top: image.offsetTop + anchor.y * image.offsetHeight };
+    const add = (line, top) => {
       const last = points[points.length - 1];
-      if (point.line >= last.line && point.top >= last.top) points.push(point);
+      if (line >= last.line && top >= last.top) points.push({ line, top });
+    };
+    if (original?.kind === "pdf") {
+      const images = originalView.querySelectorAll("img");
+      for (const anchor of original.anchors) {
+        const image = images[anchor.page - 1];
+        if (image) add(anchor.line, image.offsetTop + anchor.y * image.offsetHeight);
+      }
+    } else if (original?.kind === "html") {
+      const frame = originalView.querySelector("iframe");
+      const page = frame?.contentDocument;
+      if (page) {
+        const words = (element) => element.textContent.replace(/\s+/g, "");
+        const theirs = [...page.querySelectorAll("h1, h2, h3, h4, h5, h6")];
+        let next = 0;
+        for (const heading of preview.querySelectorAll("h1[data-line], h2[data-line], h3[data-line], h4[data-line], h5[data-line], h6[data-line]")) {
+          const text = words(heading);
+          const at = theirs.findIndex((other, index) => index >= next && words(other) === text);
+          if (at < 0 || !text) continue;
+          next = at + 1;
+          add(Number(heading.dataset.line), frame.offsetTop + theirs[at].getBoundingClientRect().top + page.documentElement.scrollTop);
+        }
+      }
+    } else if (original?.kind === "text") {
+      const lines = originalView.querySelectorAll(".original-line");
+      for (const anchor of original.anchors) {
+        const line = lines[anchor.source];
+        if (line) add(anchor.line, line.offsetTop);
+      }
     }
     points.push({ line: previewLines || view.state.doc.lines, top: originalView.scrollHeight });
     return points;
@@ -2532,7 +2624,7 @@
   };
   const showOriginal = (show) => {
     originalShown = Boolean(show && original);
-    originalView.setAttribute("aria-label", t("originalLabel"));
+    originalView.setAttribute("aria-label", t(original?.kind === "pdf" ? "originalLabel" : "originalFileLabel"));
     originalView.hidden = !originalShown;
     editorHost.hidden = originalShown;
     showLintCount(lintCount);
@@ -2547,7 +2639,10 @@
   };
   const setOriginal = (value) => {
     if (originalShown) showOriginal(false);
-    original = value?.pages?.length ? { url: value.url, pages: value.pages, anchors: value.anchors ?? [] } : null;
+    original = value?.kind === "pdf" ? (value.pages?.length ? { kind: "pdf", url: value.url, pages: value.pages, anchors: value.anchors ?? [] } : null)
+      : value?.kind === "html" ? { kind: "html", html: value.html ?? "", base: value.base ?? null }
+        : value?.kind === "text" ? { kind: "text", text: value.text ?? "", anchors: value.anchors ?? [] }
+          : null;
     originalView.replaceChildren();
     updateNotice();
   };
@@ -3696,7 +3791,7 @@
     } else if (message.type === "missingLinks") {
       const resolve = linkChecks.get(message.id);
       if (linkChecks.delete(message.id)) resolve(message.targets ?? []);
-    } else if (message.type === "originalPdf") {
+    } else if (message.type === "original") {
       setOriginal(message);
     } else if (message.type === "resetDisplay") {
       resetDisplay();
