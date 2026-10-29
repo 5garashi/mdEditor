@@ -7,6 +7,7 @@
   SPDX-License-Identifier: MIT
 */
 using System.IO;
+using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
@@ -77,6 +78,26 @@ internal static class HtmlImport
         if (document.GetElementById(SourceId) is { } source && TryReadSource(source.TextContent, out var original))
         {
             return (original, true);
+        }
+
+        // A box with a picture as its background (style="background-image: url(...)", as a
+        // site's title banner often is) gets the picture as an image before its content:
+        // Markdown cannot put words over a picture, so they follow it.
+        foreach (var box in document.QuerySelectorAll("[style*='background']").ToList())
+        {
+            if (box.LocalName is "span" or "a" or "img" or "body" or "html" || box.Closest("svg, a, button") is not null
+                || System.Text.RegularExpressions.Regex.Match(box.GetAttribute("style")!, @"background(?:-image)?\s*:[^;]*url\(\s*['""]?([^'"")]+)['""]?\s*\)",
+                    System.Text.RegularExpressions.RegexOptions.IgnoreCase) is not { Success: true } match)
+            {
+                continue;
+            }
+
+            var paragraph = document.CreateElement("p");
+            var image = document.CreateElement("img");
+            image.SetAttribute("src", match.Groups[1].Value.Trim());
+            image.SetAttribute("alt", string.Empty);
+            paragraph.AppendChild(image);
+            box.Prepend(paragraph);
         }
 
         // Relative images and links that are not beside the file (a page from the
@@ -269,6 +290,18 @@ internal static class HtmlImport
             element.Remove();
         }
 
+        // Centered and right-aligned text (style="text-align: ..." on the paragraph or a box
+        // around it) is marked before the boxes go, and kept below as <p align>.
+        foreach (var element in document.QuerySelectorAll("p, div").ToList())
+        {
+            if (element.Closest("[style*='text-align']") is { } aligned
+                && System.Text.RegularExpressions.Regex.Match(aligned.GetAttribute("style")!, @"text-align\s*:\s*(center|right)",
+                    System.Text.RegularExpressions.RegexOptions.IgnoreCase) is { Success: true } alignment)
+            {
+                element.SetAttribute("data-mdeditor-align", alignment.Groups[1].Value.ToLowerInvariant());
+            }
+        }
+
         // A box holding only words (no headings, paragraphs, or lists inside) is a
         // paragraph of its own, so the words of boxes side by side do not run together.
         foreach (var element in document.QuerySelectorAll("main, article, section, header, footer, nav, aside, div, span").ToList())
@@ -283,6 +316,11 @@ internal static class HtmlImport
                 && element.Closest("p, li, dt, dd, td, th, h1, h2, h3, h4, h5, h6, pre, blockquote, a, figcaption") is null)
             {
                 var paragraph = document.CreateElement("p");
+                if (element.GetAttribute("data-mdeditor-align") is { } align)
+                {
+                    paragraph.SetAttribute("data-mdeditor-align", align);
+                }
+
                 while (element.FirstChild is { } child)
                 {
                     paragraph.AppendChild(child);
@@ -306,6 +344,35 @@ internal static class HtmlImport
             image.Replace(document.CreateTextNode(image.GetAttribute("alt") ?? string.Empty));
         }
 
+        // Aligned paragraphs and images given a width stay as HTML (<p align="center">,
+        // <img width="...">), as GitHub shows them; placeholders keep the converter from
+        // escaping it.
+        var raw = new List<string>();
+        string Placeholder(string markup)
+        {
+            raw.Add(markup);
+            return $"MDEDITORHTML{raw.Count - 1}X";
+        }
+
+        foreach (var paragraph in document.QuerySelectorAll("p[data-mdeditor-align]").ToList())
+        {
+            if (paragraph.Closest("li, td, th, blockquote") is null
+                && (!string.IsNullOrWhiteSpace(paragraph.TextContent) || paragraph.QuerySelector("img") is not null))
+            {
+                var placeholder = document.CreateElement("p");
+                placeholder.TextContent = Placeholder($"<p align=\"{paragraph.GetAttribute("data-mdeditor-align")}\">{InlineHtml(paragraph).Trim()}</p>");
+                paragraph.Replace(placeholder);
+            }
+        }
+
+        foreach (var image in document.QuerySelectorAll("img[src]").ToList())
+        {
+            if (ImageWidth(image) is { } width)
+            {
+                image.Replace(document.CreateTextNode(Placeholder(ImageHtml(image, width))));
+            }
+        }
+
         var converter = new ReverseMarkdown.Converter(new ReverseMarkdown.Config
         {
             // The default output already uses GitHub tables; the GitHub flavor setting
@@ -326,7 +393,77 @@ internal static class HtmlImport
             markdown = markdown.Replace($"MDEDITORFENCE{index}X", fences[index]);
         }
 
+        for (var index = raw.Count - 1; index >= 0; index--)
+        {
+            markdown = markdown.Replace($"MDEDITORHTML{index}X", raw[index]);
+        }
+
         return (markdown.Trim() + "\n", false);
+    }
+
+    // An image's width in pixels as the page set it (width="300" or style="width: 300px"),
+    // or null.
+    private static int? ImageWidth(IElement image)
+    {
+        var value = image.GetAttribute("width");
+        if (System.Text.RegularExpressions.Regex.Match(image.GetAttribute("style") ?? string.Empty, @"(?:^|;)\s*width\s*:\s*([\d.]+)px",
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase) is { Success: true } style)
+        {
+            value = style.Groups[1].Value;
+        }
+
+        return double.TryParse(value?.Trim(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var width)
+               && width >= 1 && width <= 10000
+            ? (int)Math.Round(width)
+            : null;
+    }
+
+    private static string ImageHtml(IElement image, int? width)
+    {
+        static string Encode(string value) => System.Net.WebUtility.HtmlEncode(value);
+        var title = image.GetAttribute("title") is { Length: > 0 } text ? $" title=\"{Encode(text)}\"" : string.Empty;
+        return $"<img src=\"{Encode(image.GetAttribute("src")!)}\" alt=\"{Encode(image.GetAttribute("alt") ?? string.Empty)}\"{title}"
+               + (width is { } pixels ? $" width=\"{pixels}\"" : string.Empty) + ">";
+    }
+
+    // The content of an aligned paragraph as HTML that keeps only what Markdown would:
+    // links, images (with their width), emphasis, code, and line breaks. Other tags give
+    // way to their content, and text is encoded.
+    private static string InlineHtml(INode node)
+    {
+        var html = new StringBuilder();
+        foreach (var child in node.ChildNodes)
+        {
+            if (child is IText text)
+            {
+                // One line: an empty line would end the HTML in Markdown.
+                html.Append(System.Net.WebUtility.HtmlEncode(System.Text.RegularExpressions.Regex.Replace(text.Data, @"\s+", " ")));
+            }
+            else if (child is IElement element)
+            {
+                switch (element.LocalName)
+                {
+                    case "br":
+                        html.Append("<br>");
+                        break;
+                    case "img" when element.HasAttribute("src"):
+                        html.Append(ImageHtml(element, ImageWidth(element)));
+                        break;
+                    case "a" when element.GetAttribute("href") is { Length: > 0 } href:
+                        html.Append($"<a href=\"{System.Net.WebUtility.HtmlEncode(href)}\">{InlineHtml(element)}</a>");
+                        break;
+                    case "strong" or "b" or "em" or "i" or "code" or "sup" or "sub" or "s" or "del" or "kbd":
+                        var tag = element.LocalName switch { "b" => "strong", "i" => "em", var other => other };
+                        html.Append($"<{tag}>{InlineHtml(element)}</{tag}>");
+                        break;
+                    default:
+                        html.Append(InlineHtml(element));
+                        break;
+                }
+            }
+        }
+
+        return html.ToString();
     }
 
     // One saved map tile: its picture (src as written), where it was in the map (pixels from
