@@ -163,6 +163,12 @@ internal static partial class Strings
             "{0} files on the internet could not be downloaded, so their links were kept.",
         ["設定を初期設定に戻しますか？「設定」の画面のすべての項目と、PDF の取り込みの詳細設定ファイル（pdf-import.json）が初期設定になります。「クリップボードから新規作成」のキーと、キーボードショートカットはそのままです。"] =
             "Restore the default settings? Everything in Settings, and the advanced settings file for opening PDFs (pdf-import.json), goes back to its default. The key for New from clipboard and the keyboard shortcuts stay as they are.",
+        ["表 {0} 個を、線と文字から画像（SVG）に描き直しました（見た目優先）。表の中の文字は編集できません。"] =
+            "{0} tables were redrawn as pictures (SVG) from their lines and text (looks like the page). The text in them cannot be edited.",
+        ["表を画像にする（見た目優先）"] =
+            "Make tables pictures (looks like the page)",
+        ["表を Markdown の表にする（編集優先・既定）"] =
+            "Make tables Markdown tables (can be edited, default)",
         ["配布用 ZIP の書き出し"] =
             "ZIP for sharing",
         ["「{0}」フォルダーに、文書から参照されていないファイルが {1} 個あります。ごみ箱に移してから ZIP にしますか？\n\n{2}\n\n「いいえ」を選ぶと、ファイルは残したまま、ZIP には入れません。"] =

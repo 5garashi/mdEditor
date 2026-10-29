@@ -25,7 +25,8 @@ namespace MdEditor;
 // Boxes behind text (code, notes) and lines under headings are none of these.
 internal static partial class PdfImport
 {
-    private sealed record Grid(PdfRectangle Box, List<double> Columns, List<double> Rows);
+    // Verticals: the lines down the table, to tell where a cell spans several columns.
+    private sealed record Grid(PdfRectangle Box, List<double> Columns, List<double> Rows, List<Segment> Verticals);
 
     private sealed record Mark(PdfRectangle Box, bool CheckBox, bool Checked);
 
@@ -297,6 +298,25 @@ internal static partial class PdfImport
                 }
             }
 
+            // A table drawn inside a box (its sides are the box, not lines) has its sides where
+            // its row lines end: when two row lines or more reach past the outermost line down,
+            // a column edge is added there.
+            if (columns.Count >= 2)
+            {
+                var horizontals = group.Where(segment => segment.Horizontal).ToList();
+                var pastLeft = horizontals.Where(segment => segment.From < columns.Min() - 3).ToList();
+                var pastRight = horizontals.Where(segment => segment.To > columns.Max() + 3).ToList();
+                if (pastLeft.Count >= 2)
+                {
+                    columns = Distinct(columns.Append(pastLeft.Min(segment => segment.From)));
+                }
+
+                if (pastRight.Count >= 2)
+                {
+                    columns = Distinct(columns.Append(pastRight.Max(segment => segment.To)));
+                }
+            }
+
 
             // One row is a table too when its column lines run its full height (the rest of a
             // table that goes on from the page before).
@@ -313,7 +333,7 @@ internal static partial class PdfImport
                 continue;
             }
 
-            tables.Add(new Grid(box, columns, rows));
+            tables.Add(new Grid(box, columns, rows, group.Where(segment => !segment.Horizontal).ToList()));
             used.UnionWith(group);
         }
 
@@ -373,17 +393,37 @@ internal static partial class PdfImport
         var cells = new string[grid.Rows.Count - 1, grid.Columns.Count - 1];
         for (var row = 0; row < grid.Rows.Count - 1; row++)
         {
-            for (var column = 0; column < grid.Columns.Count - 1; column++)
+            var (top, bottom) = (grid.Rows[row], grid.Rows[row + 1]);
+            // A cell runs on over the next column where no line down the table divides them
+            // in this row (a header over two columns, "項目"): its text goes in its first
+            // column, and the columns it covers stay empty.
+            // A row with no line down the table at all (a header band) says nothing of where
+            // its cells are, and keeps the columns.
+            bool Divided(int column) => grid.Verticals.Any(segment => Math.Abs(segment.At - grid.Columns[column]) < 2
+                && segment.From < (top + bottom) / 2 && segment.To > (top + bottom) / 2);
+            var lined = Enumerable.Range(1, Math.Max(grid.Columns.Count - 2, 0)).Any(Divided);
+            for (var column = 0; column < grid.Columns.Count - 1;)
             {
-                var (top, bottom, left, right) = (grid.Rows[row], grid.Rows[row + 1], grid.Columns[column], grid.Columns[column + 1]);
+                var end = column + 1;
+                while (end < grid.Columns.Count - 1 && lined && !Divided(end))
+                {
+                    end++;
+                }
+
+                var (left, right) = (grid.Columns[column], grid.Columns[end]);
                 var cellWords = words.Where(word =>
                 {
                     var x = (word.BoundingBox.Left + word.BoundingBox.Right) / 2;
                     var y = (word.BoundingBox.Top + word.BoundingBox.Bottom) / 2;
                     return x > left && x < right && y < top && y > bottom;
                 }).ToList();
-                var lines = CellLines(cellWords).Select(line => ReadLine(line).Text).Where(text => text.Length > 0);
-                cells[row, column] = JoinLines(lines).Replace("|", "\\|");
+                cells[row, column] = CellText(CellLines(cellWords), left, right).Replace("|", "\\|");
+                for (var covered = column + 1; covered < end; covered++)
+                {
+                    cells[row, covered] = string.Empty;
+                }
+
+                column = end;
             }
         }
 
@@ -409,6 +449,84 @@ internal static partial class PdfImport
         }
 
         return builder.ToString().TrimEnd('\n');
+    }
+
+    // A cell's lines as text: a line wraps on into the next unless it ends well before the
+    // cell's right edge (two letters) and the next line starts an item of its own ("（", "・",
+    // "①"), or both are short (under 70% of the cell); such a line ends with <br>
+    // ("男児 午後9時20分" over "女児 午後9時30分", "外箱" over "（ケース）"). Words set apart by more than
+    // most of a letter (an ideographic space: "男児 67.8％　女児 72.0％") keep a space.
+    private static string CellText(List<List<Word>> lines, double cellLeft, double cellRight)
+    {
+        var read = new List<(string Text, double Left, double Right, double Size)>();
+        foreach (var line in lines)
+        {
+            var size = line.SelectMany(word => word.Letters).Select(letter => letter.PointSize).DefaultIfEmpty(10).Max();
+            // Letters apart by more than most of a letter are separate pieces (a word is cut
+            // there too), joined by a space; a heading spaced out a letter at a time
+            // ("項　　目") stays one word.
+            var split = new List<Word>();
+            foreach (var word in line)
+            {
+                var run = new List<Letter>();
+                foreach (var letter in word.Letters)
+                {
+                    if (run.Count > 0 && letter.BoundingBox.Left - run[^1].BoundingBox.Right > size * 0.8)
+                    {
+                        split.Add(new Word(run));
+                        run = [];
+                    }
+
+                    run.Add(letter);
+                }
+
+                if (run.Count > 0)
+                {
+                    split.Add(new Word(run));
+                }
+            }
+
+            var pieces = new List<List<Word>>();
+            foreach (var word in split)
+            {
+                if (pieces.Count == 0 || word.BoundingBox.Left - pieces[^1][^1].BoundingBox.Right > size * 0.8)
+                {
+                    pieces.Add([]);
+                }
+
+                pieces[^1].Add(word);
+            }
+
+            var texts = pieces.Select(words => ReadLine(words).Text.Trim()).Where(piece => piece.Length > 0).ToList();
+            var cellLine = new StringBuilder();
+            for (var i = 0; i < texts.Count; i++)
+            {
+                var spaced = i > 0 && !(texts[i - 1].Length == 1 && texts[i].Length == 1);
+                cellLine.Append(spaced ? " " : string.Empty).Append(texts[i]);
+            }
+
+            if (cellLine.Length == 0)
+            {
+                continue;
+            }
+
+            read.Add((cellLine.ToString(), line.Min(word => word.BoundingBox.Left), line.Max(word => word.BoundingBox.Right), size));
+        }
+
+        var parts = new List<List<string>> { new() };
+        for (var i = 0; i < read.Count; i++)
+        {
+            parts[^1].Add(read[i].Text);
+            var endsEarly = cellRight - read[i].Right > read[i].Size * 2;
+            bool IsShort(int at) => read[at].Right - read[at].Left < (cellRight - cellLeft) * 0.7;
+            var nextStarts = i + 1 < read.Count && read[i + 1].Text is ['（' or '(' or '・' or '●' or '■' or '※' or (>= '①' and <= '⑳'), ..];
+            if (i + 1 < read.Count && endsEarly && (nextStarts || IsShort(i) && IsShort(i + 1)))
+            {
+                parts.Add([]);
+            }
+        }
+
+        return string.Join("<br>", parts.Where(part => part.Count > 0).Select(part => JoinLines(part)));
     }
 
     // The words of a cell in lines, top to bottom, each read left to right.

@@ -47,6 +47,8 @@ public partial class MainWindow : Window
     private string _pdfFigureText = LoadSetting("PdfFigureText") == "text" ? "text" : "picture";
     private bool _pdfAlign = LoadSetting("PdfAlign") != "off";
     private bool _pdfPagePictures = LoadSetting("PdfPagePictures") != "off";
+    // Tables as Markdown tables ("text", the default) or as pictures ("picture").
+    private string _pdfTables = LoadSetting("PdfTables") == "picture" ? "picture" : "text";
     // What the sharing ZIP takes in besides the document (Settings): the files in its
     // name_files folder only ("folder"), also linked files elsewhere on the PC ("local",
     // the default), or also linked files on the internet ("all"); see ExportZipAsync.
@@ -56,7 +58,9 @@ public partial class MainWindow : Window
     private string? _lastPdf;
     private string? _lastPdfMarkdown;
     private bool _lastPdfInPicture;
+    private bool _lastPdfTablesAsPictures;
     private bool? _pdfFigureTextOnce;
+    private bool? _pdfTablesOnce;
     private MarkdownPipeline _markdownPipeline = MarkdownPipelines.Build(LoadSetting("NearGitHub") == "on");
     private readonly HtmlSanitizer _htmlSanitizer = new();
     private readonly DispatcherTimer _previewTimer = new()
@@ -489,6 +493,10 @@ public partial class MainWindow : Window
                 _pdfFigureText = root.GetProperty("value").GetString() == "text" ? "text" : "picture";
                 SaveSetting("PdfFigureText", _pdfFigureText);
                 break;
+            case "setPdfTables":
+                _pdfTables = root.GetProperty("value").GetString() == "picture" ? "picture" : "text";
+                SaveSetting("PdfTables", _pdfTables);
+                break;
             case "setPdfAlign":
                 _pdfAlign = root.GetProperty("enabled").GetBoolean();
                 SaveSetting("PdfAlign", _pdfAlign ? "on" : "off");
@@ -508,7 +516,7 @@ public partial class MainWindow : Window
                 OpenPdfOptionsFile();
                 break;
             case "reopenPdf":
-                await ReopenPdfAsync();
+                await ReopenPdfAsync(root.TryGetProperty("what", out var what) && what.GetString() == "tables");
                 break;
             case "checkLinks":
                 SendToPage(new
@@ -1668,6 +1676,8 @@ public partial class MainWindow : Window
         var assets = NewImportFolder();
         var options = PdfImportOptions.Load();
         options.FigureTextInPicture = _pdfFigureTextOnce ?? _pdfFigureText == "picture";
+        options.TablesAsPictures = _pdfTablesOnce ?? _pdfTables == "picture";
+        _pdfTablesOnce = null;
         options.Align = _pdfAlign;
         options.PagePictures = _pdfPagePictures;
         _pdfFigureTextOnce = null;
@@ -1717,7 +1727,6 @@ public partial class MainWindow : Window
                  {
                      (result.Figures, "図 {0} 個を、線と文字から画像（SVG）に描き直しました。図の中の文字は画像の一部で、編集できません。"),
                      (result.Formulas, "数式 {0} 個を画像（SVG）にしました。数式の文字は画像の説明（alt）に入れました。"),
-                     (result.Tables, "表 {0} 個を Markdown の表にしました。"),
                      (result.Aligned, "右寄せ・中央寄せの {0} か所は、HTML（align）で書きました。"),
                  })
         {
@@ -1727,8 +1736,15 @@ public partial class MainWindow : Window
             }
         }
 
-        // Text around figures: the notice says which way it went, and its button reopens the
-        // PDF the other way.
+        // Tables and text around figures: the notice says which way they went, and its
+        // buttons reopen the PDF the other way.
+        string? reopenTables = null;
+        if (result.Tables > 0)
+        {
+            notices.Add(string.Format(Strings.Tr(result.TablesAsPictures ? "表 {0} 個を、線と文字から画像（SVG）に描き直しました（見た目優先）。表の中の文字は編集できません。" : "表 {0} 個を Markdown の表にしました。"), result.Tables));
+            reopenTables = Strings.Tr(result.TablesAsPictures ? "表を Markdown の表にする（編集優先・既定）" : "表を画像にする（見た目優先）");
+        }
+
         string? reopen = null;
         if (result.FigureText > 0)
         {
@@ -1736,10 +1752,11 @@ public partial class MainWindow : Window
             reopen = Strings.Tr(result.InPicture ? "図のまわりの文字を文字として残す（編集優先）" : "図のまわりの文字を図に入れる（見た目優先・既定）");
         }
 
-        ApplyImported(result.Markdown, assets, name + ".md", false, string.Join(Strings.SentenceJoin, notices), reopen);
+        ApplyImported(result.Markdown, assets, name + ".md", false, string.Join(Strings.SentenceJoin, notices), reopen, reopenTables);
         _lastPdf = path;
         _lastPdfMarkdown = result.Markdown;
         _lastPdfInPicture = result.InPicture;
+        _lastPdfTablesAsPictures = result.TablesAsPictures;
         _suggestFolder = Path.GetDirectoryName(path);
         _importAssets = result.Images > 0 ? Path.Combine(assets, name + FilesSuffix) : null;
     }
@@ -1813,6 +1830,8 @@ public partial class MainWindow : Window
         WriteRecoveryCopy();
         SendToPage(new { type = "autoBackup", enabled = _autoBackup });
         _pdfFigureText = "picture";
+        _pdfTables = "text";
+        SaveSetting("PdfTables", _pdfTables);
         _pdfAlign = true;
         _pdfPagePictures = true;
         SaveSetting("PdfFigureText", _pdfFigureText);
@@ -1836,7 +1855,7 @@ public partial class MainWindow : Window
     }
 
     private void SendPdfOptions() =>
-        SendToPage(new { type = "pdfOptions", figureText = _pdfFigureText, align = _pdfAlign, pagePictures = _pdfPagePictures, file = PdfImportOptions.FilePath });
+        SendToPage(new { type = "pdfOptions", figureText = _pdfFigureText, tables = _pdfTables, align = _pdfAlign, pagePictures = _pdfPagePictures, file = PdfImportOptions.FilePath });
 
     // The advanced numbers of PDF import, in pdf-import.json: written with the defaults when
     // there is none, and opened in Notepad (mdEditor would open JSON as a document).
@@ -1853,16 +1872,18 @@ public partial class MainWindow : Window
         }
     }
 
-    // The notice's button: the PDF just opened is opened again with its figures' text the
-    // other way (this once; Settings keep the default). Changes made since are asked about.
-    private async Task ReopenPdfAsync()
+    // The notice's buttons: the PDF just opened is opened again with its figures' text, or
+    // its tables, the other way (this once; Settings keep the default; the other choice stays
+    // as it was). Changes made since are asked about.
+    private async Task ReopenPdfAsync(bool tables)
     {
         if (_lastPdf is not { } path || !File.Exists(path) || _text != _lastPdfMarkdown && !await ConfirmSaveChangesAsync())
         {
             return;
         }
 
-        _pdfFigureTextOnce = !_lastPdfInPicture;
+        _pdfFigureTextOnce = tables ? _lastPdfInPicture : !_lastPdfInPicture;
+        _pdfTablesOnce = tables ? !_lastPdfTablesAsPictures : _lastPdfTablesAsPictures;
         await LoadDocumentAsync(path);
     }
 
@@ -2597,7 +2618,7 @@ public partial class MainWindow : Window
         _suggestFolder = null;
     }
 
-    private void ApplyImported(string markdown, string? folder, string name, bool allowExternal, string? notice, string? reopen = null)
+    private void ApplyImported(string markdown, string? folder, string name, bool allowExternal, string? notice, string? reopen = null, string? reopenTables = null)
     {
         _lastPdf = null;
         RememberLeftDocument(null);
@@ -2620,7 +2641,7 @@ public partial class MainWindow : Window
         SendEncodingNotice();
         if (notice is not null)
         {
-            SendToPage(new { type = "notice", text = notice, reopen });
+            SendToPage(new { type = "notice", text = notice, reopen, reopenTables });
         }
 
         SendPreview();

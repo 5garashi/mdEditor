@@ -44,9 +44,10 @@ internal static partial class PdfImport
     // drawn by PDFium. What else was done, for the notice: figures and formulas drawn again
     // as pictures, tables made, paragraphs placed right or in the middle with HTML, and
     // whether the PDF's tags were read; FigureText, how many blocks of text reached into a
-    // figure, put in its picture (InPicture) or kept as text.
+    // figure, put in its picture (InPicture) or kept as text; TablesAsPictures, whether the
+    // tables were drawn as pictures.
     public sealed record Result(string Markdown, int Images, int Pages, int ReadPages, bool HasText, int Headings, IReadOnlyList<int> PicturePages, IReadOnlyList<int> ImagePages,
-        IReadOnlyList<int> OutlinePages, int Figures = 0, int Formulas = 0, int Tables = 0, int Aligned = 0, bool Tagged = false, int FigureText = 0, bool InPicture = true);
+        IReadOnlyList<int> OutlinePages, int Figures = 0, int Formulas = 0, int Tables = 0, int Aligned = 0, bool Tagged = false, int FigureText = 0, bool InPicture = true, bool TablesAsPictures = false);
 
     private sealed record Line(string Text, double Size, bool Bold, double Top, double Right, bool MathFont, string Family, double Left = 0, bool Rejoined = false);
 
@@ -244,14 +245,21 @@ internal static partial class PdfImport
                 if (at < 0) pageItems.Add(item); else pageItems.Insert(at, item);
             }
 
-            foreach (var table in shapes.Tables)
+            // A table is a Markdown table, or, when the options say so, drawn again as a picture
+            // of itself (its lines, fills, and text, as a figure is).
+            foreach (var (box, grid, taggedText) in shapes.Tables.Select(grid => (grid.Box, (Grid?)grid, (string?)null))
+                         .Concat(taggedTables.Select(table => (table.Box, (Grid?)null, (string?)table.Markdown))))
             {
-                Place(new Item(TableMarkdown(table, page.Letters), 0, false, ItemKind.Table, table.Box.Top, number));
-            }
-
-            foreach (var (box, table, _) in taggedTables)
-            {
-                Place(new Item(table, 0, false, ItemKind.Table, box.Top, number));
+                if (Tune.TablesAsPictures)
+                {
+                    var area = new PdfRectangle(box.Left - 1, box.Bottom - 1, box.Right + 1, box.Top + 1);
+                    Place(new Item(SaveSvg(FigureSvg(page, area, states.Value)), 0, false, ItemKind.Image, area.Top, number,
+                        Left: area.Left, Right: area.Right, Bottom: area.Bottom, Natural: area.Width * 4 / 3));
+                }
+                else
+                {
+                    Place(new Item(taggedText ?? TableMarkdown(grid!, page.Letters), 0, false, ItemKind.Table, box.Top, number));
+                }
             }
 
             figures += shapes.Figures.Count;
@@ -490,7 +498,7 @@ internal static partial class PdfImport
         var headings = levels.Count(level => level > 0);
         return new Result(markdown.Length > 0 ? markdown.Append('\n').ToString() : string.Empty,
             images, document.NumberOfPages, readPages, text.Count > 0 || imagePages.Count > 0, headings, picturePages, imagePages, outlinePages,
-            figures, formulas, tables, aligned, tagged, figureText, Tune.FigureTextInPicture);
+            figures, formulas, tables, aligned, tagged, figureText, Tune.FigureTextInPicture, Tune.TablesAsPictures);
     }
 
     // Whether a page's running text (figures, tables, and formulas apart) cannot be read in
@@ -1414,7 +1422,10 @@ internal static partial class PdfImport
             // that ends a sentence or a parenthesis, starts an entry of a list of terms (a
             // wrapped line goes on mid-sentence).
             var startsTerm = TermLinePattern().IsMatch(line.Text) && previousLine?.Text.TrimEnd() is [.., '。' or '．' or '.' or '！' or '？' or '!' or '?' or '）' or ')' or '」' or '』'];
-            if (current.Count > 0 && (sizeChanged || fontChanged || endedEarly || standsAlone || startsTerm || newElement || lineKind != ItemKind.Paragraph))
+            // A line that starts with a mark ("■家族団らんで…", "・週に…"), often set without a
+            // space after it in Japanese, starts an item of its own.
+            var startsMark = line.Text.TrimStart() is ['■' or '□' or '◆' or '◇' or '●' or '○' or '★' or '☆' or '▶' or '▷' or '※' or '・', ..];
+            if (current.Count > 0 && (sizeChanged || fontChanged || endedEarly || standsAlone || startsTerm || startsMark || newElement || lineKind != ItemKind.Paragraph))
             {
                 foreach (var item in Flush()) yield return item;
             }

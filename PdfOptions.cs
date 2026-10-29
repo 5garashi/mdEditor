@@ -22,6 +22,9 @@ internal sealed class PdfImportOptions
     // page) or stays text (false, can be edited); right-aligned and centered text is written
     // as HTML; a page that cannot be read as text becomes a picture of the whole page.
     [JsonIgnore] public bool FigureTextInPicture { get; set; } = true;
+    // Settings: a table becomes a Markdown table (false, the default, can be edited) or a
+    // picture of itself (true, looks like the page).
+    [JsonIgnore] public bool TablesAsPictures { get; set; }
     [JsonIgnore] public bool Align { get; set; } = true;
     [JsonIgnore] public bool PagePictures { get; set; } = true;
 

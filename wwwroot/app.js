@@ -38,6 +38,9 @@
       sampleIntro: "図と数式を含む文書を、編集欄に入れて試せます。短い例のほかに、使えるすべての図・チャート・数式を確かめる長い文書（日本語・英語・中国語）もあります。選んだときだけ入ります。",
       settingsPdf: "PDF の取り込み",
       settingsPdfFigureText: "図のまわりの文字",
+      settingsPdfTables: "表",
+      pdfTablesText: "Markdown の表にする（編集優先・初期設定）",
+      pdfTablesPicture: "画像にする（見た目優先）",
       pdfFigureTextPicture: "図に入れる（見た目優先・初期設定）",
       pdfFigureTextText: "文字として残す（編集優先）",
       settingsPdfFigureTextNote: "図の範囲にかかる文字（イラストの横の説明など）を、図の画像に入れて見た目を保つか、文字として残して編集できるようにするかを選びます。PDF を開いたあと、お知らせ欄のボタンで、もう一方の方法で開き直すこともできます。",
@@ -216,6 +219,9 @@
       sampleIntro: "可以把包含图表和公式的文档放入编辑区试用。除了简短的示例，还有用来检查所有图表、图形和公式的长文档（日语、英语、中文）。只有选择时才会放入。",
       settingsPdf: "PDF 导入",
       settingsPdfFigureText: "图表周围的文字",
+      settingsPdfTables: "表格",
+      pdfTablesText: "作为 Markdown 表格（编辑优先・默认）",
+      pdfTablesPicture: "作为图片（外观优先）",
       pdfFigureTextPicture: "放入图片（外观优先・默认）",
       pdfFigureTextText: "保留为文字（编辑优先）",
       settingsPdfFigureTextNote: "选择把延伸到图表范围内的文字（插图旁边的说明等）放入图表的图片以保持外观，还是保留为文字以便编辑。打开 PDF 后，也可以用通知栏中的按钮以另一种方式重新打开。",
@@ -394,6 +400,9 @@
       sampleIntro: "Try a document with diagrams and math. Besides the short examples, there are long tests of every supported diagram, chart, and formula (Japanese, English, and Chinese). Nothing is inserted until you choose one.",
       settingsPdf: "Opening PDFs",
       settingsPdfFigureText: "Text around figures",
+      settingsPdfTables: "Tables",
+      pdfTablesText: "Make Markdown tables (can be edited, default)",
+      pdfTablesPicture: "Make pictures (looks like the page)",
       pdfFigureTextPicture: "Put in the picture (looks like the page, default)",
       pdfFigureTextText: "Keep as text (can be edited)",
       settingsPdfFigureTextNote: "Choose whether text that reaches into a figure (a description beside an illustration, say) goes into the figure's picture, keeping the look, or stays text you can edit. After a PDF opens, the button in the notice bar opens it again the other way.",
@@ -952,13 +961,17 @@
     const reopen = document.getElementById("notice-reopen");
     reopen.hidden = !(noticeState?.kind === "message" && noticeState.reopen);
     reopen.textContent = noticeState?.reopen ?? "";
+    const reopenTables = document.getElementById("notice-reopen-tables");
+    reopenTables.hidden = !(noticeState?.kind === "message" && noticeState.reopenTables);
+    reopenTables.textContent = noticeState?.reopenTables ?? "";
     notice.classList.toggle("notice-strong", noticeState?.kind === "lossy");
     notice.hidden = false;
   };
 
-  // reopen: the label of a button that opens the PDF again the other way (see the host).
-  const showNoticeMessage = (text, reopen) => {
-    noticeState = { kind: "message", text, reopen };
+  // reopen, reopenTables: the labels of buttons that open the PDF again with the text around
+  // its figures, or its tables, the other way (see the host).
+  const showNoticeMessage = (text, reopen, reopenTables) => {
+    noticeState = { kind: "message", text, reopen, reopenTables };
     updateNotice();
   };
 
@@ -1817,6 +1830,13 @@
     updateNotice();
     post({ type: "reopenPdf" });
   });
+  document.getElementById("notice-reopen-tables").addEventListener("click", () => {
+    noticeState = null;
+    updateNotice();
+    post({ type: "reopenPdf", what: "tables" });
+  });
+  const pdfTablesSelect = document.getElementById("setting-pdf-tables");
+  pdfTablesSelect.addEventListener("change", () => post({ type: "setPdfTables", value: pdfTablesSelect.value }));
   // Closer to GitHub changes how the host reads Markdown, so the host keeps it.
   const nearGitHubCheckbox = document.getElementById("setting-near-github");
   nearGitHubCheckbox.addEventListener("change", () => post({ type: "setNearGitHub", enabled: nearGitHubCheckbox.checked }));
@@ -3567,7 +3587,7 @@
       }
       updateNotice();
     } else if (message.type === "notice") {
-      showNoticeMessage(message.text, message.reopen);
+      showNoticeMessage(message.text, message.reopen, message.reopenTables);
     } else if (message.type === "appInfo") {
       document.getElementById("app-version").textContent = message.version;
     } else if (message.type === "scrollToAnchor") {
@@ -3586,6 +3606,7 @@
       zipLinksSelect.value = message.value;
     } else if (message.type === "pdfOptions") {
       pdfFigureTextSelect.value = message.figureText;
+      pdfTablesSelect.value = message.tables;
       pdfAlignCheckbox.checked = Boolean(message.align);
       pdfPagePicturesCheckbox.checked = Boolean(message.pagePictures);
       document.getElementById("setting-pdf-file-path").textContent = message.file;
