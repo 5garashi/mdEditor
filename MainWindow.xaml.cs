@@ -1677,7 +1677,8 @@ public partial class MainWindow : Window
 
         // Images and links missing beside the file resolve from the page's own
         // address (<base>, canonical, or og:url), as a browser would.
-        var (markdown, exact) = HtmlImport.ToMarkdown(decoded.Text, null, relative => ExistsBeside(folder, relative), KeepPicture);
+        var (markdown, exact) = HtmlImport.ToMarkdown(decoded.Text, null, relative => ExistsBeside(folder, relative), KeepPicture,
+            tiles => DrawMapTiles(folder, tiles));
         ApplyImported(markdown, folder, name + ".md", false, Strings.Tr(exact
             ? "mdEditor で保存した HTML から、元の Markdown を開きました。保存すると Markdown ファイルになります（HTML ファイルは変わりません）。"
             : "HTML を Markdown に変換して開きました。色や配置は元に戻りません。図は画像にしました。保存すると Markdown ファイルになります（HTML ファイルは変わりません）。"));
@@ -1695,6 +1696,74 @@ public partial class MainWindow : Window
         }
 
         SendOriginalHtml(original.Html, $"https://{DocumentHost}/", original.Parts, path);
+    }
+
+    // A saved map's tiles (pictures beside the HTML file) joined into one PNG as they were
+    // laid out: the part from the map's top left (what was on the screen) to the farthest
+    // tile, up to 4096 pixels a side. Tiles not inside the HTML file's folder are skipped;
+    // null when none could be read.
+    private static byte[]? DrawMapTiles(string folder, IReadOnlyList<HtmlImport.MapTile> tiles)
+    {
+        var root = Path.GetFullPath(folder).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+        var pictures = new List<(HtmlImport.MapTile Tile, BitmapSource Picture)>();
+        foreach (var tile in tiles)
+        {
+            try
+            {
+                var path = Path.GetFullPath(Path.Combine(root, Uri.UnescapeDataString(tile.Source.Split('?', 2)[0]).Replace('/', Path.DirectorySeparatorChar)));
+                if (!path.StartsWith(root, StringComparison.OrdinalIgnoreCase) || !File.Exists(path))
+                {
+                    continue;
+                }
+
+                var picture = new BitmapImage();
+                picture.BeginInit();
+                picture.CacheOption = BitmapCacheOption.OnLoad;
+                picture.UriSource = new Uri(path);
+                picture.EndInit();
+                picture.Freeze();
+                pictures.Add((tile, picture));
+            }
+            catch (Exception ex) when (ex is IOException or ArgumentException or NotSupportedException or UriFormatException
+                                           or InvalidOperationException or System.Runtime.InteropServices.COMException)
+            {
+                // Not a picture that can be read; the map goes without it.
+            }
+        }
+
+        if (pictures.Count == 0)
+        {
+            return null;
+        }
+
+        var left = Math.Max(0, pictures.Min(item => item.Tile.X));
+        var top = Math.Max(0, pictures.Min(item => item.Tile.Y));
+        var width = (int)Math.Ceiling(Math.Min(4096, pictures.Max(item => item.Tile.X + item.Tile.Width) - left));
+        var height = (int)Math.Ceiling(Math.Min(4096, pictures.Max(item => item.Tile.Y + item.Tile.Height) - top));
+        if (width <= 0 || height <= 0)
+        {
+            return null;
+        }
+
+        var visual = new DrawingVisual();
+        using (var context = visual.RenderOpen())
+        {
+            context.DrawRectangle(Brushes.White, null, new Rect(0, 0, width, height));
+            foreach (var (tile, picture) in pictures)
+            {
+                context.PushOpacity(tile.Opacity);
+                context.DrawImage(picture, new Rect(tile.X - left, tile.Y - top, tile.Width, tile.Height));
+                context.Pop();
+            }
+        }
+
+        var bitmap = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
+        bitmap.Render(visual);
+        var encoder = new PngBitmapEncoder();
+        encoder.Frames.Add(BitmapFrame.Create(bitmap));
+        using var stream = new MemoryStream();
+        encoder.Save(stream);
+        return stream.ToArray();
     }
 
     // A Word document opens as Markdown through Mammoth (Word to clean HTML) and

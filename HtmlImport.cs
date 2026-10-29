@@ -71,7 +71,7 @@ internal static class HtmlImport
     // (SVG, and images written into the page as data:) are handed to keepPicture,
     // which stores them and gives the address to use, or are left out without it.
     public static (string Markdown, bool Exact) ToMarkdown(string html, Uri? pageUrl = null, Func<string, bool>? existsLocally = null,
-        Func<byte[], string, string?>? keepPicture = null)
+        Func<byte[], string, string?>? keepPicture = null, Func<IReadOnlyList<MapTile>, byte[]?>? drawMap = null)
     {
         var document = new HtmlParser().ParseDocument(html);
         if (document.GetElementById(SourceId) is { } source && TryReadSource(source.TextContent, out var original))
@@ -178,6 +178,25 @@ internal static class HtmlImport
             var paragraph = document.CreateElement("p");
             paragraph.TextContent = $"MDEDITORFENCE{fences.Count - 1}X";
             element.Replace(paragraph);
+        }
+
+        // A Leaflet map's saved tiles, laid out as they were, become one picture (drawMap
+        // joins them) in place of the map; its controls and credits stay.
+        if (keepPicture is not null && drawMap is not null)
+        {
+            foreach (var pane in document.QuerySelectorAll(".leaflet-container .leaflet-map-pane").ToList())
+            {
+                var tiles = MapTiles(pane);
+                if (tiles.Count > 0 && drawMap(tiles) is { } png && keepPicture(png, ".png") is { } address)
+                {
+                    var paragraph = document.CreateElement("p");
+                    var image = document.CreateElement("img");
+                    image.SetAttribute("src", address);
+                    image.SetAttribute("alt", Strings.Tr("地図（保存した時点の表示）"));
+                    paragraph.AppendChild(image);
+                    pane.Replace(paragraph);
+                }
+            }
         }
 
         // What only works on the page (buttons, choices, closed dialogs, what is hidden,
@@ -308,6 +327,57 @@ internal static class HtmlImport
         }
 
         return (markdown.Trim() + "\n", false);
+    }
+
+    // One saved map tile: its picture (src as written), where it was in the map (pixels from
+    // the map's top left, after the moves and zoom of the boxes around it), and how opaque.
+    public sealed record MapTile(string Source, double X, double Y, double Width, double Height, double Opacity);
+
+    // The picture tiles of a Leaflet map pane, placed as the page placed them: each box from
+    // the tile up to the pane moves it (translate3d / translate, or left and top) and may
+    // zoom it (scale, from its top left as Leaflet sets). Drawn tiles (canvas) hold nothing
+    // once saved and are left out.
+    private static List<MapTile> MapTiles(IElement pane)
+    {
+        static double Number(string value) =>
+            double.TryParse(value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var number) ? number : 0;
+        var tiles = new List<MapTile>();
+        foreach (var tile in pane.QuerySelectorAll("img.leaflet-tile[src]"))
+        {
+            double x = 0, y = 0, scale = 1, opacity = 1;
+            var size = (Width: 256.0, Height: 256.0);
+            var styleOf = (IElement element) => element.GetAttribute("style") ?? string.Empty;
+            var own = styleOf(tile);
+            if (System.Text.RegularExpressions.Regex.Match(own, @"(?:^|;)\s*width\s*:\s*([\d.]+)px") is { Success: true } width)
+            {
+                size.Width = Number(width.Groups[1].Value);
+            }
+
+            if (System.Text.RegularExpressions.Regex.Match(own, @"(?:^|;)\s*height\s*:\s*([\d.]+)px") is { Success: true } height)
+            {
+                size.Height = Number(height.Groups[1].Value);
+            }
+
+            for (var element = tile; element is not null; element = element == pane ? null : element.ParentElement)
+            {
+                var style = styleOf(element);
+                var move = System.Text.RegularExpressions.Regex.Match(style, @"translate(?:3d)?\(\s*(-?[\d.]+)px\s*,\s*(-?[\d.]+)px");
+                var zoom = System.Text.RegularExpressions.Regex.Match(style, @"scale\(\s*([\d.]+)\s*\)");
+                var left = System.Text.RegularExpressions.Regex.Match(style, @"(?:^|;)\s*left\s*:\s*(-?[\d.]+)px");
+                var top = System.Text.RegularExpressions.Regex.Match(style, @"(?:^|;)\s*top\s*:\s*(-?[\d.]+)px");
+                var fade = System.Text.RegularExpressions.Regex.Match(style, @"(?:^|;)\s*opacity\s*:\s*([\d.]+)");
+                // transform: translate(t) scale(s) takes a point p to t + s * p.
+                var s = zoom.Success ? Number(zoom.Groups[1].Value) : 1;
+                x = (move.Success ? Number(move.Groups[1].Value) : 0) + (left.Success ? Number(left.Groups[1].Value) : 0) + s * x;
+                y = (move.Success ? Number(move.Groups[2].Value) : 0) + (top.Success ? Number(top.Groups[1].Value) : 0) + s * y;
+                scale *= s;
+                opacity *= fade.Success ? Math.Clamp(Number(fade.Groups[1].Value), 0, 1) : 1;
+            }
+
+            tiles.Add(new MapTile(tile.GetAttribute("src")!, x, y, size.Width * scale, size.Height * scale, opacity));
+        }
+
+        return tiles;
     }
 
     private const string BlockElements =
