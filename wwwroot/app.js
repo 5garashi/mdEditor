@@ -667,7 +667,7 @@
     keymap, lintGutter, linter, markTags, markdownLanguage, openLintPanel, syntaxHighlighting, tags
   } = window.CodeMirror;
   const displayDefaults = {
-    font: "standard", size: "1", spacing: "1.7", fullWidth: false, htmlSource: false, activeLine: false, thickCaret: false, colors: true, lint: true,
+    font: "standard", size: "1", spacing: "1.7", fullWidth: false, htmlSource: true, activeLine: false, thickCaret: false, colors: true, lint: true,
     reader: false, rate: "1", pause: "0.5", readerLang: "auto", readerVoice: "", mapBackground: "ask", videoAutoplay: "auto"
   };
   const displayStorageKey = "mdeditor-display";
@@ -2612,9 +2612,11 @@
       policy.setAttribute("content", originalPolicy);
       page.head.prepend(policy);
       frame.srcdoc = "<!doctype html>" + page.documentElement.outerHTML;
+      // At least as tall as the view, so a page made to fill its window (a map, an app)
+      // is shown whole rather than squeezed.
       const fit = () => {
         const page = frame.contentDocument?.documentElement;
-        if (page) frame.style.height = `${page.scrollHeight}px`;
+        if (page) frame.style.height = `${Math.max(originalView.clientHeight, page.scrollHeight)}px`;
       };
       frame.addEventListener("load", () => {
         fit();
@@ -3055,6 +3057,15 @@
     element.replaceChildren(message, pre);
   };
 
+  // A drawn diagram keeps its code block (language and code) in data-mdeditor-fence and
+  // data-mdeditor-code, which stay in Save as HTML, so opening that HTML brings the code
+  // back. Code over 1 MB (a large 3D model) is not kept.
+  const keepFence = (element, language, code) => {
+    if (code.length > 1_000_000) return;
+    element.dataset.mdeditorFence = language;
+    element.dataset.mdeditorCode = code;
+  };
+
   const renderDiagrams = async (generation, previousSvgs, diagramCache) => {
     // Markdig emits <pre class="mermaid">; a div keeps code-block styles out of the drawing.
     const blocks = Array.from(preview.querySelectorAll(".mermaid"), (block) => {
@@ -3062,6 +3073,7 @@
       element.className = "mermaid";
       if (block.dataset.line) element.dataset.line = block.dataset.line;
       element.textContent = block.textContent;
+      keepFence(element, "mermaid", block.textContent);
       block.replaceWith(element);
       return { element, source: element.textContent };
     });
@@ -3146,6 +3158,7 @@
     const line = pre.dataset.line ?? code.dataset.line;
     if (line) element.dataset.line = line;
     element.textContent = code.textContent;
+    keepFence(element, language, code.textContent);
     pre.replaceWith(element);
     return element;
   }).filter(Boolean);
@@ -3182,6 +3195,7 @@
     const line = pre.dataset.line ?? code.dataset.line;
     if (line) element.dataset.line = line;
     element.textContent = code.textContent;
+    keepFence(element, language, code.textContent);
     pre.replaceWith(element);
     return element;
   }).filter(Boolean);
@@ -3278,6 +3292,7 @@
       if (view.element.dataset.line !== element.dataset.line) {
         if (element.dataset.line) view.element.dataset.line = element.dataset.line;
       }
+      keepFence(view.element, "stl", text);
       element.replaceWith(view.element);
     }
     // Models no longer in the document give their drawing context back.

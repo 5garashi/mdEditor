@@ -189,8 +189,8 @@ internal static partial class Strings
             "{1} files the document refers to outside the {0} folder are not in the ZIP.",
         ["mdEditor で保存した HTML から、元の Markdown を開きました。保存すると Markdown ファイルになります（HTML ファイルは変わりません）。"] =
             "Opened the original Markdown kept in this HTML file by mdEditor. Saving makes a Markdown file (the HTML file stays as it is).",
-        ["HTML を Markdown に変換して開きました。色や配置、図の絵は元に戻りません。保存すると Markdown ファイルになります（HTML ファイルは変わりません）。"] =
-            "Converted the HTML to Markdown. Colors, layout, and drawn diagrams do not come back. Saving makes a Markdown file (the HTML file stays as it is).",
+        ["HTML を Markdown に変換して開きました。色や配置は元に戻りません。図は画像にしました。保存すると Markdown ファイルになります（HTML ファイルは変わりません）。"] =
+            "Converted the HTML to Markdown. Colors and layout do not come back; diagrams became pictures. Saving makes a Markdown file (the HTML file stays as it is).",
         ["HTML ファイル (*.html)|*.html"] = "HTML files (*.html)|*.html",
         ["新しい文書.html"] = "Untitled.html",
         ["HTMLの保存先を選択してください"] = "Choose where to save the HTML file",

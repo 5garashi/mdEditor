@@ -1649,14 +1649,47 @@ public partial class MainWindow : Window
     private void ImportHtml(string path, DecodedDocument decoded)
     {
         var folder = Path.GetDirectoryName(path)!;
+        var name = Path.GetFileNameWithoutExtension(path);
+        // Drawn pictures (diagrams, data: images) are written to "name_files" in a new
+        // temporary folder, as a Word document's images are, and are copied beside the
+        // Markdown file when it is first saved. Names already taken beside the HTML file
+        // (a browser's own "name_files") are skipped.
+        var assets = Path.Combine(NewImportFolder(), name + FilesSuffix);
+        var pictures = 0;
+        string? KeepPicture(byte[] data, string extension)
+        {
+            string file;
+            do
+            {
+                file = $"picture-{++pictures}{extension}";
+            }
+            while (File.Exists(Path.Combine(folder, name + FilesSuffix, file)));
+
+            Directory.CreateDirectory(assets);
+            File.WriteAllBytes(Path.Combine(assets, file), data);
+            return $"{Uri.EscapeDataString(name + FilesSuffix)}/{file}";
+        }
+
         // Images and links missing beside the file resolve from the page's own
         // address (<base>, canonical, or og:url), as a browser would.
-        var (markdown, exact) = HtmlImport.ToMarkdown(decoded.Text, null, relative => ExistsBeside(folder, relative));
-        ApplyImported(markdown, folder, Path.GetFileNameWithoutExtension(path) + ".md", false, Strings.Tr(exact
+        var (markdown, exact) = HtmlImport.ToMarkdown(decoded.Text, null, relative => ExistsBeside(folder, relative), KeepPicture);
+        ApplyImported(markdown, folder, name + ".md", false, Strings.Tr(exact
             ? "mdEditor で保存した HTML から、元の Markdown を開きました。保存すると Markdown ファイルになります（HTML ファイルは変わりません）。"
-            : "HTML を Markdown に変換して開きました。色や配置、図の絵は元に戻りません。保存すると Markdown ファイルになります（HTML ファイルは変わりません）。"));
-        // Its pictures beside it come from the document's folder, as the preview's do.
-        SendOriginalHtml(decoded.Text, $"https://{DocumentHost}/");
+            : "HTML を Markdown に変換して開きました。色や配置は元に戻りません。図は画像にしました。保存すると Markdown ファイルになります（HTML ファイルは変わりません）。"));
+        _importAssets = Directory.Exists(assets) ? assets : null;
+        // Its pictures beside it come from the document's folder, as the preview's do,
+        // its stylesheets beside it are put into the page, and its data: pictures are served.
+        (string Html, List<(string Type, byte[] Data)>? Parts) original = (decoded.Text, null);
+        try
+        {
+            original = HtmlImport.ForOriginal(decoded.Text, folder, $"https://{DocumentHost}/");
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // Without its stylesheets the page still shows, plainer.
+        }
+
+        SendOriginalHtml(original.Html, $"https://{DocumentHost}/", original.Parts);
     }
 
     // A Word document opens as Markdown through Mammoth (Word to clean HTML) and
@@ -1795,8 +1828,8 @@ public partial class MainWindow : Window
     private List<string> MissingLinkTargets(IEnumerable<string> targets)
     {
         var missing = new List<string>();
-        var baseFolder = _filePath is null ? _importFolder : Path.GetDirectoryName(_filePath);
-        if (baseFolder is null)
+        var folders = DocumentFolders().ToList();
+        if (folders.Count == 0)
         {
             return missing;
         }
@@ -1811,8 +1844,8 @@ public partial class MainWindow : Window
 
             try
             {
-                var full = Path.GetFullPath(Path.Combine(baseFolder, Uri.UnescapeDataString(pathPart).Replace('/', Path.DirectorySeparatorChar)));
-                if (!File.Exists(full) && !Directory.Exists(full))
+                var relative = Uri.UnescapeDataString(pathPart).Replace('/', Path.DirectorySeparatorChar);
+                if (!folders.Any(folder => Path.GetFullPath(Path.Combine(folder, relative)) is var full && (File.Exists(full) || Directory.Exists(full))))
                 {
                     missing.Add(target);
                 }
@@ -2985,32 +3018,46 @@ public partial class MainWindow : Window
     {
         path = string.Empty;
         contentType = string.Empty;
-        var folder = _filePath is null ? _importFolder : Path.GetDirectoryName(_filePath);
-        if (folder is null)
+        foreach (var folder in DocumentFolders())
         {
-            return false;
-        }
-
-        try
-        {
-            var root = Path.GetFullPath(folder).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
-            // Without the file time ResolveImageAddress puts first (/~time/).
-            var relative = System.Text.RegularExpressions.Regex.Replace(Uri.UnescapeDataString(relativeUrlPath), @"^/~\d+/", "/").TrimStart('/');
-            path = Path.GetFullPath(Path.Combine(root, relative));
-            if (!path.StartsWith(root, StringComparison.OrdinalIgnoreCase)
-                || !ImageContentTypes.TryGetValue(Path.GetExtension(path), out var type)
-                || !File.Exists(path))
+            try
             {
-                return false;
+                var root = Path.GetFullPath(folder).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+                // Without the file time ResolveImageAddress puts first (/~time/).
+                var relative = System.Text.RegularExpressions.Regex.Replace(Uri.UnescapeDataString(relativeUrlPath), @"^/~\d+/", "/").TrimStart('/');
+                path = Path.GetFullPath(Path.Combine(root, relative));
+                if (path.StartsWith(root, StringComparison.OrdinalIgnoreCase)
+                    && ImageContentTypes.TryGetValue(Path.GetExtension(path), out var type)
+                    && File.Exists(path))
+                {
+                    contentType = type;
+                    return true;
+                }
             }
-
-            contentType = type;
-            return true;
+            catch (Exception ex) when (ex is ArgumentException or NotSupportedException or PathTooLongException
+                                           or SecurityException or UriFormatException)
+            {
+                // Not a path in this folder.
+            }
         }
-        catch (Exception ex) when (ex is ArgumentException or NotSupportedException or PathTooLongException
-                                       or SecurityException or UriFormatException)
+
+        path = string.Empty;
+        return false;
+    }
+
+    // Where a document's relative pictures and links are looked for: its folder, and,
+    // until an HTML file's conversion is first saved, the temporary folder holding the
+    // pictures drawn in it (ImportHtml), which saving copies beside the Markdown file.
+    private IEnumerable<string> DocumentFolders()
+    {
+        if ((_filePath is null ? _importFolder : Path.GetDirectoryName(_filePath)) is { } folder)
         {
-            return false;
+            yield return folder;
+        }
+
+        if (_filePath is null && _importAssets is not null && Path.GetDirectoryName(_importAssets) is { } assets)
+        {
+            yield return assets;
         }
     }
 
