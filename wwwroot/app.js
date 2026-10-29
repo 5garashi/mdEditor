@@ -149,7 +149,8 @@
       zoomNote: "Ctrl + マウスホイール、Ctrl + プラス／マイナス、Ctrl + 0 でも変えられます。倍率は次回の起動でも使います。",
       settingsFullWidth: "プレビューの本文の幅を制限しない（広い画面で1行を長くする）",
       settingsEditor: "編集欄", settingsActiveLine: "いまの行を強調する", settingsThickCaret: "カーソルを太くする",
-      settingsLint: "Markdown の書き方を確かめる（問題のある所に波線を引く）",
+      settingsColors: "Markdown の書き方を色分けする（見出し、強調、リンク、コード、数式など）",
+      settingsLint: "Markdown の書き方を確かめる（問題のある所に波線を引き、行に印を付ける）",
       lintStatus: (count) => `書き方の問題 ${count} 件（押すと一覧を表示）`,
       lintPhrases: {"Diagnostics": "書き方の確認", "No diagnostics": "問題は見つかりませんでした", "close": "閉じる"},
       lint: {"MD001": "見出しの段階が飛んでいます（# の次に ### など）。1 段ずつ下げてください。", "MD011": "リンクの書き方が逆です。[文字](アドレス) の順に書きます。", "MD018": "見出しの # の後に空白がありません（#見出し → # 見出し）。", "MD023": "見出しが行の先頭から始まっていません。前の空白を消してください。", "MD024": "同じ階層に同じ名前の見出しがあります。目次やリンクで見分けられません。", "MD037": "強調の記号（* や _）の内側に空白があり、強調になりません。", "MD038": "コード（`）の内側の前後に空白があります。", "MD039": "リンクの文字の前後に空白があります。", "MD042": "リンク先が空です。", "MD045": "画像に説明（代替テキスト）がありません。![説明](…) と書くと、画面読み上げでも伝わります。", "MD051": "ページ内リンク（#…）の行き先の見出しが見つかりません。", "MD052": "参照リンク [文字][名前] の名前が、どこにも定義されていません。", "MD056": "表のこの行の列の数が、見出しの行と違います。", "MD058": "表の前後に空行がありません。表として表示されないことがあります。", "fence": "コードブロック（``` や ~~~）が閉じられていません。文書の最後までコードになります。", "missing": "リンク先のファイルが見つかりません: "},
@@ -336,7 +337,8 @@
       zoomNote: "也可以用 Ctrl + 鼠标滚轮、Ctrl + 加号／减号、Ctrl + 0 更改。下次启动时会保留缩放比例。",
       settingsFullWidth: "不限制预览正文的宽度（在宽屏上每行更长）",
       settingsEditor: "编辑区", settingsActiveLine: "突出显示当前行", settingsThickCaret: "加粗光标",
-      settingsLint: "检查 Markdown 写法（在有问题的地方画波浪线）",
+      settingsColors: "按颜色区分 Markdown 写法（标题、强调、链接、代码、公式等）",
+      settingsLint: "检查 Markdown 写法（在有问题的地方画波浪线，并在该行做标记）",
       lintStatus: (count) => `写法问题 ${count} 个（按下显示列表）`,
       lintPhrases: {"Diagnostics": "写法检查", "No diagnostics": "没有发现问题", "close": "关闭"},
       lint: {"MD001": "标题级别跳跃了（例如 # 之后是 ###）。请逐级降低。", "MD011": "链接的写法反了。请按 [文字](地址) 的顺序书写。", "MD018": "标题的 # 后面没有空格（#标题 → # 标题）。", "MD023": "标题没有从行首开始。请删除前面的空格。", "MD024": "同一级别中有同名的标题，目录和链接无法区分。", "MD037": "强调符号（* 或 _）内侧有空格，不会显示为强调。", "MD038": "代码（`）内侧的前后有空格。", "MD039": "链接文字的前后有空格。", "MD042": "链接目标为空。", "MD045": "图像没有说明（替代文字）。写成 ![说明](…)，屏幕阅读器也能读出。", "MD051": "找不到页内链接（#…）指向的标题。", "MD052": "引用链接 [文字][名称] 的名称没有定义。", "MD056": "表格这一行的列数与标题行不同。", "MD058": "表格前后没有空行，可能不会显示为表格。", "fence": "代码块（``` 或 ~~~）没有结束，文档末尾之前都会成为代码。", "missing": "找不到链接的文件："},
@@ -523,7 +525,8 @@
       zoomNote: "Ctrl + mouse wheel, Ctrl + plus/minus, and Ctrl + 0 also work. The zoom level is remembered.",
       settingsFullWidth: "Don't limit the preview text width (longer lines on wide screens)",
       settingsEditor: "Editor", settingsActiveLine: "Highlight the current line", settingsThickCaret: "Use a thick cursor",
-      settingsLint: "Check how Markdown is written (underline problems)",
+      settingsColors: "Color Markdown as you write it (headings, emphasis, links, code, math, and more)",
+      settingsLint: "Check how Markdown is written (underline problems and mark their lines)",
       lintStatus: (count) => `${count} Markdown problem${count === 1 ? "" : "s"} (press to list them)`,
       lintPhrases: {},
       lint: {"MD001": "A heading level is skipped (### after #, for example). Go down one level at a time.", "MD011": "The link is written the wrong way round. Write [text](address).", "MD018": "There is no space after the heading's # (#Heading → # Heading).", "MD023": "The heading does not start at the beginning of the line. Remove the spaces before it.", "MD024": "Another heading at the same level has the same name; contents and links cannot tell them apart.", "MD037": "There are spaces inside the emphasis marks (* or _), so the text is not emphasized.", "MD038": "There are spaces just inside the code marks (`).", "MD039": "There are spaces around the link text.", "MD042": "The link goes nowhere.", "MD045": "The image has no description (alternative text). Write ![description](…) so screen readers can say what it shows.", "MD051": "The heading this link on the page (#…) points to cannot be found.", "MD052": "The name of the reference link [text][name] is not defined anywhere.", "MD056": "This row of the table has a different number of columns from the header row.", "MD058": "There is no empty line before or after the table, so it may not show as a table.", "fence": "The code block (``` or ~~~) is never closed; everything to the end becomes code.", "missing": "The linked file cannot be found: "},
@@ -658,9 +661,13 @@
   // The editor is CodeMirror 6 rather than a textarea: it keeps only the visible
   // lines in the DOM, so screen readers stay responsive on long documents (a
   // textarea made Narrator stall for 20+ seconds on each selection change).
-  const { Compartment, EditorSelection, EditorState, EditorView, closeLintPanel, defaultKeymap, drawSelection, forceLinting, highlightActiveLine, history, historyKeymap, keymap, linter, openLintPanel } = window.CodeMirror;
+  const {
+    Compartment, Decoration, EditorSelection, EditorState, EditorView, HighlightStyle, RangeSetBuilder, ViewPlugin,
+    closeLintPanel, defaultKeymap, drawSelection, forEachDiagnostic, forceLinting, highlightActiveLine, history, historyKeymap,
+    keymap, lintGutter, linter, markdownLanguage, openLintPanel, syntaxHighlighting, tags
+  } = window.CodeMirror;
   const displayDefaults = {
-    font: "standard", size: "1", spacing: "1.7", fullWidth: false, htmlSource: false, activeLine: false, thickCaret: false, lint: true,
+    font: "standard", size: "1", spacing: "1.7", fullWidth: false, htmlSource: false, activeLine: false, thickCaret: false, colors: true, lint: true,
     reader: false, rate: "1", pause: "0.5", readerLang: "auto", readerVoice: "", mapBackground: "ask", videoAutoplay: "auto"
   };
   const displayStorageKey = "mdeditor-display";
@@ -775,14 +782,60 @@
     status.textContent = t("lintStatus")(count);
     status.hidden = count === 0 || !displaySettings.lint || originalShown;
   };
-  const markdownCheck = () => linter(markdownDiagnostics, { delay: 800 });
+  // A line with a problem gets a faint background in the problem's color (a mistake over a
+  // hint), and a mark of its shape in the gutter (a triangle, or a dot for a hint).
+  const problemLineDecorations = (state) => {
+    const lines = new Map();
+    forEachDiagnostic(state, (diagnostic, from) => {
+      const line = state.doc.lineAt(from).from;
+      if (lines.get(line) !== "warning") lines.set(line, diagnostic.severity === "info" ? "info" : "warning");
+    });
+    const builder = new RangeSetBuilder();
+    for (const line of [...lines.keys()].sort((a, b) => a - b)) {
+      builder.add(line, line, Decoration.line({ class: `cm-problem-line cm-problem-line-${lines.get(line)}` }));
+    }
+    return builder.finish();
+  };
+  const problemLines = ViewPlugin.fromClass(class {
+    constructor(editor) { this.decorations = problemLineDecorations(editor.state); }
+    update(update) {
+      if (update.docChanged || update.transactions.some((transaction) => transaction.effects.length)) {
+        this.decorations = problemLineDecorations(update.state);
+      }
+    }
+  }, { decorations: (plugin) => plugin.decorations });
+  const markdownCheck = () => [linter(markdownDiagnostics, { delay: 800 }), lintGutter(), problemLines];
 
-  // Optional editor aids: a highlighted current line, a drawn (thicker) cursor, and the
-  // Markdown check.
+  // Markdown colored as it is written: each kind of text gets a class, and styles.css gives
+  // the classes the code colors of the theme. The marks (#, **, [ ]( ), `) are dimmed.
+  const markdownColors = [
+    markdownLanguage,
+    syntaxHighlighting(HighlightStyle.define([
+      { tag: [tags.heading1, tags.heading2, tags.heading3, tags.heading4, tags.heading5, tags.heading6], class: "md-heading" },
+      { tag: tags.heading, class: "md-strong" },
+      { tag: tags.strong, class: "md-strong" },
+      { tag: tags.emphasis, class: "md-emphasis" },
+      { tag: tags.strikethrough, class: "md-strikethrough" },
+      { tag: tags.link, class: "md-link" },
+      { tag: tags.url, class: "md-url" },
+      { tag: tags.monospace, class: "md-code" },
+      { tag: tags.quote, class: "md-quote" },
+      { tag: tags.special(tags.string), class: "md-math" },
+      { tag: tags.tagName, class: "md-html" },
+      { tag: tags.comment, class: "md-comment" },
+      { tag: [tags.labelName, tags.string], class: "md-label" },
+      { tag: [tags.escape, tags.character, tags.atom], class: "md-escape" },
+      { tag: [tags.processingInstruction, tags.contentSeparator], class: "md-mark" }
+    ]))
+  ];
+
+  // Optional editor aids: a highlighted current line, a drawn (thicker) cursor, Markdown
+  // colors, and the Markdown check.
   const editorExtras = new Compartment();
   const editorExtrasFor = (settings) => [
     settings.activeLine ? highlightActiveLine() : [],
     settings.thickCaret ? drawSelection() : [],
+    settings.colors ? markdownColors : [],
     settings.lint ? markdownCheck() : []
   ];
   const editorAttributes = new Compartment();
@@ -1773,6 +1826,7 @@
     htmlSource: document.getElementById("setting-html-source"),
     activeLine: document.getElementById("setting-active-line"),
     thickCaret: document.getElementById("setting-thick-caret"),
+    colors: document.getElementById("setting-colors"),
     lint: document.getElementById("setting-lint"),
     reader: document.getElementById("setting-reader"),
     rate: document.getElementById("setting-reader-rate"),

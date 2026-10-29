@@ -41,7 +41,7 @@ The 5garashi.com logotype and symbol mark in `wwwroot/assets/` are not covered b
 | d3-geo | 3.1.1 | ISC | Copyright 2010-2024 Mike Bostock | https://github.com/d3/d3-geo |
 | topojson-client | 3.1.0 | ISC | Copyright 2012-2019 Michael Bostock | https://github.com/topojson/topojson-client |
 | world-atlas (countries-110m, from Natural Earth, public domain) | 2.0.2 | ISC | Copyright 2013-2019 Michael Bostock | https://github.com/topojson/world-atlas |
-| CodeMirror 6 (view 6.43.12, state 6.7.6, commands 6.11.1, lint 6.9.7) | 6 | MIT | Copyright (C) 2018-2021 by Marijn Haverbeke and others | https://codemirror.net/ |
+| CodeMirror 6 (view 6.43.12, state 6.7.6, commands 6.11.1, lint 6.9.7, language 6.13.1; Lezer markdown 1.8.0) | 6 | MIT | Copyright (C) 2018-2021 by Marijn Haverbeke and others | https://codemirror.net/ |
 | markdownlint (the Markdown check; with micromark and the packages listed below) | 0.41.1 | MIT | Copyright (c) David Anson | https://github.com/DavidAnson/markdownlint |
 
 Microsoft Edge WebView2 Runtime is not distributed with mdEditor; it is provided by Windows or installed separately under Microsoft's terms. The .NET runtime's own third-party notices are at https://github.com/dotnet/runtime/blob/main/THIRD-PARTY-NOTICES.TXT.
@@ -60,6 +60,7 @@ Microsoft Edge WebView2 Runtime is not distributed with mdEditor; it is provided
 | @lezer/common | 1.5.3 | MIT | Copyright (C) 2018 by Marijn Haverbeke and others |
 | @lezer/highlight | 1.2.5 | MIT | Copyright (C) 2018 by Marijn Haverbeke and others |
 | @lezer/lr | 1.4.11 | MIT | Copyright (C) 2018 by Marijn Haverbeke and others |
+| @lezer/markdown | 1.8.0 | MIT | Copyright (C) 2020 by Marijn Haverbeke and others |
 | @marijn/find-cluster-break | 1.0.4 | MIT | Copyright (C) 2024 by Marijn Haverbeke |
 | crelt | 1.0.7 | MIT | Copyright (C) 2020 by Marijn Haverbeke |
 | style-mod | 4.1.4 | MIT | Copyright (C) 2018 by Marijn Haverbeke and others |

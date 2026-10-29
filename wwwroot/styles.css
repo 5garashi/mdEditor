@@ -43,6 +43,9 @@
   --code-added-background: #DAFBE1;
   --code-removed: #82071E;
   --code-removed-background: #FFEBE9;
+  /* Lines with a problem in the editor: faint volt for a mistake, faint steel for a hint. */
+  --problem-warning: #FCEAE6;
+  --problem-info: #F5EEE6;
   /* Identity Art. 6: on Windows, Yu Gothic then Meiryo. */
   font-family: "Yu Gothic UI", "Meiryo", sans-serif;
   color: var(--ink);
@@ -90,6 +93,8 @@
     --code-added-background: #033A16;
     --code-removed: #FFA198;
     --code-removed-background: #490202;
+    --problem-warning: #33201C;
+    --problem-info: #29251F;
   }
 }
 
@@ -1125,6 +1130,69 @@ body.capture-export .preview-content {
 #editor .cm-diagnostic-info {
   border-left-color: var(--steel);
 }
+
+/* The lines with a problem: a mark in the gutter and a faint background, a triangle for a
+   mistake and a dot for a hint, so the kind does not rest on color alone. The same marks
+   begin each entry of the list and of the tooltip (left unread: the entry says it). */
+#editor .cm-gutters {
+  background: var(--document-background);
+  border-right: 1px solid var(--document-rule);
+}
+
+#editor .cm-gutter-lint {
+  width: 1.5em;
+}
+
+#editor .cm-lint-marker {
+  content: normal;
+  width: auto;
+  height: auto;
+  line-height: 1;
+  font-size: 0.85em;
+  text-align: center;
+}
+
+#editor .cm-lint-marker-warning::before,
+#editor .cm-diagnostic-warning::before {
+  content: "\25B2" / "";
+  color: var(--volt);
+}
+
+#editor .cm-lint-marker-info::before,
+#editor .cm-diagnostic-info::before {
+  content: "\25CF" / "";
+  color: var(--steel);
+}
+
+#editor .cm-diagnostic-warning::before,
+#editor .cm-diagnostic-info::before {
+  margin-right: 0.5em;
+}
+
+#editor .cm-problem-line-warning {
+  background: var(--problem-warning);
+}
+
+#editor .cm-problem-line-info {
+  background: var(--problem-info);
+}
+
+/* Markdown colors (Settings): the theme's code colors, which keep at least 5.3:1 on the
+   document in both themes; the marks in the muted gray. */
+#editor .md-heading { color: var(--code-keyword); font-weight: 700; }
+#editor .md-strong { font-weight: 700; }
+#editor .md-emphasis { font-style: italic; }
+#editor .md-strikethrough { text-decoration: line-through; }
+#editor .md-link { color: var(--code-number); }
+#editor .md-url { color: var(--code-string); }
+#editor .md-code { color: var(--code-tag); }
+#editor .md-quote { color: var(--code-comment); }
+#editor .md-math { color: var(--code-title); }
+#editor .md-html { color: var(--code-attr); }
+#editor .md-comment { color: var(--code-comment); font-style: italic; }
+#editor .md-label { color: var(--code-attr); }
+#editor .md-escape { color: var(--code-number); }
+#editor .md-mark { color: var(--document-muted); }
 
 /* The original PDF in place of the editor: its pages one under another, on the paper. */
 .original-view {
