@@ -12,7 +12,7 @@ import { Compartment, EditorSelection, EditorState, RangeSetBuilder } from "@cod
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
 import { closeLintPanel, diagnosticCount, forEachDiagnostic, forceLinting, linter, lintGutter, lintKeymap, openLintPanel } from "@codemirror/lint";
 import { HighlightStyle, Language, defineLanguageFacet, syntaxHighlighting } from "@codemirror/language";
-import { styleTags, tags } from "@lezer/highlight";
+import { Tag, styleTags, tags } from "@lezer/highlight";
 import { GFM, parser } from "@lezer/markdown";
 
 // Math as mdEditor writes it: $…$, $$…$$, \(…\) and \[…\]. A single $ needs no space inside
@@ -46,10 +46,19 @@ const MathSyntax = {
     }
   }]
 };
+// The marks that start a heading, a list item, and a quote (#, -, 1., >) get tags of their
+// own under processingInstruction, so they can be colored apart from the other marks.
+const markTags = {
+  heading: Tag.define(tags.processingInstruction),
+  list: Tag.define(tags.processingInstruction),
+  quote: Tag.define(tags.processingInstruction)
+};
 // GitHub's Markdown (tables, task lists, strikethrough, bare addresses), math, and HTML tags.
 const markdownLanguage = new Language(
   defineLanguageFacet({ commentTokens: { block: { open: "<!--", close: "-->" } } }),
-  parser.configure([GFM, MathSyntax, { props: [styleTags({ "HTMLTag HTMLBlock": tags.tagName })] }]),
+  parser.configure([GFM, MathSyntax, {
+    props: [styleTags({ "HTMLTag HTMLBlock": tags.tagName, HeaderMark: markTags.heading, ListMark: markTags.list, QuoteMark: markTags.quote })]
+  }]),
   [],
   "markdown"
 );
@@ -58,5 +67,5 @@ window.CodeMirror = {
   Compartment, Decoration, EditorSelection, EditorState, EditorView, RangeSetBuilder, ViewPlugin,
   defaultKeymap, drawSelection, highlightActiveLine, history, historyKeymap, keymap,
   closeLintPanel, diagnosticCount, forEachDiagnostic, forceLinting, linter, lintGutter, lintKeymap, openLintPanel,
-  HighlightStyle, markdownLanguage, syntaxHighlighting, tags
+  HighlightStyle, markTags, markdownLanguage, syntaxHighlighting, tags
 };

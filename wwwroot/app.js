@@ -664,7 +664,7 @@
   const {
     Compartment, Decoration, EditorSelection, EditorState, EditorView, HighlightStyle, RangeSetBuilder, ViewPlugin,
     closeLintPanel, defaultKeymap, drawSelection, forEachDiagnostic, forceLinting, highlightActiveLine, history, historyKeymap,
-    keymap, lintGutter, linter, markdownLanguage, openLintPanel, syntaxHighlighting, tags
+    keymap, lintGutter, linter, markTags, markdownLanguage, openLintPanel, syntaxHighlighting, tags
   } = window.CodeMirror;
   const displayDefaults = {
     font: "standard", size: "1", spacing: "1.7", fullWidth: false, htmlSource: false, activeLine: false, thickCaret: false, colors: true, lint: true,
@@ -807,7 +807,8 @@
   const markdownCheck = () => [linter(markdownDiagnostics, { delay: 800 }), lintGutter(), problemLines];
 
   // Markdown colored as it is written: each kind of text gets a class, and styles.css gives
-  // the classes the code colors of the theme. The marks (#, **, [ ]( ), `) are dimmed.
+  // the classes the code colors of the theme. The marks that start a line (#, -, 1., >)
+  // take a color of their own; the others (**, [ ]( ), `) are dimmed.
   const markdownColors = [
     markdownLanguage,
     syntaxHighlighting(HighlightStyle.define([
@@ -825,6 +826,9 @@
       { tag: tags.comment, class: "md-comment" },
       { tag: [tags.labelName, tags.string], class: "md-label" },
       { tag: [tags.escape, tags.character, tags.atom], class: "md-escape" },
+      { tag: markTags.heading, class: "md-heading-mark" },
+      { tag: markTags.list, class: "md-list-mark" },
+      { tag: markTags.quote, class: "md-quote-mark" },
       { tag: [tags.processingInstruction, tags.contentSeparator], class: "md-mark" }
     ]))
   ];

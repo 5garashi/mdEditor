@@ -1178,7 +1178,8 @@ body.capture-export .preview-content {
 }
 
 /* Markdown colors (Settings): the theme's code colors, which keep at least 5.3:1 on the
-   document in both themes; the marks in the muted gray. */
+   document in both themes; the marks in the muted gray, but those that start a line
+   (#, -, 1., >) in colors of their own. */
 #editor .md-heading { color: var(--code-keyword); font-weight: 700; }
 #editor .md-strong { font-weight: 700; }
 #editor .md-emphasis { font-style: italic; }
@@ -1193,6 +1194,9 @@ body.capture-export .preview-content {
 #editor .md-label { color: var(--code-attr); }
 #editor .md-escape { color: var(--code-number); }
 #editor .md-mark { color: var(--document-muted); }
+#editor .md-heading-mark { color: var(--code-keyword); }
+#editor .md-list-mark { color: var(--code-attr); font-weight: 700; }
+#editor .md-quote-mark { color: var(--code-tag); font-weight: 700; }
 
 /* The original PDF in place of the editor: its pages one under another, on the paper. */
 .original-view {
