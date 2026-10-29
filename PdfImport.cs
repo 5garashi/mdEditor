@@ -45,9 +45,11 @@ internal static partial class PdfImport
     // as pictures, tables made, paragraphs placed right or in the middle with HTML, and
     // whether the PDF's tags were read; FigureText, how many blocks of text reached into a
     // figure, put in its picture (InPicture) or kept as text; TablesAsPictures, whether the
-    // tables were drawn as pictures.
+    // tables were drawn as pictures. PageSizes and Anchors (see ToMarkdown) let the original
+    // PDF be shown beside the Markdown, scrolling with the preview.
     public sealed record Result(string Markdown, int Images, int Pages, int ReadPages, bool HasText, int Headings, IReadOnlyList<int> PicturePages, IReadOnlyList<int> ImagePages,
-        IReadOnlyList<int> OutlinePages, int Figures = 0, int Formulas = 0, int Tables = 0, int Aligned = 0, bool Tagged = false, int FigureText = 0, bool InPicture = true, bool TablesAsPictures = false);
+        IReadOnlyList<int> OutlinePages, int Figures = 0, int Formulas = 0, int Tables = 0, int Aligned = 0, bool Tagged = false, int FigureText = 0, bool InPicture = true, bool TablesAsPictures = false,
+        IReadOnlyList<(double Width, double Height)>? PageSizes = null, IReadOnlyList<(int Line, int Page, double Y)>? Anchors = null);
 
     private sealed record Line(string Text, double Size, bool Bold, double Top, double Right, bool MathFont, string Family, double Left = 0, bool Rejoined = false);
 
@@ -74,6 +76,8 @@ internal static partial class PdfImport
         var picturePages = new List<int>();
         var imagePages = new List<int>();
         var outlinePages = new List<int>();
+        // Each page's size, for showing the PDF beside its Markdown.
+        var pageSizes = new List<(double Width, double Height)>();
         var images = 0;
         int figures = 0, formulas = 0, tables = 0, aligned = 0, figureText = 0;
         var tagged = false;
@@ -95,6 +99,7 @@ internal static partial class PdfImport
         for (var number = 1; number <= readPages; number++)
         {
             var page = document.GetPage(number);
+            pageSizes.Add((page.Width, page.Height));
             var unreadable = Tune.PagePictures && UnreadablePage(document, page);
             if ((unreadable || Tune.PagePictures && OutlinePage(page)) && RenderPage(path, number, page.Width) is { } png)
             {
@@ -390,6 +395,25 @@ internal static partial class PdfImport
 
         var tocDepth = TocDepths(items);
         var markdown = new StringBuilder();
+        // Where each item starts in the Markdown (its line) and on the page (its page, and how
+        // far down it, 0 to 1), so the original PDF and the preview can scroll together.
+        var anchors = new List<(int Line, int Page, double Y)>();
+        var counted = 0;
+        var lineCount = 0;
+        void Anchor(Item at)
+        {
+            for (; counted < markdown.Length; counted++)
+            {
+                lineCount += markdown[counted] == '\n' ? 1 : 0;
+            }
+
+            var height = at.Page >= 1 && at.Page <= pageSizes.Count ? pageSizes[at.Page - 1].Height : 0;
+            if (height > 0)
+            {
+                anchors.Add((lineCount, at.Page, Math.Clamp(1 - at.Top / height, 0, 1)));
+            }
+        }
+
         ItemKind? previous = null;
         var previousToc = false;
         // The open list items, outermost first: where each starts, and how far its text is
@@ -413,6 +437,7 @@ internal static partial class PdfImport
                     markdown.Append("\n\n");
                 }
 
+                Anchor(item);
                 markdown.Append(CodeBlock(items.GetRange(index, end - index + 1)));
                 index = end;
                 previous = ItemKind.Code;
@@ -438,6 +463,8 @@ internal static partial class PdfImport
             {
                 markdown.Append(listContinues ? "\n" : "\n\n");
             }
+
+            Anchor(item);
 
             previousToc = item.Toc;
             if (item.Toc)
@@ -498,7 +525,7 @@ internal static partial class PdfImport
         var headings = levels.Count(level => level > 0);
         return new Result(markdown.Length > 0 ? markdown.Append('\n').ToString() : string.Empty,
             images, document.NumberOfPages, readPages, text.Count > 0 || imagePages.Count > 0, headings, picturePages, imagePages, outlinePages,
-            figures, formulas, tables, aligned, tagged, figureText, Tune.FigureTextInPicture, Tune.TablesAsPictures);
+            figures, formulas, tables, aligned, tagged, figureText, Tune.FigureTextInPicture, Tune.TablesAsPictures, pageSizes, anchors);
     }
 
     // Whether a page's running text (figures, tables, and formulas apart) cannot be read in

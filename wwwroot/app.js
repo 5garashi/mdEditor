@@ -8,6 +8,10 @@
 */
 (() => {
   const editorHost = document.getElementById("editor");
+  const originalView = document.getElementById("original-view");
+  // The original PDF of the document, and whether it is shown (see buildOriginal).
+  let original = null;
+  let originalShown = false;
   let applyingHostEdits = false;
   const preview = document.getElementById("preview");
   const documentName = document.getElementById("document-name");
@@ -49,6 +53,10 @@
       settingsPdfFile: "詳細な数値を開く",
       settingsPdfFileNote: "取り込みの細かい数値（図とみなす線の間隔、ラベルの文字数、右寄せとみなす位置など）は、詳細設定ファイルで変えられます。メモ帳で開きます。変えた数値は、次に PDF を開いたときから使います。ファイル:",
       settingsExport: "書き出し",
+      originalShow: "元の PDF を表示",
+      originalBack: "編集画面に戻す",
+      originalLabel: "元の PDF（ページの画像）",
+      originalPage: "PDF の {0} ページ目",
       settingsZipLinks: "配布用 ZIP に入れるファイル",
       zipLinksFolder: "「名前_files」フォルダーのファイルだけ",
       zipLinksLocal: "PC の中のリンク先のファイルも「名前_files」に写す（初期設定）",
@@ -230,6 +238,10 @@
       settingsPdfFile: "打开详细数值",
       settingsPdfFileNote: "导入时的细节数值（视为图表的线条间距、标签的字数、视为靠右的位置等）可以在详细设置文件中更改。用记事本打开。更改的数值从下次打开 PDF 时开始使用。文件：",
       settingsExport: "导出",
+      originalShow: "显示原 PDF",
+      originalBack: "返回编辑区",
+      originalLabel: "原 PDF（页面图像）",
+      originalPage: "PDF 第 {0} 页",
       settingsZipLinks: "放入分发用 ZIP 的文件",
       zipLinksFolder: "只放入“名称_files”文件夹中的文件",
       zipLinksLocal: "电脑中链接的文件也复制到“名称_files”（默认）",
@@ -411,6 +423,10 @@
       settingsPdfFile: "Open detailed values",
       settingsPdfFileNote: "The finer values of PDF import (how close lines must be to make a figure, how long a label may be, where text counts as right-aligned, and so on) are in an advanced settings file, opened in Notepad. Changed values are used from the next PDF you open. File:",
       settingsExport: "Export",
+      originalShow: "Show the original PDF",
+      originalBack: "Back to the editor",
+      originalLabel: "The original PDF (pictures of its pages)",
+      originalPage: "PDF page {0}",
       settingsZipLinks: "Files in the ZIP for sharing",
       zipLinksFolder: "Only the files in the name_files folder",
       zipLinksLocal: "Also copy linked files on this PC into name_files (default)",
@@ -751,7 +767,7 @@
     lintCount = count;
     const status = document.getElementById("lint-status");
     status.textContent = t("lintStatus")(count);
-    status.hidden = count === 0 || !displaySettings.lint;
+    status.hidden = count === 0 || !displaySettings.lint || originalShown;
   };
   const markdownCheck = () => linter(markdownDiagnostics, { delay: 800 });
 
@@ -961,6 +977,10 @@
     const reopen = document.getElementById("notice-reopen");
     reopen.hidden = !(noticeState?.kind === "message" && noticeState.reopen);
     reopen.textContent = noticeState?.reopen ?? "";
+    const originalButton = document.getElementById("notice-original");
+    originalButton.hidden = !(original && noticeState?.kind === "message");
+    originalButton.textContent = t(originalShown ? "originalBack" : "originalShow");
+    originalButton.setAttribute("aria-pressed", String(originalShown));
     const reopenTables = document.getElementById("notice-reopen-tables");
     reopenTables.hidden = !(noticeState?.kind === "message" && noticeState.reopenTables);
     reopenTables.textContent = noticeState?.reopenTables ?? "";
@@ -1216,6 +1236,8 @@
     post({ type: "allowMaps" });
   });
   document.getElementById("notice-close").addEventListener("click", () => {
+    // Without the notice there is no button back, so the editor comes back first.
+    if (originalShown) showOriginal(false);
     noticeState = null;
     mapNoticeClosed = true;
     updateNotice();
@@ -2474,6 +2496,63 @@
     else scrollWithoutEcho(editorScroller, editorTopOfLine(line));
   };
 
+  // The original PDF, for a document opened from one: pictures of its pages, drawn by the
+  // host as they come into view, shown in place of the editor and back with the notice's
+  // button. Where each Markdown item came from (anchors: its line, page, and height on the
+  // page) lets it scroll with the preview as the editor does.
+  const buildOriginal = () => {
+    const pixels = Math.min(3000, Math.ceil(originalView.clientWidth * (window.devicePixelRatio || 1)));
+    originalView.replaceChildren(...original.pages.map((size, index) => {
+      const image = document.createElement("img");
+      image.loading = "lazy";
+      image.decoding = "async";
+      image.alt = t("originalPage").replace("{0}", String(index + 1));
+      image.style.aspectRatio = `${size.w} / ${size.h}`;
+      image.src = `${original.url}page-${index + 1}.png?w=${pixels}`;
+      return image;
+    }));
+  };
+  const originalAnchors = () => {
+    const images = originalView.querySelectorAll("img");
+    const points = [{ line: 0, top: 0 }];
+    for (const anchor of original?.anchors ?? []) {
+      const image = images[anchor.page - 1];
+      if (!image) continue;
+      const point = { line: anchor.line, top: image.offsetTop + anchor.y * image.offsetHeight };
+      const last = points[points.length - 1];
+      if (point.line >= last.line && point.top >= last.top) points.push(point);
+    }
+    points.push({ line: previewLines || view.state.doc.lines, top: originalView.scrollHeight });
+    return points;
+  };
+  const scrollOriginalToLine = (line, edge) => {
+    if (!originalShown) return;
+    if (edge) scrollWithoutEcho(originalView, edge === "top" ? 0 : originalView.scrollHeight);
+    else scrollWithoutEcho(originalView, interpolate(originalAnchors(), line, "line", "top"));
+  };
+  const showOriginal = (show) => {
+    originalShown = Boolean(show && original);
+    originalView.setAttribute("aria-label", t("originalLabel"));
+    originalView.hidden = !originalShown;
+    editorHost.hidden = originalShown;
+    showLintCount(lintCount);
+    if (originalShown) {
+      if (!originalView.childElementCount) buildOriginal();
+      scrollOriginalToLine(interpolate(previewAnchors(), preview.scrollTop, "top", "line"), scrollEdge(preview));
+      originalView.focus({ preventScroll: true });
+    } else {
+      view.requestMeasure();
+    }
+    updateNotice();
+  };
+  const setOriginal = (value) => {
+    if (originalShown) showOriginal(false);
+    original = value?.pages?.length ? { url: value.url, pages: value.pages, anchors: value.anchors ?? [] } : null;
+    originalView.replaceChildren();
+    updateNotice();
+  };
+  document.getElementById("notice-original").addEventListener("click", () => showOriginal(!originalShown));
+
   // When the preview has its own window, the position (a source line, not
   // pixels, so different window sizes and displays still match) goes through
   // the host to the other window.
@@ -2481,6 +2560,21 @@
   const syncFrom = (source) => {
     if (source.clientHeight === 0) return;
     const edge = scrollEdge(source);
+    // The original PDF shown in place of the editor scrolls with the preview.
+    if (originalShown && (source === originalView || source === preview)) {
+      const line = edge ? 0 : source === originalView
+        ? interpolate(originalAnchors(), originalView.scrollTop, "top", "line")
+        : interpolate(previewAnchors(), preview.scrollTop, "top", "line");
+      if (source === originalView && (previewWindow || previewDetached)) {
+        lastSyncedLine = { line, edge };
+        post({ type: "syncLine", line, edge });
+      } else if (source === originalView) {
+        if (preview.clientHeight > 0) scrollPreviewToLine(line, edge);
+      } else {
+        scrollOriginalToLine(line, edge);
+      }
+      return;
+    }
     if (previewWindow || previewDetached) {
       const line = edge ? 0
         : source === editorScroller ? editorLineAtTop()
@@ -2502,6 +2596,7 @@
   };
   editorScroller.addEventListener("scroll", onPaneScroll);
   preview.addEventListener("scroll", onPaneScroll);
+  originalView.addEventListener("scroll", onPaneScroll);
 
   // Links to headings in the same document (#heading) scroll the preview there.
   const scrollToAnchor = (name) => {
@@ -3571,6 +3666,7 @@
     } else if (message.type === "syncLine") {
       lastSyncedLine = { line: message.line, edge: message.edge };
       if (previewWindow) scrollPreviewToLine(message.line, message.edge);
+      else if (originalShown) scrollOriginalToLine(message.line, message.edge);
       else scrollEditorToLine(message.line, message.edge);
     } else if (message.type === "runCommand") {
       shortcutDefinitions.find((item) => item.id === message.id)?.run(message.at ?? undefined);
@@ -3600,6 +3696,8 @@
     } else if (message.type === "missingLinks") {
       const resolve = linkChecks.get(message.id);
       if (linkChecks.delete(message.id)) resolve(message.targets ?? []);
+    } else if (message.type === "originalPdf") {
+      setOriginal(message);
     } else if (message.type === "resetDisplay") {
       resetDisplay();
     } else if (message.type === "zipLinks") {
@@ -3627,6 +3725,9 @@
       updateThemeButton();
     } else if (message.type === "setText") {
       mapNoticeClosed = false;
+      // Another document: the original PDF of the last one goes (a PDF just opened sends
+      // originalPdf right after).
+      setOriginal(null);
       view.setState(EditorState.create({ doc: message.text, extensions: editorExtensions() }));
       // A newly loaded document starts at the top, not where the last one was.
       editorScroller.scrollTop = 0;

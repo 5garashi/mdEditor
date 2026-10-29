@@ -68,6 +68,13 @@ public partial class MainWindow : Window
         Interval = TimeSpan.FromMilliseconds(200)
     };
     private const string DocumentHost = "document.mdeditor.local";
+    // The pages of the PDF the document was opened from, drawn by PDFium when the page asks
+    // for them (https://original.mdeditor.local/{token}/page-{n}.png?w={pixels}), to show the
+    // original in place of the editor. The token changes with each PDF opened.
+    private const string OriginalHost = "original.mdeditor.local";
+    private string? _originalPdf;
+    private string _originalToken = string.Empty;
+    private readonly Dictionary<(int Page, int Pixels), byte[]> _originalPages = [];
     private static readonly UTF8Encoding Utf8NoBom = new(false);
     private string _text = string.Empty;
     private string? _filePath;
@@ -1757,6 +1764,22 @@ public partial class MainWindow : Window
         _lastPdfMarkdown = result.Markdown;
         _lastPdfInPicture = result.InPicture;
         _lastPdfTablesAsPictures = result.TablesAsPictures;
+        // The original PDF can be shown in place of the editor (see the notice's button),
+        // scrolling with the preview by where each item came from.
+        _originalPdf = path;
+        _originalToken = Guid.NewGuid().ToString("N");
+        lock (_originalPages)
+        {
+            _originalPages.Clear();
+        }
+
+        SendToPage(new
+        {
+            type = "originalPdf",
+            url = $"https://{OriginalHost}/{_originalToken}/",
+            pages = (result.PageSizes ?? []).Select(size => new { w = size.Width, h = size.Height }),
+            anchors = (result.Anchors ?? []).Select(anchor => new { line = anchor.Line, page = anchor.Page, y = anchor.Y })
+        });
         _suggestFolder = Path.GetDirectoryName(path);
         _importAssets = result.Images > 0 ? Path.Combine(assets, name + FilesSuffix) : null;
     }
@@ -3138,6 +3161,12 @@ public partial class MainWindow : Window
         }
 
         using var deferral = e.GetDeferral();
+        if (uri.Host.Equals(OriginalHost, StringComparison.OrdinalIgnoreCase))
+        {
+            e.Response = await ServeOriginalPageAsync(environment, uri);
+            return;
+        }
+
         if (e.ResourceContext == CoreWebView2WebResourceContext.Media)
         {
             var range = e.Request.Headers.Contains("Range") ? e.Request.Headers.GetHeader("Range") : null;
@@ -3174,6 +3203,43 @@ public partial class MainWindow : Window
         {
             e.Response = environment.CreateWebResourceResponse(null, 404, "Not Found", "");
         }
+    }
+
+    // A page of the original PDF as a PNG, drawn the first time it is asked for at that width
+    // (the last 40 are kept); 404 for a PDF no longer open or a page PDFium cannot draw.
+    private async Task<CoreWebView2WebResourceResponse> ServeOriginalPageAsync(CoreWebView2Environment environment, Uri uri)
+    {
+        var match = System.Text.RegularExpressions.Regex.Match(uri.AbsolutePath, @"^/([0-9a-f]{32})/page-(\d{1,4})\.png$");
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+        if (!match.Success || match.Groups[1].Value != _originalToken || _originalPdf is not { } path
+            || !int.TryParse(match.Groups[2].Value, out var number) || !int.TryParse(query["w"], out var pixels))
+        {
+            return environment.CreateWebResourceResponse(null, 404, "Not Found", "");
+        }
+
+        byte[]? png;
+        lock (_originalPages)
+        {
+            _originalPages.TryGetValue((number, pixels), out png);
+        }
+
+        png ??= await Task.Run(() => PdfImport.PagePicture(path, number, pixels));
+        if (png is null)
+        {
+            return environment.CreateWebResourceResponse(null, 404, "Not Found", "");
+        }
+
+        lock (_originalPages)
+        {
+            if (_originalPages.Count >= 40)
+            {
+                _originalPages.Clear();
+            }
+
+            _originalPages[(number, pixels)] = png;
+        }
+
+        return environment.CreateWebResourceResponse(new MemoryStream(png), 200, "OK", "Content-Type: image/png");
     }
 
     private const long VideoChunkBytes = 4L * 1024 * 1024;

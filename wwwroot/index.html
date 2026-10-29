@@ -76,6 +76,7 @@
     <button id="notice-encoding" type="button" data-i18n="noticeChoose">文字コードを選ぶ</button>
     <button id="notice-action" type="button" data-i18n="loadExternal" hidden>画像を読み込む</button>
     <button id="notice-maps" type="button" data-i18n="loadMaps" hidden>詳細な地図を読み込む</button>
+    <button id="notice-original" type="button" aria-pressed="false" hidden></button>
     <button id="notice-reopen" type="button" hidden></button>
     <button id="notice-reopen-tables" type="button" hidden></button>
     <button id="notice-close" type="button" data-i18n="close">閉じる</button>
@@ -112,6 +113,7 @@
       </div>
       <!-- CodeMirror 6 mounts here (app.js); its content element carries the label. -->
       <div id="editor" class="editor-host"></div>
+      <div id="original-view" class="original-view" tabindex="0" role="region" aria-label="元の PDF（ページの画像）" hidden></div>
       <button id="lint-status" class="lint-status" type="button" hidden></button>
     </section>
     <div id="pane-divider"

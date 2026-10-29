@@ -106,9 +106,13 @@ internal static partial class PdfImport
         !page.Letters.Any(letter => !IsBlank(letter) && !letter.Value.All(char.IsControl))
         && page.Paths.Where(path => !path.IsClipping).Sum(path => path.Count()) >= Tune.OutlineMinShapes;
 
+    // A page of the PDF as a PNG picture pixels wide, for showing the original PDF beside
+    // its Markdown (200 to 3000 pixels); null when PDFium cannot draw it.
+    public static byte[]? PagePicture(string path, int number, int pixels) => RenderPage(path, number, 0, Math.Clamp(pixels, 200, 3000));
+
     // A page drawn as a PNG picture by PDFium, twice as wide as it is shown (sharp on a
-    // high-resolution screen), on white; null when PDFium cannot draw it.
-    private static byte[]? RenderPage(string path, int number, double width)
+    // high-resolution screen), or pixels wide, on white; null when PDFium cannot draw it.
+    private static byte[]? RenderPage(string path, int number, double width, int? pixels = null)
     {
         try
         {
@@ -129,7 +133,7 @@ internal static partial class PdfImport
                         return null;
                     }
 
-                    var scale = width * 4 / 3 * Tune.RenderScale / Math.Max(Pdfium.FPDF_GetPageWidthF(page), 1);
+                    var scale = (pixels ?? width * 4 / 3 * Tune.RenderScale) / Math.Max(Pdfium.FPDF_GetPageWidthF(page), 1);
                     var (pixelWidth, pixelHeight) = ((int)Math.Round(Pdfium.FPDF_GetPageWidthF(page) * scale), (int)Math.Round(Pdfium.FPDF_GetPageHeightF(page) * scale));
                     if (pixelWidth <= 0 || pixelHeight <= 0 || (long)pixelWidth * pixelHeight > Tune.RenderMaxPixels)
                     {
