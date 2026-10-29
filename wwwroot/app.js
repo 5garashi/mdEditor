@@ -46,6 +46,11 @@
       settingsPdfFile: "詳細な数値を開く",
       settingsPdfFileNote: "取り込みの細かい数値（図とみなす線の間隔、ラベルの文字数、右寄せとみなす位置など）は、詳細設定ファイルで変えられます。メモ帳で開きます。変えた数値は、次に PDF を開いたときから使います。ファイル:",
       settingsExport: "書き出し",
+      settingsZipLinks: "配布用 ZIP に入れるファイル",
+      zipLinksFolder: "「名前_files」フォルダーのファイルだけ",
+      zipLinksLocal: "PC の中のリンク先のファイルも「名前_files」に写す（初期設定）",
+      zipLinksAll: "インターネット上のリンク先のファイルも「名前_files」に写す",
+      settingsZipLinksNote: "文書がリンクしている「名前_files」フォルダーの外のファイル（ほかのフォルダーの画像・資料など）を、ZIP の中の「名前_files」に写し、ZIP の中の文書はその写しにリンクします。元の文書とファイルは変わりません。「インターネット上…」では、インターネット上の画像・動画と、ファイル（.pdf など）へのリンクもダウンロードして入れます（1 個 50 MB まで。Web ページへのリンクはリンクのまま）。ダウンロードすると、そのサーバーに IP アドレスなどが伝わります。",
       settingsMarkdown: "Markdown の書き方",
       settingsNearGitHub: "GitHub での表示に近づける（mdEditor 独自の書き方を使わない）",
       settingsNearGitHubNote: "オンにすると、GitHub にない mdEditor 独自の書き方（x^2^ の上付き、H~2~O の下付き、==強調==、++挿入++、定義リスト、::: の囲み、{#id} などの属性、略語、罫線の表、a. の番号）を、GitHub と同じく書いたとおりの文字で表示し、~文字~ を取り消し線にします。PDF などの書き出しも同じです。表示を GitHub に近づけるための設定で、GitHub と完全に同じにはなりません（図・地図・3D モデル、コードの色分け、数式の描き方などは mdEditor のままです）。",
@@ -219,6 +224,11 @@
       settingsPdfFile: "打开详细数值",
       settingsPdfFileNote: "导入时的细节数值（视为图表的线条间距、标签的字数、视为靠右的位置等）可以在详细设置文件中更改。用记事本打开。更改的数值从下次打开 PDF 时开始使用。文件：",
       settingsExport: "导出",
+      settingsZipLinks: "放入分发用 ZIP 的文件",
+      zipLinksFolder: "只放入“名称_files”文件夹中的文件",
+      zipLinksLocal: "电脑中链接的文件也复制到“名称_files”（默认）",
+      zipLinksAll: "网络上链接的文件也复制到“名称_files”",
+      settingsZipLinksNote: "把文档链接的“名称_files”文件夹以外的文件（其他文件夹中的图像、资料等）复制到 ZIP 中的“名称_files”，ZIP 中的文档链接到这些副本。原文档和文件不会改变。选择“网络上…”时，网络上的图像、视频以及指向文件（.pdf 等）的链接也会下载并放入（每个最多 50 MB；指向网页的链接仍保留为链接）。下载时，这些服务器会得知你的 IP 地址等信息。",
       settingsMarkdown: "Markdown 写法",
       settingsNearGitHub: "显示效果接近 GitHub（不使用 mdEditor 独有的写法）",
       settingsNearGitHubNote: "开启后，GitHub 没有的 mdEditor 独有写法（x^2^ 上标、H~2~O 下标、==强调==、++插入++、定义列表、::: 容器、{#id} 等属性、缩写、网格表格、a. 编号）会像在 GitHub 上一样按原文显示，~文字~ 显示为删除线。导出 PDF 等时也一样。此设置只是让显示接近 GitHub，并不会与 GitHub 完全相同（图表、地图、3D 模型、代码着色和公式的绘制方式仍是 mdEditor 的方式）。",
@@ -392,6 +402,11 @@
       settingsPdfFile: "Open detailed values",
       settingsPdfFileNote: "The finer values of PDF import (how close lines must be to make a figure, how long a label may be, where text counts as right-aligned, and so on) are in an advanced settings file, opened in Notepad. Changed values are used from the next PDF you open. File:",
       settingsExport: "Export",
+      settingsZipLinks: "Files in the ZIP for sharing",
+      zipLinksFolder: "Only the files in the name_files folder",
+      zipLinksLocal: "Also copy linked files on this PC into name_files (default)",
+      zipLinksAll: "Also copy linked files on the internet into name_files",
+      settingsZipLinksNote: "Files the document links to outside its name_files folder (pictures or papers in other folders, say) are copied into name_files in the ZIP, and the document in the ZIP links to the copies. The document and the files themselves are not changed. With \"on the internet\", pictures and videos on the internet, and links to files (.pdf and so on), are downloaded into it too (50 MB at most each; links to web pages stay links). Downloading lets those servers see information such as your IP address.",
       settingsMarkdown: "Markdown syntax",
       settingsNearGitHub: "Show documents closer to GitHub (no mdEditor-only syntax)",
       settingsNearGitHubNote: "When on, mdEditor's own syntax that GitHub does not have (x^2^ superscript, H~2~O subscript, ==highlight==, ++insert++, definition lists, ::: containers, attributes such as {#id}, abbreviations, grid tables, and a. numbering) shows as the plain text you wrote, as on GitHub, and ~text~ is struck through. Exports such as PDF follow it too. This brings the display closer to GitHub but does not make it identical (diagrams, maps, 3D models, code colors, and how math is drawn stay mdEditor's own).",
@@ -1781,6 +1796,9 @@
       openLintPanel(view);
     }
   });
+  // What the sharing ZIP takes in: the host keeps it.
+  const zipLinksSelect = document.getElementById("setting-zip-links");
+  zipLinksSelect.addEventListener("change", () => post({ type: "setZipLinks", value: zipLinksSelect.value }));
   // PDF import: the host keeps these and uses them when a PDF is opened.
   const pdfFigureTextSelect = document.getElementById("setting-pdf-figure-text");
   const pdfAlignCheckbox = document.getElementById("setting-pdf-align");
@@ -3554,6 +3572,8 @@
     } else if (message.type === "missingLinks") {
       const resolve = linkChecks.get(message.id);
       if (linkChecks.delete(message.id)) resolve(message.targets ?? []);
+    } else if (message.type === "zipLinks") {
+      zipLinksSelect.value = message.value;
     } else if (message.type === "pdfOptions") {
       pdfFigureTextSelect.value = message.figureText;
       pdfAlignCheckbox.checked = Boolean(message.align);

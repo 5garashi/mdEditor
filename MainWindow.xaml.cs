@@ -47,6 +47,10 @@ public partial class MainWindow : Window
     private string _pdfFigureText = LoadSetting("PdfFigureText") == "text" ? "text" : "picture";
     private bool _pdfAlign = LoadSetting("PdfAlign") != "off";
     private bool _pdfPagePictures = LoadSetting("PdfPagePictures") != "off";
+    // What the sharing ZIP takes in besides the document (Settings): the files in its
+    // name_files folder only ("folder"), also linked files elsewhere on the PC ("local",
+    // the default), or also linked files on the internet ("all"); see ExportZipAsync.
+    private string _zipLinks = LoadSetting("ZipLinks") is "folder" or "all" ? LoadSetting("ZipLinks")! : "local";
     // The last PDF opened, its Markdown, and which way its figures' text went, for reopening
     // it the other way from the notice (_pdfFigureTextOnce, for that one opening).
     private string? _lastPdf;
@@ -442,6 +446,7 @@ public partial class MainWindow : Window
                 SendToPage(new { type = "autoBackup", enabled = _autoBackup });
                 SendToPage(new { type = "nearGitHub", enabled = _nearGitHub });
                 SendPdfOptions();
+                SendToPage(new { type = "zipLinks", value = _zipLinks });
                 SendToPage(new { type = "appInfo", version = AppVersion });
                 SendToPage(new { type = "externalImages", value = _externalImages });
                 if (await OfferRecoveryAsync())
@@ -491,6 +496,10 @@ public partial class MainWindow : Window
             case "setPdfPagePictures":
                 _pdfPagePictures = root.GetProperty("enabled").GetBoolean();
                 SaveSetting("PdfPagePictures", _pdfPagePictures ? "on" : "off");
+                break;
+            case "setZipLinks":
+                _zipLinks = root.GetProperty("value").GetString() is "folder" or "all" ? root.GetProperty("value").GetString()! : "local";
+                SaveSetting("ZipLinks", _zipLinks);
                 break;
             case "openPdfOptionsFile":
                 OpenPdfOptionsFile();
@@ -3582,7 +3591,10 @@ public partial class MainWindow : Window
     // A ZIP to hand the document to someone: the Markdown file and its name_files
     // folder, under the names the links use. Files in the folder the document does
     // not refer to are left out and, when the user agrees, moved to the Recycle Bin
-    // first. Without a folder (or a saved document), the ZIP holds the text only.
+    // first. As Settings say (_zipLinks), files the document links to elsewhere on the
+    // PC, and files on the internet, are copied into name_files in the ZIP too, and the
+    // Markdown in the ZIP links to the copies; the document itself is not changed.
+    // Without a saved document, only those copies (and the text) go in.
     private async Task ExportZipAsync(string path)
     {
         var title = Strings.Tr("配布用 ZIP の書き出し");
@@ -3607,7 +3619,7 @@ public partial class MainWindow : Window
             if (documentFolder is not null && filesFolder is not null)
             {
                 var referenced = ReferencedFiles(_text, documentFolder, filesFolder);
-                outside = referenced.Count(file => !IsInside(file, filesFolder));
+                outside = _zipLinks == "folder" ? referenced.Count(file => !IsInside(file, filesFolder)) : 0;
                 if (Directory.Exists(filesFolder))
                 {
                     var all = Directory.GetFiles(filesFolder, "*", SearchOption.AllDirectories);
@@ -3639,6 +3651,21 @@ public partial class MainWindow : Window
                 }
             }
 
+            // Linked files outside the folder, copied in under names of their own.
+            var filesName = filesFolder is not null ? Path.GetFileName(filesFolder) : Path.GetFileNameWithoutExtension(documentName) + FilesSuffix;
+            var (text, copies, notFetched) = await CollectLinkedFilesAsync(documentFolder, filesFolder, filesName, included);
+            if (copies.Count > 0)
+            {
+                try
+                {
+                    bytes = EncodeDocument(text, _encoding);
+                }
+                catch (EncoderFallbackException)
+                {
+                    bytes = EncodeDocument(text, Utf8NoBom);
+                }
+            }
+
             var tempPath = Path.Combine(Path.GetDirectoryName(Path.GetFullPath(path))!, $".mdEditor-{Guid.NewGuid():N}.tmp");
             try
             {
@@ -3657,6 +3684,19 @@ public partial class MainWindow : Window
                                 + Path.GetRelativePath(filesFolder!, file).Replace(Path.DirectorySeparatorChar, '/');
                             archive.CreateEntryFromFile(file, name, CompressionLevel.Optimal);
                         }
+
+                        foreach (var copy in copies)
+                        {
+                            if (copy.Source is { } source)
+                            {
+                                archive.CreateEntryFromFile(source, filesName + "/" + copy.Name, CompressionLevel.Optimal);
+                            }
+                            else
+                            {
+                                using var entry = archive.CreateEntry(filesName + "/" + copy.Name, CompressionLevel.Optimal).Open();
+                                entry.Write(copy.Bytes);
+                            }
+                        }
                     }
 
                     File.Move(tempPath, path, overwrite: true);
@@ -3670,10 +3710,20 @@ public partial class MainWindow : Window
                 }
             }
 
-            var message = included.Count == 0
+            var message = included.Count + copies.Count == 0
                 ? string.Format(Strings.Tr("「{0}」を ZIP に保存しました。"), documentName)
                 : string.Format(Strings.Tr("「{0}」と「{1}」フォルダーのファイル {2} 個を ZIP に保存しました。"),
-                    documentName, Path.GetFileName(filesFolder!), included.Count);
+                    documentName, filesName, included.Count + copies.Count);
+            if (copies.Count > 0)
+            {
+                message += "\n\n" + string.Format(Strings.Tr("そのうち {0} 個は、文書がリンクしている「{1}」フォルダーの外のファイルを写したものです。ZIP の中の文書は、写したファイルにリンクしています（元の文書は変わりません）。"),
+                    copies.Count, filesName);
+            }
+
+            if (notFetched > 0)
+            {
+                message += "\n\n" + string.Format(Strings.Tr("インターネット上のファイル {0} 個は、ダウンロードできなかったため、リンクのまま残しました。"), notFetched);
+            }
             if (outside > 0)
             {
                 message += "\n\n" + string.Format(Strings.Tr("文書から参照している「{0}」フォルダーの外のファイル {1} 個は、ZIP に入っていません。"),
@@ -3692,6 +3742,22 @@ public partial class MainWindow : Window
     // through reference definitions) and src/href/poster in raw HTML. A file in
     // name_files whose path from the document is written anywhere in the text
     // counts too, so a file is only left out when nothing in the document can mean it.
+    // The addresses the document links to, as written: Markdown links, pictures, and
+    // reference definitions, and src, href, poster, and data in HTML. Media says whether the
+    // address is shown in the page (a picture, a video) rather than followed.
+    private static List<(string Url, bool Media)> LinkUrls(string markdown)
+    {
+        var parsed = Markdig.Markdown.Parse(markdown, ReferencePipeline);
+        return parsed.Descendants<LinkInline>().Where(link => link.Url is not null).Select(link => (Url: link.Url!, Media: link.IsImage))
+            .Concat(parsed.Descendants<LinkReferenceDefinition>().Where(definition => definition.Url is not null).Select(definition => (Url: definition.Url!, Media: false)))
+            .Concat(System.Text.RegularExpressions.Regex.Matches(markdown,
+                    """\b(src|href|poster|data)\s*=\s*(?:"([^"]*)"|'([^']*)')""",
+                    System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+                .Select(match => (Url: System.Net.WebUtility.HtmlDecode(match.Groups[2].Success ? match.Groups[2].Value : match.Groups[3].Value),
+                    Media: !match.Groups[1].Value.Equals("href", StringComparison.OrdinalIgnoreCase))))
+            .Select(link => (Url: link.Url.Trim(), link.Media)).Where(link => link.Url.Length > 0).ToList();
+    }
+
     private static HashSet<string> ReferencedFiles(string markdown, string documentFolder, string filesFolder)
     {
         var parsed = Markdig.Markdown.Parse(markdown, ReferencePipeline);
@@ -3726,6 +3792,208 @@ public partial class MainWindow : Window
         }
 
         return result;
+    }
+
+    private sealed record ZipCopy(string Name, string? Source, byte[]? Bytes);
+
+    // Web pages are links, not files to take along.
+    private static readonly HashSet<string> PageExtensions = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "", ".html", ".htm", ".xhtml", ".php", ".asp", ".aspx", ".jsp", ".cgi"
+    };
+
+    private const long MaxZipDownloadBytes = 50 * 1024 * 1024;
+
+    // For the sharing ZIP (_zipLinks "local" or "all"): the files the document links to
+    // outside its name_files folder, to copy into it. A file on the PC is found from the
+    // document's folder, or by its full path (C:\…, file:///…); with "all", a picture or
+    // video on the internet, and a link to a file there (not a web page), is downloaded
+    // (https and http only, public addresses, 50 MB at most each). Each gets a name not
+    // used yet in name_files, and the returned text links to it there; the same file is
+    // copied once. NotFetched counts downloads that failed (their links stay).
+    private async Task<(string Text, List<ZipCopy> Copies, int NotFetched)> CollectLinkedFilesAsync(
+        string? documentFolder, string? filesFolder, string filesName, IReadOnlyList<string> included)
+    {
+        var text = _text;
+        var copies = new List<ZipCopy>();
+        var notFetched = 0;
+        if (_zipLinks == "folder")
+        {
+            return (text, copies, notFetched);
+        }
+
+        var used = new HashSet<string>(included.Select(file => Path.GetRelativePath(filesFolder!, file).Replace(Path.DirectorySeparatorChar, '/')),
+            StringComparer.OrdinalIgnoreCase);
+        var copied = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        string NameFor(string fileName)
+        {
+            var stem = Path.GetFileNameWithoutExtension(fileName);
+            var extension = Path.GetExtension(fileName);
+            var name = fileName;
+            for (var i = 1; used.Contains(name); i++)
+            {
+                name = $"{stem} ({i}){extension}";
+            }
+
+            used.Add(name);
+            return name;
+        }
+
+        foreach (var (url, media) in LinkUrls(_text).DistinctBy(link => link.Url))
+        {
+            if (LinkedLocalFile(url, documentFolder) is { } local)
+            {
+                if (filesFolder is not null && IsInside(local.Path, filesFolder))
+                {
+                    continue;
+                }
+
+                if (!copied.TryGetValue(local.Path, out var name))
+                {
+                    name = NameFor(Path.GetFileName(local.Path));
+                    copied[local.Path] = name;
+                    copies.Add(new ZipCopy(name, local.Path, null));
+                }
+
+                text = ReplaceLinkUrl(text, url, filesName + "/" + Uri.EscapeDataString(name) + local.Suffix);
+                continue;
+            }
+
+            if (_zipLinks != "all" || !Uri.TryCreate(url, UriKind.Absolute, out var uri) || uri.Scheme is not ("https" or "http")
+                || !media && PageExtensions.Contains(Path.GetExtension(uri.AbsolutePath)))
+            {
+                continue;
+            }
+
+            if (!copied.TryGetValue(uri.AbsoluteUri, out var downloaded))
+            {
+                var bytes = await DownloadFileAsync(uri);
+                if (bytes is null)
+                {
+                    notFetched++;
+                    continue;
+                }
+
+                var fileName = string.Concat(Path.GetFileName(Uri.UnescapeDataString(uri.AbsolutePath)).Split(Path.GetInvalidFileNameChars()));
+                downloaded = NameFor(fileName.Length > 0 ? fileName : "file");
+                copied[uri.AbsoluteUri] = downloaded;
+                copies.Add(new ZipCopy(downloaded, null, bytes));
+            }
+
+            text = ReplaceLinkUrl(text, url, filesName + "/" + Uri.EscapeDataString(downloaded) + uri.Fragment);
+        }
+
+        return (text, copies, notFetched);
+    }
+
+    // A file on the PC a link points to: relative to the document's folder, or a full path
+    // (C:\… or C:/…) or file: address. Null for anything else, or a file that is not there.
+    private static (string Path, string Suffix)? LinkedLocalFile(string url, string? documentFolder)
+    {
+        try
+        {
+            if (url.StartsWith("file:", StringComparison.OrdinalIgnoreCase) && Uri.TryCreate(url, UriKind.Absolute, out var fileUri) && fileUri.IsFile)
+            {
+                return File.Exists(fileUri.LocalPath) ? (fileUri.LocalPath, fileUri.Fragment) : null;
+            }
+
+            if (System.Text.RegularExpressions.Regex.IsMatch(url, @"^[A-Za-z]:[\\/]"))
+            {
+                var cut = url.IndexOf('#');
+                var full = Path.GetFullPath(Uri.UnescapeDataString(cut < 0 ? url : url[..cut]));
+                return File.Exists(full) ? (full, cut < 0 ? string.Empty : url[cut..]) : null;
+            }
+        }
+        catch (Exception ex) when (ex is ArgumentException or NotSupportedException or PathTooLongException or UriFormatException)
+        {
+            return null;
+        }
+
+        return documentFolder is null ? null : ResolveLocalFile(url, [documentFolder]);
+    }
+
+    // The link written as old, in Markdown ((old), (<old>)) or HTML ("old", 'old'), made to
+    // point to replacement; examples in code (fenced blocks and `code`) stay as written.
+    private static string ReplaceLinkUrl(string text, string old, string replacement)
+    {
+        var code = CodeRanges(text);
+        return System.Text.RegularExpressions.Regex.Replace(text,
+            $"""(?<=[(<"'])({System.Text.RegularExpressions.Regex.Escape(old)})(?=[)>"'\s])""",
+            match => code.Any(range => match.Index >= range.Start && match.Index < range.End) ? match.Value : replacement);
+    }
+
+    // Where the code is in Markdown: fenced blocks (``` or ~~~) and `code` spans on one line.
+    private static List<(int Start, int End)> CodeRanges(string text)
+    {
+        var ranges = new List<(int Start, int End)>();
+        string? fence = null;
+        var fenceStart = 0;
+        var at = 0;
+        foreach (var line in text.Split('\n'))
+        {
+            var mark = System.Text.RegularExpressions.Regex.Match(line, @"^ {0,3}(`{3,}|~{3,})");
+            if (fence is not null)
+            {
+                if (mark.Success && mark.Groups[1].Value[0] == fence[0] && mark.Groups[1].Length >= fence.Length && line.Trim().Trim('`', '~').Length == 0)
+                {
+                    ranges.Add((fenceStart, at + line.Length));
+                    fence = null;
+                }
+            }
+            else if (mark.Success)
+            {
+                fence = mark.Groups[1].Value;
+                fenceStart = at;
+            }
+            else
+            {
+                foreach (System.Text.RegularExpressions.Match span in System.Text.RegularExpressions.Regex.Matches(line, @"(`+)[^`]*?\1"))
+                {
+                    ranges.Add((at + span.Index, at + span.Index + span.Length));
+                }
+            }
+
+            at += line.Length + 1;
+        }
+
+        if (fence is not null)
+        {
+            ranges.Add((fenceStart, text.Length));
+        }
+
+        return ranges;
+    }
+
+    // A file on the internet, for the sharing ZIP, or null when it cannot be had.
+    private static async Task<byte[]?> DownloadFileAsync(Uri uri)
+    {
+        try
+        {
+            using var response = await Http.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead);
+            if (!response.IsSuccessStatusCode || response.Content.Headers.ContentLength > MaxZipDownloadBytes)
+            {
+                return null;
+            }
+
+            await using var stream = await response.Content.ReadAsStreamAsync();
+            using var buffer = new MemoryStream();
+            var chunk = new byte[81920];
+            int read;
+            while ((read = await stream.ReadAsync(chunk)) > 0)
+            {
+                buffer.Write(chunk, 0, read);
+                if (buffer.Length > MaxZipDownloadBytes)
+                {
+                    return null;
+                }
+            }
+
+            return buffer.ToArray();
+        }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or IOException or InvalidOperationException)
+        {
+            return null;
+        }
     }
 
     // To the Recycle Bin, so a file left out by mistake can be put back.

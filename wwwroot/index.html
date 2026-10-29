@@ -290,6 +290,13 @@
       <legend data-i18n="settingsExport">書き出し</legend>
       <label class="settings-check"><input id="setting-html-source" type="checkbox"> <span data-i18n="settingsHtmlSource">HTMLに保存するとき、元の Markdown も入れる（mdEditor で開くと元どおりに戻せる）</span></label>
       <p class="settings-note" data-i18n="settingsHtmlSourceNote"></p>
+      <label class="settings-row"><span data-i18n="settingsZipLinks">配布用 ZIP に入れるファイル</span>
+        <select id="setting-zip-links">
+          <option value="folder" data-i18n="zipLinksFolder">「名前_files」フォルダーのファイルだけ</option>
+          <option value="local" data-i18n="zipLinksLocal" selected>PC の中のリンク先のファイルも「名前_files」に写す（初期設定）</option>
+          <option value="all" data-i18n="zipLinksAll">インターネット上のリンク先のファイルも「名前_files」に写す</option>
+        </select></label>
+      <p class="settings-note" data-i18n="settingsZipLinksNote"></p>
     </fieldset>
     <fieldset class="settings-group">
       <legend data-i18n="settingsPasteKey">クリップボードから新規作成</legend>

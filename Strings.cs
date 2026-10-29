@@ -157,6 +157,10 @@ internal static partial class Strings
             "The table was saved.",
         ["文書の中の表を、1 つずつ別のファイルに保存しました。"] =
             "Each table in the document was saved as its own file.",
+        ["そのうち {0} 個は、文書がリンクしている「{1}」フォルダーの外のファイルを写したものです。ZIP の中の文書は、写したファイルにリンクしています（元の文書は変わりません）。"] =
+            "{0} of them are copies of files outside the \"{1}\" folder that the document links to. The document in the ZIP links to the copies (the document itself is not changed).",
+        ["インターネット上のファイル {0} 個は、ダウンロードできなかったため、リンクのまま残しました。"] =
+            "{0} files on the internet could not be downloaded, so their links were kept.",
         ["配布用 ZIP の書き出し"] =
             "ZIP for sharing",
         ["「{0}」フォルダーに、文書から参照されていないファイルが {1} 個あります。ごみ箱に移してから ZIP にしますか？\n\n{2}\n\n「いいえ」を選ぶと、ファイルは残したまま、ZIP には入れません。"] =
