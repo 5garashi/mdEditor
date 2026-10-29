@@ -3127,7 +3127,8 @@ public partial class MainWindow : Window
             "src=\"https://" + System.Text.RegularExpressions.Regex.Escape(DocumentHost) + "(/[^\"]*)\"",
             match =>
             {
-                var urlPath = System.Net.WebUtility.HtmlDecode(match.Groups[1].Value);
+                // Without the file time ResolveImageAddress adds (?v=).
+                var urlPath = System.Net.WebUtility.HtmlDecode(match.Groups[1].Value).Split('?', 2)[0];
                 if (!TryResolveDocumentImage(urlPath, out var path, out var contentType))
                 {
                     return match.Value;
@@ -4865,9 +4866,16 @@ public partial class MainWindow : Window
         }
 
         var hasFolder = _filePath is not null || _importFolder is not null;
-        return hasFolder && !url.StartsWith('/') && Uri.TryCreate(new Uri($"https://{DocumentHost}/"), url.Replace('\\', '/'), out var resolved)
-            ? (resolved.AbsoluteUri, null)
-            : (null, null);
+        if (!hasFolder || url.StartsWith('/') || !Uri.TryCreate(new Uri($"https://{DocumentHost}/"), url.Replace('\\', '/'), out var resolved))
+        {
+            return (null, null);
+        }
+
+        // The file's time goes in the address, so a file written again under the same name (a
+        // PDF opened again another way, a picture replaced) is not shown from the page's cache.
+        return TryResolveDocumentImage(resolved.AbsolutePath, out var file, out _)
+            ? (resolved.GetLeftPart(UriPartial.Path) + "?v=" + File.GetLastWriteTimeUtc(file).Ticks.ToString(System.Globalization.CultureInfo.InvariantCulture) + resolved.Fragment, null)
+            : (resolved.AbsoluteUri, null);
     }
 
     // An image written as HTML (<img>, or <source> in <picture>, as GitHub READMEs
