@@ -2970,7 +2970,8 @@ public partial class MainWindow : Window
         try
         {
             var root = Path.GetFullPath(folder).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
-            var relative = Uri.UnescapeDataString(relativeUrlPath).TrimStart('/');
+            // Without the file time ResolveImageAddress puts first (/~time/).
+            var relative = System.Text.RegularExpressions.Regex.Replace(Uri.UnescapeDataString(relativeUrlPath), @"^/~\d+/", "/").TrimStart('/');
             path = Path.GetFullPath(Path.Combine(root, relative));
             if (!path.StartsWith(root, StringComparison.OrdinalIgnoreCase)
                 || !ImageContentTypes.TryGetValue(Path.GetExtension(path), out var type)
@@ -3127,8 +3128,7 @@ public partial class MainWindow : Window
             "src=\"https://" + System.Text.RegularExpressions.Regex.Escape(DocumentHost) + "(/[^\"]*)\"",
             match =>
             {
-                // Without the file time ResolveImageAddress adds (?v=).
-                var urlPath = System.Net.WebUtility.HtmlDecode(match.Groups[1].Value).Split('?', 2)[0];
+                var urlPath = System.Net.WebUtility.HtmlDecode(match.Groups[1].Value);
                 if (!TryResolveDocumentImage(urlPath, out var path, out var contentType))
                 {
                     return match.Value;
@@ -4871,10 +4871,11 @@ public partial class MainWindow : Window
             return (null, null);
         }
 
-        // The file's time goes in the address, so a file written again under the same name (a
-        // PDF opened again another way, a picture replaced) is not shown from the page's cache.
+        // The file's time goes in the address (/~time/name_files/a.png; TryResolveDocumentImage
+        // leaves it out again), so a picture written again under the same name (a PDF opened
+        // again another way, a picture replaced) is not shown from the page's cache.
         return TryResolveDocumentImage(resolved.AbsolutePath, out var file, out _)
-            ? (resolved.GetLeftPart(UriPartial.Path) + "?v=" + File.GetLastWriteTimeUtc(file).Ticks.ToString(System.Globalization.CultureInfo.InvariantCulture) + resolved.Fragment, null)
+            ? ($"https://{DocumentHost}/~{File.GetLastWriteTimeUtc(file).Ticks.ToString(System.Globalization.CultureInfo.InvariantCulture)}{resolved.AbsolutePath}{resolved.Fragment}", null)
             : (resolved.AbsoluteUri, null);
     }
 
