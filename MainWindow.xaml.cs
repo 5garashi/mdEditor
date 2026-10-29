@@ -501,6 +501,9 @@ public partial class MainWindow : Window
                 _zipLinks = root.GetProperty("value").GetString() is "folder" or "all" ? root.GetProperty("value").GetString()! : "local";
                 SaveSetting("ZipLinks", _zipLinks);
                 break;
+            case "resetSettings":
+                ResetSettings();
+                break;
             case "openPdfOptionsFile":
                 OpenPdfOptionsFile();
                 break;
@@ -1776,6 +1779,60 @@ public partial class MainWindow : Window
         }
 
         return missing;
+    }
+
+    // Settings > "初期設定に戻す", after asking: everything in the Settings dialog goes back
+    // to its default, the host's settings here and the page's (resetDisplay), and
+    // pdf-import.json gets its default values. The key for New from clipboard (it would
+    // remove a desktop shortcut) and the keyboard shortcuts (they have their own reset) stay.
+    private void ResetSettings()
+    {
+        if (MessageBox.Show(Strings.Tr("設定を初期設定に戻しますか？「設定」の画面のすべての項目と、PDF の取り込みの詳細設定ファイル（pdf-import.json）が初期設定になります。「クリップボードから新規作成」のキーと、キーボードショートカットはそのままです。"),
+                "mdEditor", MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
+        {
+            return;
+        }
+
+        _theme = NormalizeTheme(null);
+        SaveSetting("Theme", _theme);
+        ApplyTheme();
+        SendToPage(new { type = "theme", theme = _theme });
+        _paper = NormalizePaper(null);
+        SaveSetting("PaperSize", _paper);
+        SendPaper();
+        _externalImages = NormalizeExternal(null);
+        SaveSetting("ExternalImages", _externalImages);
+        _noticedBlocked = -1;
+        SendToPage(new { type = "externalImages", value = _externalImages });
+        _nearGitHub = false;
+        SaveSetting("NearGitHub", "off");
+        _markdownPipeline = MarkdownPipelines.Build(_nearGitHub);
+        SendToPage(new { type = "nearGitHub", enabled = _nearGitHub });
+        _autoBackup = true;
+        SaveSetting("AutoBackup", "on");
+        WriteRecoveryCopy();
+        SendToPage(new { type = "autoBackup", enabled = _autoBackup });
+        _pdfFigureText = "picture";
+        _pdfAlign = true;
+        _pdfPagePictures = true;
+        SaveSetting("PdfFigureText", _pdfFigureText);
+        SaveSetting("PdfAlign", "on");
+        SaveSetting("PdfPagePictures", "on");
+        SendPdfOptions();
+        _zipLinks = "local";
+        SaveSetting("ZipLinks", _zipLinks);
+        SendToPage(new { type = "zipLinks", value = _zipLinks });
+        try
+        {
+            PdfImportOptions.WriteDefaults(overwrite: true);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            MessageBox.Show($"{Strings.Tr("PDF の詳細設定ファイルを開けませんでした。")}\n\n{ex.Message}", "mdEditor", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+
+        SendToPage(new { type = "resetDisplay" });
+        SendPreview();
     }
 
     private void SendPdfOptions() =>

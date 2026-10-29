@@ -10,9 +10,13 @@ using System.Text.RegularExpressions;
 using Markdig;
 using Markdig.Extensions.AutoIdentifiers;
 using Markdig.Extensions.EmphasisExtras;
+using Markdig.Extensions.Mathematics;
 using Markdig.Extensions.Tables;
+using Markdig.Helpers;
+using Markdig.Parsers;
 using Markdig.Parsers.Inlines;
 using Markdig.Renderers;
+using Markdig.Renderers.Html;
 using Markdig.Renderers.Html.Inlines;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
@@ -46,11 +50,83 @@ internal static class MarkdownPipelines
             builder.UseAdvancedExtensions();
         }
 
+        builder.Extensions.AddIfNotAlready<LatexMathDelimitersExtension>();
+
         // As on GitHub: front matter becomes a table and :smile: an emoji
         // (smileys such as :) stay text).
         builder.UseYamlFrontMatter().UseEmojiAndSmiley(enableSmileys: false);
         builder.Extensions.AddIfNotAlready<GfmDetailsExtension>();
         return builder.Build();
+    }
+}
+
+// Math written with LaTeX's own delimiters, as many AI chats and papers write it: \(x\) in a
+// line, \[x\] shown on a line of its own. Markdig reads only $x$ and $$x$$ (and would show
+// \( as an escaped "("). The math is the same MathInline, so preview, PDF, HTML, and Word
+// draw it as they draw $x$; \[x\] is marked math-display. Both pipelines read it, though
+// GitHub itself shows \( as an escaped parenthesis: the math is wanted more than the
+// difference.
+internal sealed class LatexMathDelimitersExtension : IMarkdownExtension
+{
+    public void Setup(MarkdownPipelineBuilder pipeline)
+    {
+        if (!pipeline.InlineParsers.Contains<LatexMathInlineParser>())
+        {
+            pipeline.InlineParsers.InsertBefore<EscapeInlineParser>(new LatexMathInlineParser());
+        }
+    }
+
+    public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+    {
+    }
+}
+
+internal sealed class LatexMathInlineParser : InlineParser
+{
+    public LatexMathInlineParser()
+    {
+        OpeningCharacters = ['\\'];
+    }
+
+    public override bool Match(InlineProcessor processor, ref StringSlice slice)
+    {
+        var open = slice.PeekChar();
+        if (open is not ('(' or '['))
+        {
+            return false;
+        }
+
+        var close = open == '(' ? @"\)" : @"\]";
+        var text = slice.Text;
+        var start = slice.Start + 2;
+        var end = text.IndexOf(close, start, slice.End - start + 1, StringComparison.Ordinal);
+        // An empty \(\), one never closed, and one with another opening before its close (a
+        // lone escaped "(") are left to the escape parser.
+        if (end < 0 || end == start || string.IsNullOrWhiteSpace(text[start..end])
+            || text.IndexOf(close == @"\)" ? @"\(" : @"\[", start, end - start, StringComparison.Ordinal) >= 0)
+        {
+            return false;
+        }
+
+        var math = new MathInline
+        {
+            Delimiter = '$',
+            DelimiterCount = open == '(' ? 1 : 2,
+            Content = new StringSlice(text, start, end - 1),
+            Span = new SourceSpan(processor.GetSourcePosition(slice.Start, out var line, out var column), processor.GetSourcePosition(end + 1)),
+            Line = line,
+            Column = column
+        };
+        // The class the preview draws math by (Markdig's own math parser adds it too).
+        math.GetAttributes().AddClass("math");
+        if (open == '[')
+        {
+            math.GetAttributes().AddClass("math-display");
+        }
+
+        processor.Inline = math;
+        slice.Start = end + 2;
+        return true;
     }
 }
 

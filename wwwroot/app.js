@@ -150,7 +150,7 @@
       readerPlay: "読み上げ", readerPause: "一時停止", readerResume: "再開", readerStop: "停止",
       settingsBackup: "自動バックアップ", settingsBackupOn: "作業中の文書を自動でバックアップし、異常終了したときに復元する",
       settingsBackupNote: "保存していない変更を、この PC の中（%LOCALAPPDATA%\\mdEditor\\Recovery）に15秒ごとに控えます。元のファイルは書き換えません。保存するか、正常に終了すると控えは消えます。",
-      settingsReset: "表示の設定を初期設定に戻す",
+      settingsReset: "初期設定に戻す",
       settingsPasteKey: "クリップボードから新規作成", pasteKeyLabel: "起動するキー", pasteKeyNone: "なし",
       pasteKeyNote: "キーを選ぶと、確認のうえデスクトップにショートカットを作ります。テキストや画像をコピーしてからそのキーを押すと、mdEditor が起動して新しい文書に入れます。",
       pasteKeyReady: (key) => `${key} で使えます（デスクトップのショートカット）。テキストや画像をコピーしてから押してください。「なし」にするとショートカットを削除します。`,
@@ -328,7 +328,7 @@
       readerPlay: "朗读", readerPause: "暂停", readerResume: "继续", readerStop: "停止",
       settingsBackup: "自动备份", settingsBackupOn: "自动备份正在编辑的文档，异常退出时恢复",
       settingsBackupNote: "每 15 秒将未保存的更改备份到这台电脑中（%LOCALAPPDATA%\\mdEditor\\Recovery）。不会改写原文件。保存或正常退出后，备份会被删除。",
-      settingsReset: "将显示设置恢复为默认",
+      settingsReset: "恢复默认设置",
       settingsPasteKey: "从剪贴板新建", pasteKeyLabel: "启动按键", pasteKeyNone: "无",
       pasteKeyNote: "选择按键后，经你确认会在桌面上创建快捷方式。复制文本或图像后按该键，mdEditor 会启动并把内容放入新文档。",
       pasteKeyReady: (key) => `可以使用 ${key}（桌面快捷方式）。请先复制文本或图像，再按该键。选择“无”会删除快捷方式。`,
@@ -506,7 +506,7 @@
       readerPlay: "Read aloud", readerPause: "Pause", readerResume: "Resume", readerStop: "Stop",
       settingsBackup: "Automatic backup", settingsBackupOn: "Back up the open document automatically and restore it after a crash",
       settingsBackupNote: "Unsaved changes are copied every 15 seconds to this PC (%LOCALAPPDATA%\\mdEditor\\Recovery). The original file is never changed. The copy is removed when you save or close normally.",
-      settingsReset: "Restore display defaults",
+      settingsReset: "Restore defaults",
       settingsPasteKey: "New from clipboard", pasteKeyLabel: "Start key", pasteKeyNone: "None",
       pasteKeyNote: "Choosing a key creates a desktop shortcut once you confirm. Copy text or a picture, then press the key: mdEditor starts and puts it in a new document.",
       pasteKeyReady: (key) => `${key} is ready (desktop shortcut). Copy text or a picture first, then press it. Choosing None deletes the shortcut.`,
@@ -1531,6 +1531,11 @@
     // Math: the result column renders each example with KaTeX.
     { group: { ja: "数式（KaTeX）", en: "Math (KaTeX)", zh: "公式（KaTeX）" } },
     { math: "E = mc^2", ja: ["文中の数式", "$E = mc^2$", ""], en: ["Inline math", "$E = mc^2$", ""], zh: ["行内公式", "$E = mc^2$", ""] },
+    // LaTeX's own delimiters, as AI chats and papers write math.
+    { math: "D_{AB}=0", ja: ["文中の数式（\\( \\) で囲む）", "\\(D_{AB}=0\\)", ""], en: ["Inline math with \\( \\)", "\\(D_{AB}=0\\)", ""],
+      zh: ["行内公式（用 \\( \\) 括起来）", "\\(D_{AB}=0\\)", ""] },
+    { math: "\\frac{1 + D_{AB}}{2}", display: true, ja: ["別の行の数式（\\[ \\] で囲む）", "\\[\\frac{1 + D_{AB}}{2}\\]", ""],
+      en: ["Display math with \\[ \\]", "\\[\\frac{1 + D_{AB}}{2}\\]", ""], zh: ["独立公式（用 \\[ \\] 括起来）", "\\[\\frac{1 + D_{AB}}{2}\\]", ""] },
     { block: true, math: "\\int_0^1 x^2\\,dx = \\frac{1}{3}", display: true,
       ja: ["別の行の数式", "$$\n\\int_0^1 x^2\\,dx = \\frac{1}{3}\n$$", ""],
       en: ["Display math", "$$\n\\int_0^1 x^2\\,dx = \\frac{1}{3}\n$$", ""],
@@ -1818,13 +1823,15 @@
   document.getElementById("zoom-in").addEventListener("click", () => post({ type: "zoom", action: "in" }));
   document.getElementById("zoom-out").addEventListener("click", () => post({ type: "zoom", action: "out" }));
   document.getElementById("zoom-reset").addEventListener("click", () => post({ type: "zoom", action: "reset" }));
-  document.getElementById("settings-reset").addEventListener("click", () => {
+  // The host asks first, resets its own settings, and then sends resetDisplay.
+  document.getElementById("settings-reset").addEventListener("click", () => post({ type: "resetSettings" }));
+  const resetDisplay = () => {
     displaySettings = { ...displayDefaults };
     saveDisplaySettings();
     fillSettingControls();
     applyDisplaySettings();
     post({ type: "zoom", action: "reset" });
-  });
+  };
 
   // Settings > New from clipboard: Ctrl+Alt+letter or digit, given to a desktop shortcut
   // the host makes (after asking) to start mdEditor with --paste.
@@ -2613,8 +2620,9 @@
         // GitHub also writes inline math as $`x`$; the backticks are not part of it.
         .replace(/^`([\s\S]*)`$/, "$1");
       try {
+        // \[x\] in a line is marked math-display by the host and shown on a line of its own.
         window.katex.render(source, element, {
-          displayMode: element.tagName === "DIV",
+          displayMode: element.tagName === "DIV" || element.classList.contains("math-display"),
           throwOnError: false
         });
       } catch {
@@ -3572,6 +3580,8 @@
     } else if (message.type === "missingLinks") {
       const resolve = linkChecks.get(message.id);
       if (linkChecks.delete(message.id)) resolve(message.targets ?? []);
+    } else if (message.type === "resetDisplay") {
+      resetDisplay();
     } else if (message.type === "zipLinks") {
       zipLinksSelect.value = message.value;
     } else if (message.type === "pdfOptions") {

@@ -803,7 +803,7 @@ internal static partial class PdfImport
     private static IEnumerable<TextBlock> TextBlocks(IReadOnlyList<Letter> letters, HashSet<Word> rejoined, IReadOnlyList<PdfRectangle> frames)
     {
         var words = NearestNeighbourWordExtractor.Instance.GetWords(letters).ToList();
-        var blocks = KeyValueRows(JoinSplitLines(DocstrumBoundingBoxes.Instance.GetBlocks(words).ToList(), rejoined), rejoined, frames);
+        var blocks = KeyValueRows(JoinTermLines(JoinSplitLines(DocstrumBoundingBoxes.Instance.GetBlocks(words).ToList(), rejoined), rejoined), rejoined, frames);
         var ordered = new List<TextBlock>();
         foreach (var block in UnsupervisedReadingOrderDetector.Instance.Get(blocks))
         {
@@ -1073,6 +1073,62 @@ internal static partial class PdfImport
 
         return Math.Abs((item.Left + item.Right) / 2 - (left + right) / 2) <= Math.Max(height, width * Tune.AlignCenterTolerance) && item.Right < right - width * 0.1
             ? "center" : string.Empty;
+    }
+
+    // A term set before its explanation, which starts with a colon ("食物繊維  ：体内の余分な…"
+    // in a box of nutrients), belongs on the explanation's line, but the page's segmentation
+    // can put the term in another block (with the heading above it), and it would be read in
+    // the wrong place. A line of twelve letters at most, followed on its baseline, across a
+    // gap of up to three line heights, by a line of another block that starts with ":" or
+    // "：", goes into that block on that line. Its words are added to rejoined. Lines of
+    // columns side by side do not start with a colon, so they stay apart.
+    private static List<TextBlock> JoinTermLines(List<TextBlock> blocks, HashSet<Word> rejoined)
+    {
+        for (var changed = true; changed;)
+        {
+            changed = false;
+            for (var i = 0; i < blocks.Count && !changed; i++)
+            {
+                foreach (var term in SplitLines(blocks[i]))
+                {
+                    var text = ReadLine(term).Text.Trim();
+                    if (text.Length == 0 || text.Count(c => !char.IsWhiteSpace(c)) > 12 || text[^1] is ':' or '：')
+                    {
+                        continue;
+                    }
+
+                    var height = Math.Max(term.Max(word => word.BoundingBox.Height), 1);
+                    var right = term.Max(word => word.BoundingBox.Right);
+                    var owner = Enumerable.Range(0, blocks.Count).FirstOrDefault(j => j != i && SplitLines(blocks[j]).Any(line =>
+                        Math.Abs(line[0].BoundingBox.Bottom - term[0].BoundingBox.Bottom) < height * 0.5
+                        && line.Min(word => word.BoundingBox.Left) - right is > 0 and var gap && gap <= height * 3
+                        && ReadLine(line).Text.TrimStart() is [':' or '：', ..]), -1);
+                    if (owner < 0)
+                    {
+                        continue;
+                    }
+
+                    var moved = new HashSet<Word>(term, ReferenceEqualityComparer.Instance);
+                    rejoined.UnionWith(term);
+                    blocks[owner] = new TextBlock(blocks[owner].TextLines.Append(new TextLine(term)).ToList());
+                    var rest = blocks[i].TextLines.Select(line => line.Words.Where(word => !moved.Contains(word)).ToList())
+                        .Where(words => words.Count > 0).Select(words => new TextLine(words)).ToList();
+                    if (rest.Count > 0)
+                    {
+                        blocks[i] = new TextBlock(rest);
+                    }
+                    else
+                    {
+                        blocks.RemoveAt(i);
+                    }
+
+                    changed = true;
+                    break;
+                }
+            }
+        }
+
+        return blocks;
     }
 
     // A line with a wide gap ("File Number: E46769   Type dsg: 1494V-0") can be cut into two
@@ -1354,7 +1410,11 @@ internal static partial class PdfImport
             // A line put back together across a wide gap is a form line or a table row, not
             // prose: it stands alone.
             var standsAlone = line.Rejoined || previousLine?.Rejoined == true;
-            if (current.Count > 0 && (sizeChanged || fontChanged || endedEarly || standsAlone || newElement || lineKind != ItemKind.Paragraph))
+            // A line that starts with a short term and a colon ("ビタミンＥ：…"), after a line
+            // that ends a sentence or a parenthesis, starts an entry of a list of terms (a
+            // wrapped line goes on mid-sentence).
+            var startsTerm = TermLinePattern().IsMatch(line.Text) && previousLine?.Text.TrimEnd() is [.., '。' or '．' or '.' or '！' or '？' or '!' or '?' or '）' or ')' or '」' or '』'];
+            if (current.Count > 0 && (sizeChanged || fontChanged || endedEarly || standsAlone || startsTerm || newElement || lineKind != ItemKind.Paragraph))
             {
                 foreach (var item in Flush()) yield return item;
             }
@@ -1729,6 +1789,11 @@ internal static partial class PdfImport
 
     [GeneratedRegex(@"^\s*[•●○◦▪■□・·‣⁃\-–*]\s+")]
     private static partial Regex BulletPattern();
+
+    // A term of up to twelve characters and a colon at the start of a line: no punctuation
+    // in the term, and not an address's "https:".
+    [GeneratedRegex(@"^\s*[^\s:：/、。，,（）()「」]{1,12}[:：](?!//)")]
+    private static partial Regex TermLinePattern();
 
     // The tags InlineMarkup puts in the text.
     [GeneratedRegex("</?(?:mark|kbd|sup|sub)>")]

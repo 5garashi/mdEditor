@@ -161,6 +161,8 @@ internal static partial class Strings
             "{0} of them are copies of files outside the \"{1}\" folder that the document links to. The document in the ZIP links to the copies (the document itself is not changed).",
         ["インターネット上のファイル {0} 個は、ダウンロードできなかったため、リンクのまま残しました。"] =
             "{0} files on the internet could not be downloaded, so their links were kept.",
+        ["設定を初期設定に戻しますか？「設定」の画面のすべての項目と、PDF の取り込みの詳細設定ファイル（pdf-import.json）が初期設定になります。「クリップボードから新規作成」のキーと、キーボードショートカットはそのままです。"] =
+            "Restore the default settings? Everything in Settings, and the advanced settings file for opening PDFs (pdf-import.json), goes back to its default. The key for New from clipboard and the keyboard shortcuts stay as they are.",
         ["配布用 ZIP の書き出し"] =
             "ZIP for sharing",
         ["「{0}」フォルダーに、文書から参照されていないファイルが {1} 個あります。ごみ箱に移してから ZIP にしますか？\n\n{2}\n\n「いいえ」を選ぶと、ファイルは残したまま、ZIP には入れません。"] =
