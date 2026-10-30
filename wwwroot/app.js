@@ -115,6 +115,9 @@
       settingsMapTilesNote: "```geojson と ```topojson の地図は、まず PC の中の簡単な世界地図の上に描きます。道路や地名の入った詳細な地図は OpenStreetMap からインターネットで読み込み、そのとき地図のサーバーに、表示している場所と IP アドレスが伝わります。保存した HTML には入れません。",
       noticeMaps: (count) => `この文書には地図が ${count} 件あります。詳細な地図（OpenStreetMap）を読み込むと、地図のサーバーに表示している場所と IP アドレスなどが伝わります。`,
       loadMaps: "詳細な地図を読み込む",
+      noticeMath: (count, example) => `数式の $ が抜けたような書き方が ${count} か所あります（例: ${example}）。数式に直すと、プレビューで数式として表示されます。`,
+      noticeMathDone: (count) => `${count} か所を数式に直しました。元に戻すときは Ctrl+Z を押してください。`,
+      fixMath: "数式に直す",
       modelLabel: "3D モデル（STL）。ドラッグで回転、ホイールで拡大・縮小", modelEmpty: "三角形がありません",
       mapLabel: "地図（GeoJSON）", mapEmpty: "地図に描く図形がありません",
       toc: "目次", tocNoHeadings: "目次にする見出しがありません。「## 見出し」のように見出しを書いてから、もう一度押してください。",
@@ -305,6 +308,9 @@
       settingsMapTilesNote: "```geojson 和 ```topojson 的地图会先绘制在电脑中的简单世界地图上。带有道路和地名的详细地图需要从 OpenStreetMap 通过互联网加载，此时地图服务器会得知显示的地点和你的 IP 地址。保存的 HTML 中不包含详细地图。",
       noticeMaps: (count) => `此文档中有 ${count} 个地图。加载详细地图（OpenStreetMap）后，地图服务器会得知显示的地点和你的 IP 地址等信息。`,
       loadMaps: "加载详细地图",
+      noticeMath: (count, example) => `有 ${count} 处看起来像是丢失了 $ 的公式（例: ${example}）。改为公式后，预览中会显示为公式。`,
+      noticeMathDone: (count) => `已将 ${count} 处改为公式。要撤消，请按 Ctrl+Z。`,
+      fixMath: "改为公式",
       modelLabel: "3D 模型（STL）。拖动旋转，滚轮缩放", modelEmpty: "没有三角形",
       mapLabel: "地图（GeoJSON）", mapEmpty: "没有可绘制在地图上的图形",
       toc: "目录", tocNoHeadings: "没有可以作为目录的标题。请先写出“## 标题”这样的标题，然后再按一次。",
@@ -495,6 +501,9 @@
       settingsMapTilesNote: "```geojson and ```topojson maps are first drawn on a simple world map on your PC. A detailed map with roads and place names comes from OpenStreetMap over the internet, which lets the map server see the area shown and your IP address. It is not kept in saved HTML.",
       noticeMaps: (count) => `This document has ${count} map(s). Loading detailed maps (OpenStreetMap) lets the map server see the area shown and information such as your IP address.`,
       loadMaps: "Load detailed maps",
+      noticeMath: (count, example) => `${count} place(s) look like math that lost its $ (for example, ${example}). Made into math, they show as formulas in the preview.`,
+      noticeMathDone: (count) => `Made ${count} place(s) into math. Press Ctrl+Z to undo.`,
+      fixMath: "Make into math",
       modelLabel: "3D model (STL). Drag to turn, use the wheel to zoom", modelEmpty: "There are no triangles",
       mapLabel: "Map (GeoJSON)", mapEmpty: "There are no shapes to draw on the map",
       toc: "Contents", tocNoHeadings: "There are no headings for a table of contents. Write headings such as \"## Heading\", then press it again.",
@@ -1026,10 +1035,115 @@
     encodingButton.setAttribute("aria-label", t("encodingButtonLabel")(encodingButton.textContent));
   };
 
+  // Math that lost its $ on the way: an export (Google Docs, for example) writes $t \to +\infty$
+  // as t \\to \+\\infty, which shows the backslashes as words. A piece starts only at a LaTeX
+  // command on this list written with \\; letters standing alone, numbers, operators, other \\
+  // commands, and {…} groups next to it (no space or one space) join it, and so does (…) right
+  // after it, as in x(\\tau). Code, math, HTML, links' addresses, and Markdown's own marks are
+  // never read, so a piece never runs into them.
+  const lostMathCommands = new Set(("to infty rightarrow leftarrow Rightarrow Leftarrow leftrightarrow mapsto "
+    + "le ge leq geq ne neq approx sim simeq equiv propto times cdot pm mp div partial nabla sum prod int oint lim "
+    + "frac sqrt hbar ell alpha beta gamma delta epsilon varepsilon zeta eta theta lambda mu nu xi pi rho "
+    + "sigma tau phi varphi chi psi omega Gamma Delta Theta Lambda Xi Pi Sigma Phi Psi Omega notin subset "
+    + "subseteq cup cap forall exists langle rangle ldots cdots otimes oplus mathcal mathbb mathrm").split(" "));
+  const lostMathSkipped = new Set(["FencedCode", "CodeBlock", "InlineCode", "Math", "HTMLBlock", "HTMLTag",
+    "Comment", "CommentBlock", "ProcessingInstructionBlock", "URL", "Autolink", "LinkLabel", "ListMark",
+    "HeaderMark", "QuoteMark", "EmphasisMark", "LinkMark", "CodeMark", "TableDelimiter", "TaskMarker"]);
+  // One token at a time: a \\command (or \\, and the like), an escaped operator (\+), an operator,
+  // a number, or a letter standing alone (not part of a word such as "to").
+  const lostMathToken = /\\\\([A-Za-z]+|[,;:!])|\\[-+=*_^|<>!]|[-+=<>^_*|!]|\d+(?:\.\d+)?|(?<![A-Za-z])[A-Za-z](?![A-Za-z])/y;
+  const findLostMath = (text) => {
+    const skipped = [];
+    markdownLanguage.parser.parse(text).iterate({
+      enter: (node) => {
+        if (!lostMathSkipped.has(node.name)) return true;
+        skipped.push([node.from, node.to]);
+        return false;
+      }
+    });
+    // Where the group opened at `at` closes, on the same line and before `to`, or -1.
+    const groupEnd = (at, to, open, shut) => {
+      let depth = 0;
+      for (let i = at; i < to; i += 1) {
+        const c = text[i];
+        if (c === "\n" || c === "$") return -1;
+        if (c === open) depth += 1;
+        else if (c === shut && (depth -= 1) === 0) return i + 1;
+      }
+      return -1;
+    };
+    const found = [];
+    const readPart = (from, to) => {
+      let run = [];
+      const close = () => {
+        // Operators at the ends belong to the sentence (a dash, an asterisk), not to the math.
+        while (run.length && !run[run.length - 1].word) run.pop();
+        while (run.length && !run[0].word && text[run[0].to] === " ") run.shift();
+        // Glued to a word or another backslash, it is more likely a path (C:\\temp\\pi\\data).
+        if (run.some((token) => token.command) && !/[$A-Za-z0-9:.\/\\]/.test(text[run[0].from - 1] ?? "")
+          && !/^(?:\$|\\[A-Za-z\\])/.test(text.slice(run[run.length - 1].to, run[run.length - 1].to + 2))) {
+          found.push({ from: run[0].from, to: run[run.length - 1].to });
+        }
+        run = [];
+      };
+      let at = from;
+      while (at < to) {
+        let token = null;
+        const glued = run.length > 0 && run[run.length - 1].to === at;
+        const groupTo = text[at] === "{" ? groupEnd(at, to, "{", "}")
+          : text[at] === "(" && glued ? groupEnd(at, to, "(", ")") : -1;
+        if (groupTo > 0 && (text[at] === "{" || /^\([\\A-Za-z0-9 +\-=*^_{}.,|()]{1,60}\)$/.test(text.slice(at, groupTo)))) {
+          token = { from: at, to: groupTo, word: true };
+        } else {
+          lostMathToken.lastIndex = at;
+          const match = lostMathToken.exec(text);
+          if (match && match.index + match[0].length <= to) {
+            const command = Boolean(match[1]);
+            token = { from: at, to: at + match[0].length, command: command && lostMathCommands.has(match[1]), word: command || /[A-Za-z0-9]/.test(match[0][0]) };
+          }
+        }
+        if (!token) {
+          close();
+          at += 1;
+          continue;
+        }
+        run.push(token);
+        // One space may sit between tokens; anything else ends the piece (above).
+        at = text[token.to] === " " ? token.to + 1 : token.to;
+      }
+      close();
+    };
+    let at = 0;
+    for (const [from, to] of skipped) {
+      if (from > at) readPart(at, from);
+      at = Math.max(at, to);
+    }
+    if (at < text.length) readPart(at, text.length);
+    // A line that already has a $ (a price, say) is left alone: a new $ could pair up with it.
+    // A piece that is a paragraph of its own becomes a formula on its own lines ($$ above and below).
+    const lineOf = (piece) => text.slice(text.lastIndexOf("\n", piece.from - 1) + 1, (text.indexOf("\n", piece.to) + 1 || text.length + 1) - 1);
+    return found.filter((piece) => !lineOf(piece).includes("$")).map((piece) => ({ ...piece,
+      display: /(^|\n[ \t]*\r?\n)[ \t]*$/.test(text.slice(Math.max(0, piece.from - 20), piece.from))
+        && /^[ \t]*(\r?\n[ \t]*(\r?\n|$)|$)/.test(text.slice(piece.to, piece.to + 20)) }));
+  };
+  // \\to becomes \to, and an escaped operator (\+, \_) the operator itself.
+  const restoreLostMath = (piece, display) => {
+    const mark = display ? "$$\n" : "$";
+    return `${mark}${piece.replace(/\\\\([A-Za-z]+|[,;:!])/g, "\\$1").replace(/\\([-+=*_^{}|<>!\[\]()])/g, "$1")}${display ? "\n$$" : "$"}`;
+  };
+  let lostMath = null;
+  const checkLostMath = () => {
+    const found = findLostMath(view.state.doc.toString());
+    // The example is one that reads as math at a glance: not a lone \\tau, nor a whole formula.
+    const example = found.find(({ from, to }) => to - from >= 8 && to - from <= 40) ?? found[0];
+    lostMath = example ? { count: found.length, example: view.state.sliceDoc(example.from, example.to) } : null;
+  };
+
   const updateNotice = () => {
     const askMaps = mapsWaiting > 0 && !mapNoticeClosed;
     document.getElementById("notice-maps").hidden = !askMaps;
-    if (!noticeState && !askMaps) {
+    document.getElementById("notice-math").hidden = !lostMath?.example;
+    if (!noticeState && !askMaps && !lostMath) {
       notice.hidden = true;
       return;
     }
@@ -1040,7 +1154,8 @@
           ? [noticeState.prefix, t("noticeExternal")(noticeState.count)].filter(Boolean).join(language === "en" ? " " : "")
           : t(noticeState.kind === "lossy" ? "noticeLossy" : "noticeGuessed")(encodingLabel(noticeState.encoding));
     // Sentences are joined with a space in English only (Japanese and Chinese end with 。).
-    noticeText.textContent = [main, askMaps ? t("noticeMaps")(mapsWaiting) : ""].filter(Boolean).join(language === "en" ? " " : "");
+    const math = !lostMath ? "" : lostMath.example ? t("noticeMath")(lostMath.count, lostMath.example) : t("noticeMathDone")(lostMath.count);
+    noticeText.textContent = [main, askMaps ? t("noticeMaps")(mapsWaiting) : "", math].filter(Boolean).join(language === "en" ? " " : "");
     document.getElementById("notice-encoding").hidden = !noticeState || noticeState.kind === "message" || noticeState.kind === "external";
     document.getElementById("notice-action").hidden = noticeState?.kind !== "external";
     const reopen = document.getElementById("notice-reopen");
@@ -1312,6 +1427,19 @@
     if (originalShown) showOriginal(false);
     noticeState = null;
     mapNoticeClosed = true;
+    lostMath = null;
+    updateNotice();
+    view.focus();
+  });
+  // One edit, so a single Ctrl+Z puts every piece back. The pieces are found again in the
+  // text as it is now, in case it was changed after opening.
+  document.getElementById("notice-math").addEventListener("click", () => {
+    const found = findLostMath(view.state.doc.toString());
+    view.dispatch({
+      changes: found.map(({ from, to, display }) => ({ from, to, insert: restoreLostMath(view.state.sliceDoc(from, to), display) })),
+      userEvent: "input"
+    });
+    lostMath = found.length ? { count: found.length, example: null } : null;
     updateNotice();
     view.focus();
   });
@@ -3907,6 +4035,8 @@
       // originalPdf right after).
       setOriginal(null);
       view.setState(EditorState.create({ doc: message.text, extensions: editorExtensions() }));
+      checkLostMath();
+      updateNotice();
       // A newly loaded document starts at the top, not where the last one was.
       editorScroller.scrollTop = 0;
       preview.scrollTop = 0;
