@@ -253,6 +253,14 @@ internal static partial class Strings
             "Keep text around figures as text (can be edited)",
         ["図のまわりの文字を図に入れる（見た目優先・既定）"] =
             "Put text around figures in their pictures (looks like the page, default)",
+        ["自動修正のルールを保存できませんでした。"] =
+            "The fix rules could not be saved.",
+        ["自動修正のルールを書き出せませんでした。"] =
+            "The fix rules could not be exported.",
+        ["自動修正のルール (*.json)|*.json"] =
+            "Fix rules (*.json)|*.json",
+        ["このファイルは自動修正のルールとして読めませんでした。"] =
+            "This file could not be read as fix rules.",
         ["PDF の詳細設定ファイルを開けませんでした。"] =
             "The PDF import settings file could not be opened.",
         ["{0} ページ目は、文字が図形として描かれていて取り出せないため、ページ全体を画像（PNG）にしました。"] =

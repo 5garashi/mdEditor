@@ -1953,6 +1953,108 @@ body.capture-export .preview-content pre {
   }
 }
 
+/* Fix rules: the rules in order, each with its pattern and its buttons, and the form that
+   writes one. Patterns and examples are in the editor's font (a Japanese UI font draws \ as a
+   yen sign). */
+.fix-rules-list {
+  margin: 0 16px;
+  padding: 0;
+  list-style: none;
+}
+
+.fix-rule {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.fix-rule-name {
+  margin: 0;
+  font-weight: 800;
+}
+
+.fix-rule-what {
+  margin: 4px 0 8px;
+  color: var(--steel);
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.fix-rule-what code,
+.fix-rule-result code,
+.fix-rule-code {
+  font-family: Consolas, "Cascadia Mono", monospace;
+}
+
+.fix-rule-actions,
+.fix-rule-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.fix-rule-actions select,
+.fix-rule-form select,
+.fix-rule-field input {
+  min-height: 44px;
+  padding: 4px 8px;
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  color: var(--ink);
+  background: var(--card);
+  font: inherit;
+}
+
+.fix-rule-form h3 {
+  margin: 4px 0;
+  font-size: 16px;
+}
+
+.fix-rule-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 8px 0;
+}
+
+.fix-rule-skip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 16px;
+  margin: 8px 0;
+  padding: 4px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.fix-rule-problem {
+  margin: 8px 0;
+  color: var(--volt-deep);
+  font-weight: 800;
+}
+
+.fix-rule-problem:empty {
+  display: none;
+}
+
+.fix-rule-result {
+  margin: 8px 0 0;
+  overflow-wrap: anywhere;
+}
+
+.fix-rule-result ol {
+  margin: 4px 0 0;
+  padding-left: 1.5em;
+}
+
+.fix-rules-status {
+  margin: 8px 16px 16px;
+}
+
+.fix-details-actions {
+  margin-bottom: 16px;
+}
+
 /* Settings dialog and the read-aloud controls */
 .settings-dialog {
   width: min(640px, calc(100vw - 32px));

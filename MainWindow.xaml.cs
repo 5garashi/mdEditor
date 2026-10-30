@@ -464,6 +464,8 @@ public partial class MainWindow : Window
                 SendToPage(new { type = "zipLinks", value = _zipLinks });
                 SendToPage(new { type = "appInfo", version = AppVersion });
                 SendToPage(new { type = "externalImages", value = _externalImages });
+                // Before any document, so the rules apply to the first one opened.
+                SendToPage(new { type = "fixRules", json = FixRules.Read(FixRules.FilePath), exists = File.Exists(FixRules.FilePath) });
                 if (await OfferRecoveryAsync())
                 {
                     // The recovered document is shown instead of the file passed at start.
@@ -522,6 +524,15 @@ public partial class MainWindow : Window
                 break;
             case "resetSettings":
                 ResetSettings();
+                break;
+            case "saveFixRules":
+                WriteFixRules(FixRules.FilePath, root.GetProperty("json").GetString() ?? "{}", "自動修正のルールを保存できませんでした。");
+                break;
+            case "exportFixRules":
+                ExportFixRules(root.GetProperty("json").GetString() ?? "{}");
+                break;
+            case "importFixRules":
+                ImportFixRules();
                 break;
             case "openPdfOptionsFile":
                 OpenPdfOptionsFile();
@@ -2004,6 +2015,58 @@ public partial class MainWindow : Window
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or System.ComponentModel.Win32Exception)
         {
             MessageBox.Show($"{Strings.Tr("PDF の詳細設定ファイルを開けませんでした。")}\n\n{ex.Message}", "mdEditor", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+    }
+
+    private void WriteFixRules(string path, string json, string failure)
+    {
+        try
+        {
+            FixRules.Write(path, json);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
+        {
+            MessageBox.Show($"{Strings.Tr(failure)}\n\n{ex.Message}", "mdEditor", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+    }
+
+    // The rules as a file to keep or to take to another PC.
+    private void ExportFixRules(string json)
+    {
+        var dialog = new SaveFileDialog
+        {
+            Filter = Strings.Tr("自動修正のルール (*.json)|*.json"),
+            DefaultExt = ".json",
+            AddExtension = true,
+            FileName = "fix-rules.json"
+        };
+        if (dialog.ShowDialog(this) == true)
+        {
+            WriteFixRules(dialog.FileName, json, "自動修正のルールを書き出せませんでした。");
+        }
+    }
+
+    // The page decides how the rules read join the ones it has.
+    private void ImportFixRules()
+    {
+        var dialog = new OpenFileDialog
+        {
+            Filter = Strings.Tr("自動修正のルール (*.json)|*.json"),
+            CheckFileExists = true,
+            Multiselect = false
+        };
+        if (dialog.ShowDialog(this) != true)
+        {
+            return;
+        }
+
+        if (FixRules.Read(dialog.FileName) is { } json)
+        {
+            SendToPage(new { type = "fixRulesImported", json });
+        }
+        else
+        {
+            MessageBox.Show(Strings.Tr("このファイルは自動修正のルールとして読めませんでした。"), "mdEditor", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
 

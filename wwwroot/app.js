@@ -119,7 +119,79 @@
       noticeMathDone: (count, example) => `数式の $ が抜けたような書き方（例: ${example}）を、${count} か所、数式に直しました。`,
       fixMath: "数式に直す",
       unfixMath: "元に戻す",
-      settingsMathFix: "数式の $ が抜けたような書き方（t \\\\to \\\\infty など）を、開いたときに数式に直す",
+      fixRuleMath: "数式の $ が抜けた書き方を数式に直す（組み込み）",
+      fixRuleEmphasis: "強調の ** がそのまま表示される書き方を <strong> に直す（組み込み）",
+      fixRule: "直す",
+      unfixRule: "元に戻す",
+      fixAll: "すべて直す",
+      unfixAll: "すべて元に戻す",
+      fixDetails: "内訳",
+      noticeRule: (name, count, example) => `「${name}」で直せる書き方が ${count} か所あります（例: ${example}）。`,
+      noticeRuleDone: (name, count, example) => `「${name}」で ${count} か所を直しました（例: ${example}）。`,
+      noticeRulesDone: (rules, count) => `自動修正のルール ${rules} 件で、${count} か所を直しました。`,
+      noticeRulesAsk: (rules, count) => `自動修正のルール ${rules} 件で直せる書き方が、${count} か所あります。`,
+      noticeRuleSlow: (name) => `「${name}」は時間がかかりすぎたため、当てませんでした。`,
+      noticeRuleMany: (name) => `「${name}」は直すところが 1,000 か所を超えたため、当てませんでした。`,
+      noticeRuleError: (name) => `「${name}」は正規表現が正しくないため、当てませんでした。`,
+      fixDetailsHeading: "自動修正の内訳",
+      fixDetailsRules: "ルールを開く",
+      fixDetailsDone: (count) => `${count} か所を直しました。例:`,
+      fixDetailsAsk: (count) => `直せるところが ${count} か所あります。例:`,
+      fixRulesHeading: "自動修正のルール",
+      fixRulesIntro: "文書を開いたときに、決まった書き方を直すルールです。上から順に当てます。ルールごとに、開いたときに直すか、開いたときにお知らせ欄で聞くか、「当てる」を押したときだけにするかを選べます。直したところは、お知らせ欄のボタンで元に戻せます。保存するまで、ファイルは変わりません。",
+      fixRulesNew: "新しいルール",
+      fixRulesExport: "書き出す…",
+      fixRulesImport: "読み込む…",
+      fixRulesRestore: "削除した例を戻す",
+      fixWhenOpen: "開いたときに直す",
+      fixWhenAsk: "開いたときに聞く",
+      fixWhenManual: "「当てる」を押したときだけ",
+      fixRuleWhen: "当てる時",
+      fixRuleApply: "当てる",
+      fixRuleEdit: "編集",
+      fixRuleUp: "上へ",
+      fixRuleDown: "下へ",
+      fixRuleDelete: "削除",
+      fixRuleBuiltinNote: "組み込みのルールです。当てる時だけを変えられます。",
+      fixRuleNothing: "（消す）",
+      fixRulesDeleted: (name) => `「${name}」を削除しました。`,
+      fixRulesApplied: (name, count) => `「${name}」で ${count} か所を直しました。お知らせ欄のボタンで元に戻せます。`,
+      fixRulesNothing: (name) => `「${name}」で直すところは、この文書にはありません。`,
+      fixRulesSaved: (name) => `「${name}」を保存しました。`,
+      fixRulesRestored: (count) => (count ? `削除した例 ${count} 件を戻しました。` : "削除した例はありません。"),
+      fixRulesImported: (count) => `${count} 件のルールを読み込みました（同じルールは置き換えました）。`,
+      fixRulesBadFile: "このファイルは自動修正のルールとして読めませんでした。",
+      fixRuleFormNew: "新しいルール",
+      fixRuleFormEdit: "ルールを編集",
+      fixRuleName: "名前",
+      fixRulePattern: "探す（正規表現）",
+      fixRuleReplacement: "置き換え",
+      fixRuleReplacementNote: "$1・$2 で、探す正規表現の ( ) に一致したところを入れられます。$ そのものは $$ と書きます。空にすると、一致したところを消します。",
+      fixRuleCase: "大文字と小文字を区別する",
+      fixRuleMultiline: "行をまたいで探す（^ と $ は行の始めと終わり）",
+      fixRuleSkip: "読まない所",
+      fixRuleSkipCode: "コード",
+      fixRuleSkipMath: "数式",
+      fixRuleSkipHtml: "HTML のタグ",
+      fixRuleTest: "この文書で試す",
+      fixRuleSave: "保存",
+      fixRuleCancel: "取り消す",
+      fixRuleTestCount: (count) => (count ? `この文書で ${count} か所に当たります（初めの 20 か所まで表示）。` : "この文書には当たるところがありません。"),
+      fixRuleNoPattern: "探す正規表現を入れてください。",
+      fixRuleEmptyMatch: "空の文字に一致する正規表現は使えません（同じところを何度も直してしまうため）。",
+      fixRuleBadPattern: (message) => `正規表現が正しくありません（${message}）。`,
+      fixRuleSlow: "時間がかかりすぎたため、止めました。正規表現を見直してください。",
+      fixRuleMany: "当たるところが 1,000 か所を超えたため、止めました。",
+      fixRuleError: "この正規表現は当てられませんでした。",
+      findRegex: "正規表現",
+      saveAsRule: "ルールに保存",
+      findBadPattern: "正規表現が正しくありません",
+      settingsFixRules: "自動修正のルール…",
+      settingsFixRulesNote: "数式の $ が抜けた書き方、強調の ** がそのまま表示される書き方、Gemini・ChatGPT・Claude などが残す印を、文書を開いたときに直します。",
+      noticeEmphasis: (count, example) => `強調の ** がそのまま表示される書き方が ${count} か所あります（例: ${example}）。<strong> などのタグに直すと、プレビューで太字として表示されます。`,
+      noticeEmphasisDone: (count, example) => `強調の ** がそのまま表示される書き方（例: ${example}）を、${count} か所、<strong> などのタグに直しました。`,
+      fixEmphasis: "強調を直す",
+      unfixEmphasis: "強調を元に戻す",
       modelLabel: "3D モデル（STL）。ドラッグで回転、ホイールで拡大・縮小", modelEmpty: "三角形がありません",
       mapLabel: "地図（GeoJSON）", mapEmpty: "地図に描く図形がありません",
       toc: "目次", tocNoHeadings: "目次にする見出しがありません。「## 見出し」のように見出しを書いてから、もう一度押してください。",
@@ -314,7 +386,79 @@
       noticeMathDone: (count, example) => `已将 ${count} 处看起来丢失了 $ 的写法（例: ${example}）改为公式。`,
       fixMath: "改为公式",
       unfixMath: "恢复原样",
-      settingsMathFix: "打开时，将看起来丢失了 $ 的公式写法（t \\\\to \\\\infty 等）改为公式",
+      fixRuleMath: "将丢失了 $ 的公式写法改为公式（内置）",
+      fixRuleEmphasis: "将强调的 ** 被原样显示的写法改为 <strong>（内置）",
+      fixRule: "修正",
+      unfixRule: "恢复原样",
+      fixAll: "全部修正",
+      unfixAll: "全部恢复原样",
+      fixDetails: "详情",
+      noticeRule: (name, count, example) => `有 ${count} 处可以用“${name}”修正（例: ${example}）。`,
+      noticeRuleDone: (name, count, example) => `已用“${name}”修正 ${count} 处（例: ${example}）。`,
+      noticeRulesDone: (rules, count) => `已用 ${rules} 条自动修正规则修正 ${count} 处。`,
+      noticeRulesAsk: (rules, count) => `有 ${count} 处可以用 ${rules} 条自动修正规则修正。`,
+      noticeRuleSlow: (name) => `“${name}”耗时过长，未应用。`,
+      noticeRuleMany: (name) => `“${name}”要修正的地方超过 1,000 处，未应用。`,
+      noticeRuleError: (name) => `“${name}”的正则表达式不正确，未应用。`,
+      fixDetailsHeading: "自动修正详情",
+      fixDetailsRules: "打开规则",
+      fixDetailsDone: (count) => `已修正 ${count} 处。例:`,
+      fixDetailsAsk: (count) => `有 ${count} 处可以修正。例:`,
+      fixRulesHeading: "自动修正规则",
+      fixRulesIntro: "打开文档时修正特定写法的规则，按从上到下的顺序应用。每条规则都可以选择：打开时修正、打开时在通知栏中询问，或仅在按“应用”时使用。修正的地方可以用通知栏的按钮恢复原样。保存之前，文件不会改变。",
+      fixRulesNew: "新建规则",
+      fixRulesExport: "导出…",
+      fixRulesImport: "导入…",
+      fixRulesRestore: "恢复已删除的示例",
+      fixWhenOpen: "打开时修正",
+      fixWhenAsk: "打开时询问",
+      fixWhenManual: "仅在按“应用”时",
+      fixRuleWhen: "应用时机",
+      fixRuleApply: "应用",
+      fixRuleEdit: "编辑",
+      fixRuleUp: "上移",
+      fixRuleDown: "下移",
+      fixRuleDelete: "删除",
+      fixRuleBuiltinNote: "内置规则。只能更改应用时机。",
+      fixRuleNothing: "（删除）",
+      fixRulesDeleted: (name) => `已删除“${name}”。`,
+      fixRulesApplied: (name, count) => `已用“${name}”修正 ${count} 处。可以用通知栏的按钮恢复原样。`,
+      fixRulesNothing: (name) => `此文档中没有可以用“${name}”修正的地方。`,
+      fixRulesSaved: (name) => `已保存“${name}”。`,
+      fixRulesRestored: (count) => (count ? `已恢复 ${count} 条已删除的示例。` : "没有已删除的示例。"),
+      fixRulesImported: (count) => `已导入 ${count} 条规则（相同的规则已替换）。`,
+      fixRulesBadFile: "无法将此文件作为自动修正规则读取。",
+      fixRuleFormNew: "新建规则",
+      fixRuleFormEdit: "编辑规则",
+      fixRuleName: "名称",
+      fixRulePattern: "查找（正则表达式）",
+      fixRuleReplacement: "替换为",
+      fixRuleReplacementNote: "可以用 $1、$2 插入与查找的正则表达式中 ( ) 匹配的部分。$ 本身写作 $$。留空则删除匹配的部分。",
+      fixRuleCase: "区分大小写",
+      fixRuleMultiline: "跨行查找（^ 和 $ 表示行首和行尾）",
+      fixRuleSkip: "不读取的部分",
+      fixRuleSkipCode: "代码",
+      fixRuleSkipMath: "公式",
+      fixRuleSkipHtml: "HTML 标签",
+      fixRuleTest: "在此文档中试用",
+      fixRuleSave: "保存",
+      fixRuleCancel: "取消",
+      fixRuleTestCount: (count) => (count ? `在此文档中匹配 ${count} 处（最多显示前 20 处）。` : "此文档中没有匹配的地方。"),
+      fixRuleNoPattern: "请输入要查找的正则表达式。",
+      fixRuleEmptyMatch: "不能使用匹配空字符的正则表达式（会反复修正同一个地方）。",
+      fixRuleBadPattern: (message) => `正则表达式不正确（${message}）。`,
+      fixRuleSlow: "耗时过长，已停止。请检查正则表达式。",
+      fixRuleMany: "匹配的地方超过 1,000 处，已停止。",
+      fixRuleError: "无法应用此正则表达式。",
+      findRegex: "正则表达式",
+      saveAsRule: "保存为规则",
+      findBadPattern: "正则表达式不正确",
+      settingsFixRules: "自动修正规则…",
+      settingsFixRulesNote: "打开文档时，修正丢失了 $ 的公式写法、强调的 ** 被原样显示的写法，以及 Gemini、ChatGPT、Claude 等留下的标记。",
+      noticeEmphasis: (count, example) => `有 ${count} 处强调的 ** 被原样显示（例: ${example}）。改为 <strong> 等标签后，预览中会显示为粗体。`,
+      noticeEmphasisDone: (count, example) => `已将 ${count} 处强调的 ** 被原样显示的写法（例: ${example}）改为 <strong> 等标签。`,
+      fixEmphasis: "修正强调",
+      unfixEmphasis: "恢复强调原样",
       modelLabel: "3D 模型（STL）。拖动旋转，滚轮缩放", modelEmpty: "没有三角形",
       mapLabel: "地图（GeoJSON）", mapEmpty: "没有可绘制在地图上的图形",
       toc: "目录", tocNoHeadings: "没有可以作为目录的标题。请先写出“## 标题”这样的标题，然后再按一次。",
@@ -509,7 +653,79 @@
       noticeMathDone: (count, example) => `Made ${count} place(s) that looked like math without its $ (for example, ${example}) into math.`,
       fixMath: "Make into math",
       unfixMath: "Put back",
-      settingsMathFix: "When a document opens, make what looks like math without its $ (t \\\\to \\\\infty and the like) into math",
+      fixRuleMath: "Make math that lost its $ into math (built in)",
+      fixRuleEmphasis: "Change bold whose ** shows as written to <strong> (built in)",
+      fixRule: "Fix",
+      unfixRule: "Put back",
+      fixAll: "Fix all",
+      unfixAll: "Put all back",
+      fixDetails: "Details",
+      noticeRule: (name, count, example) => `"${name}" can fix ${count} place(s) (for example, ${example}).`,
+      noticeRuleDone: (name, count, example) => `"${name}" fixed ${count} place(s) (for example, ${example}).`,
+      noticeRulesDone: (rules, count) => `${rules} fix rules fixed ${count} place(s).`,
+      noticeRulesAsk: (rules, count) => `${rules} fix rules can fix ${count} place(s).`,
+      noticeRuleSlow: (name) => `"${name}" took too long and was not applied.`,
+      noticeRuleMany: (name) => `"${name}" found more than 1,000 places to fix and was not applied.`,
+      noticeRuleError: (name) => `"${name}" has a regular expression that is not valid and was not applied.`,
+      fixDetailsHeading: "Fix details",
+      fixDetailsRules: "Open the rules",
+      fixDetailsDone: (count) => `Fixed ${count} place(s). For example:`,
+      fixDetailsAsk: (count) => `Can fix ${count} place(s). For example:`,
+      fixRulesHeading: "Fix rules",
+      fixRulesIntro: "Rules that fix certain ways of writing when a document opens, applied from the top down. For each rule, choose whether it fixes on opening, asks in the notice on opening, or works only when you press Apply. What was fixed can be put back with the notice's button. The file does not change until you save.",
+      fixRulesNew: "New rule",
+      fixRulesExport: "Export…",
+      fixRulesImport: "Import…",
+      fixRulesRestore: "Bring back deleted examples",
+      fixWhenOpen: "Fix on opening",
+      fixWhenAsk: "Ask on opening",
+      fixWhenManual: "Only when Apply is pressed",
+      fixRuleWhen: "When",
+      fixRuleApply: "Apply",
+      fixRuleEdit: "Edit",
+      fixRuleUp: "Up",
+      fixRuleDown: "Down",
+      fixRuleDelete: "Delete",
+      fixRuleBuiltinNote: "A built-in rule: only when it applies can be changed.",
+      fixRuleNothing: "(removed)",
+      fixRulesDeleted: (name) => `Deleted "${name}".`,
+      fixRulesApplied: (name, count) => `"${name}" fixed ${count} place(s). The notice's button puts them back.`,
+      fixRulesNothing: (name) => `"${name}" has nothing to fix in this document.`,
+      fixRulesSaved: (name) => `Saved "${name}".`,
+      fixRulesRestored: (count) => (count ? `Brought back ${count} deleted example(s).` : "No examples were deleted."),
+      fixRulesImported: (count) => `Imported ${count} rule(s) (rules that were already here were replaced).`,
+      fixRulesBadFile: "This file could not be read as fix rules.",
+      fixRuleFormNew: "New rule",
+      fixRuleFormEdit: "Edit rule",
+      fixRuleName: "Name",
+      fixRulePattern: "Find (regular expression)",
+      fixRuleReplacement: "Replace with",
+      fixRuleReplacementNote: "$1 and $2 put in what the ( ) in the regular expression matched. Write $ itself as $$. Left empty, what matched is removed.",
+      fixRuleCase: "Match case",
+      fixRuleMultiline: "Find across lines (^ and $ mean the start and end of a line)",
+      fixRuleSkip: "Do not read",
+      fixRuleSkipCode: "Code",
+      fixRuleSkipMath: "Math",
+      fixRuleSkipHtml: "HTML tags",
+      fixRuleTest: "Try on this document",
+      fixRuleSave: "Save",
+      fixRuleCancel: "Cancel",
+      fixRuleTestCount: (count) => (count ? `Matches ${count} place(s) in this document (the first 20 are shown).` : "Matches nothing in this document."),
+      fixRuleNoPattern: "Enter the regular expression to find.",
+      fixRuleEmptyMatch: "A regular expression that matches empty text cannot be used (it would fix the same place again and again).",
+      fixRuleBadPattern: (message) => `The regular expression is not valid (${message}).`,
+      fixRuleSlow: "Stopped because it took too long. Check the regular expression.",
+      fixRuleMany: "Stopped because it matched more than 1,000 places.",
+      fixRuleError: "This regular expression could not be applied.",
+      findRegex: "Regular expression",
+      saveAsRule: "Save as rule",
+      findBadPattern: "The regular expression is not valid",
+      settingsFixRules: "Fix rules…",
+      settingsFixRulesNote: "When a document opens, fixes math that lost its $, bold whose ** shows as written, and the marks that Gemini, ChatGPT, Claude, and others leave.",
+      noticeEmphasis: (count, example) => `${count} place(s) show their ** as written instead of in bold (for example, ${example}). Changed to tags such as <strong>, they show in bold in the preview.`,
+      noticeEmphasisDone: (count, example) => `Changed ${count} place(s) whose ** showed as written instead of in bold (for example, ${example}) to tags such as <strong>.`,
+      fixEmphasis: "Fix emphasis",
+      unfixEmphasis: "Undo emphasis fix",
       modelLabel: "3D model (STL). Drag to turn, use the wheel to zoom", modelEmpty: "There are no triangles",
       mapLabel: "Map (GeoJSON)", mapEmpty: "There are no shapes to draw on the map",
       toc: "Contents", tocNoHeadings: "There are no headings for a table of contents. Write headings such as \"## Heading\", then press it again.",
@@ -664,6 +880,12 @@
     updatePaperButton();
     updateEncodingButton();
     updateNotice();
+    if (fixRulesDialog.open) renderFixRules();
+    if (!fixRuleForm.hidden) {
+      fillWhenSelect(fixRuleFields.when);
+      document.getElementById("fix-rule-heading").textContent = t(editingRule ? "fixRuleFormEdit" : "fixRuleFormNew");
+    }
+    if (fixDetailsDialog.open) renderFixDetails();
     saveState.textContent = pdfStarting ? t("pdfStarting") : statusText();
     setEditorRatio(editorRatio, false);
     setDisplayMode(displayMode);
@@ -688,7 +910,7 @@
     keymap, lintGutter, linter, markTags, markdownLanguage, openLintPanel, syntaxHighlighting, tags
   } = window.CodeMirror;
   const displayDefaults = {
-    font: "standard", size: "1", spacing: "1.7", fullWidth: false, htmlSource: true, activeLine: false, thickCaret: false, colors: true, lint: true, mathFix: true,
+    font: "standard", size: "1", spacing: "1.7", fullWidth: false, htmlSource: true, activeLine: false, thickCaret: false, colors: true, lint: true,
     reader: false, rate: "1", pause: "0.5", readerLang: "auto", readerVoice: "", mapBackground: "ask", videoAutoplay: "auto"
   };
   const displayStorageKey = "mdeditor-display";
@@ -881,7 +1103,7 @@
     // (edits the host itself asked for, such as links rewritten on Save As, are marked).
     EditorView.updateListener.of((update) => {
       if (!update.docChanged) return;
-      mapLostMath(update.changes);
+      mapFixes(update.changes);
       post({ type: "change", text: update.state.doc.toString(), host: applyingHostEdits });
     })
   ];
@@ -1139,60 +1361,364 @@
     const mark = display ? "$$\n" : "$";
     return `${mark}${piece.replace(/\\\\([A-Za-z]+|[,;:!])/g, "\\$1").replace(/\\([-+=*_^{}|<>!\[\]()])/g, "$1")}${display ? "\n$$" : "$"}`;
   };
-  // What the notice says about it: how many places, one of them as written, and, once they are
-  // math, where each one is now and what it was (kept in step with later edits), to put back.
-  let lostMath = null;
-  const makeLostMath = () => {
-    const found = findLostMath(view.state.doc.toString());
-    if (!found.length) return false;
-    // The example is one that reads as math at a glance: not a lone \\tau, nor a whole formula.
-    const example = found.find(({ from, to }) => to - from >= 8 && to - from <= 40) ?? found[0];
-    const changes = found.map(({ from, to, display }) => {
-      const original = view.state.sliceDoc(from, to);
-      return { from, to, original, insert: restoreLostMath(original, display) };
+  // Bold that shows its ** as written. CommonMark lets ** open or close next to a punctuation
+  // mark only when a space or another mark is on its other side, so **限界（SQL）**と and
+  // の**「…」** stay as text, here and on GitHub alike. A pair of ** (or ***) on one line that
+  // the parser left as text becomes <strong>…</strong>, which has no such rule. A pair that
+  // would work, or one with a space just inside it (a ** b ** c), is not bold that went wrong.
+  const brokenEmphasisSkipped = new Set([...lostMathSkipped, "Escape"]);
+  const findBrokenEmphasis = (text) => {
+    const skipped = [];
+    markdownLanguage.parser.parse(text).iterate({
+      enter: (node) => {
+        if (!brokenEmphasisSkipped.has(node.name)) return true;
+        skipped.push([node.from, node.to]);
+        return false;
+      }
     });
-    // One edit, so a single Ctrl+Z also puts every piece back.
-    const transaction = view.state.update({ changes: changes.map(({ from, to, insert }) => ({ from, to, insert })), userEvent: "input" });
-    view.dispatch(transaction);
-    lostMath = {
-      count: found.length,
-      example: transaction.startState.sliceDoc(example.from, example.to),
-      pieces: changes.map(({ from, to, original, insert }) => ({
-        from: transaction.changes.mapPos(from, -1), to: transaction.changes.mapPos(to, 1), original, inserted: insert
-      }))
+    const isSkipped = (from, to) => skipped.some(([skipFrom, skipTo]) => skipFrom < to && from < skipTo);
+    const runs = [...text.matchAll(/\*+/g)].map((match) => ({ from: match.index, to: match.index + match[0].length }))
+      .filter(({ from, to }) => !isSkipped(from, to));
+    const space = (c) => c === undefined || /\s/.test(c);
+    const mark = (c) => c !== undefined && /[\p{P}\p{S}]/u.test(c);
+    const found = [];
+    for (let i = 0; i + 1 < runs.length; i += 1) {
+      const open = runs[i];
+      const shut = runs[i + 1];
+      const marks = open.to - open.from;
+      if (marks < 2 || marks > 3 || shut.to - shut.from !== marks) continue;
+      const inner = text.slice(open.to, shut.from);
+      if (!inner || /[\n|]/.test(inner) || space(inner[0]) || space(inner[inner.length - 1])) continue;
+      const before = text[open.from - 1];
+      const after = text[shut.to];
+      const opens = !mark(inner[0]) || space(before) || mark(before);
+      const closes = !mark(inner[inner.length - 1]) || space(after) || mark(after);
+      if (opens && closes) continue;
+      found.push({ from: open.from, to: shut.to, marks });
+      i += 1;
+    }
+    return found;
+  };
+  const restoreBrokenEmphasis = (piece, { marks }) => {
+    const inner = piece.slice(marks, -marks);
+    return marks === 3 ? `<strong><em>${inner}</em></strong>` : `<strong>${inner}</strong>`;
+  };
+  // Fix rules: what a document is fixed in when it opens. Two are built in (math that lost its
+  // $, and bold whose ** shows), and the others are regular expressions: the marks that
+  // Gemini, ChatGPT, Claude, Copilot, and Grok leave in what is copied from them come with
+  // mdEditor, and the user can add their own. Each says when it applies: on opening (fixed,
+  // and the notice can put it back), asking in the notice, or only when run by hand from the
+  // rules. The host keeps them in fix-rules.json.
+  const fixWhen = ["open", "ask", "manual"];
+  const builtinFixes = {
+    math: {
+      name: "fixRuleMath", notice: "noticeMath", noticeDone: "noticeMathDone", fixLabel: "fixMath", unfixLabel: "unfixMath",
+      find: (text) => findLostMath(text).map((piece) => ({ ...piece, insert: restoreLostMath(text.slice(piece.from, piece.to), piece.display) }))
+    },
+    emphasis: {
+      name: "fixRuleEmphasis", notice: "noticeEmphasis", noticeDone: "noticeEmphasisDone", fixLabel: "fixEmphasis", unfixLabel: "unfixEmphasis",
+      find: (text) => findBrokenEmphasis(text).map((piece) => ({ ...piece, insert: restoreBrokenEmphasis(text.slice(piece.from, piece.to), piece) }))
+    }
+  };
+  // The rules that come with mdEditor. Marks that only point at a source the copy does not
+  // have are removed on opening; changes to how math or lists are written only ask.
+  const fixPresets = [
+    { id: "gemini-cite-start", when: "open", pattern: String.raw`\[cite_start\]`, replacement: "",
+      name: { ja: "Gemini の [cite_start] を消す", en: "Remove Gemini's [cite_start]", zh: "删除 Gemini 的 [cite_start]" } },
+    { id: "gemini-cite", when: "ask", pattern: String.raw`\[cite:\s*(\d+(?:\s*,\s*\d+)*)\s*\]`, replacement: "[$1]",
+      name: { ja: "Gemini の [cite: 1, 2] を [1, 2] に直す", en: "Change Gemini's [cite: 1, 2] to [1, 2]", zh: "将 Gemini 的 [cite: 1, 2] 改为 [1, 2]" } },
+    { id: "chatgpt-oaicite", when: "open", pattern: String.raw` ?:contentReference\[oaicite:\d+\]\{index=\d+\}`, replacement: "",
+      name: { ja: "ChatGPT の :contentReference[oaicite:…] を消す", en: "Remove ChatGPT's :contentReference[oaicite:…]", zh: "删除 ChatGPT 的 :contentReference[oaicite:…]" } },
+    { id: "chatgpt-cite-marks", when: "open", pattern: String.raw`\uE200[^\uE201\n]*\uE201`, replacement: "",
+      name: { ja: "ChatGPT の見えない引用の印を消す", en: "Remove ChatGPT's hidden citation marks", zh: "删除 ChatGPT 的不可见引用标记" } },
+    { id: "chatgpt-cite-text", when: "open", pattern: String.raw`(?<![A-Za-z])(?:cite|filecite|navlist)(?:turn\d+[a-z]+\d+)+`, replacement: "",
+      name: { ja: "ChatGPT の citeturn0search0 のような引用の残りを消す", en: "Remove ChatGPT's leftovers such as citeturn0search0", zh: "删除 ChatGPT 的 citeturn0search0 等引用残留" } },
+    { id: "chatgpt-source-marks", when: "open", pattern: String.raw`【\d+(?::\d+)?†[^】\n]*】`, replacement: "",
+      name: { ja: "ChatGPT の【4:0†source】のような引用の印を消す", en: "Remove ChatGPT's marks such as 【4:0†source】", zh: "删除 ChatGPT 的【4:0†source】等引用标记" } },
+    { id: "latex-display-block", when: "ask", multiline: true, skipMath: false,
+      pattern: String.raw`^[ \t]*\\\[[ \t]*\n([\s\S]+?)\n[ \t]*\\\][ \t]*$`, replacement: "$$$$\n$1\n$$$$",
+      name: { ja: "ChatGPT などの別行の \\[ … \\] を $$ の数式にする（GitHub でも数式になる）", en: "Make \\[ … \\] on lines of their own (ChatGPT and others) into $$ math (math on GitHub too)", zh: "将 ChatGPT 等单独成行的 \\[ … \\] 改为 $$ 公式（在 GitHub 上也是公式）" } },
+    { id: "latex-display-inline", when: "ask", skipMath: false,
+      pattern: String.raw`\\\[\s*((?:(?!\\\])[^\n])*?[\\^_=<>{}](?:(?!\\\])[^\n])*?)\s*\\\]`, replacement: "$$$$$1$$$$",
+      name: { ja: "文の中の \\[ … \\] を $$ … $$ にする", en: "Make \\[ … \\] in a sentence into $$ … $$", zh: "将句中的 \\[ … \\] 改为 $$ … $$" } },
+    { id: "latex-inline", when: "ask", skipMath: false,
+      pattern: String.raw`\\\(\s*((?:(?!\\\))[^\n])*?[\\^_=<>{}](?:(?!\\\))[^\n])*?)\s*\\\)`, replacement: "$$$1$$",
+      name: { ja: "ChatGPT などの \\( … \\) を $ … $ にする", en: "Make \\( … \\) (ChatGPT and others) into $ … $", zh: "将 ChatGPT 等的 \\( … \\) 改为 $ … $" } },
+    { id: "dollar-spaces", when: "ask",
+      pattern: String.raw`(?<![\\$])\$[ \t]+([^$\n]*?[\\^_=][^$\n]*?)[ \t]+\$(?!\$)`, replacement: "$$$1$$",
+      name: { ja: "数式の $ の内側の空白を除く（$ x^2 $ → $x^2$）", en: "Remove the spaces inside math's $ ($ x^2 $ to $x^2$)", zh: "删除公式 $ 内侧的空格（$ x^2 $ → $x^2$）" } },
+    { id: "copilot-footnote", when: "open", pattern: String.raw`\[\^(\d+)\^\]`, replacement: "[$1]",
+      name: { ja: "Copilot の [^1^] を [1] に直す", en: "Change Copilot's [^1^] to [1]", zh: "将 Copilot 的 [^1^] 改为 [1]" } },
+    { id: "claude-cite", when: "open", skipHtml: false, pattern: String.raw`<cite index="[^"\n]*">(.*?)</cite>`, replacement: "$1",
+      name: { ja: "Claude の <cite index=…> のタグを外す（文は残す）", en: "Remove Claude's <cite index=…> tags (keeping the words)", zh: "去掉 Claude 的 <cite index=…> 标签（保留文字）" } },
+    { id: "grok-render", when: "open", skipHtml: false, pattern: String.raw`<grok:render\b[^\n]*?</grok:render>`, replacement: "",
+      name: { ja: "Grok の <grok:render> の引用のタグを消す", en: "Remove Grok's <grok:render> citation tags", zh: "删除 Grok 的 <grok:render> 引用标签" } },
+    { id: "zero-width", when: "open", pattern: String.raw`[\u200B\u2060\uFEFF]`, replacement: "",
+      name: { ja: "目に見えない文字（ゼロ幅スペースなど）を消す", en: "Remove invisible characters (zero-width spaces and the like)", zh: "删除不可见字符（零宽空格等）" } },
+    { id: "no-break-space", when: "ask", pattern: String.raw`[\u00A0\u202F]`, replacement: " ",
+      name: { ja: "改行しない空白（NBSP など）をふつうの空白にする", en: "Make no-break spaces (NBSP and the like) ordinary spaces", zh: "将不换行空格（NBSP 等）改为普通空格" } },
+    { id: "copied-bullets", when: "ask", pattern: String.raw`^([ \t]*)[•●▪◦][ \t]+`, replacement: "$1- ",
+      name: { ja: "コピーで • になった箇条書きを Markdown の一覧（-）にする", en: "Make bullets that became • when copied into a Markdown list (-)", zh: "将复制时变成 • 的项目符号改为 Markdown 列表（-）" } }
+  ];
+  const presetRule = (preset) => ({
+    id: preset.id, preset: true, pattern: preset.pattern, replacement: preset.replacement, ignoreCase: false,
+    multiline: Boolean(preset.multiline), skip: { code: true, math: preset.skipMath ?? true, html: preset.skipHtml ?? true },
+    when: preset.when, enabled: true
+  });
+  const defaultFixRules = () => ({
+    version: 1,
+    removedPresets: [],
+    rules: [
+      // Settings before 1.0.18 could set math to only ask.
+      { id: "math", builtin: true, when: displaySettings.mathFix === false ? "ask" : "open", enabled: true },
+      { id: "emphasis", builtin: true, when: "open", enabled: true },
+      ...fixPresets.map(presetRule)
+    ]
+  });
+  // A rule as read from a file: anything missing or of the wrong kind takes its default.
+  const cleanFixRule = (rule) => {
+    if (!rule || typeof rule.id !== "string" || !rule.id) return null;
+    const when = fixWhen.includes(rule.when) ? rule.when : "ask";
+    const enabled = rule.enabled !== false;
+    if (builtinFixes[rule.id]) return { id: rule.id, builtin: true, when, enabled };
+    if (typeof rule.pattern !== "string" || !rule.pattern) return null;
+    return {
+      id: rule.id,
+      ...(fixPresets.some(({ id }) => id === rule.id) ? { preset: true } : {}),
+      ...(typeof rule.name === "string" && rule.name.trim() ? { name: rule.name.trim() } : {}),
+      pattern: rule.pattern,
+      replacement: typeof rule.replacement === "string" ? rule.replacement : "",
+      ignoreCase: Boolean(rule.ignoreCase),
+      multiline: Boolean(rule.multiline),
+      skip: { code: rule.skip?.code !== false, math: rule.skip?.math !== false, html: rule.skip?.html !== false },
+      when,
+      enabled
     };
+  };
+  const readFixRules = (json) => {
+    let data;
+    try {
+      data = JSON.parse(json);
+    } catch {
+      return null;
+    }
+    if (!Array.isArray(data?.rules)) return null;
+    const rules = [];
+    for (const rule of data.rules.map(cleanFixRule)) {
+      if (rule && !rules.some(({ id }) => id === rule.id)) rules.push(rule);
+    }
+    const removedPresets = Array.isArray(data.removedPresets) ? data.removedPresets.filter((id) => typeof id === "string") : [];
+    return { version: 1, removedPresets, rules };
+  };
+  // The built-in rules are always there (at the top when missing), and rules that came with a
+  // newer mdEditor join at the end, unless they were deleted.
+  const completeFixRules = (data) => {
+    for (const id of Object.keys(builtinFixes).reverse()) {
+      if (!data.rules.some((rule) => rule.id === id)) data.rules.unshift({ id, builtin: true, when: "open", enabled: true });
+    }
+    for (const preset of fixPresets) {
+      if (!data.rules.some(({ id }) => id === preset.id) && !data.removedPresets.includes(preset.id)) data.rules.push(presetRule(preset));
+    }
+    return data;
+  };
+  let fixRules = defaultFixRules();
+  const saveFixRules = () => post({ type: "saveFixRules", json: JSON.stringify(fixRules, null, 2) });
+  const ruleName = (rule) => {
+    if (rule.builtin) return t(builtinFixes[rule.id].name);
+    const preset = fixPresets.find(({ id }) => id === rule.id);
+    return rule.name ?? preset?.name[language] ?? preset?.name.ja ?? rule.pattern;
+  };
+
+  // The parts a rule never reads: link addresses always, and code, math, and HTML unless the
+  // rule says it reads them.
+  const ruleSkipNames = {
+    code: ["FencedCode", "CodeBlock", "InlineCode"],
+    math: ["Math"],
+    html: ["HTMLBlock", "HTMLTag", "Comment", "CommentBlock", "ProcessingInstructionBlock"]
+  };
+  // Read once per text and kind, as the rules on opening all read the same text.
+  const ruleSkippedCache = { text: null, kinds: new Map() };
+  const ruleSkipped = (text, skip) => {
+    const kind = Object.keys(ruleSkipNames).map((part) => (skip?.[part] === false ? "0" : "1")).join("");
+    if (ruleSkippedCache.text !== text) {
+      ruleSkippedCache.text = text;
+      ruleSkippedCache.kinds.clear();
+    }
+    if (ruleSkippedCache.kinds.has(kind)) return ruleSkippedCache.kinds.get(kind);
+    const names = new Set(["URL", ...Object.entries(ruleSkipNames).flatMap(([part, list]) => (skip?.[part] === false ? [] : list))]);
+    const skipped = [];
+    ruleSkippedCache.kinds.set(kind, skipped);
+    markdownLanguage.parser.parse(text).iterate({
+      enter: (node) => {
+        if (!names.has(node.name)) return true;
+        skipped.push([node.from, node.to]);
+        return false;
+      }
+    });
+    return skipped;
+  };
+  // A regular expression runs in a worker, one rule at a time; one that takes more than a
+  // second is stopped (with the worker) and reported, so the editor never freezes.
+  let fixWorker = null;
+  let fixQueue = Promise.resolve();
+  const runFixRule = (rule, text) => {
+    const run = () => new Promise((resolve) => {
+      try {
+        fixWorker ??= new Worker("fix-worker.js");
+      } catch (error) {
+        resolve({ error: String(error?.message ?? error) });
+        return;
+      }
+      const worker = fixWorker;
+      const stop = (result) => {
+        worker.terminate();
+        if (fixWorker === worker) fixWorker = null;
+        resolve(result);
+      };
+      const timer = setTimeout(() => stop({ slow: true }), 1000);
+      worker.onmessage = ({ data }) => {
+        clearTimeout(timer);
+        resolve(data);
+      };
+      worker.onerror = (event) => {
+        event.preventDefault();
+        clearTimeout(timer);
+        stop({ error: event.message || "Error" });
+      };
+      worker.postMessage({
+        id: 0, text, pattern: rule.pattern, replacement: rule.replacement, ignoreCase: rule.ignoreCase,
+        multiline: rule.multiline, skipped: ruleSkipped(text, rule.skip), limit: 1000
+      });
+    });
+    const result = fixQueue.then(run);
+    fixQueue = result.catch(() => {});
+    return result;
+  };
+  const findFixes = async (rule, text) => (rule.builtin ? { pieces: builtinFixes[rule.id].find(text) } : runFixRule(rule, text));
+
+  // What the notice says about each rule: how many places, one of them as written, and, once
+  // they are fixed, where each one is now and what it was (kept in step with later edits), so
+  // they can be put back. A rule that could not run says why.
+  const fixStates = new Map();
+  let fixGeneration = 0;
+  // The example reads as what it is at a glance: not a lone \\tau, nor a whole paragraph.
+  const fixExample = (pieces) => {
+    const example = pieces.find(({ from, to }) => to - from >= 8 && to - from <= 40) ?? pieces[0];
+    return view.state.sliceDoc(example.from, example.to);
+  };
+  // Characters that do not show (zero-width spaces, no-break spaces, private marks) are
+  // written as their code, and a long example is cut.
+  const visibleExample = (text) => {
+    const shown = text.replace(/[\u0000-\u001F\u00A0\u200B-\u200F\u2028-\u202F\u2060\uFEFF\uE000-\uF8FF]/g,
+      (character) => `<U+${character.codePointAt(0).toString(16).toUpperCase().padStart(4, "0")}>`);
+    return shown.length > 60 ? `${shown.slice(0, 59)}…` : shown;
+  };
+  const takeFixResult = (rule, result, make) => {
+    if (!result.pieces) {
+      fixStates.set(rule.id, { problem: result.slow ? "slow" : result.many ? "many" : "error" });
+      return false;
+    }
+    if (!result.pieces.length) {
+      fixStates.delete(rule.id);
+      return false;
+    }
+    const count = result.pieces.length;
+    const example = fixExample(result.pieces);
+    if (!make) {
+      fixStates.set(rule.id, { count, example, pieces: null });
+      return true;
+    }
+    const originals = result.pieces.map(({ from, to }) => view.state.sliceDoc(from, to));
+    // One edit, so a single Ctrl+Z also puts every piece of the rule back.
+    const transaction = view.state.update({ changes: result.pieces.map(({ from, to, insert }) => ({ from, to, insert })), userEvent: "input" });
+    view.dispatch(transaction);
+    fixStates.set(rule.id, {
+      count,
+      example,
+      pieces: result.pieces.map(({ from, to, insert }, index) => ({
+        from: transaction.changes.mapPos(from, -1), to: transaction.changes.mapPos(to, 1), original: originals[index], inserted: insert
+      }))
+    });
     return true;
   };
-  // Back as it was opened: a piece edited since then is left as it is now.
-  const unmakeLostMath = () => {
-    const pieces = lostMath.pieces.filter(({ from, to, inserted }) => view.state.sliceDoc(from, to) === inserted);
-    view.dispatch({ changes: pieces.map(({ from, to, original }) => ({ from, to, insert: original })), userEvent: "input" });
-    lostMath = { count: lostMath.count, example: lostMath.example, pieces: null };
-  };
-  const mapLostMath = (changes) => {
-    if (!lostMath?.pieces) return;
-    lostMath.pieces = lostMath.pieces.map((piece) => ({ ...piece, from: changes.mapPos(piece.from, 1), to: changes.mapPos(piece.to, -1) }));
-  };
-  // On opening, made into math at once (Settings can make it only ask).
-  const checkLostMath = () => {
-    lostMath = null;
-    if (displaySettings.mathFix) {
-      makeLostMath();
-      return;
+  // Found in the text as it is now; found again if it was edited while a worker was reading.
+  // False when there was nothing to fix (or a newer document came in).
+  const runFix = async (rule, make, generation = fixGeneration) => {
+    for (let tries = 0; tries < 3; tries += 1) {
+      const doc = view.state.doc;
+      const result = await findFixes(rule, doc.toString());
+      if (generation !== fixGeneration) return false;
+      if (view.state.doc !== doc) continue;
+      return takeFixResult(rule, result, make);
     }
-    const found = findLostMath(view.state.doc.toString());
-    const example = found.find(({ from, to }) => to - from >= 8 && to - from <= 40) ?? found[0];
-    if (example) lostMath = { count: found.length, example: view.state.sliceDoc(example.from, example.to), pieces: null };
+    return false;
+  };
+  // Back as it was: a piece edited since then is left as it is now.
+  const unmakeFix = (rule) => {
+    const state = fixStates.get(rule.id);
+    const pieces = state.pieces.filter(({ from, to, inserted }) => view.state.sliceDoc(from, to) === inserted);
+    view.dispatch({ changes: pieces.map(({ from, to, original }) => ({ from, to, insert: original })), userEvent: "input" });
+    fixStates.set(rule.id, { count: state.count, example: state.example, pieces: null });
+  };
+  const mapFixes = (changes) => {
+    for (const state of fixStates.values()) {
+      if (state.pieces) state.pieces = state.pieces.map((piece) => ({ ...piece, from: changes.mapPos(piece.from, 1), to: changes.mapPos(piece.to, -1) }));
+    }
+  };
+  // On opening, every rule in order; the notice grows as each one finishes.
+  const checkFixes = async () => {
+    const generation = ++fixGeneration;
+    fixStates.clear();
+    for (const rule of fixRules.rules) {
+      if (!rule.enabled || rule.when === "manual") continue;
+      await runFix(rule, rule.when === "open", generation);
+      if (generation !== fixGeneration) return;
+      updateNotice();
+    }
+  };
+  const shownFixes = () => fixRules.rules.filter((rule) => fixStates.has(rule.id));
+  const fixButton = document.getElementById("notice-fix");
+  const fixDetailsButton = document.getElementById("notice-fix-details");
+  // One rule: its own sentence, with an example. More: how many rules and places, and the
+  // list behind "Details". A rule that could not run says so on its own.
+  const fixSentences = () => {
+    const shown = shownFixes();
+    const fixes = shown.filter((rule) => !fixStates.get(rule.id).problem);
+    const done = fixes.filter((rule) => fixStates.get(rule.id).pieces);
+    const asked = fixes.filter((rule) => !fixStates.get(rule.id).pieces);
+    const places = (rules) => rules.reduce((sum, rule) => sum + fixStates.get(rule.id).count, 0);
+    fixButton.hidden = !fixes.length;
+    fixDetailsButton.hidden = fixes.length < 2;
+    fixButton.setAttribute("aria-pressed", String(done.length > 0));
+    const sentences = [];
+    if (fixes.length === 1) {
+      const [rule] = fixes;
+      const state = fixStates.get(rule.id);
+      const example = visibleExample(state.example);
+      const builtin = builtinFixes[rule.id];
+      fixButton.textContent = t(builtin ? (state.pieces ? builtin.unfixLabel : builtin.fixLabel) : (state.pieces ? "unfixRule" : "fixRule"));
+      sentences.push({
+        text: builtin ? t(state.pieces ? builtin.noticeDone : builtin.notice)(state.count, example)
+          : t(state.pieces ? "noticeRuleDone" : "noticeRule")(ruleName(rule), state.count, example),
+        example
+      });
+    } else if (fixes.length) {
+      fixButton.textContent = t(done.length ? "unfixAll" : "fixAll");
+      if (done.length) sentences.push(t("noticeRulesDone")(done.length, places(done)));
+      if (asked.length) sentences.push(t("noticeRulesAsk")(asked.length, places(asked)));
+    }
+    for (const rule of shown.filter((item) => fixStates.get(item.id).problem)) {
+      const { problem } = fixStates.get(rule.id);
+      sentences.push(t(problem === "slow" ? "noticeRuleSlow" : problem === "many" ? "noticeRuleMany" : "noticeRuleError")(ruleName(rule)));
+    }
+    return sentences;
   };
 
   const updateNotice = () => {
     const askMaps = mapsWaiting > 0 && !mapNoticeClosed;
     document.getElementById("notice-maps").hidden = !askMaps;
-    const mathButton = document.getElementById("notice-math");
-    mathButton.hidden = !lostMath;
-    mathButton.textContent = t(lostMath?.pieces ? "unfixMath" : "fixMath");
-    mathButton.setAttribute("aria-pressed", String(Boolean(lostMath?.pieces)));
-    if (!noticeState && !askMaps && !lostMath) {
+    const fixed = fixSentences();
+    if (!noticeState && !askMaps && !fixed.length) {
       notice.hidden = true;
       return;
     }
@@ -1203,15 +1729,16 @@
           ? [noticeState.prefix, t("noticeExternal")(noticeState.count)].filter(Boolean).join(language === "en" ? " " : "")
           : t(noticeState.kind === "lossy" ? "noticeLossy" : "noticeGuessed")(encodingLabel(noticeState.encoding));
     // Sentences are joined with a space in English only (Japanese and Chinese end with 。).
-    const math = !lostMath ? "" : t(lostMath.pieces ? "noticeMathDone" : "noticeMath")(lostMath.count, lostMath.example);
-    noticeText.textContent = [main, askMaps ? t("noticeMaps")(mapsWaiting) : "", math].filter(Boolean).join(language === "en" ? " " : "");
-    if (math) {
-      // The example as it is written, in the editor's font.
-      const [before, ...after] = noticeText.textContent.split(lostMath.example);
+    // The example of a fix is shown as it is written, in the editor's font.
+    const sentences = [main, askMaps ? t("noticeMaps")(mapsWaiting) : "", ...fixed].filter(Boolean);
+    noticeText.replaceChildren(...sentences.flatMap((sentence, index) => {
+      const gap = index && language === "en" ? [" "] : [];
+      if (typeof sentence === "string") return [...gap, sentence];
+      const [before, ...after] = sentence.text.split(sentence.example);
       const code = document.createElement("code");
-      code.textContent = lostMath.example;
-      noticeText.replaceChildren(before, code, after.join(lostMath.example));
-    }
+      code.textContent = sentence.example;
+      return [...gap, before, code, after.join(sentence.example)];
+    }));
     document.getElementById("notice-encoding").hidden = !noticeState || noticeState.kind === "message" || noticeState.kind === "external";
     document.getElementById("notice-action").hidden = noticeState?.kind !== "external";
     const reopen = document.getElementById("notice-reopen");
@@ -1483,18 +2010,24 @@
     if (originalShown) showOriginal(false);
     noticeState = null;
     mapNoticeClosed = true;
-    lostMath = null;
+    fixStates.clear();
     updateNotice();
     view.focus();
   });
-  // The button goes back and forth: back as it was, and into math again (found again in the
-  // text as it is now, in case it was changed).
-  document.getElementById("notice-math").addEventListener("click", () => {
-    if (lostMath?.pieces) unmakeLostMath();
-    else if (!makeLostMath()) lostMath = null;
+  // The fix button goes back and forth: every rule that fixed something is put back, or, when
+  // none has, every rule shown is fixed (found again in the text as it is now).
+  fixButton.addEventListener("click", async () => {
+    const fixes = shownFixes().filter((rule) => !fixStates.get(rule.id).problem);
+    const done = fixes.filter((rule) => fixStates.get(rule.id).pieces);
+    if (done.length) {
+      for (const rule of done) unmakeFix(rule);
+    } else {
+      for (const rule of fixes) await runFix(rule, true);
+    }
     updateNotice();
     view.focus();
   });
+  fixDetailsButton.addEventListener("click", () => openFixDetails());
   document.getElementById("encoding-close").addEventListener("click", () => encodingDialog.close());
   encodingDialog.addEventListener("click", (event) => {
     if (event.target === encodingDialog) encodingDialog.close();
@@ -1633,6 +2166,7 @@
   const findInput = document.getElementById("find-input");
   const replaceInput = document.getElementById("replace-input");
   const findCase = document.getElementById("find-case");
+  const findRegex = document.getElementById("find-regex");
   const findStatus = document.getElementById("find-status");
 
   const openFindBar = () => {
@@ -1653,14 +2187,38 @@
   };
 
   // Matches come from the original text, so selection positions stay right even
-  // when lowercasing would change a string's length (for example "İ").
+  // when lowercasing would change a string's length (for example "İ"). With Regular
+  // expression, each match carries its own replacement ($1 and the like, as in a fix rule);
+  // an expression that is not valid gives null, and empty matches are passed over.
   const findMatches = () => {
-    const pattern = findInput.value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const regex = new RegExp(pattern, findCase.checked ? "g" : "gi");
-    return Array.from(view.state.doc.toString().matchAll(regex), (match) => ({
-      index: match.index,
-      length: match[0].length
-    }));
+    const text = view.state.doc.toString();
+    if (!findRegex.checked) {
+      const pattern = findInput.value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const regex = new RegExp(pattern, findCase.checked ? "g" : "gi");
+      return Array.from(text.matchAll(regex), (match) => ({
+        index: match.index,
+        length: match[0].length,
+        insert: replaceInput.value
+      }));
+    }
+    let regex;
+    let sticky;
+    try {
+      regex = new RegExp(findInput.value, findCase.checked ? "gu" : "giu");
+      sticky = new RegExp(findInput.value, findCase.checked ? "yu" : "iyu");
+    } catch {
+      findStatus.textContent = t("findBadPattern");
+      return null;
+    }
+    return Array.from(text.matchAll(regex)).filter((match) => match[0]).map((match) => {
+      sticky.lastIndex = match.index;
+      const replaced = text.replace(sticky, replaceInput.value);
+      return {
+        index: match.index,
+        length: match[0].length,
+        insert: replaced.slice(match.index, replaced.length - (text.length - match.index - match[0].length))
+      };
+    });
   };
 
   const findText = (forward) => {
@@ -1669,6 +2227,7 @@
       return false;
     }
     const matches = findMatches();
+    if (!matches) return false;
     if (matches.length === 0) {
       findStatus.textContent = t("notFound");
       return false;
@@ -1691,10 +2250,12 @@
     const needle = findInput.value;
     if (!needle) return;
     const selection = view.state.selection.main;
-    const selectedIsMatch = findMatches().some((m) =>
+    const matches = findMatches();
+    if (!matches) return;
+    const selected = matches.find((m) =>
       m.index === selection.from && m.index + m.length === selection.to);
-    if (selectedIsMatch) {
-      replaceSelection(replaceInput.value);
+    if (selected) {
+      replaceSelection(selected.insert);
     }
     findText(true);
   };
@@ -1703,6 +2264,7 @@
     const needle = findInput.value;
     if (!needle) return;
     const matches = findMatches();
+    if (!matches) return;
     const count = matches.length;
     if (count === 0) {
       findStatus.textContent = t("notFound");
@@ -1710,7 +2272,7 @@
     }
     // One transaction, so a single undo restores every replacement.
     view.dispatch({
-      changes: matches.map((m) => ({ from: m.index, to: m.index + m.length, insert: replaceInput.value }))
+      changes: matches.map((m) => ({ from: m.index, to: m.index + m.length, insert: m.insert }))
     });
     view.focus();
     findStatus.textContent = t("replacedCount")(count);
@@ -1995,6 +2557,16 @@
   document.getElementById("find-prev").addEventListener("click", () => findText(false));
   document.getElementById("replace-one").addEventListener("click", replaceOne);
   document.getElementById("replace-all").addEventListener("click", replaceAll);
+  // What is in the find bar becomes a new fix rule (plain text is written as a regular
+  // expression, and a $ in its replacement as $$).
+  document.getElementById("find-save-rule").addEventListener("click", () => {
+    const regex = findRegex.checked;
+    openFixRules({
+      pattern: regex ? findInput.value : findInput.value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+      replacement: regex ? replaceInput.value : replaceInput.value.replace(/\$/g, "$$$$"),
+      ignoreCase: !findCase.checked
+    });
+  });
   findBar.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
@@ -2020,7 +2592,6 @@
     thickCaret: document.getElementById("setting-thick-caret"),
     colors: document.getElementById("setting-colors"),
     lint: document.getElementById("setting-lint"),
-    mathFix: document.getElementById("setting-math-fix"),
     reader: document.getElementById("setting-reader"),
     rate: document.getElementById("setting-reader-rate"),
     pause: document.getElementById("setting-reader-pause"),
@@ -2162,6 +2733,321 @@
   settingsDialog.addEventListener("click", (event) => {
     if (event.target === settingsDialog) settingsDialog.close();
   });
+
+  // Fix rules dialog (Settings > Fix rules, or Save as rule in the find bar): the rules in the
+  // order they apply, each with when it applies, and a form to write one, tried on the
+  // document before it is saved.
+  const fixRulesDialog = document.getElementById("fix-rules-dialog");
+  const fixRulesList = document.getElementById("fix-rules-list");
+  const fixRulesStatus = document.getElementById("fix-rules-status");
+  const fixRuleForm = document.getElementById("fix-rule-form");
+  const fixRuleFields = {
+    name: document.getElementById("fix-rule-name"),
+    pattern: document.getElementById("fix-rule-pattern"),
+    replacement: document.getElementById("fix-rule-replacement"),
+    matchCase: document.getElementById("fix-rule-case"),
+    multiline: document.getElementById("fix-rule-multiline"),
+    skipCode: document.getElementById("fix-rule-skip-code"),
+    skipMath: document.getElementById("fix-rule-skip-math"),
+    skipHtml: document.getElementById("fix-rule-skip-html"),
+    when: document.getElementById("fix-rule-when")
+  };
+  const fixRuleProblem = document.getElementById("fix-rule-problem");
+  const fixRuleResult = document.getElementById("fix-rule-result");
+  // The rule being written: null for a new one.
+  let editingRule = null;
+  const whenSelect = (value) => {
+    const select = document.createElement("select");
+    for (const when of fixWhen) {
+      const option = document.createElement("option");
+      option.value = when;
+      option.textContent = t(`fixWhen${when[0].toUpperCase()}${when.slice(1)}`);
+      select.appendChild(option);
+    }
+    select.value = value;
+    return select;
+  };
+  const fillWhenSelect = (select) => {
+    const value = select.value;
+    select.replaceChildren(...whenSelect(value).children);
+    select.value = value;
+  };
+  const ruleButton = (label, rule, action) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = t(label);
+    button.setAttribute("aria-label", `${t(label)}: ${ruleName(rule)}`);
+    button.addEventListener("click", action);
+    return button;
+  };
+  const renderFixRules = () => {
+    fixRulesList.replaceChildren(...fixRules.rules.map((rule, index) => {
+      const item = document.createElement("li");
+      item.className = "fix-rule";
+      const check = document.createElement("label");
+      check.className = "settings-check fix-rule-name";
+      const enabled = document.createElement("input");
+      enabled.type = "checkbox";
+      enabled.checked = rule.enabled;
+      enabled.addEventListener("change", () => {
+        rule.enabled = enabled.checked;
+        saveFixRules();
+      });
+      const name = document.createElement("span");
+      name.textContent = ruleName(rule);
+      check.append(enabled, " ", name);
+      const what = document.createElement("p");
+      what.className = "fix-rule-what";
+      if (rule.builtin) {
+        what.textContent = t("fixRuleBuiltinNote");
+      } else {
+        const pattern = document.createElement("code");
+        pattern.textContent = rule.pattern;
+        const replacement = document.createElement("code");
+        replacement.textContent = rule.replacement || t("fixRuleNothing");
+        what.append(pattern, " → ", replacement);
+      }
+      const actions = document.createElement("div");
+      actions.className = "fix-rule-actions";
+      const when = whenSelect(rule.when);
+      when.setAttribute("aria-label", `${t("fixRuleWhen")}: ${ruleName(rule)}`);
+      when.addEventListener("change", () => {
+        rule.when = when.value;
+        saveFixRules();
+      });
+      actions.append(when, ruleButton("fixRuleApply", rule, () => applyRuleNow(rule)));
+      if (!rule.builtin) actions.append(ruleButton("fixRuleEdit", rule, () => editFixRule(rule)));
+      const up = ruleButton("fixRuleUp", rule, () => moveFixRule(index, -1));
+      up.disabled = index === 0;
+      const down = ruleButton("fixRuleDown", rule, () => moveFixRule(index, 1));
+      down.disabled = index === fixRules.rules.length - 1;
+      actions.append(up, down);
+      if (!rule.builtin) actions.append(ruleButton("fixRuleDelete", rule, () => deleteFixRule(rule)));
+      item.append(check, what, actions);
+      return item;
+    }));
+  };
+  const moveFixRule = (index, step) => {
+    const [rule] = fixRules.rules.splice(index, 1);
+    fixRules.rules.splice(index + step, 0, rule);
+    saveFixRules();
+    renderFixRules();
+    // The moved rule keeps the focus, on the same button when it can still be used.
+    const buttons = fixRulesList.children[index + step].querySelectorAll(".fix-rule-actions button");
+    [...buttons].find((button) => button.textContent === t(step < 0 ? "fixRuleUp" : "fixRuleDown") && !button.disabled)?.focus();
+  };
+  const deleteFixRule = (rule) => {
+    fixRules.rules = fixRules.rules.filter((item) => item !== rule);
+    if (rule.preset && !fixRules.removedPresets.includes(rule.id)) fixRules.removedPresets.push(rule.id);
+    fixStates.delete(rule.id);
+    saveFixRules();
+    renderFixRules();
+    updateNotice();
+    fixRulesStatus.textContent = t("fixRulesDeleted")(ruleName(rule));
+    document.getElementById("fix-rules-new").focus();
+  };
+  // Run by hand: fixed now, and the notice can put it back.
+  const applyRuleNow = async (rule) => {
+    const fixed = await runFix(rule, true);
+    const state = fixStates.get(rule.id);
+    fixRulesStatus.textContent = state?.problem
+      ? t(state.problem === "slow" ? "noticeRuleSlow" : state.problem === "many" ? "noticeRuleMany" : "noticeRuleError")(ruleName(rule))
+      : fixed ? t("fixRulesApplied")(ruleName(rule), state.count) : t("fixRulesNothing")(ruleName(rule));
+    updateNotice();
+  };
+
+  // The form: a pattern that is not a regular expression, or matches nothing at all (an empty
+  // match would fix the same place forever), is not saved.
+  const formRule = () => ({
+    pattern: fixRuleFields.pattern.value,
+    replacement: fixRuleFields.replacement.value,
+    ignoreCase: !fixRuleFields.matchCase.checked,
+    multiline: fixRuleFields.multiline.checked,
+    skip: { code: fixRuleFields.skipCode.checked, math: fixRuleFields.skipMath.checked, html: fixRuleFields.skipHtml.checked },
+    when: fixRuleFields.when.value
+  });
+  const patternProblem = (pattern) => {
+    if (!pattern) return t("fixRuleNoPattern");
+    try {
+      if (new RegExp(`^(?:${pattern})$`, "u").test("")) return t("fixRuleEmptyMatch");
+    } catch (error) {
+      return t("fixRuleBadPattern")(error.message);
+    }
+    return "";
+  };
+  const showFixRuleForm = (rule, values) => {
+    editingRule = rule;
+    document.getElementById("fix-rule-heading").textContent = t(rule ? "fixRuleFormEdit" : "fixRuleFormNew");
+    fixRuleFields.name.value = rule ? ruleName(rule) : values?.name ?? "";
+    fixRuleFields.pattern.value = values?.pattern ?? rule?.pattern ?? "";
+    fixRuleFields.replacement.value = values?.replacement ?? rule?.replacement ?? "";
+    fixRuleFields.matchCase.checked = !(values?.ignoreCase ?? rule?.ignoreCase ?? false);
+    fixRuleFields.multiline.checked = rule?.multiline ?? false;
+    fixRuleFields.skipCode.checked = rule?.skip.code ?? true;
+    fixRuleFields.skipMath.checked = rule?.skip.math ?? true;
+    fixRuleFields.skipHtml.checked = rule?.skip.html ?? true;
+    fillWhenSelect(fixRuleFields.when);
+    fixRuleFields.when.value = rule?.when ?? "ask";
+    fixRuleProblem.textContent = "";
+    fixRuleResult.replaceChildren();
+    fixRuleForm.hidden = false;
+    fixRuleFields.name.focus();
+  };
+  const editFixRule = (rule) => showFixRuleForm(rule);
+  const closeFixRuleForm = () => {
+    fixRuleForm.hidden = true;
+    editingRule = null;
+  };
+  // Tried on the document as it is: how many places, and the first 20 as they are and as
+  // they would become.
+  const testFixRule = async () => {
+    const rule = formRule();
+    const problem = patternProblem(rule.pattern);
+    fixRuleProblem.textContent = problem;
+    fixRuleResult.replaceChildren();
+    if (problem) return;
+    const text = view.state.doc.toString();
+    const result = await runFixRule(rule, text);
+    if (!result.pieces) {
+      fixRuleResult.textContent = t(result.slow ? "fixRuleSlow" : result.many ? "fixRuleMany" : "fixRuleError");
+      return;
+    }
+    const summary = document.createElement("p");
+    summary.textContent = t("fixRuleTestCount")(result.pieces.length);
+    const list = document.createElement("ol");
+    list.className = "fix-rule-samples";
+    list.append(...result.pieces.slice(0, 20).map(({ from, to, insert }) => {
+      const item = document.createElement("li");
+      const before = document.createElement("code");
+      before.textContent = visibleExample(text.slice(from, to));
+      const after = document.createElement("code");
+      after.textContent = insert ? visibleExample(insert) : t("fixRuleNothing");
+      item.append(before, " → ", after);
+      return item;
+    }));
+    fixRuleResult.append(summary, ...(result.pieces.length ? [list] : []));
+  };
+  const saveFixRule = () => {
+    const values = formRule();
+    const problem = patternProblem(values.pattern);
+    fixRuleProblem.textContent = problem;
+    if (problem) {
+      fixRuleFields.pattern.focus();
+      return;
+    }
+    const name = fixRuleFields.name.value.trim();
+    if (editingRule) {
+      // A rule that came with mdEditor keeps its translated name until it is renamed.
+      const renamed = name && name !== ruleName(editingRule);
+      Object.assign(editingRule, values, renamed ? { name } : {});
+      if (!name) delete editingRule.name;
+    } else {
+      fixRules.rules.push({ id: `rule-${Date.now().toString(36)}`, ...(name ? { name } : {}), ...values, enabled: true });
+    }
+    const saved = editingRule ?? fixRules.rules[fixRules.rules.length - 1];
+    saveFixRules();
+    closeFixRuleForm();
+    renderFixRules();
+    fixRulesStatus.textContent = t("fixRulesSaved")(ruleName(saved));
+    fixRulesList.children[fixRules.rules.indexOf(saved)]?.querySelector("input")?.focus();
+  };
+  const openFixRules = (values) => {
+    renderFixRules();
+    fixRulesStatus.textContent = "";
+    closeFixRuleForm();
+    if (settingsDialog.open) settingsDialog.close();
+    if (!fixRulesDialog.open) fixRulesDialog.showModal();
+    if (values) showFixRuleForm(null, values);
+  };
+  document.getElementById("setting-fix-rules").addEventListener("click", () => openFixRules());
+  document.getElementById("fix-rules-close").addEventListener("click", () => fixRulesDialog.close());
+  fixRulesDialog.addEventListener("click", (event) => {
+    if (event.target === fixRulesDialog) fixRulesDialog.close();
+  });
+  document.getElementById("fix-rules-new").addEventListener("click", () => showFixRuleForm(null));
+  document.getElementById("fix-rules-export").addEventListener("click", () => post({ type: "exportFixRules", json: JSON.stringify(fixRules, null, 2) }));
+  document.getElementById("fix-rules-import").addEventListener("click", () => post({ type: "importFixRules" }));
+  document.getElementById("fix-rules-restore").addEventListener("click", () => {
+    const count = fixRules.removedPresets.length;
+    fixRules.removedPresets = [];
+    completeFixRules(fixRules);
+    saveFixRules();
+    renderFixRules();
+    fixRulesStatus.textContent = t("fixRulesRestored")(count);
+  });
+  document.getElementById("fix-rule-test").addEventListener("click", testFixRule);
+  document.getElementById("fix-rule-cancel").addEventListener("click", () => {
+    closeFixRuleForm();
+    document.getElementById("fix-rules-new").focus();
+  });
+  fixRuleForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    saveFixRule();
+  });
+  // Rules read from a file join these: one with the same id takes its place.
+  const importFixRules = (json) => {
+    const read = readFixRules(json);
+    if (!read) {
+      fixRulesStatus.textContent = t("fixRulesBadFile");
+      return;
+    }
+    for (const rule of read.rules) {
+      const index = fixRules.rules.findIndex(({ id }) => id === rule.id);
+      if (index >= 0) fixRules.rules[index] = rule;
+      else fixRules.rules.push(rule);
+    }
+    saveFixRules();
+    renderFixRules();
+    fixRulesStatus.textContent = t("fixRulesImported")(read.rules.length);
+  };
+
+  // Details of the notice: each rule shown there, with its own button.
+  const fixDetailsDialog = document.getElementById("fix-details-dialog");
+  const fixDetailsList = document.getElementById("fix-details-list");
+  const renderFixDetails = () => {
+    fixDetailsList.replaceChildren(...shownFixes().map((rule) => {
+      const state = fixStates.get(rule.id);
+      const item = document.createElement("li");
+      item.className = "fix-rule";
+      const name = document.createElement("p");
+      name.className = "fix-rule-name";
+      name.textContent = ruleName(rule);
+      const what = document.createElement("p");
+      what.className = "fix-rule-what";
+      if (state.problem) {
+        what.textContent = t(state.problem === "slow" ? "noticeRuleSlow" : state.problem === "many" ? "noticeRuleMany" : "noticeRuleError")(ruleName(rule));
+        item.append(name, what);
+        return item;
+      }
+      const example = document.createElement("code");
+      example.textContent = visibleExample(state.example);
+      what.append(t(state.pieces ? "fixDetailsDone" : "fixDetailsAsk")(state.count), " ", example);
+      const actions = document.createElement("div");
+      actions.className = "fix-rule-actions";
+      actions.append(ruleButton(state.pieces ? "unfixRule" : "fixRule", rule, async () => {
+        if (state.pieces) unmakeFix(rule);
+        else await runFix(rule, true);
+        renderFixDetails();
+        updateNotice();
+        fixDetailsList.querySelector(".fix-rule-actions button")?.focus();
+      }));
+      item.append(name, what, actions);
+      return item;
+    }));
+  };
+  const openFixDetails = () => {
+    renderFixDetails();
+    fixDetailsDialog.showModal();
+  };
+  document.getElementById("fix-details-close").addEventListener("click", () => fixDetailsDialog.close());
+  document.getElementById("fix-details-rules").addEventListener("click", () => {
+    fixDetailsDialog.close();
+    openFixRules();
+  });
+  fixDetailsDialog.addEventListener("click", (event) => {
+    if (event.target === fixDetailsDialog) fixDetailsDialog.close();
+  });
+  fixDetailsDialog.addEventListener("close", () => view.focus());
 
   // Read-aloud (optional): reads the preview from the first visible block and
   // highlights what is being read, so sound and screen match (Identity 7-4).
@@ -4032,6 +4918,15 @@
     } else if (message.type === "pasteHotkey") {
       pasteKey = { key: message.key ?? "", exists: Boolean(message.exists) };
       showPasteKey();
+    } else if (message.type === "fixRules") {
+      const read = message.json ? readFixRules(message.json) : null;
+      fixRules = completeFixRules(read ?? defaultFixRules());
+      // A file that is there but cannot be read is left as it is (this session uses the rules
+      // that come with mdEditor); otherwise the file is written when there was none or rules
+      // were added, so it is there to keep or copy.
+      if (!message.exists || (read && JSON.stringify(read) !== JSON.stringify(fixRules))) saveFixRules();
+    } else if (message.type === "fixRulesImported") {
+      importFixRules(message.json);
     } else if (message.type === "externalImages") {
       externalSelect.value = message.value;
     } else if (message.type === "externalNotice") {
@@ -4088,8 +4983,8 @@
       // originalPdf right after).
       setOriginal(null);
       view.setState(EditorState.create({ doc: message.text, extensions: editorExtensions() }));
-      checkLostMath();
       updateNotice();
+      checkFixes();
       // A newly loaded document starts at the top, not where the last one was.
       editorScroller.scrollTop = 0;
       preview.scrollTop = 0;

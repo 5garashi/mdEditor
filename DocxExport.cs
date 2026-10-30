@@ -476,10 +476,23 @@ internal sealed class DocxExport
             return result;
         }
 
+        // <strong> and <em> (and <b>, <i>) written as HTML tags are bold and italic up to their
+        // closing tag, as in the preview (mdEditor writes <strong> for ** that could not close).
+        var htmlBold = 0;
+        var htmlItalic = 0;
+        var outerBold = bold;
+        var outerItalic = italic;
         foreach (var inline in container)
         {
+            bold = outerBold || htmlBold > 0;
+            italic = outerItalic || htmlItalic > 0;
             switch (inline)
             {
+                case HtmlInline html when HtmlStyleTag.Match(html.Tag) is { Success: true } tag:
+                    var step = tag.Groups[1].Success ? -1 : 1;
+                    if (tag.Groups[2].Value.ToLowerInvariant() is "strong" or "b") htmlBold = Math.Max(0, htmlBold + step);
+                    else htmlItalic = Math.Max(0, htmlItalic + step);
+                    break;
                 case LiteralInline literal:
                     result.Add(Run(literal.Content.ToString(), bold, italic, strike));
                     break;
@@ -610,6 +623,9 @@ internal sealed class DocxExport
 
     private static readonly System.Text.RegularExpressions.Regex ImageTag =
         new(@"<img\b[^>]*>", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+    private static readonly System.Text.RegularExpressions.Regex HtmlStyleTag =
+        new(@"^<(/)?(strong|b|em|i)\s*>$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 
     // One paragraph or heading of text placed with HTML: <p align="right">…</p>, <h1 align="center">…</h1>.
     private static readonly System.Text.RegularExpressions.Regex AlignedText =
