@@ -73,6 +73,19 @@ internal sealed class LatexMathDelimitersExtension : IMarkdownExtension
         if (!pipeline.InlineParsers.Contains<LatexMathInlineParser>())
         {
             pipeline.InlineParsers.InsertBefore<EscapeInlineParser>(new LatexMathInlineParser());
+            // $$x$$ inside a paragraph is shown on a line of its own too, as GitHub does
+            // (and \tag, which KaTeX allows only there, then works).
+            pipeline.DocumentProcessed += document =>
+            {
+                foreach (var math in document.Descendants<MathInline>())
+                {
+                    var attributes = math.GetAttributes();
+                    if (math.DelimiterCount >= 2 && attributes.Classes?.Contains("math-display") != true)
+                    {
+                        attributes.AddClass("math-display");
+                    }
+                }
+            };
         }
     }
 
