@@ -338,6 +338,11 @@ button.primary:hover {
   min-width: 0;
 }
 
+/* Markdown quoted in the notice, in the editor's font: a Japanese UI font draws \ as a yen sign. */
+.notice-text code {
+  font-family: Consolas, "Cascadia Mono", monospace;
+}
+
 .notice button {
   min-height: 44px;
   padding: 4px 10px;

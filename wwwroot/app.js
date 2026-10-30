@@ -116,8 +116,10 @@
       noticeMaps: (count) => `この文書には地図が ${count} 件あります。詳細な地図（OpenStreetMap）を読み込むと、地図のサーバーに表示している場所と IP アドレスなどが伝わります。`,
       loadMaps: "詳細な地図を読み込む",
       noticeMath: (count, example) => `数式の $ が抜けたような書き方が ${count} か所あります（例: ${example}）。数式に直すと、プレビューで数式として表示されます。`,
-      noticeMathDone: (count) => `${count} か所を数式に直しました。元に戻すときは Ctrl+Z を押してください。`,
+      noticeMathDone: (count, example) => `数式の $ が抜けたような書き方（例: ${example}）を、${count} か所、数式に直しました。`,
       fixMath: "数式に直す",
+      unfixMath: "元に戻す",
+      settingsMathFix: "数式の $ が抜けたような書き方（t \\\\to \\\\infty など）を、開いたときに数式に直す",
       modelLabel: "3D モデル（STL）。ドラッグで回転、ホイールで拡大・縮小", modelEmpty: "三角形がありません",
       mapLabel: "地図（GeoJSON）", mapEmpty: "地図に描く図形がありません",
       toc: "目次", tocNoHeadings: "目次にする見出しがありません。「## 見出し」のように見出しを書いてから、もう一度押してください。",
@@ -309,8 +311,10 @@
       noticeMaps: (count) => `此文档中有 ${count} 个地图。加载详细地图（OpenStreetMap）后，地图服务器会得知显示的地点和你的 IP 地址等信息。`,
       loadMaps: "加载详细地图",
       noticeMath: (count, example) => `有 ${count} 处看起来像是丢失了 $ 的公式（例: ${example}）。改为公式后，预览中会显示为公式。`,
-      noticeMathDone: (count) => `已将 ${count} 处改为公式。要撤消，请按 Ctrl+Z。`,
+      noticeMathDone: (count, example) => `已将 ${count} 处看起来丢失了 $ 的写法（例: ${example}）改为公式。`,
       fixMath: "改为公式",
+      unfixMath: "恢复原样",
+      settingsMathFix: "打开时，将看起来丢失了 $ 的公式写法（t \\\\to \\\\infty 等）改为公式",
       modelLabel: "3D 模型（STL）。拖动旋转，滚轮缩放", modelEmpty: "没有三角形",
       mapLabel: "地图（GeoJSON）", mapEmpty: "没有可绘制在地图上的图形",
       toc: "目录", tocNoHeadings: "没有可以作为目录的标题。请先写出“## 标题”这样的标题，然后再按一次。",
@@ -502,8 +506,10 @@
       noticeMaps: (count) => `This document has ${count} map(s). Loading detailed maps (OpenStreetMap) lets the map server see the area shown and information such as your IP address.`,
       loadMaps: "Load detailed maps",
       noticeMath: (count, example) => `${count} place(s) look like math that lost its $ (for example, ${example}). Made into math, they show as formulas in the preview.`,
-      noticeMathDone: (count) => `Made ${count} place(s) into math. Press Ctrl+Z to undo.`,
+      noticeMathDone: (count, example) => `Made ${count} place(s) that looked like math without its $ (for example, ${example}) into math.`,
       fixMath: "Make into math",
+      unfixMath: "Put back",
+      settingsMathFix: "When a document opens, make what looks like math without its $ (t \\\\to \\\\infty and the like) into math",
       modelLabel: "3D model (STL). Drag to turn, use the wheel to zoom", modelEmpty: "There are no triangles",
       mapLabel: "Map (GeoJSON)", mapEmpty: "There are no shapes to draw on the map",
       toc: "Contents", tocNoHeadings: "There are no headings for a table of contents. Write headings such as \"## Heading\", then press it again.",
@@ -682,7 +688,7 @@
     keymap, lintGutter, linter, markTags, markdownLanguage, openLintPanel, syntaxHighlighting, tags
   } = window.CodeMirror;
   const displayDefaults = {
-    font: "standard", size: "1", spacing: "1.7", fullWidth: false, htmlSource: true, activeLine: false, thickCaret: false, colors: true, lint: true,
+    font: "standard", size: "1", spacing: "1.7", fullWidth: false, htmlSource: true, activeLine: false, thickCaret: false, colors: true, lint: true, mathFix: true,
     reader: false, rate: "1", pause: "0.5", readerLang: "auto", readerVoice: "", mapBackground: "ask", videoAutoplay: "auto"
   };
   const displayStorageKey = "mdeditor-display";
@@ -874,7 +880,9 @@
     // Every edit goes to the host, which tracks the text and the unsaved state
     // (edits the host itself asked for, such as links rewritten on Save As, are marked).
     EditorView.updateListener.of((update) => {
-      if (update.docChanged) post({ type: "change", text: update.state.doc.toString(), host: applyingHostEdits });
+      if (!update.docChanged) return;
+      mapLostMath(update.changes);
+      post({ type: "change", text: update.state.doc.toString(), host: applyingHostEdits });
     })
   ];
   const view = new EditorView({ parent: editorHost, state: EditorState.create({ doc: "", extensions: editorExtensions() }) });
@@ -1131,18 +1139,59 @@
     const mark = display ? "$$\n" : "$";
     return `${mark}${piece.replace(/\\\\([A-Za-z]+|[,;:!])/g, "\\$1").replace(/\\([-+=*_^{}|<>!\[\]()])/g, "$1")}${display ? "\n$$" : "$"}`;
   };
+  // What the notice says about it: how many places, one of them as written, and, once they are
+  // math, where each one is now and what it was (kept in step with later edits), to put back.
   let lostMath = null;
-  const checkLostMath = () => {
+  const makeLostMath = () => {
     const found = findLostMath(view.state.doc.toString());
+    if (!found.length) return false;
     // The example is one that reads as math at a glance: not a lone \\tau, nor a whole formula.
     const example = found.find(({ from, to }) => to - from >= 8 && to - from <= 40) ?? found[0];
-    lostMath = example ? { count: found.length, example: view.state.sliceDoc(example.from, example.to) } : null;
+    const changes = found.map(({ from, to, display }) => {
+      const original = view.state.sliceDoc(from, to);
+      return { from, to, original, insert: restoreLostMath(original, display) };
+    });
+    // One edit, so a single Ctrl+Z also puts every piece back.
+    const transaction = view.state.update({ changes: changes.map(({ from, to, insert }) => ({ from, to, insert })), userEvent: "input" });
+    view.dispatch(transaction);
+    lostMath = {
+      count: found.length,
+      example: transaction.startState.sliceDoc(example.from, example.to),
+      pieces: changes.map(({ from, to, original, insert }) => ({
+        from: transaction.changes.mapPos(from, -1), to: transaction.changes.mapPos(to, 1), original, inserted: insert
+      }))
+    };
+    return true;
+  };
+  // Back as it was opened: a piece edited since then is left as it is now.
+  const unmakeLostMath = () => {
+    const pieces = lostMath.pieces.filter(({ from, to, inserted }) => view.state.sliceDoc(from, to) === inserted);
+    view.dispatch({ changes: pieces.map(({ from, to, original }) => ({ from, to, insert: original })), userEvent: "input" });
+    lostMath = { count: lostMath.count, example: lostMath.example, pieces: null };
+  };
+  const mapLostMath = (changes) => {
+    if (!lostMath?.pieces) return;
+    lostMath.pieces = lostMath.pieces.map((piece) => ({ ...piece, from: changes.mapPos(piece.from, 1), to: changes.mapPos(piece.to, -1) }));
+  };
+  // On opening, made into math at once (Settings can make it only ask).
+  const checkLostMath = () => {
+    lostMath = null;
+    if (displaySettings.mathFix) {
+      makeLostMath();
+      return;
+    }
+    const found = findLostMath(view.state.doc.toString());
+    const example = found.find(({ from, to }) => to - from >= 8 && to - from <= 40) ?? found[0];
+    if (example) lostMath = { count: found.length, example: view.state.sliceDoc(example.from, example.to), pieces: null };
   };
 
   const updateNotice = () => {
     const askMaps = mapsWaiting > 0 && !mapNoticeClosed;
     document.getElementById("notice-maps").hidden = !askMaps;
-    document.getElementById("notice-math").hidden = !lostMath?.example;
+    const mathButton = document.getElementById("notice-math");
+    mathButton.hidden = !lostMath;
+    mathButton.textContent = t(lostMath?.pieces ? "unfixMath" : "fixMath");
+    mathButton.setAttribute("aria-pressed", String(Boolean(lostMath?.pieces)));
     if (!noticeState && !askMaps && !lostMath) {
       notice.hidden = true;
       return;
@@ -1154,8 +1203,15 @@
           ? [noticeState.prefix, t("noticeExternal")(noticeState.count)].filter(Boolean).join(language === "en" ? " " : "")
           : t(noticeState.kind === "lossy" ? "noticeLossy" : "noticeGuessed")(encodingLabel(noticeState.encoding));
     // Sentences are joined with a space in English only (Japanese and Chinese end with 。).
-    const math = !lostMath ? "" : lostMath.example ? t("noticeMath")(lostMath.count, lostMath.example) : t("noticeMathDone")(lostMath.count);
+    const math = !lostMath ? "" : t(lostMath.pieces ? "noticeMathDone" : "noticeMath")(lostMath.count, lostMath.example);
     noticeText.textContent = [main, askMaps ? t("noticeMaps")(mapsWaiting) : "", math].filter(Boolean).join(language === "en" ? " " : "");
+    if (math) {
+      // The example as it is written, in the editor's font.
+      const [before, ...after] = noticeText.textContent.split(lostMath.example);
+      const code = document.createElement("code");
+      code.textContent = lostMath.example;
+      noticeText.replaceChildren(before, code, after.join(lostMath.example));
+    }
     document.getElementById("notice-encoding").hidden = !noticeState || noticeState.kind === "message" || noticeState.kind === "external";
     document.getElementById("notice-action").hidden = noticeState?.kind !== "external";
     const reopen = document.getElementById("notice-reopen");
@@ -1431,15 +1487,11 @@
     updateNotice();
     view.focus();
   });
-  // One edit, so a single Ctrl+Z puts every piece back. The pieces are found again in the
-  // text as it is now, in case it was changed after opening.
+  // The button goes back and forth: back as it was, and into math again (found again in the
+  // text as it is now, in case it was changed).
   document.getElementById("notice-math").addEventListener("click", () => {
-    const found = findLostMath(view.state.doc.toString());
-    view.dispatch({
-      changes: found.map(({ from, to, display }) => ({ from, to, insert: restoreLostMath(view.state.sliceDoc(from, to), display) })),
-      userEvent: "input"
-    });
-    lostMath = found.length ? { count: found.length, example: null } : null;
+    if (lostMath?.pieces) unmakeLostMath();
+    else if (!makeLostMath()) lostMath = null;
     updateNotice();
     view.focus();
   });
@@ -1968,6 +2020,7 @@
     thickCaret: document.getElementById("setting-thick-caret"),
     colors: document.getElementById("setting-colors"),
     lint: document.getElementById("setting-lint"),
+    mathFix: document.getElementById("setting-math-fix"),
     reader: document.getElementById("setting-reader"),
     rate: document.getElementById("setting-reader-rate"),
     pause: document.getElementById("setting-reader-pause"),
