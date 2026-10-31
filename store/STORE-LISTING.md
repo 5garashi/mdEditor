@@ -27,17 +27,19 @@ Turn PDFs, Word files, e-mails, and web pages into clean Markdown, and back into
 Open as Markdown
 - PDF: the text comes back in reading order, wrapped lines join into paragraphs, and headings (from text size and numbering), lists, the table of contents, and pictures come back. Ruled tables and code come back too. Diagrams, charts, and math are redrawn as pictures from their lines and labels; column layout and tables without cell borders do not come back (their text remains), and a scanned PDF has no text to take.
 - Word: headings, lists, tables, links, and pictures come back (colors and layout do not). When a document has no heading styles, headings are guessed from text size.
-- Also HTML, web pages, e-mail (.eml), CSV, TSV, JSON, XML, Jupyter Notebooks, and images. The original file is never changed.
+- Also HTML, web pages, e-mail (.eml), CSV, TSV, JSON, XML, Jupyter Notebooks, and images. The original file is never changed, and it can be shown beside the preview to compare.
 - Check and fix the result before you share it or paste it into an AI chat.
 
 Save as PDF and Word
-- One click saves a PDF that looks exactly like the preview: diagrams, math, tables, 3D models, maps, and colored code included, on A4 or Letter (Auto follows your region).
+- One click saves a PDF that looks exactly like the preview: diagrams, math, tables, 3D models, maps, and colored code included, on A4 or Letter (Auto follows your region). Pages are numbered, and the PDF is tagged so screen readers can follow its headings, lists, and tables.
 - Save As also writes Word, HTML, PNG, CSV, TSV, JSON, Jupyter Notebook, and plain text, and a ZIP for sharing that holds the document and its name_files folder.
 - Printing and PDF always use a white page, even in dark mode.
 
 Write and see
 - Type on the left and the preview on the right updates at once. Both sides scroll together.
-- Draw flowcharts and Gantt charts (Mermaid), Graphviz diagrams, and formulas (KaTeX) with a few lines of text.
+- Markdown is colored as you type, and a check underlines mistakes such as a skipped heading level or a link to nowhere.
+- Writing help: Ctrl+B and Ctrl+I for bold and italic, lists that go on when you press Enter, tables lined up in one key, numbered headings, a URL pasted on selected text becomes a link, and suggestions for links and math.
+- Draw flowcharts and Gantt charts (Mermaid), Graphviz diagrams, and formulas (KaTeX) with a few lines of text. Math written the way AI chats write it, \(…\) and \[…\], shows too.
 - Turn 3D models (text STL) with the mouse, and draw maps (GeoJSON, TopoJSON) on a simple world map, all offline.
 - Code is colored for about 40 languages, and Contents builds a table of contents from your headings.
 - Reads Markdown the way GitHub does: alerts, front matter, math blocks, emoji short names, collapsible sections, and more. Videos in a document play too.
@@ -61,19 +63,16 @@ Made for everyone
 Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Design Office. Open About in the app for the company, support, and privacy policy links.
 
 **What's new in this version:**
-- Open PDFs as Markdown, on your PC: text, headings, lists, the table of contents, ruled tables, code, and pictures come back, and diagrams and math are redrawn as pictures. Tagged PDFs are read by their tags, and a page whose text cannot be read comes back as a picture. Column layout does not come back.
-- Saved PDFs are tagged, so screen readers can follow their headings, lists, and tables.
-- Word documents without heading styles get their headings from text size.
-- Read aloud reads only the text you select.
-- Simplified Chinese: choose Japanese, English, or Chinese from the Language list.
-- New from clipboard: copy text, a picture, or a file in any app, press your key, and it opens as a new document.
-- Starts about twice as fast.
-- 3D models (text STL) turn with the mouse; maps (GeoJSON, TopoJSON) and Graphviz diagrams are drawn offline.
-- GitHub-style Markdown: alerts, front matter, math blocks, emoji short names, collapsible sections, and videos.
-- Code is colored for about 40 languages and keeps its colors in PDF, PNG, HTML, and Word. Contents builds a table of contents from your headings.
-- Save As lists every format, including a ZIP for sharing the document with its name_files folder. Adjust image sets a picture's size and position.
-- Drop or paste pictures into the editor. Drop a file on the editor to insert it, or outside to open it.
-- Internet images and videos load only when you allow them. mdEditor appears in Open with for the file types it supports.
+- Open PDFs as Markdown, on your PC: text, headings, lists, the table of contents, tables, code, and pictures come back, and diagrams and math are redrawn as pictures. Tagged PDFs are read by their tags, and the original can be shown beside the preview. Column layout does not come back.
+- Saved PDFs have page numbers and are tagged for screen readers. Word files without heading styles get headings from text size.
+- Writing help: Markdown is colored as you type. Ctrl+B / Ctrl+I add bold and italic, lists go on with Enter and Tab, Ctrl+Shift+W lines up a table, Ctrl+Shift+N numbers the headings, a URL pasted on selected text makes a link, and links and math commands are suggested.
+- A Markdown check underlines mistakes such as a skipped heading level or a link to nowhere.
+- Math as AI chats write it, \(…\) and \[…\], shows as math. Math or bold whose marks were lost is fixed on opening, with a button to undo.
+- Line breaks in a paragraph show as written (can be turned off).
+- Simplified Chinese, New from clipboard, and about twice as fast to start.
+- 3D models (STL), maps, Graphviz, GitHub-style Markdown (alerts, front matter, collapsible sections, videos), and code colored for about 40 languages.
+- Save As lists every format, including a ZIP for sharing. Adjust image sets a picture's size and position. Drop or paste pictures into the editor.
+- Internet images and videos load only when you allow them. Read aloud can read just the selection.
 
 **Features (bullets):**
 - Open PDF and Word files as Markdown, offline
@@ -82,11 +81,11 @@ Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Des
 - Save as Word, HTML, PNG, CSV, JSON, text, or a ZIP
 - Live preview beside your text, scrolling together
 - Preview on a second display, following the line you edit
+- Markdown colored as you type, with a check for mistakes
+- Bold, italic, lists, tables, and heading numbers in one key
 - Mermaid and Graphviz diagrams and math, offline
-- 3D models (STL) you turn with the mouse
-- Maps (GeoJSON), with OpenStreetMap when you allow it
-- Colored code for about 40 languages, kept in PDF and Word
-- Table of contents from your headings, updated with one press
+- 3D models (STL) and maps (GeoJSON), offline
+- Colored code for about 40 languages, and a table of contents
 - GitHub-style alerts, front matter, and collapsible sections
 - Also opens HTML, e-mail, CSV, JSON, Jupyter Notebooks, and images
 - Drop or paste pictures straight into your document
@@ -143,17 +142,19 @@ PDF・Word・メール・Web ページを、PC の中だけで Markdown にで�
 Markdown として開く
 - PDF: 文字を読む順に取り出し、折り返した行を段落にまとめます。見出し（文字の大きさと番号から推測）・箇条書き・目次・画像も戻ります。罫線のある表とコードも戻ります。図と数式は線と文字から画像に描き直し、段組みの配置・罫線のない表は戻りません（文字は残ります）。スキャンした画像だけの PDF からは、文字を取り出せません。
 - Word: 見出し・箇条書き・表・リンク・画像が戻ります（色や配置は戻りません）。見出しのスタイルがない文書は、文字の大きさから見出しを推測します。
-- HTML・Web ページ・メール（.eml）・CSV・TSV・JSON・XML・Jupyter Notebook・画像も開けます。元のファイルは書き換えません。
+- HTML・Web ページ・メール（.eml）・CSV・TSV・JSON・XML・Jupyter Notebook・画像も開けます。元のファイルは書き換えず、プレビューの横に元のファイルを並べて見比べられます。
 - 取り込んだ結果は、人に渡す前や AI のチャットに貼る前に、確かめて直せます。
 
 PDF や Word で保存する
-- プレビューと同じ見た目の PDF を、ワンクリックで保存します。図・数式・表・3D モデル・地図・色分けしたコードも入ります。用紙は A4 と Letter から選べます（「自動」は地域の設定に合わせます）。
+- プレビューと同じ見た目の PDF を、ワンクリックで保存します。図・数式・表・3D モデル・地図・色分けしたコードも入ります。用紙は A4 と Letter から選べます（「自動」は地域の設定に合わせます）。ページ番号が入り、画面読み上げで見出し・箇条書き・表をたどれるタグ付きの PDF になります。
 - 「名前を付けて保存」で、Word・HTML・PNG・CSV・TSV・JSON・Jupyter Notebook・テキストにも保存できます。文書と「名前_files」フォルダーをまとめた配布用 ZIP も作れます。
 - ダークモードでも、印刷と PDF は白地です。
 
 書く・見る
 - 左に書くと、右のプレビューにすぐ反映されます。両側のスクロールは連動します。
-- フローチャートやガントチャート（Mermaid）、Graphviz の図、数式（KaTeX）を、数行のテキストで描けます。
+- 書くそばから Markdown を色分けし、見出しの段階の飛びや行き先のないリンクなどの書き間違いに波線を引きます。
+- 書く手助け: Ctrl+B・Ctrl+I で太字・斜体、Enter でリストの続き、キー 1 つで表を整える・見出しに番号を付ける、選んだ文字に URL を貼るとリンク、リンク先と数式の入力の候補。
+- フローチャートやガントチャート（Mermaid）、Graphviz の図、数式（KaTeX）を、数行のテキストで描けます。AI のチャットが書く \(…\)・\[…\] の数式も表示します。
 - 3D モデル（テキスト形式の STL）はマウスで回して確かめられ、地図（GeoJSON・TopoJSON）は簡単な世界地図の上に描きます。どちらもオフラインで表示します。
 - 約 40 の言語のコードを色分けし、「目次」ボタンで見出しから目次を作れます。
 - GitHub と同じ書き方に対応します（注意書き、フロントマター、数式のコードブロック、絵文字の短縮名、折りたたみなど）。文書の中の動画も再生できます。
@@ -177,19 +178,16 @@ PDF や Word で保存する
 日本語・英語・簡体字中国語に対応します。5garashi.com Design Office が作りました。会社紹介・サポート・プライバシーポリシーは、アプリの「このアプリについて」から開けます。
 
 **このバージョンの新機能:**
-- PDF を Markdown として開けるようになりました（PC の中で変換します）。文字・見出し・箇条書き・目次・罫線のある表・コード・画像が戻り、図と数式は画像に描き直します。タグ付きの PDF はタグのとおりに読み、文字を読み取れないページはページ全体を画像にします。段組みの配置は戻りません。
-- 保存した PDF はタグ付きになり、画面読み上げで見出し・箇条書き・表をたどれます。
-- 見出しのスタイルがない Word 文書は、文字の大きさから見出しを推測します。
-- 読み上げで、選んだ部分だけを読めるようになりました。
-- 簡体字中国語に対応しました。「Language」の一覧で、日本語・英語・中国語を選べます。
-- 「クリップボードから新規作成」: ほかのアプリでテキスト・画像・ファイルをコピーしてから、設定したキーを押すと、新しい文書として開きます。
-- 起動がおよそ 2 倍速くなりました。
-- 3D モデル（テキスト形式の STL）をマウスで回して確かめられ、地図（GeoJSON・TopoJSON）と Graphviz の図をオフラインで描けます。
-- GitHub と同じ書き方に対応しました（注意書き、フロントマター、数式のコードブロック、絵文字の短縮名、折りたたみ、動画）。
-- 約 40 の言語のコードを色分けし、PDF・PNG・HTML・Word に保存しても色が残ります。「目次」ボタンで、見出しから目次を作れます。
-- 「名前を付けて保存」で、すべての形式を選べます。文書と「名前_files」フォルダーを 1 つにまとめる配布用 ZIP も作れます。「画像の調整」で、画像の大きさと位置を変えられます。
-- 画像は、ドロップや貼り付けで文書に入ります。編集画面にドロップすると入れ、外にドロップすると開きます。
-- インターネット上の画像と動画は、許可したときだけ読み込みます。対応する形式のファイルで、「プログラムから開く」に mdEditor が出ます。
+- PDF を Markdown として開けるようになりました（PC の中で変換します）。文字・見出し・箇条書き・目次・表・コード・画像が戻り、図と数式は画像に描き直します。タグ付きの PDF はタグのとおりに読み、元の PDF をプレビューの横に並べて見比べられます。段組みの配置は戻りません。
+- 保存した PDF にページ番号が入り、画面読み上げ用のタグも付きます。見出しのスタイルがない Word 文書は、文字の大きさから見出しを推測します。
+- 書く手助け: 書くそばから Markdown を色分けします。Ctrl+B / Ctrl+I で太字・斜体、Enter と Tab でリストの続きと段、Ctrl+Shift+W で表を整え、Ctrl+Shift+N で見出しに番号を付けます。選んだ文字に URL を貼るとリンクになり、リンク先と数式の命令を候補に出します。
+- 書き方の確認: 見出しの段階の飛びや行き先のないリンクなどの書き間違いに、波線を引きます。
+- AI のチャットが書く \(…\)・\[…\] の数式を表示します。$ や ** が崩れた数式・太字は、開いたときに直します（元に戻すボタン付き）。
+- 段落の中の改行を、書いたとおりに改行して表示します（オフにすると GitHub と同じ）。
+- 簡体字中国語、「クリップボードから新規作成」に対応し、起動がおよそ 2 倍速くなりました。
+- 3D モデル（STL）・地図・Graphviz の図、GitHub と同じ書き方（注意書き、フロントマター、折りたたみ、動画）、約 40 の言語のコードの色分け（PDF・Word にも残る）に対応しました。
+- 「名前を付けて保存」で、配布用 ZIP を含むすべての形式を選べます。「画像の調整」で画像の大きさと位置を変えられ、画像はドロップや貼り付けで文書に入ります。
+- インターネット上の画像と動画は、許可したときだけ読み込みます。読み上げで、選んだ部分だけを読めます。
 
 **製品の機能（箇条書き）:**
 - PDF や Word を Markdown として開ける。PC の中だけで変換
@@ -198,11 +196,11 @@ PDF や Word で保存する
 - Word・HTML・PNG・CSV・JSON・テキスト・ZIP にも保存
 - 書きながら横で仕上がりを確認。スクロールも連動
 - プレビューを 2 台目のディスプレイに。編集中の行を表示
+- 書くそばから色分けし、書き間違いに波線を引く
+- 太字・斜体・リスト・表・見出しの番号をキー 1 つで
 - Mermaid・Graphviz の図と数式をオフラインで表示
-- 3D モデル（STL）をマウスで回して確認
-- 地図（GeoJSON）。許可すると OpenStreetMap の地図も
-- 約 40 の言語のコードを色分け。PDF・Word にも色が残る
-- 見出しから目次を作り、ボタン 1 つで新しくする
+- 3D モデル（STL）と地図（GeoJSON）をオフラインで表示
+- 約 40 の言語のコードを色分け。見出しから目次も作る
 - GitHub と同じ注意書き・フロントマター・折りたたみ
 - HTML・メール・CSV・JSON・Jupyter Notebook・画像も開ける
 - 画像はドロップや貼り付けで、そのまま文書に
@@ -241,17 +239,19 @@ PDF や Word で保存する
 作为 Markdown 打开
 - PDF：按阅读顺序取出文字，把折行合并为段落，标题（根据文字大小和编号推测）、列表、目录和图片也会取出。有边框的表格和代码也会取出。图表和公式会根据线条和文字重新绘制为图片，分栏排版和没有边框的表格不会恢复（文字会保留）。扫描得到的纯图像 PDF 无法取出文字。
 - Word：标题、列表、表格、链接和图片会取出（颜色和排版不会保留）。没有使用标题样式的文档，会根据文字大小推测标题。
-- 也可以打开 HTML、网页、电子邮件（.eml）、CSV、TSV、JSON、XML、Jupyter Notebook 和图像。原文件不会被改写。
+- 也可以打开 HTML、网页、电子邮件（.eml）、CSV、TSV、JSON、XML、Jupyter Notebook 和图像。原文件不会被改写，还可以把原文件显示在预览旁边进行对照。
 - 在分享给别人或粘贴到 AI 聊天之前，可以先检查并修改取出的结果。
 
 保存为 PDF 和 Word
-- 一键保存与预览外观完全相同的 PDF，包括图表、公式、表格、3D 模型、地图和着色的代码。纸张可选 A4 或 Letter（“自动”跟随地区设置）。
+- 一键保存与预览外观完全相同的 PDF，包括图表、公式、表格、3D 模型、地图和着色的代码。纸张可选 A4 或 Letter（“自动”跟随地区设置）。页面带有页码，PDF 带有标签，屏幕阅读器可以按标题、列表和表格浏览。
 - “另存为”还可以保存为 Word、HTML、PNG、CSV、TSV、JSON、Jupyter Notebook 和纯文本，以及包含文档和“名称_files”文件夹的用于分发的 ZIP。
 - 即使在深色模式下，打印和 PDF 也始终使用白色页面。
 
 写作和查看
 - 在左边输入，右边的预览立即更新。两边同步滚动。
-- 用几行文字就能画出流程图和甘特图（Mermaid）、Graphviz 图表和公式（KaTeX）。
+- 输入时 Markdown 会着色显示，标题层级跳跃、没有目标的链接等写法错误会加上波浪线。
+- 写作辅助：Ctrl+B、Ctrl+I 设置粗体和斜体，按 Enter 接续列表，一个键整理表格、给标题编号，在选中的文字上粘贴 URL 即成为链接，链接目标和公式命令会给出输入候选。
+- 用几行文字就能画出流程图和甘特图（Mermaid）、Graphviz 图表和公式（KaTeX）。AI 聊天中 \(…\)、\[…\] 写法的公式也能显示。
 - 用鼠标旋转 3D 模型（文本格式的 STL），在简单的世界地图上绘制地图（GeoJSON、TopoJSON），全部离线完成。
 - 约 40 种语言的代码会着色显示，“目录”可以根据标题生成目录。
 - 支持与 GitHub 相同的写法：提示框、前置元数据、公式代码块、表情符号短名称、折叠等。文档中的视频也可以播放。
@@ -275,19 +275,16 @@ PDF や Word で保存する
 支持日语、英语和简体中文。由 5garashi.com Design Office 制作。公司介绍、支持和隐私政策的链接，可以在应用的“关于此应用”中打开。
 
 **此版本的新功能:**
-- 可以把 PDF 作为 Markdown 打开（在你的电脑中转换）。文字、标题、列表、目录、有边框的表格、代码和图片会取出，图表和公式重新绘制为图片。带标签的 PDF 按标签读取，无法读取文字的页面会整页变为图片；分栏排版不会恢复。
-- 保存的 PDF 带有标签，屏幕阅读器可以按标题、列表和表格浏览。
-- 没有标题样式的 Word 文档，会根据文字大小推测标题。
-- 朗读可以只朗读选中的文字。
-- 支持简体中文。可以在“Language”列表中选择日语、英语或中文。
-- 从剪贴板新建：在任意应用中复制文本、图片或文件后，按你设置的按键，即可作为新文档打开。
-- 启动速度提高约一倍。
-- 用鼠标旋转 3D 模型（文本格式的 STL），离线绘制地图（GeoJSON、TopoJSON）和 Graphviz 图表。
-- 支持与 GitHub 相同的写法（提示框、前置元数据、公式代码块、表情符号短名称、折叠、视频）。
-- 约 40 种语言的代码会着色显示，保存为 PDF、PNG、HTML 和 Word 后颜色仍然保留。“目录”根据标题生成目录。
-- “另存为”可以选择所有格式，也可以生成把文档和“名称_files”文件夹打包在一起的用于分发的 ZIP。“调整图像”可以更改图像的大小和位置。
-- 图片可以通过拖放或粘贴放入文档。拖放到编辑区即可插入，拖放到编辑区以外即可打开。
-- 网络上的图像和视频只有在你允许时才会加载。对于支持的文件类型，“打开方式”中会列出 mdEditor。
+- 可以把 PDF 作为 Markdown 打开（在你的电脑中转换）。文字、标题、列表、目录、表格、代码和图片会取出，图表和公式重新绘制为图片。带标签的 PDF 按标签读取，原 PDF 可以显示在预览旁边对照。分栏排版不会恢复。
+- 保存的 PDF 带有页码和供屏幕阅读器使用的标签。没有标题样式的 Word 文档，会根据文字大小推测标题。
+- 写作辅助：输入时 Markdown 会着色显示。Ctrl+B / Ctrl+I 设置粗体和斜体，Enter 和 Tab 接续列表并调整层级，Ctrl+Shift+W 整理表格，Ctrl+Shift+N 给标题编号。在选中的文字上粘贴 URL 即成为链接，链接目标和公式命令会给出候选。
+- 写法检查：标题层级跳跃、没有目标的链接等错误会加上波浪线。
+- AI 聊天中 \(…\)、\[…\] 写法的公式会显示为公式。丢失了 $ 或 ** 的公式和粗体，打开时会自动修正（带撤销按钮）。
+- 段落中的换行按原样换行显示（关闭后与 GitHub 相同）。
+- 支持简体中文和“从剪贴板新建”，启动速度提高约一倍。
+- 支持 3D 模型（STL）、地图、Graphviz 图表、与 GitHub 相同的写法（提示框、前置元数据、折叠、视频），约 40 种语言的代码着色（PDF 和 Word 中也保留）。
+- “另存为”可以选择包括用于分发的 ZIP 在内的所有格式。“调整图像”可以更改图像的大小和位置，图片可以通过拖放或粘贴放入文档。
+- 网络上的图像和视频只有在你允许时才会加载。朗读可以只朗读选中的部分。
 
 **产品功能（要点）:**
 - 把 PDF 和 Word 作为 Markdown 打开，在电脑中转换
@@ -296,11 +293,11 @@ PDF や Word で保存する
 - 也可保存为 Word、HTML、PNG、CSV、JSON、文本或 ZIP
 - 边写边在旁边查看效果，滚动同步
 - 预览可放到第二个显示器上，跟随正在编辑的行
+- 输入时着色显示，写法错误加上波浪线
+- 一个键设置粗体、斜体、列表、表格和标题编号
 - 离线显示 Mermaid、Graphviz 图表和公式
-- 用鼠标旋转 3D 模型（STL）
-- 地图（GeoJSON），允许后可用 OpenStreetMap
-- 约 40 种语言的代码着色，PDF 和 Word 中也保留
-- 根据标题生成目录，一键更新
+- 离线显示 3D 模型（STL）和地图（GeoJSON）
+- 约 40 种语言的代码着色，并可根据标题生成目录
 - 与 GitHub 相同的提示框、前置元数据和折叠
 - 也可打开 HTML、电子邮件、CSV、JSON、Jupyter Notebook 和图像
 - 图片拖放或粘贴即可放入文档
@@ -330,7 +327,7 @@ PDF や Word で保存する
 - Reserve the name in Partner Center and confirm it is available. Use the same spelling ("5garashi.com Design Office") in the Store, the app, and the website.
 - Replace the privacy or support links if the final URLs differ. The company URL in the app is `https://www.5garashi.com/`.
 - "Worldwide" distribution and "all languages" are different settings. The app supports Japanese, English, and Simplified Chinese (1.0.15) only. Since 1.0.15 the package declares ja-JP, en-US, and zh-CN, so Partner Center expects a listing in each of the three languages; the zh-CN text and its screenshots are above. The Chinese text has not been reviewed by a native speaker.
-- The screenshots are in `docs/images/` (1366 x 768 window, 90% zoom), in Japanese (`.ja`), English (`.en`), and Simplified Chinese (`.zh-CN`). Screenshots 1-main to 9-pdf were retaken with 1.0.15 (2026-10-23) after the header and toolbar changed; screenshot 1-main shows the 3D model of samples/diagram-test (21-1). `10-pdf-open` (retaken with 1.0.18 on 2026-10-26 for the new notice text; listed first to lead with PDF import) puts page 1 of a short report PDF beside the window that opened it as Markdown; the report was written for the screenshot and saved as PDF by mdEditor, with numbered lists. `9-pdf` (listed second) puts the window beside the first page of the PDF it saved. Upload the screenshots in the listed order; ten is the Store maximum. Retake them when the screen changes.
+- The screenshots are in `docs/images/` (1366 x 768 window, 90% zoom), in Japanese (`.ja`), English (`.en`), and Simplified Chinese (`.zh-CN`). Screenshots 1-main to 9-pdf were retaken with 1.0.15 (2026-10-23) after the header and toolbar changed; screenshot 1-main shows the 3D model of samples/diagram-test (21-1). `10-pdf-open` (retaken with 1.0.18 on 2026-10-26 for the new notice text; listed first to lead with PDF import) puts page 1 of a short report PDF beside the window that opened it as Markdown; the report was written for the screenshot and saved as PDF by mdEditor, with numbered lists. `9-pdf` (listed second) puts the window beside the first page of the PDF it saved. Upload the screenshots in the listed order; ten is the Store maximum. Retake them when the screen changes. Since 1.0.18 the editor colors Markdown and marks lines the Markdown check finds; the screenshots taken before that show the editor in plain text, which is still true with coloring turned off.
 - The map screenshot (`8-map`, listed tenth) shows OpenStreetMap map tiles. Keep the credit "© OpenStreetMap contributors" visible; do not crop it out.
   地図のスクリーンショット（`8-map`、一覧の 10 番目）には OpenStreetMap の地図が写っています。右下の「© OpenStreetMap contributors」を切り取らないでください。
 - Partner Center limits: What's new 1,500 characters, each feature 200 characters (up to 20), each screenshot caption 200 characters (up to 10 screenshots).
