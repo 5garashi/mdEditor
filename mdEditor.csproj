@@ -38,15 +38,15 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </None>
-    <!-- The rendering tests in samples/ also open from the Samples dialog. -->
-    <Content Include="samples\diagram-test.md;samples\diagram-test.en.md;samples\diagram-test.zh-CN.md">
+    <!-- The rendering tests and the key features tour in samples/ also open from the Samples dialog. -->
+    <Content Include="samples\diagram-test.md;samples\diagram-test.en.md;samples\diagram-test.zh-CN.md;samples\key-features.md;samples\key-features.en.md;samples\key-features.zh-CN.md">
       <Link>wwwroot\samples\%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
     <!-- The video that diagram-test plays (21-3) and the official 5garashi.com assets its
-         image size and position examples use (22), unmodified, beside it as in samples/. -->
+         image size and position examples (22) and key-features use, unmodified, beside them as in samples/. -->
     <Content Include="samples\import-test_files\cube5.mp4;samples\import-test_files\5garashi_*.svg;samples\import-test_files\5garashi_*.png">
       <Link>wwwroot\samples\import-test_files\%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

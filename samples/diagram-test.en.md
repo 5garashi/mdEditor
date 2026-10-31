@@ -640,7 +640,7 @@ Expected: the front matter (YAML) at the top shows as a card of keys and values 
 
 ### 21-1. 3D model (STL)
 
-With the body (`solid cube`) and the letters (`solid letters`) as separate solids, mdEditor paints the first cream and the rest volt (a `#RRGGBB` in a solid's name sets its color). GitHub shows one color, and the letters stand out by their relief.
+With the body (`solid cube`) and the letters (`solid letters`) as separate solids, mdEditor paints the first cream and the rest volt (a `#RRGGBB` in a solid's name sets its color, and an empty `solid background #RRGGBB` sets the background). GitHub shows one color, and the letters stand out by their relief.
 
 ```stl
 solid cube

@@ -12,6 +12,18 @@
 
 The version number lives in [VERSION](./VERSION). Add each new version at the top, with a `## version — date` heading (used as the GitHub Release notes).
 
+## 1.0.19 — 2026-11-01
+
+- 3D モデル（```stl）で、solid の名前の後ろに書いた `#RRGGBB` の色が使われていなかったのを直した（1.0.12 から。色を取り出す式に、見えない制御文字が入っていた）。部品ごとに色を変えられる。
+- 3D モデルの背景の色を、STL の中に書けるようにした。面のない `solid background #F9EFCB`（続けて `endsolid background`）を書くと、その色が背景になり、その solid は描かない。書かなければ、これまでどおりの暗い緑。淡い背景にするときは、部品の色も背景の上で見える色にする。
+- サンプルに「主な機能」を加えた。図・数式・3D モデル・画像・地図で mdEditor の機能を一通り見せる文書で、表示の言語のもの（samples/key-features.md・.en.md・.zh-CN.md）を開く。
+- サンプルの「図と数式」に、シーケンス図・円グラフ・Graphviz の図と数式を足し、「基本の書き方」に、取り消し線・入れ子のリスト・チェックリスト・注意書き・表・画像・折りたたみ・図を足した。図の色は Identity の配色にした。
+
+- 3D models (```stl): a `#RRGGBB` after a solid's name was never used (since 1.0.12; a hidden control character had got into the pattern that reads it). Each part now takes its color.
+- A 3D model's background color can be written in the STL: an empty `solid background #F9EFCB` (followed by `endsolid background`) sets the background and is not drawn. Without it, the background stays dark green. With a light background, give the parts colors that show on it.
+- A new "Key features" sample: a tour of mdEditor through diagrams, math, a 3D model, images, and a map, opened in the display language (samples/key-features.md, .en.md, .zh-CN.md).
+- The "Diagrams and math" sample gains a sequence diagram, a pie chart, a Graphviz diagram, and more math; "Basic writing" gains strikethrough, nested lists, a checklist, alerts, a table, an image, details, and a diagram. Diagram colors follow the Identity palette.
+
 ## 1.0.18 — 2026-10-31
 
 - タグ付きの PDF（Word・Acrobat・LibreOffice・ブラウザーなどで作ったもの）を開いたときに、PDF の中のタグ（見出し・段落・箇条書き・表と、その読む順）を使うようにした。ページの文字のほとんどがタグに入っていれば、読む順・段落の区切り・見出しの段階（H1〜H6）・箇条書きをタグのとおりにし、罫線のない表も Markdown の表に戻し、柱やページ番号として印の付いた文字は省く。次のページに続いた箇条書きや段落の続きも、正しい場所に読む。タグのない PDF や、タグが文字を覆っていないページは、これまでどおり文字の位置から読む。図・数式・罫線のある表・コードは、タグがあってもこれまでどおり。

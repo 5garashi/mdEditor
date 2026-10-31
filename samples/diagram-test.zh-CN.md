@@ -640,7 +640,7 @@ Write-Output "短名称"
 
 ### 21-1. 3D 模型（STL）
 
-将主体（`solid cube`）和文字（`solid letters`）分为不同的实体后，mdEditor 会把第一个涂成奶油色，其余涂成 volt（在实体名称中写 `#RRGGBB` 可以指定颜色）。GitHub 用单一颜色显示，文字靠凹凸显现出来。
+将主体（`solid cube`）和文字（`solid letters`）分为不同的实体后，mdEditor 会把第一个涂成奶油色，其余涂成 volt（在实体名称中写 `#RRGGBB` 可以指定颜色，写一个没有面的 `solid background #RRGGBB` 可以指定背景色）。GitHub 用单一颜色显示，文字靠凹凸显现出来。
 
 ```stl
 solid cube

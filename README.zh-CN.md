@@ -21,7 +21,7 @@ tags: [markdown, windows, wpf, webview2]
 
 [English](./README.md) | [日本語](./README.ja.md) | 简体中文
 
-版本 / Version: 1.0.18（更改记录 / Changes: [CHANGELOG.md](./CHANGELOG.md)）
+版本 / Version: 1.0.19（更改记录 / Changes: [CHANGELOG.md](./CHANGELOG.md)）
 
 ## 特点
 
@@ -111,7 +111,7 @@ mdEditor 能打开的其他类型（.txt、.html、.htm、.docx、.eml、.csv、
 
 ## 使用方法
 
-- **示例**：只有在选择时，才会把简短的示例（“图表和公式”或“基本写法”），或检查所有支持的图表、图形和公式的“图表显示测试”（日语、英语或简体中文；[samples/](./samples/) 中的三个文件）作为新文档放入（如果当前文档有更改，会先询问是否保存；不会写入当前打开的文件）。
+- **示例**：只有在选择时，才会把简短的示例（“图表和公式”或“基本写法”）、一览 mdEditor 功能的“主要功能”（显示语言的版本），或检查所有支持的图表、图形和公式的“图表显示测试”（日语、英语或简体中文；后两个是 [samples/](./samples/) 中的文件）作为新文档放入（如果当前文档有更改，会先询问是否保存；不会写入当前打开的文件）。
 - **关于此应用**：显示公司介绍、支持和隐私政策的链接。只有在选择链接时才会用浏览器打开。
 - **打开**：选择 Markdown 文件。也可以打开文本（.txt）、Word（.docx）和 HTML（.html、.htm）文件。文本按原样打开和保存。Word 文档作为 Markdown 打开：标题、列表、表格、链接和图像会保留（颜色和排版不会保留）；其中的图像在第一次保存时放到 Markdown 文件旁边的“名称_files”文件夹中，不会写入 Word 文档。没有使用标题样式、只用较大文字做标题的 Word 文档，会根据文字大小推测标题（明显大于正文的文字，或大一号的粗体，成为标题 1～3；设为标题的个数会在通知栏中显示）。也可以打开 HTML 文件（.html、.htm）：会转换为 Markdown，标题、段落、列表、表格、链接、图像和公式会保留（颜色和排版不会保留）。mdEditor 绘制的图表恢复为图表代码，其他图形（SVG 以及嵌入页面的图像）会保存为“文件名_files”中的图像文件，首次保存时复制到 Markdown 文件旁边。背景图像作为图像导入，居中和右对齐的段落以及图像宽度以 HTML（`<p align>`、`<img width>`）保留，按钮、选项和隐藏的部分不会导入，Leaflet 地图会把保存的瓦片合成为一张地图图像。依靠脚本运行的页面，可以用通知栏的“在浏览器中打开”在平时的浏览器中打开。保存后成为 Markdown 文件，不会写入 HTML 文件。
   - **PDF（.pdf）**：转换为 Markdown 打开。按阅读顺序取出文字，把折行的行合成一个段落，根据文字大小推测标题，以项目符号或编号开头的行成为列表项。带编号（1.、3.1、(1)、① 等）且字体与正文不同的标题也会成为标题，并按编号的深度嵌套。目录（点线和页码的行）按 PDF 的缩进成为嵌套的列表。图像与 Word 文档的图像处理方式相同。有边框的表格成为 Markdown 表格，等宽字体的行成为代码块（保留缩进），用图形绘制的项目符号和复选框（例如从浏览器或 mdEditor 保存的 PDF）成为列表项。用线条和图形绘制的图（例如用 Mermaid 或 Graphviz 绘制的示意图和图表）会根据其线条、图形、颜色和图中的文字重新绘制为 SVG 图片，保存在“名称_files”中。图中的文字成为图片的一部分，无法作为文字编辑；沿直线的渐变色和半透明颜色也会照样绘制（其他图案显示为灰色）。用 KaTeX 排版的公式（例如从 mdEditor 保存的 PDF）或用 LaTeX（Computer Modern）排版的公式也会同样重新绘制为图片：单独一行的公式成为居中的图片，句中的公式成为原位置的图片，公式的文字作为图片的说明（PDF 中不保留 TeX 写法，因此不会恢复为 TeX）。以与原始大小不同的大小、居中、靠右或文字环绕显示的图片，会以 `<img width>`、`<p align>`、`align="left"`/`"right"` 以及环绕文字之后的 `<br clear="all">` 恢复。制作 PDF 时未加载的互联网视频，会恢复为单独一行的地址。带标签的 PDF（Word、Acrobat、LibreOffice 等可以生成）在文件中记录了文字是什么（标题、段落、列表、表格），因此会按标签决定阅读顺序、段落、标题层级和列表项，没有边框的表格也会恢复为表格，并省去标记为页眉或页码的文字。其他 PDF 的分栏排版和没有边框的表格不会恢复（文字会保留）。无法按顺序读取文字的页面（竖排、文字叠在文字上的页面等）会整页作为一张图片，并在通知栏中说明是哪几页。页面上下边缘的页码会省去。使用无法读取文字的字体（会显示为乱码）的页面，会用 PDFium（Chromium 和 Edge 的 PDF 绘制组件）把整页作为图片取入。只由图像组成的 PDF（扫描件等）无法取出文字，受密码保护的 PDF 无法打开。最多打开 500 页。不会改写原 PDF。打开后，按通知栏中的“显示原 PDF”，可以在编辑区的位置显示原 PDF 进行对照（与预览同步滚动，按“返回编辑区”返回；HTML、网页、电子邮件、CSV、TSV、JSON 和 XML 也可以用“显示原文件”同样对照）。靠右和居中的文字与标题用 `<p align>` 等 HTML 保留位置，进行的特殊处理（转为图片的图表数量等）会显示在通知栏中。在“设置”→“PDF 导入”中，可以选择把延伸到图表范围内的文字放入图片（外观优先・默认）还是保留为文字（编辑优先）、把表格作为 Markdown 表格（编辑优先・默认）还是图片（外观优先）等，细节数值可以在详细设置文件（pdf-import.json）中更改（各数值的含义以日语和英语写在文件中；“设置”→“恢复默认设置”会恢复为默认值）。
@@ -305,14 +305,14 @@ flowchart LR
 | 桑基图 | `sankey-beta` | 支持 | 节点名称只能用 ASCII（Mermaid 的限制） |
 | 公式 | `$...$`（行内）、`$$...$$`（独立） | 支持 | 用 KaTeX 显示 |
 | Graphviz | ` ```dot `、` ```graphviz `、` ```gv ` | 支持 | 用随附的 Graphviz（WebAssembly）离线绘制。为安全起见，图中的链接和图像会被移除。会超出框的日语和中文标签会缩小以适应 |
-| 3D 模型 | ` ```stl `（ASCII STL） | 支持 | 用随附的 three.js 离线显示。拖动旋转，滚轮缩放。PDF、PNG、HTML 和 Word 中放入当前视角的图片 |
+| 3D 模型 | ` ```stl `（ASCII STL） | 支持 | 用随附的 three.js 离线显示。拖动旋转，滚轮缩放。PDF、PNG、HTML 和 Word 中放入当前视角的图片。在实体名称后写 `#RRGGBB` 即为该部件的颜色，写一个没有面的 `solid background #RRGGBB` 即为背景色 |
 | 地图 | ` ```geojson `、` ```topojson ` | 支持 | 点、线和面先离线绘制在随附的简单世界地图（Natural Earth）上。默认情况下，通知栏会询问是否加载详细地图；按“加载详细地图”后，只为该文档加载带有道路和地名的 OpenStreetMap 地图（地图服务器会得知显示的地点和你的 IP 地址；保存的 HTML 中不包含）。“设置”→“互联网”→“详细地图（OpenStreetMap）”中也可以选择“始终加载”和“不加载”。GitHub 的 `marker-color`、`stroke` 和 `fill` 样式可以使用 |
 | PlantUML | ` ```plantuml ` | 不支持 | 显示为代码块。绘制它需要电脑上有 Java 和 PlantUML，或把文档发送到外部的 PlantUML 服务器，这违背了把文档留在电脑中的原则 |
 | nomnoml | ` ```nomnoml ` | 不支持 | 显示为代码块 |
 
 标为“支持”的都已用测试文档验证。其他 Mermaid 图表（如 `block-beta`）如果 Mermaid 11.17.2 支持也会显示，但尚未检查。
 
-[samples/diagram-test.md](./samples/diagram-test.md)、[samples/diagram-test.en.md](./samples/diagram-test.en.md) 和 [samples/diagram-test.zh-CN.md](./samples/diagram-test.zh-CN.md) 这三个文档专为在 mdEditor 中查看而编写，不要求与 GitHub 兼容（Identity 8-9 (7)）。它们用来原样展示 mdEditor 能画和不能画的图表，因此包含 GitHub 无法绘制的写法（Graphviz、PlantUML），显示效果在 mdEditor 中检查（Identity 8-9 (8)、1-4 (1)）。每个文档的开头都写明了这一点。本 README 的其他说明、CHANGELOG.md、PRIVACY.md 和其他示例只使用 GitHub 能显示的写法。
+[samples/diagram-test.md](./samples/diagram-test.md)、[samples/diagram-test.en.md](./samples/diagram-test.en.md) 和 [samples/diagram-test.zh-CN.md](./samples/diagram-test.zh-CN.md) 这三个文档，以及介绍功能的 [samples/key-features.md](./samples/key-features.md)、[samples/key-features.en.md](./samples/key-features.en.md) 和 [samples/key-features.zh-CN.md](./samples/key-features.zh-CN.md)，都专为在 mdEditor 中查看而编写，不要求与 GitHub 兼容（Identity 8-9 (7)）。它们用来原样展示 mdEditor 能画和不能画的图表，因此包含 GitHub 无法绘制的写法（Graphviz、PlantUML），显示效果在 mdEditor 中检查（Identity 8-9 (8)、1-4 (1)）。每个文档的开头都写明了这一点。本 README 的其他说明、CHANGELOG.md、PRIVACY.md 和其他示例只使用 GitHub 能显示的写法。
 
 ## 与 GitHub 相同的写法
 
