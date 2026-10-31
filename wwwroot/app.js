@@ -1854,7 +1854,10 @@
   // の**「…」** stay as text, here and on GitHub alike. A pair of ** (or ***) on one line that
   // the parser left as text becomes <strong>…</strong>, which has no such rule. A pair that
   // would work, or one with a space just inside it (a ** b ** c), is not bold that went wrong.
+  // Marks the parser paired are looked at too: in **“光年”**不是…**距离** the broken pair's
+  // closing ** opens bold with the next pair's opening one, so only the first and last are text.
   const brokenEmphasisSkipped = new Set([...lostMathSkipped, "Escape"]);
+  brokenEmphasisSkipped.delete("EmphasisMark");
   const findBrokenEmphasis = (text) => {
     const skipped = [];
     markdownLanguage.parser.parse(text).iterate({
@@ -1881,8 +1884,8 @@
       const after = text[shut.to];
       const opens = !mark(inner[0]) || space(before) || mark(before);
       const closes = !mark(inner[inner.length - 1]) || space(after) || mark(after);
-      if (opens && closes) continue;
-      found.push({ from: open.from, to: shut.to, marks });
+      // A pair that works is passed over whole, so its closing ** is not taken to open the next.
+      if (!(opens && closes)) found.push({ from: open.from, to: shut.to, marks });
       i += 1;
     }
     return found;
@@ -2790,9 +2793,15 @@
   };
 
   // Markdown quick reference. Results are fixed markup written here, not user input.
+  // Keys shown under a row's name: a shortcut's id (its current key), or a fixed key with its own label.
+  const helpListKeys = [
+    { key: "Enter", ja: "次の項目", en: "Next item", zh: "下一项" },
+    { key: "Tab / Shift+Tab", ja: "段を下げる・上げる", en: "Indent / outdent", zh: "缩进／取消缩进" }
+  ];
+  const helpPasteLink = { key: "Ctrl+V", ja: "選んだ文字に URL を貼る", en: "Paste a URL on selected text", zh: "在选中的文字上粘贴 URL" };
   const helpItems = [
     { group: { ja: "基本", en: "Basics", zh: "基本" } },
-    { block: true,
+    { block: true, keys: ["sectionNumbers"],
       ja: ["見出し", "# 見出し1\n## 見出し2\n### 見出し3", '<span class="help-h1">見出し1</span><span class="help-h2">見出し2</span><span class="help-h3">見出し3</span>'],
       en: ["Headings", "# Heading 1\n## Heading 2\n### Heading 3", '<span class="help-h1">Heading 1</span><span class="help-h2">Heading 2</span><span class="help-h3">Heading 3</span>'],
       zh: ["标题", "# 标题1\n## 标题2\n### 标题3", '<span class="help-h1">标题1</span><span class="help-h2">标题2</span><span class="help-h3">标题3</span>'] },
@@ -2801,31 +2810,31 @@
       en: ["Paragraphs", "First paragraph\n\nSecond paragraph", "<p>First paragraph</p><p>Second paragraph</p><small>A blank line starts a new paragraph</small>"],
       zh: ["段落", "第一段\n\n第二段", "<p>第一段</p><p>第二段</p><small>空一行即分成新的段落</small>"] },
     { block: true,
-      ja: ["改行", "1行目\\\n2行目", "<p>1行目<br>2行目</p><small>行末に \\ を付けるか、半角スペースを2つ入れると改行します。何も付けずに改行すると、前の行に続けて表示されます</small>"],
-      en: ["Line break", "First line\\\nSecond line", "<p>First line<br>Second line</p><small>End a line with \\ or two spaces to break it. A plain line break joins the lines in the output</small>"],
-      zh: ["换行", "第一行\\\n第二行", "<p>第一行<br>第二行</p><small>在行末加 \\ 或两个半角空格即可换行。不加任何东西直接换行时，会接在上一行后面显示</small>"] },
-    { ja: ["太字", "**太字**", "<strong>太字</strong>"], en: ["Bold", "**bold**", "<strong>bold</strong>"], zh: ["粗体", "**粗体**", "<strong>粗体</strong>"] },
-    { ja: ["斜体", "*斜体*", "<em>斜体</em>"], en: ["Italic", "*italic*", "<em>italic</em>"], zh: ["斜体", "*斜体*", "<em>斜体</em>"] },
+      ja: ["改行", "1行目\\\n2行目", "<p>1行目<br>2行目</p><small>行末に \\ を付けるか、半角スペースを2つ入れると改行します。何も付けずに改行しても mdEditor では改行して表示しますが、GitHub などでは前の行に続きます（「設定」の「Markdown の書き方」で同じにできます）</small>"],
+      en: ["Line break", "First line\\\nSecond line", "<p>First line<br>Second line</p><small>End a line with \\ or two spaces to break it. A plain line break also breaks in mdEditor, but GitHub and others join the lines (Settings > Markdown syntax can do the same)</small>"],
+      zh: ["换行", "第一行\\\n第二行", "<p>第一行<br>第二行</p><small>在行末加 \\ 或两个半角空格即可换行。不加任何东西直接换行时，mdEditor 也会换行显示，但 GitHub 等会接在上一行后面（可在“设置”的“Markdown 写法”中改为相同）</small>"] },
+    { keys: ["bold"], ja: ["太字", "**太字**", "<strong>太字</strong>"], en: ["Bold", "**bold**", "<strong>bold</strong>"], zh: ["粗体", "**粗体**", "<strong>粗体</strong>"] },
+    { keys: ["italic"], ja: ["斜体", "*斜体*", "<em>斜体</em>"], en: ["Italic", "*italic*", "<em>italic</em>"], zh: ["斜体", "*斜体*", "<em>斜体</em>"] },
     { ja: ["取り消し線", "~~取り消し線~~", "<del>取り消し線</del>"], en: ["Strikethrough", "~~strikethrough~~", "<del>strikethrough</del>"], zh: ["删除线", "~~删除线~~", "<del>删除线</del>"] },
     { ja: ["コード（文中）", "`コード`", "<code>コード</code>"], en: ["Inline code", "`code`", "<code>code</code>"], zh: ["行内代码", "`代码`", "<code>代码</code>"] },
-    { ja: ["リンク", "[リンクの文字](https://example.com)", '<span class="help-link">リンクの文字</span>'],
+    { keys: [helpPasteLink], ja: ["リンク", "[リンクの文字](https://example.com)", '<span class="help-link">リンクの文字</span>'],
       en: ["Link", "[link text](https://example.com)", '<span class="help-link">link text</span>'],
       zh: ["链接", "[链接文字](https://example.com)", '<span class="help-link">链接文字</span>'] },
     { ja: ["画像", "![画像の説明](https://example.com/image.png)", "<small>画像が表示されます</small>"],
       en: ["Image", "![image description](https://example.com/image.png)", "<small>The image is shown</small>"],
       zh: ["图像", "![图像说明](https://example.com/image.png)", "<small>会显示图像</small>"] },
-    { block: true,
+    { block: true, keys: ["image"],
       ja: ["画像の大きさと位置", '<p align="center"><img src="https://example.com/image.png" alt="画像の説明" width="50%"></p>',
         "<small>本文の幅の半分の大きさで、中央に表示されます（GitHub と同じ書き方）。画像の行で「画像の調整」を押すか、プレビューの画像を右クリックしても書き換えられます</small>"],
       en: ["Image size and position", '<p align="center"><img src="https://example.com/image.png" alt="image description" width="50%"></p>',
         "<small>Shown at half the text width, centered (written as on GitHub). Adjust image on the image's line, or right-clicking the image in the preview, rewrites it for you</small>"],
       zh: ["图像的大小和位置", '<p align="center"><img src="https://example.com/image.png" alt="图像说明" width="50%"></p>',
         "<small>以正文宽度的一半居中显示（与 GitHub 相同的写法）。在图像所在行按“调整图像”，或在预览中右键单击图像，也可以改写</small>"] },
-    { block: true,
+    { block: true, keys: helpListKeys,
       ja: ["箇条書き", "- 項目1\n- 項目2\n  - 入れ子の項目", "<ul><li>項目1</li><li>項目2<ul><li>入れ子の項目</li></ul></li></ul>"],
       en: ["Bulleted list", "- Item 1\n- Item 2\n  - Nested item", "<ul><li>Item 1</li><li>Item 2<ul><li>Nested item</li></ul></li></ul>"],
       zh: ["无序列表", "- 项目1\n- 项目2\n  - 嵌套项目", "<ul><li>项目1</li><li>项目2<ul><li>嵌套项目</li></ul></li></ul>"] },
-    { block: true,
+    { block: true, keys: helpListKeys,
       ja: ["番号付きリスト", "1. 手順1\n2. 手順2", "<ol><li>手順1</li><li>手順2</li></ol>"],
       en: ["Numbered list", "1. Step 1\n2. Step 2", "<ol><li>Step 1</li><li>Step 2</li></ol>"],
       zh: ["有序列表", "1. 步骤1\n2. 步骤2", "<ol><li>步骤1</li><li>步骤2</li></ol>"] },
@@ -2837,12 +2846,12 @@
       ja: ["コードブロック", "```js\nconsole.log(\"hello\");\n```", "<pre><code>console.log(\"hello\");</code></pre>"],
       en: ["Code block", "```js\nconsole.log(\"hello\");\n```", "<pre><code>console.log(\"hello\");</code></pre>"],
       zh: ["代码块", "```js\nconsole.log(\"hello\");\n```", "<pre><code>console.log(\"hello\");</code></pre>"] },
-    { block: true,
+    { block: true, keys: ["formatTable"],
       ja: ["表", "| 名前 | 数 |\n| --- | ---: |\n| りんご | 3 |", '<table><thead><tr><th>名前</th><th class="help-right">数</th></tr></thead><tbody><tr><td>りんご</td><td class="help-right">3</td></tr></tbody></table>'],
       en: ["Table", "| Name | Qty |\n| --- | ---: |\n| Apple | 3 |", '<table><thead><tr><th>Name</th><th class="help-right">Qty</th></tr></thead><tbody><tr><td>Apple</td><td class="help-right">3</td></tr></tbody></table>'],
       zh: ["表格", "| 名称 | 数量 |\n| --- | ---: |\n| 苹果 | 3 |", '<table><thead><tr><th>名称</th><th class="help-right">数量</th></tr></thead><tbody><tr><td>苹果</td><td class="help-right">3</td></tr></tbody></table>'] },
     { block: true, ja: ["区切り線", "---", "<hr>"], en: ["Horizontal rule", "---", "<hr>"], zh: ["分隔线", "---", "<hr>"] },
-    { block: true,
+    { block: true, keys: helpListKeys,
       ja: ["チェックリスト", "- [x] 済んだこと\n- [ ] これからのこと", '<ul class="help-tasks"><li>☑ 済んだこと</li><li>☐ これからのこと</li></ul>'],
       en: ["Checklist", "- [x] Done\n- [ ] To do", '<ul class="help-tasks"><li>☑ Done</li><li>☐ To do</li></ul>'],
       zh: ["任务列表", "- [x] 已完成\n- [ ] 待完成", '<ul class="help-tasks"><li>☑ 已完成</li><li>☐ 待完成</li></ul>'] },
@@ -3017,6 +3026,19 @@
       const nameCell = document.createElement("th");
       nameCell.scope = "row";
       nameCell.textContent = name;
+      for (const entry of item.keys || []) {
+        const definition = typeof entry === "string" && shortcutDefinitions.find((d) => d.id === entry);
+        const key = definition ? (shortcutSettings.enabled ? shortcutKeys(definition) : "") : entry.key;
+        if (!key) continue;
+        const label = definition ? t("shortcutNames")[entry] : entry[language];
+        const line = document.createElement("small");
+        line.className = "help-key";
+        const kbd = document.createElement("kbd");
+        kbd.textContent = key;
+        line.appendChild(kbd);
+        if (label !== name) line.append(` ${label}`);
+        nameCell.appendChild(line);
+      }
       const syntaxCell = document.createElement("td");
       const pre = document.createElement("pre");
       const code = document.createElement("code");

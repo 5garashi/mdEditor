@@ -585,6 +585,27 @@ body.drop-insert .editor-pane {
   white-space: nowrap;
 }
 
+/* The keys that write a row, under its name. */
+.help-key {
+  display: block;
+  max-width: 13em;
+  margin-top: 4px;
+  font-weight: 400;
+  font-size: 12px;
+  white-space: normal;
+}
+
+/* The key on its own line, so a long label below it wraps under it. */
+.help-key kbd {
+  display: table;
+  margin-bottom: 2px;
+  padding: 0 4px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  font-family: Consolas, "Cascadia Mono", monospace;
+  white-space: nowrap;
+}
+
 .help-table pre {
   margin: 0;
   padding: 6px 8px;
