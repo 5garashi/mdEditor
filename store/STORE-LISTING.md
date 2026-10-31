@@ -8,7 +8,7 @@
 -->
 # Microsoft Store listing / ストア掲載文
 
-Paste each section into the matching Partner Center field. Check the character limits there before submitting.
+Paste each section into the matching Partner Center field. Check the character limits there before submitting. Marks that the text names as written (`\(…\)`, `**`, `$`) are in code spans so this file shows them; copy from the preview, or leave out the backticks, so the Store shows them as plain text.
 
 Since 1.0.16 the listing leads with opening PDF and Word files as Markdown and saving them back as PDF or Word, offline. Say what does not come back from a PDF (column layout, tables without cell borders, scans; figures and math become pictures) wherever PDF import is described, and do not claim exact conversion.
 1.0.16 から、掲載文の先頭は「PDF や Word を Markdown として開き、PDF や Word で渡せる（PC の中だけで）」にしています。PDF の取り込みを書くところには、戻らないもの（段組み・罫線のない表・スキャンした PDF。図と数式は画像になる）を必ず併記し、正確に変換できるとは書きません。
@@ -31,8 +31,8 @@ Open as Markdown
 - Check and fix the result before you share it or paste it into an AI chat.
 
 Markdown from AI chats, shown as meant
-- Open or paste an answer from an AI chat and it shows the way the chat showed it. Math written \(…\) and \[…\], $$…$$ inside a line, and math followed straight by Japanese or Chinese text all show as math.
-- Bold whose ** shows as written (common beside Japanese brackets) and math that lost its $ are found when the document opens and fixed, with a button to put them back.
+- Open or paste an answer from an AI chat and it shows the way the chat showed it. Math written `\(…\)` and `\[…\]`, `$$…$$` inside a line, and math followed straight by Japanese or Chinese text all show as math.
+- Bold whose `**` shows as written (common beside Japanese brackets) and math that lost its `$` are found when the document opens and fixed, with a button to put them back.
 - Citation marks, hidden characters, and other leftovers that AI chats put in copied text are taken out by ready-made fix rules, and rules of your own can fix more.
 - Each line break shows as written, and a check underlines mistakes such as a skipped heading level.
 
@@ -45,7 +45,7 @@ Write and see
 - Type on the left and the preview on the right updates at once. Both sides scroll together.
 - Markdown is colored as you type, and a check underlines mistakes such as a skipped heading level or a link to nowhere.
 - Writing help: Ctrl+B and Ctrl+I for bold and italic, lists that go on when you press Enter, tables lined up in one key, numbered headings, a URL pasted on selected text becomes a link, and suggestions for links and math.
-- Draw flowcharts and Gantt charts (Mermaid), Graphviz diagrams, and formulas (KaTeX) with a few lines of text. Math written the way AI chats write it, \(…\) and \[…\], shows too.
+- Draw flowcharts and Gantt charts (Mermaid), Graphviz diagrams, and formulas (KaTeX) with a few lines of text. Math written the way AI chats write it, `\(…\)` and `\[…\]`, shows too.
 - Turn 3D models (text STL) with the mouse, and draw maps (GeoJSON, TopoJSON) on a simple world map, all offline.
 - Code is colored for about 40 languages, and Contents builds a table of contents from your headings.
 - Reads Markdown the way GitHub does: alerts, front matter, math blocks, emoji short names, collapsible sections, and more. Videos in a document play too.
@@ -73,7 +73,7 @@ Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Des
 - Saved PDFs have page numbers and are tagged for screen readers. Word files without heading styles get headings from text size.
 - Writing help: Markdown is colored as you type. Ctrl+B / Ctrl+I add bold and italic, lists go on with Enter and Tab, Ctrl+Shift+W lines up a table, Ctrl+Shift+N numbers the headings, a URL pasted on selected text makes a link, and links and math commands are suggested.
 - A Markdown check underlines mistakes such as a skipped heading level or a link to nowhere.
-- Markdown from AI chats shows as meant: \(…\) and \[…\] math, bold beside Japanese brackets, and math that lost its $ are fixed on opening, with a button to undo.
+- Markdown from AI chats shows as meant: `\(…\)` and `\[…\]` math, bold beside Japanese brackets, and math that lost its `$` are fixed on opening, with a button to undo.
 - Line breaks in a paragraph show as written (can be turned off).
 - Simplified Chinese, New from clipboard, and about twice as fast to start.
 - 3D models (STL), maps, Graphviz, GitHub-style Markdown (alerts, front matter, collapsible sections, videos), and code colored for about 40 languages.
@@ -86,7 +86,7 @@ Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Des
 - Save as PDF in one click, exactly as the preview looks
 - Save as Word, HTML, PNG, CSV, JSON, text, or a ZIP
 - Live preview beside your text, scrolling together
-- Markdown from AI chats shows as meant: \(…\) math, bold, line breaks
+- Markdown from AI chats shows as meant: `\(…\)` math, bold, line breaks
 - Preview on a second display, following the line you edit
 - Markdown colored as you type, with a check for mistakes
 - Bold, italic, lists, tables, and heading numbers in one key
@@ -111,7 +111,7 @@ Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Des
 **Screenshots (1366 x 768, the Store minimum; English UI) with captions:**
 1. `docs/images/10-pdf-open.en.png` — Open a PDF and it becomes Markdown on your PC: text, headings, lists, tables, and pictures come back. The notice says the conversion is best-effort.
 2. `docs/images/9-pdf.en.png` — One click saves a PDF that looks exactly like the preview: diagrams, tables, math, and colored code included, on A4 or Letter.
-3. `docs/images/11-ai-chat.en.png` — Open an answer from an AI chat and it shows as meant: \(…\) and \[…\] math, bold, and line breaks. The notice tells what was fixed, with a button to put it back.
+3. `docs/images/11-ai-chat.en.png` — Open an answer from an AI chat and it shows as meant: `\(…\)` and `\[…\]` math, bold, and line breaks. The notice tells what was fixed, with a button to put it back.
 4. `docs/images/1-main.en.png` — Type Markdown on the left and the preview on the right updates at once. A 3D model written in STL turns when you drag it.
 5. `docs/images/2-dark.en.png` — Day and night palettes follow Windows, or choose one with the Theme button in Settings. Printing and PDF always use a white page.
 6. `docs/images/3-preview-window.en.png` — Put the preview on a second display to keep writing and reading apart. It scrolls with your editing.
@@ -152,8 +152,8 @@ Markdown として開く
 - 取り込んだ結果は、人に渡す前や AI のチャットに貼る前に、確かめて直せます。
 
 AI のチャットの Markdown を、意図どおりに
-- AI のチャットの回答を開くか貼り付けると、チャットで見たとおりに表示します。\(…\)・\[…\] で書いた数式、行の中の $$…$$、すぐ後に日本語が続く数式も、数式になります。
-- ** がそのまま出てしまう太字（「」などのかっこの隣でよく起きます）や、$ が抜けた数式は、開いたときに見つけて直します（元に戻すボタン付き）。
+- AI のチャットの回答を開くか貼り付けると、チャットで見たとおりに表示します。`\(…\)`・`\[…\]` で書いた数式、行の中の `$$…$$`、すぐ後に日本語が続く数式も、数式になります。
+- `**` がそのまま出てしまう太字（「」などのかっこの隣でよく起きます）や、`$` が抜けた数式は、開いたときに見つけて直します（元に戻すボタン付き）。
 - AI のチャットからコピーした文に残る引用の印・見えない文字などは、初めから用意した「自動修正のルール」で取り除きます。自分でルールを足して、ほかの書き方も直せます。
 - 行ごとの改行は書いたとおりに改行して表示し、見出しの段階の飛びなどの書き間違いには波線を引きます。
 
@@ -166,7 +166,7 @@ PDF や Word で保存する
 - 左に書くと、右のプレビューにすぐ反映されます。両側のスクロールは連動します。
 - 書くそばから Markdown を色分けし、見出しの段階の飛びや行き先のないリンクなどの書き間違いに波線を引きます。
 - 書く手助け: Ctrl+B・Ctrl+I で太字・斜体、Enter でリストの続き、キー 1 つで表を整える・見出しに番号を付ける、選んだ文字に URL を貼るとリンク、リンク先と数式の入力の候補。
-- フローチャートやガントチャート（Mermaid）、Graphviz の図、数式（KaTeX）を、数行のテキストで描けます。AI のチャットが書く \(…\)・\[…\] の数式も表示します。
+- フローチャートやガントチャート（Mermaid）、Graphviz の図、数式（KaTeX）を、数行のテキストで描けます。AI のチャットが書く `\(…\)`・`\[…\]` の数式も表示します。
 - 3D モデル（テキスト形式の STL）はマウスで回して確かめられ、地図（GeoJSON・TopoJSON）は簡単な世界地図の上に描きます。どちらもオフラインで表示します。
 - 約 40 の言語のコードを色分けし、「目次」ボタンで見出しから目次を作れます。
 - GitHub と同じ書き方に対応します（注意書き、フロントマター、数式のコードブロック、絵文字の短縮名、折りたたみなど）。文書の中の動画も再生できます。
@@ -194,7 +194,7 @@ PDF や Word で保存する
 - 保存した PDF にページ番号が入り、画面読み上げ用のタグも付きます。見出しのスタイルがない Word 文書は、文字の大きさから見出しを推測します。
 - 書く手助け: 書くそばから Markdown を色分けします。Ctrl+B / Ctrl+I で太字・斜体、Enter と Tab でリストの続きと段、Ctrl+Shift+W で表を整え、Ctrl+Shift+N で見出しに番号を付けます。選んだ文字に URL を貼るとリンクになり、リンク先と数式の命令を候補に出します。
 - 書き方の確認: 見出しの段階の飛びや行き先のないリンクなどの書き間違いに、波線を引きます。
-- AI のチャットの Markdown を意図どおりに表示します。\(…\)・\[…\] の数式を表示し、かっこの隣で ** が出てしまう太字や $ が抜けた数式は、開いたときに直します（元に戻すボタン付き）。コピーした文に残る引用の印なども取り除きます。
+- AI のチャットの Markdown を意図どおりに表示します。`\(…\)`・`\[…\]` の数式を表示し、かっこの隣で `**` が出てしまう太字や `$` が抜けた数式は、開いたときに直します（元に戻すボタン付き）。コピーした文に残る引用の印なども取り除きます。
 - 段落の中の改行を、書いたとおりに改行して表示します（オフにすると GitHub と同じ）。
 - 簡体字中国語、「クリップボードから新規作成」に対応し、起動がおよそ 2 倍速くなりました。
 - 3D モデル（STL）・地図・Graphviz の図、GitHub と同じ書き方（注意書き、フロントマター、折りたたみ、動画）、約 40 の言語のコードの色分け（PDF・Word にも残る）に対応しました。
@@ -207,7 +207,7 @@ PDF や Word で保存する
 - ワンクリックで PDF に保存。プレビューと同じ見た目のまま
 - Word・HTML・PNG・CSV・JSON・テキスト・ZIP にも保存
 - 書きながら横で仕上がりを確認。スクロールも連動
-- AI のチャットの Markdown（\(…\) の数式・太字・改行）も意図どおり
+- AI のチャットの Markdown（`\(…\)` の数式・太字・改行）も意図どおり
 - プレビューを 2 台目のディスプレイに。編集中の行を表示
 - 書くそばから色分けし、書き間違いに波線を引く
 - 太字・斜体・リスト・表・見出しの番号をキー 1 つで
@@ -228,7 +228,7 @@ PDF や Word で保存する
 **スクリーンショット（1366 x 768。Store の最小の大きさ。日本語の画面）と説明文:**
 1. `docs/images/10-pdf-open.ja.png` — PDF を開くと、PC の中で Markdown になります。文字・見出し・箇条書き・表・画像が戻ります。できる範囲での変換であることを、お知らせ欄に示します。
 2. `docs/images/9-pdf.ja.png` — ワンクリックで、プレビューと同じ見た目の PDF に保存します。図・表・数式・色分けしたコードもそのまま入り、用紙は A4 か Letter です。
-3. `docs/images/11-ai-chat.ja.png` — AI のチャットの回答を開くと、意図どおりに表示します。\(…\)・\[…\] の数式、かっこの隣の太字、行ごとの改行。直したことはお知らせ欄に出て、元に戻すこともできます。
+3. `docs/images/11-ai-chat.ja.png` — AI のチャットの回答を開くと、意図どおりに表示します。`\(…\)`・`\[…\]` の数式、かっこの隣の太字、行ごとの改行。直したことはお知らせ欄に出て、元に戻すこともできます。
 4. `docs/images/1-main.ja.png` — 左に Markdown を書くと、右のプレビューにすぐ反映されます。STL で書いた 3D モデルも、ドラッグで回せます。
 5. `docs/images/2-dark.ja.png` — 昼と夜の配色は Windows の設定に合わせて切り替わり、「設定」の「表示」ボタンでも選べます。印刷と PDF は常に白地です。
 6. `docs/images/3-preview-window.ja.png` — プレビューを別のウィンドウにして 2 台目のディスプレイへ。書く画面と見る画面を分けられ、スクロールは編集と連動します。
@@ -255,8 +255,8 @@ PDF や Word で保存する
 - 在分享给别人或粘贴到 AI 聊天之前，可以先检查并修改取出的结果。
 
 按原意显示 AI 聊天的 Markdown
-- 打开或粘贴 AI 聊天的回答，会按聊天中看到的样子显示。\(…\)、\[…\] 写法的公式、行内的 $$…$$，以及后面紧跟中文或日文的公式，都会显示为公式。
-- ** 原样显示出来的粗体（常见于中文或日文括号旁边）和丢失了 $ 的公式，会在打开文档时找出并修正（带撤销按钮）。
+- 打开或粘贴 AI 聊天的回答，会按聊天中看到的样子显示。`\(…\)`、`\[…\]` 写法的公式、行内的 `$$…$$`，以及后面紧跟中文或日文的公式，都会显示为公式。
+- `**` 原样显示出来的粗体（常见于中文或日文括号旁边）和丢失了 `$` 的公式，会在打开文档时找出并修正（带撤销按钮）。
 - 从 AI 聊天复制的文字中残留的引用标记、不可见字符等，会由预先准备的“自动修正规则”去除。也可以自己添加规则，修正其他写法。
 - 每一行的换行按原样显示，标题层级跳跃等写法错误会加上波浪线。
 
@@ -269,7 +269,7 @@ PDF や Word で保存する
 - 在左边输入，右边的预览立即更新。两边同步滚动。
 - 输入时 Markdown 会着色显示，标题层级跳跃、没有目标的链接等写法错误会加上波浪线。
 - 写作辅助：Ctrl+B、Ctrl+I 设置粗体和斜体，按 Enter 接续列表，一个键整理表格、给标题编号，在选中的文字上粘贴 URL 即成为链接，链接目标和公式命令会给出输入候选。
-- 用几行文字就能画出流程图和甘特图（Mermaid）、Graphviz 图表和公式（KaTeX）。AI 聊天中 \(…\)、\[…\] 写法的公式也能显示。
+- 用几行文字就能画出流程图和甘特图（Mermaid）、Graphviz 图表和公式（KaTeX）。AI 聊天中 `\(…\)`、`\[…\]` 写法的公式也能显示。
 - 用鼠标旋转 3D 模型（文本格式的 STL），在简单的世界地图上绘制地图（GeoJSON、TopoJSON），全部离线完成。
 - 约 40 种语言的代码会着色显示，“目录”可以根据标题生成目录。
 - 支持与 GitHub 相同的写法：提示框、前置元数据、公式代码块、表情符号短名称、折叠等。文档中的视频也可以播放。
@@ -297,7 +297,7 @@ PDF や Word で保存する
 - 保存的 PDF 带有页码和供屏幕阅读器使用的标签。没有标题样式的 Word 文档，会根据文字大小推测标题。
 - 写作辅助：输入时 Markdown 会着色显示。Ctrl+B / Ctrl+I 设置粗体和斜体，Enter 和 Tab 接续列表并调整层级，Ctrl+Shift+W 整理表格，Ctrl+Shift+N 给标题编号。在选中的文字上粘贴 URL 即成为链接，链接目标和公式命令会给出候选。
 - 写法检查：标题层级跳跃、没有目标的链接等错误会加上波浪线。
-- 按原意显示 AI 聊天的 Markdown：\(…\)、\[…\] 写法的公式会显示为公式，括号旁 ** 原样显示的粗体和丢失了 $ 的公式会在打开时修正（带撤销按钮），复制文字中残留的引用标记等也会去除。
+- 按原意显示 AI 聊天的 Markdown：`\(…\)`、`\[…\]` 写法的公式会显示为公式，括号旁 `**` 原样显示的粗体和丢失了 `$` 的公式会在打开时修正（带撤销按钮），复制文字中残留的引用标记等也会去除。
 - 段落中的换行按原样换行显示（关闭后与 GitHub 相同）。
 - 支持简体中文和“从剪贴板新建”，启动速度提高约一倍。
 - 支持 3D 模型（STL）、地图、Graphviz 图表、与 GitHub 相同的写法（提示框、前置元数据、折叠、视频），约 40 种语言的代码着色（PDF 和 Word 中也保留）。
@@ -310,7 +310,7 @@ PDF や Word で保存する
 - 一键保存为 PDF，外观与预览完全相同
 - 也可保存为 Word、HTML、PNG、CSV、JSON、文本或 ZIP
 - 边写边在旁边查看效果，滚动同步
-- AI 聊天的 Markdown（\(…\) 公式、粗体、换行）按原意显示
+- AI 聊天的 Markdown（`\(…\)` 公式、粗体、换行）按原意显示
 - 预览可放到第二个显示器上，跟随正在编辑的行
 - 输入时着色显示，写法错误加上波浪线
 - 一个键设置粗体、斜体、列表、表格和标题编号
@@ -331,7 +331,7 @@ PDF や Word で保存する
 **屏幕截图（1366 x 768，Store 的最小尺寸；简体中文界面）及说明:**
 1. `docs/images/10-pdf-open.zh-CN.png` — 打开 PDF，就会在电脑中变成 Markdown。文字、标题、列表、表格和图片会取出，通知栏会说明这是尽力而为的转换。
 2. `docs/images/9-pdf.zh-CN.png` — 一键保存与预览外观相同的 PDF。图表、表格、公式和着色的代码都会原样放入，纸张为 A4 或 Letter。
-3. `docs/images/11-ai-chat.zh-CN.png` — 打开 AI 聊天的回答，会按原意显示：\(…\)、\[…\] 公式、括号旁的粗体和每行的换行。修正的内容会显示在通知栏中，也可以撤销。
+3. `docs/images/11-ai-chat.zh-CN.png` — 打开 AI 聊天的回答，会按原意显示：`\(…\)`、`\[…\]` 公式、括号旁的粗体和每行的换行。修正的内容会显示在通知栏中，也可以撤销。
 4. `docs/images/1-main.zh-CN.png` — 在左边写 Markdown，右边的预览立即更新。用 STL 写的 3D 模型也可以拖动旋转。
 5. `docs/images/2-dark.zh-CN.png` — 白天和夜间的配色跟随 Windows 的设置，也可以在“设置”中用“显示”按钮选择。打印和 PDF 始终使用白色页面。
 6. `docs/images/3-preview-window.zh-CN.png` — 把预览放到第二个显示器上，写作和阅读分开进行。预览会跟随编辑滚动。
@@ -345,7 +345,7 @@ PDF や Word で保存する
 - Reserve the name in Partner Center and confirm it is available. Use the same spelling ("5garashi.com Design Office") in the Store, the app, and the website.
 - Replace the privacy or support links if the final URLs differ. The company URL in the app is `https://www.5garashi.com/`.
 - "Worldwide" distribution and "all languages" are different settings. The app supports Japanese, English, and Simplified Chinese (1.0.15) only. Since 1.0.15 the package declares ja-JP, en-US, and zh-CN, so Partner Center expects a listing in each of the three languages; the zh-CN text and its screenshots are above. The Chinese text has not been reviewed by a native speaker.
-- The screenshots are in `docs/images/` (1366 x 768 window, 90% zoom), in Japanese (`.ja`), English (`.en`), and Simplified Chinese (`.zh-CN`). All were retaken with 1.0.18 on 2026-10-31 (the editor colors Markdown, F1 shows the keys) with the scratch kit take-shots.ps1, make_pdfs.py, take-import18.ps1, compose_pdf.py, and compose_import.py; 1-main shows the 3D model of samples/diagram-test (21-1). `10-pdf-open` (listed first to lead with PDF import) puts page 1 of a short report PDF beside the window that opened it as Markdown; the report was written for the screenshot and saved as PDF by mdEditor, with numbered lists. `9-pdf` (listed second) puts the window beside the first page of the PDF it saved, with its page number. `11-ai-chat` (listed third) opens an AI-chat-style answer written for the screenshot (extra\7-ai-chat.* in the kit); the default fix rules fix its bold and offer to rewrite its \(…\) math, so the notice shows both. `7-ai-chat` is saved as `11-ai-chat`, and `7-3d-model` is no longer listed (1-main shows the same model) but stays in the READMEs. The window shots are 1352 x 761 (the visible frame of a 1366 x 768 window) and `5-save-as` is a crop, so upload the copies in `artifacts/store-shots/` instead: each sits on the 1366 x 768 ground of 3, 9, and 10 (5-save-as at 1.5 times). Upload the screenshots in the listed order; ten is the Store maximum. Retake them when the screen changes.
+- The screenshots are in `docs/images/` (1366 x 768 window, 90% zoom), in Japanese (`.ja`), English (`.en`), and Simplified Chinese (`.zh-CN`). All were retaken with 1.0.18 on 2026-10-31 (the editor colors Markdown, F1 shows the keys) with the scratch kit take-shots.ps1, make_pdfs.py, take-import18.ps1, compose_pdf.py, and compose_import.py; 1-main shows the 3D model of samples/diagram-test (21-1). `10-pdf-open` (listed first to lead with PDF import) puts page 1 of a short report PDF beside the window that opened it as Markdown; the report was written for the screenshot and saved as PDF by mdEditor, with numbered lists. `9-pdf` (listed second) puts the window beside the first page of the PDF it saved, with its page number. `11-ai-chat` (listed third) opens an AI-chat-style answer written for the screenshot (extra\7-ai-chat.* in the kit); the default fix rules fix its bold and offer to rewrite its `\(…\)` math, so the notice shows both. `7-ai-chat` is saved as `11-ai-chat`, and `7-3d-model` is no longer listed (1-main shows the same model) but stays in the READMEs. The window shots are 1352 x 761 (the visible frame of a 1366 x 768 window) and `5-save-as` is a crop, so upload the copies in `artifacts/store-shots/` instead: each sits on the 1366 x 768 ground of 3, 9, and 10 (5-save-as at 1.5 times). Upload the screenshots in the listed order; ten is the Store maximum. Retake them when the screen changes.
 - The map screenshot (`8-map`, listed tenth) shows OpenStreetMap map tiles. Keep the credit "© OpenStreetMap contributors" visible; do not crop it out.
   地図のスクリーンショット（`8-map`、一覧の 10 番目）には OpenStreetMap の地図が写っています。右下の「© OpenStreetMap contributors」を切り取らないでください。
 - Partner Center limits: What's new 1,500 characters, each feature 200 characters (up to 20), each screenshot caption 200 characters (up to 10 screenshots).
