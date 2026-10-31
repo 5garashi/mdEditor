@@ -19,6 +19,7 @@ using System.Text.Json;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Ganss.Xss;
 using Markdig;
@@ -37,15 +38,57 @@ public partial class MainWindow : Window
 {
     private readonly string? _initialPath;
     private readonly string? _initialAnchor;
+    // Started with --paste: the clipboard goes into the new document.
+    private readonly bool _initialPaste;
     // "Closer to GitHub" (Settings > Markdown) leaves out mdEditor's own syntax.
     private bool _nearGitHub = LoadSetting("NearGitHub") == "on";
-    private MarkdownPipeline _markdownPipeline = MarkdownPipelines.Build(LoadSetting("NearGitHub") == "on");
+    // With it, whether the other display settings follow GitHub too (line breaks in paragraphs
+    // and \(x\) math are then not used) or are used as they are (the default).
+    private bool _nearGitHubAll = LoadSetting("NearGitHubAll") == "on";
+    // Page numbers ("2 / 5") at the foot of each PDF page (Settings > Export), on by default.
+    private bool _pdfPageNumbers = LoadSetting("PdfPageNumbers") != "off";
+    // Each line break in a paragraph shown as a line break (Settings > Markdown), on by default.
+    private bool _lineBreaks = LoadSetting("LineBreaks") != "off";
+    // How many line breaks in paragraphs the last preview had, for the notice on opening.
+    private int _softBreaks;
+    // PDF import (Settings): text around a figure in its picture ("picture") or kept as text
+    // ("text"), alignment as HTML, and pages that cannot be read as pictures of themselves.
+    private string _pdfFigureText = LoadSetting("PdfFigureText") == "text" ? "text" : "picture";
+    private bool _pdfAlign = LoadSetting("PdfAlign") != "off";
+    private bool _pdfPagePictures = LoadSetting("PdfPagePictures") != "off";
+    // Tables as Markdown tables ("text", the default) or as pictures ("picture").
+    private string _pdfTables = LoadSetting("PdfTables") == "picture" ? "picture" : "text";
+    // What the sharing ZIP takes in besides the document (Settings): the files in its
+    // name_files folder only ("folder"), also linked files elsewhere on the PC ("local",
+    // the default), or also linked files on the internet ("all"); see ExportZipAsync.
+    private string _zipLinks = LoadSetting("ZipLinks") is "folder" or "all" ? LoadSetting("ZipLinks")! : "local";
+    // The last PDF opened, its Markdown, and which way its figures' text went, for reopening
+    // it the other way from the notice (_pdfFigureTextOnce, for that one opening).
+    private string? _lastPdf;
+    private string? _lastPdfMarkdown;
+    private bool _lastPdfInPicture;
+    private bool _lastPdfTablesAsPictures;
+    private bool? _pdfFigureTextOnce;
+    private bool? _pdfTablesOnce;
+    private MarkdownPipeline _markdownPipeline = BuildPipeline(
+        LoadSetting("NearGitHub") == "on", LoadSetting("NearGitHubAll") == "on", LoadSetting("LineBreaks") != "off");
     private readonly HtmlSanitizer _htmlSanitizer = new();
     private readonly DispatcherTimer _previewTimer = new()
     {
         Interval = TimeSpan.FromMilliseconds(200)
     };
     private const string DocumentHost = "document.mdeditor.local";
+    // The pages of the PDF the document was opened from, drawn by PDFium when the page asks
+    // for them (https://original.mdeditor.local/{token}/page-{n}.png?w={pixels}), to show the
+    // original in place of the editor. The token changes with each PDF opened.
+    private const string OriginalHost = "original.mdeditor.local";
+    private string? _originalPdf;
+    private string _originalToken = string.Empty;
+    private readonly Dictionary<(int Page, int Pixels), byte[]> _originalPages = [];
+    // The pictures inside an e-mail (cid:), served at .../{token}/cid/{n} for its original.
+    private List<(string Type, byte[] Data)> _originalParts = [];
+    // What "Open in browser" opens: the HTML file shown as the original, or the web page's address.
+    private string? _originalBrowserTarget;
     private static readonly UTF8Encoding Utf8NoBom = new(false);
     private string _text = string.Empty;
     private string? _filePath;
@@ -227,11 +270,61 @@ public partial class MainWindow : Window
     [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
     private static extern int SHFileOperation(ref ShFileOperationInfo operation);
 
-    public MainWindow(string? initialPath, string? initialAnchor = null)
+    [DllImport("user32.dll")]
+    private static extern IntPtr GetForegroundWindow();
+
+    [DllImport("user32.dll")]
+    private static extern uint GetWindowThreadProcessId(IntPtr hwnd, IntPtr processId);
+
+    [DllImport("kernel32.dll")]
+    private static extern uint GetCurrentThreadId();
+
+    [DllImport("user32.dll")]
+    private static extern bool AttachThreadInput(uint thread, uint toThread, bool attach);
+
+    [DllImport("user32.dll")]
+    private static extern bool SetForegroundWindow(IntPtr hwnd);
+
+    // Brings a window to the front before it asks or tells something. A file dropped from
+    // File Explorer leaves Explorer the foreground window (the drop itself goes to
+    // WebView2's process), and Windows then keeps this app's message boxes behind it.
+    // Joining the foreground window's input for a moment lets this window take the front.
+    private static void BringToFront(Window window)
+    {
+        if (window.WindowState == WindowState.Minimized)
+        {
+            window.WindowState = WindowState.Normal;
+        }
+
+        if (window.Activate() && window.IsActive)
+        {
+            return;
+        }
+
+        var hwnd = new WindowInteropHelper(window).Handle;
+        var foreground = GetWindowThreadProcessId(GetForegroundWindow(), IntPtr.Zero);
+        var current = GetCurrentThreadId();
+        var attached = foreground != 0 && foreground != current && AttachThreadInput(current, foreground, true);
+        try
+        {
+            SetForegroundWindow(hwnd);
+            window.Activate();
+        }
+        finally
+        {
+            if (attached)
+            {
+                AttachThreadInput(current, foreground, false);
+            }
+        }
+    }
+
+    public MainWindow(string? initialPath, string? initialAnchor = null, bool paste = false)
     {
         InitializeComponent();
         _initialPath = initialPath;
         _initialAnchor = initialAnchor;
+        _initialPaste = paste;
         ApplyTheme();
         SourceInitialized += (_, _) => ApplyTheme();
         SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
@@ -330,6 +423,10 @@ public partial class MainWindow : Window
         }
 
         EditorWebView.CoreWebView2.Settings.AreDevToolsEnabled = false;
+        // The page only ever loads the app's own files (mdeditor.local): web links open in
+        // the browser and internet images go through the app's own client. The SmartScreen
+        // check of that address held up every launch by about 2 seconds.
+        EditorWebView.CoreWebView2.Settings.IsReputationCheckingRequired = false;
         // Zoom (Ctrl + wheel, Ctrl + plus/minus, or the settings dialog) is kept between launches.
         EditorWebView.ZoomFactor = LoadZoom();
         EditorWebView.ZoomFactorChanged += (_, _) => OnZoomChanged();
@@ -361,9 +458,8 @@ public partial class MainWindow : Window
             case "ready":
                 _pageReady = true;
                 Strings.Language = Strings.ForcedLanguage
-                    ?? (root.TryGetProperty("lang", out var lang) && lang.GetString() == "en"
-                        ? "en"
-                        : "ja");
+                    ?? (root.TryGetProperty("lang", out var lang) ? Strings.Normalize(lang.GetString()) : null)
+                    ?? "ja";
                 if (Strings.ForcedLanguage is not null)
                 {
                     SendToPage(new { type = "language", lang = Strings.ForcedLanguage });
@@ -373,9 +469,15 @@ public partial class MainWindow : Window
                 SendPaper();
                 SendZoom();
                 SendToPage(new { type = "autoBackup", enabled = _autoBackup });
-                SendToPage(new { type = "nearGitHub", enabled = _nearGitHub });
+                SendToPage(new { type = "nearGitHub", enabled = _nearGitHub, all = _nearGitHubAll });
+                SendToPage(new { type = "lineBreaks", enabled = _lineBreaks });
+                SendToPage(new { type = "pdfPageNumbers", enabled = _pdfPageNumbers });
+                SendPdfOptions();
+                SendToPage(new { type = "zipLinks", value = _zipLinks });
                 SendToPage(new { type = "appInfo", version = AppVersion });
                 SendToPage(new { type = "externalImages", value = _externalImages });
+                // Before any document, so the rules apply to the first one opened.
+                SendToPage(new { type = "fixRules", json = FixRules.Read(FixRules.FilePath), exists = File.Exists(FixRules.FilePath) });
                 if (await OfferRecoveryAsync())
                 {
                     // The recovered document is shown instead of the file passed at start.
@@ -396,6 +498,10 @@ public partial class MainWindow : Window
                 {
                     SendDocumentInfo();
                     SendPreview();
+                    if (_initialPaste)
+                    {
+                        await PasteClipboardAsync();
+                    }
                 }
 
                 if (LoadSetting("PreviewDetached") == "on")
@@ -408,10 +514,75 @@ public partial class MainWindow : Window
                 SaveSetting("Theme", _theme);
                 ApplyTheme();
                 break;
+            case "setPdfFigureText":
+                _pdfFigureText = root.GetProperty("value").GetString() == "text" ? "text" : "picture";
+                SaveSetting("PdfFigureText", _pdfFigureText);
+                break;
+            case "setPdfTables":
+                _pdfTables = root.GetProperty("value").GetString() == "picture" ? "picture" : "text";
+                SaveSetting("PdfTables", _pdfTables);
+                break;
+            case "setPdfAlign":
+                _pdfAlign = root.GetProperty("enabled").GetBoolean();
+                SaveSetting("PdfAlign", _pdfAlign ? "on" : "off");
+                break;
+            case "setPdfPagePictures":
+                _pdfPagePictures = root.GetProperty("enabled").GetBoolean();
+                SaveSetting("PdfPagePictures", _pdfPagePictures ? "on" : "off");
+                break;
+            case "setZipLinks":
+                _zipLinks = root.GetProperty("value").GetString() is "folder" or "all" ? root.GetProperty("value").GetString()! : "local";
+                SaveSetting("ZipLinks", _zipLinks);
+                break;
+            case "resetSettings":
+                ResetSettings();
+                break;
+            case "saveFixRules":
+                WriteFixRules(FixRules.FilePath, root.GetProperty("json").GetString() ?? "{}", "自動修正のルールを保存できませんでした。");
+                break;
+            case "exportFixRules":
+                ExportFixRules(root.GetProperty("json").GetString() ?? "{}");
+                break;
+            case "importFixRules":
+                ImportFixRules();
+                break;
+            case "openPdfOptionsFile":
+                OpenPdfOptionsFile();
+                break;
+            case "openInBrowser":
+                OpenOriginalInBrowser();
+                break;
+            case "reopenPdf":
+                await ReopenPdfAsync(root.TryGetProperty("what", out var what) && what.GetString() == "tables");
+                break;
+            case "checkLinks":
+                SendToPage(new
+                {
+                    type = "missingLinks",
+                    id = root.GetProperty("id").GetInt32(),
+                    targets = MissingLinkTargets(root.GetProperty("targets").EnumerateArray().Select(item => item.GetString() ?? string.Empty))
+                });
+                break;
             case "setNearGitHub":
                 _nearGitHub = root.GetProperty("enabled").GetBoolean();
                 SaveSetting("NearGitHub", _nearGitHub ? "on" : "off");
-                _markdownPipeline = MarkdownPipelines.Build(_nearGitHub);
+                _markdownPipeline = BuildPipeline(_nearGitHub, _nearGitHubAll, _lineBreaks);
+                SendPreview();
+                break;
+            case "setNearGitHubAll":
+                _nearGitHubAll = root.GetProperty("enabled").GetBoolean();
+                SaveSetting("NearGitHubAll", _nearGitHubAll ? "on" : "off");
+                _markdownPipeline = BuildPipeline(_nearGitHub, _nearGitHubAll, _lineBreaks);
+                SendPreview();
+                break;
+            case "setPdfPageNumbers":
+                _pdfPageNumbers = root.GetProperty("enabled").GetBoolean();
+                SaveSetting("PdfPageNumbers", _pdfPageNumbers ? "on" : "off");
+                break;
+            case "setLineBreaks":
+                _lineBreaks = root.GetProperty("enabled").GetBoolean();
+                SaveSetting("LineBreaks", _lineBreaks ? "on" : "off");
+                _markdownPipeline = BuildPipeline(_nearGitHub, _nearGitHubAll, _lineBreaks);
                 SendPreview();
                 break;
             case "setAutoBackup":
@@ -445,7 +616,7 @@ public partial class MainWindow : Window
                 SetSaveEncoding(root.GetProperty("encoding").GetString());
                 break;
             case "setLanguage":
-                Strings.Language = root.GetProperty("lang").GetString() == "en" ? "en" : "ja";
+                Strings.Language = Strings.Normalize(root.GetProperty("lang").GetString()) ?? "ja";
                 SendDocumentInfo();
                 SendDiscardedState();
                 UpdatePreviewWindowTitle();
@@ -456,12 +627,21 @@ public partial class MainWindow : Window
             case "restoreDiscarded":
                 await RestoreDiscardedAsync();
                 break;
+            case "listFiles":
+                SendToPage(new { type = "fileList", files = DocumentFolderFiles() });
+                break;
             case "toc":
                 SendToPage(new { type = "tocText", text = TableOfContents.Build(_text, _markdownPipeline) });
                 break;
             case "openSample":
                 await OpenSampleAsync(root.GetProperty("text").GetString(),
                     root.TryGetProperty("name", out var sampleName) ? sampleName.GetString() : null);
+                break;
+            case "getPasteHotkey":
+                SendPasteHotkey();
+                break;
+            case "setPasteHotkey":
+                SetPasteHotkey(root.TryGetProperty("key", out var pasteKey) ? pasteKey.GetString() : null);
                 break;
             case "pasteImage":
                 var pastedType = root.TryGetProperty("mime", out var mime) ? mime.GetString() : null;
@@ -754,8 +934,10 @@ public partial class MainWindow : Window
     // On the editor, dropped files go in at the cursor: images and videos as
     // pictures, files mdEditor opens as their content (converted as Open does),
     // and other files as links. Anywhere else, one file mdEditor opens is opened.
-    private async Task HandleDropAsync(CoreWebView2WebMessageReceivedEventArgs e, bool onEditor)
+    private async Task HandleDropAsync(CoreWebView2WebMessageReceivedEventArgs e, bool onEditor, Window? target = null)
     {
+        // Questions and notices about the drop come up in front, over File Explorer.
+        BringToFront(target ?? this);
         var paths = (e.AdditionalObjects ?? []).OfType<CoreWebView2File>().Select(file => file.Path).ToList();
         if (paths.Count > 0 && !paths.Any(Directory.Exists))
         {
@@ -787,7 +969,7 @@ public partial class MainWindow : Window
         }
 
         MessageBox.Show(
-            Strings.Tr("開けるファイル（.md、.txt、.html、.docx、.eml、.csv、.tsv、.json、.xml、.ipynb、画像、動画）は、1つだけドロップしてください。編集画面にドロップすると、ファイルの中身・画像・動画・リンクを文書に入れます。フォルダーはドロップできません。"),
+            Strings.Tr("開けるファイル（.md、.txt、.html、.docx、.pdf、.eml、.csv、.tsv、.json、.xml、.ipynb、画像、動画）は、1つだけドロップしてください。編集画面にドロップすると、ファイルの中身・画像・動画・リンクを文書に入れます。フォルダーはドロップできません。"),
             "mdEditor",
             MessageBoxButton.OK,
             MessageBoxImage.Information);
@@ -796,12 +978,19 @@ public partial class MainWindow : Window
     // Files that open as a document of their own (images and videos open too, see IsMediaPath).
     private static bool IsDocumentPath(string path) =>
         Path.GetExtension(path).ToLowerInvariant() is ".md" or ".markdown" or ".txt" or ".html" or ".htm" or ".docx"
-            or ".eml" or ".csv" or ".tsv" or ".json" or ".xml" or ".ipynb";
+            or ".eml" or ".csv" or ".tsv" or ".json" or ".xml" or ".ipynb" or ".pdf";
+
+    private static bool IsPdfPath(string path) =>
+        string.Equals(Path.GetExtension(path), ".pdf", StringComparison.OrdinalIgnoreCase);
+
+    // Dropped on the editor, a file's content goes in, except a PDF: it is usually sent
+    // along as it is, so it goes into name_files and in as a link, as before.
+    private static bool InsertsContent(string path) => IsDocumentPath(path) && !IsPdfPath(path);
 
     private const string OpenFilter =
-        "開けるファイル|*.md;*.markdown;*.txt;*.html;*.htm;*.docx;*.eml;*.csv;*.tsv;*.json;*.xml;*.ipynb;*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp;*.mp4;*.m4v;*.webm;*.ogv;*.mov"
+        "開けるファイル|*.md;*.markdown;*.txt;*.html;*.htm;*.docx;*.eml;*.csv;*.tsv;*.json;*.xml;*.ipynb;*.pdf;*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp;*.mp4;*.m4v;*.webm;*.ogv;*.mov"
         + "|Markdown ファイル (*.md;*.markdown)|*.md;*.markdown|テキスト ファイル (*.txt)|*.txt|HTML ファイル (*.html;*.htm)|*.html;*.htm"
-        + "|Word 文書 (*.docx)|*.docx|メール (*.eml)|*.eml|CSV / TSV (*.csv;*.tsv)|*.csv;*.tsv|JSON / XML (*.json;*.xml)|*.json;*.xml|Jupyter Notebook (*.ipynb)|*.ipynb"
+        + "|Word 文書 (*.docx)|*.docx|メール (*.eml)|*.eml|CSV / TSV (*.csv;*.tsv)|*.csv;*.tsv|JSON / XML (*.json;*.xml)|*.json;*.xml|Jupyter Notebook (*.ipynb)|*.ipynb|PDF (*.pdf)|*.pdf"
         + "|画像 (*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp)|*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp"
         + "|動画 (*.mp4;*.m4v;*.webm;*.ogv;*.mov)|*.mp4;*.m4v;*.webm;*.ogv;*.mov|すべてのファイル (*.*)|*.*";
 
@@ -850,6 +1039,26 @@ public partial class MainWindow : Window
                                                or System.Xml.XmlException or NotSupportedException or KeyNotFoundException)
                 {
                     ShowFileError("Word の文書を読み込めません。Word で開けるか確かめて、.docx 形式で保存し直してから、もう一度開いてください", ex);
+                }
+
+                return;
+            }
+
+            if (IsPdfPath(fullPath))
+            {
+                try
+                {
+                    ImportPdf(fullPath);
+                }
+                catch (UglyToad.PdfPig.Exceptions.PdfDocumentEncryptedException ex)
+                {
+                    ShowFileError("パスワードで保護された PDF は開けません。保護を外した PDF を開いてください", ex);
+                }
+                catch (Exception ex) when (ex is UglyToad.PdfPig.Core.PdfDocumentFormatException or InvalidOperationException
+                                               or InvalidDataException or FormatException or NotSupportedException
+                                               or ArgumentException or IndexOutOfRangeException)
+                {
+                    ShowFileError("PDF を読み込めません。PDF を表示するアプリで開けるか確かめてから、もう一度開いてください", ex);
                 }
 
                 return;
@@ -1216,7 +1425,7 @@ public partial class MainWindow : Window
             notices.Add(string.Format(Strings.Tr("「{0}」フォルダーの外を指すリンク {1} 個は、元のファイルを指すように書き換えました。"), Path.GetFileName(newFiles), outside));
         }
 
-        return notices.Count == 0 ? null : string.Join(Strings.Language == "en" ? " " : string.Empty, notices);
+        return notices.Count == 0 ? null : string.Join(Strings.SentenceJoin, notices);
     }
 
     // BOMs win; otherwise strict UTF-8, falling back to the system ANSI code page
@@ -1307,11 +1516,14 @@ public partial class MainWindow : Window
         ?? typeof(MainWindow).Assembly.GetName().Version?.ToString(3)
         ?? string.Empty;
 
+    // The whole window starts at 90%, which fits more of the toolbar and the document.
+    private const double DefaultZoom = 0.9;
+
     private static double LoadZoom(string name = "Zoom") =>
         double.TryParse(LoadSetting(name), System.Globalization.NumberStyles.Float,
                 System.Globalization.CultureInfo.InvariantCulture, out var zoom) && zoom >= 0.25 && zoom <= 5
             ? zoom
-            : 1.0;
+            : DefaultZoom;
 
     private void OnZoomChanged()
     {
@@ -1336,7 +1548,7 @@ public partial class MainWindow : Window
         {
             "in" => ZoomSteps.FirstOrDefault(step => step > current + 0.001, ZoomSteps[^1]),
             "out" => ZoomSteps.LastOrDefault(step => step < current - 0.001, ZoomSteps[0]),
-            _ => 1.0
+            _ => DefaultZoom
         };
         // Setting ZoomFactor from code does not raise ZoomFactorChanged.
         OnZoomChanged();
@@ -1484,12 +1696,116 @@ public partial class MainWindow : Window
     private void ImportHtml(string path, DecodedDocument decoded)
     {
         var folder = Path.GetDirectoryName(path)!;
+        var name = Path.GetFileNameWithoutExtension(path);
+        // Drawn pictures (diagrams, data: images) are written to "name_files" in a new
+        // temporary folder, as a Word document's images are, and are copied beside the
+        // Markdown file when it is first saved. Names already taken beside the HTML file
+        // (a browser's own "name_files") are skipped.
+        var assets = Path.Combine(NewImportFolder(), name + FilesSuffix);
+        var pictures = 0;
+        string? KeepPicture(byte[] data, string extension)
+        {
+            string file;
+            do
+            {
+                file = $"picture-{++pictures}{extension}";
+            }
+            while (File.Exists(Path.Combine(folder, name + FilesSuffix, file)));
+
+            Directory.CreateDirectory(assets);
+            File.WriteAllBytes(Path.Combine(assets, file), data);
+            return $"{Uri.EscapeDataString(name + FilesSuffix)}/{file}";
+        }
+
         // Images and links missing beside the file resolve from the page's own
         // address (<base>, canonical, or og:url), as a browser would.
-        var (markdown, exact) = HtmlImport.ToMarkdown(decoded.Text, null, relative => ExistsBeside(folder, relative));
-        ApplyImported(markdown, folder, Path.GetFileNameWithoutExtension(path) + ".md", false, Strings.Tr(exact
+        var (markdown, exact) = HtmlImport.ToMarkdown(decoded.Text, null, relative => ExistsBeside(folder, relative), KeepPicture,
+            tiles => DrawMapTiles(folder, tiles));
+        ApplyImported(markdown, folder, name + ".md", false, Strings.Tr(exact
             ? "mdEditor で保存した HTML から、元の Markdown を開きました。保存すると Markdown ファイルになります（HTML ファイルは変わりません）。"
-            : "HTML を Markdown に変換して開きました。色や配置、図の絵は元に戻りません。保存すると Markdown ファイルになります（HTML ファイルは変わりません）。"));
+            : "HTML を Markdown に変換して開きました。色や配置は元に戻りません。図は画像にしました。保存すると Markdown ファイルになります（HTML ファイルは変わりません）。"));
+        _importAssets = Directory.Exists(assets) ? assets : null;
+        // Its pictures beside it come from the document's folder, as the preview's do,
+        // its stylesheets beside it are put into the page, and its data: pictures are served.
+        (string Html, List<(string Type, byte[] Data)>? Parts) original = (decoded.Text, null);
+        try
+        {
+            original = HtmlImport.ForOriginal(decoded.Text, folder, $"https://{DocumentHost}/");
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // Without its stylesheets the page still shows, plainer.
+        }
+
+        SendOriginalHtml(original.Html, $"https://{DocumentHost}/", original.Parts, path);
+    }
+
+    // A saved map's tiles (pictures beside the HTML file) joined into one PNG as they were
+    // laid out: the part from the map's top left (what was on the screen) to the farthest
+    // tile, up to 4096 pixels a side. Tiles not inside the HTML file's folder are skipped;
+    // null when none could be read.
+    private static byte[]? DrawMapTiles(string folder, IReadOnlyList<HtmlImport.MapTile> tiles)
+    {
+        var root = Path.GetFullPath(folder).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+        var pictures = new List<(HtmlImport.MapTile Tile, BitmapSource Picture)>();
+        foreach (var tile in tiles)
+        {
+            try
+            {
+                var path = Path.GetFullPath(Path.Combine(root, Uri.UnescapeDataString(tile.Source.Split('?', 2)[0]).Replace('/', Path.DirectorySeparatorChar)));
+                if (!path.StartsWith(root, StringComparison.OrdinalIgnoreCase) || !File.Exists(path))
+                {
+                    continue;
+                }
+
+                var picture = new BitmapImage();
+                picture.BeginInit();
+                picture.CacheOption = BitmapCacheOption.OnLoad;
+                picture.UriSource = new Uri(path);
+                picture.EndInit();
+                picture.Freeze();
+                pictures.Add((tile, picture));
+            }
+            catch (Exception ex) when (ex is IOException or ArgumentException or NotSupportedException or UriFormatException
+                                           or InvalidOperationException or System.Runtime.InteropServices.COMException)
+            {
+                // Not a picture that can be read; the map goes without it.
+            }
+        }
+
+        if (pictures.Count == 0)
+        {
+            return null;
+        }
+
+        var left = Math.Max(0, pictures.Min(item => item.Tile.X));
+        var top = Math.Max(0, pictures.Min(item => item.Tile.Y));
+        var width = (int)Math.Ceiling(Math.Min(4096, pictures.Max(item => item.Tile.X + item.Tile.Width) - left));
+        var height = (int)Math.Ceiling(Math.Min(4096, pictures.Max(item => item.Tile.Y + item.Tile.Height) - top));
+        if (width <= 0 || height <= 0)
+        {
+            return null;
+        }
+
+        var visual = new DrawingVisual();
+        using (var context = visual.RenderOpen())
+        {
+            context.DrawRectangle(Brushes.White, null, new Rect(0, 0, width, height));
+            foreach (var (tile, picture) in pictures)
+            {
+                context.PushOpacity(tile.Opacity);
+                context.DrawImage(picture, new Rect(tile.X - left, tile.Y - top, tile.Width, tile.Height));
+                context.Pop();
+            }
+        }
+
+        var bitmap = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
+        bitmap.Render(visual);
+        var encoder = new PngBitmapEncoder();
+        encoder.Frames.Add(BitmapFrame.Create(bitmap));
+        using var stream = new MemoryStream();
+        encoder.Save(stream);
+        return stream.ToArray();
     }
 
     // A Word document opens as Markdown through Mammoth (Word to clean HTML) and
@@ -1499,22 +1815,330 @@ public partial class MainWindow : Window
     private void ImportDocx(string path)
     {
         var name = Path.GetFileNameWithoutExtension(path);
-        var (markdown, assets, count) = ConvertDocx(path);
-        ApplyImported(markdown, assets, name + ".md", false, Strings.Tr(
-            "Word の文書を Markdown に変換して開きました。見出し・リスト・表・リンク・画像は戻り、色や配置は戻りません。保存すると Markdown ファイルになります（Word の文書は変わりません）。"));
+        var (markdown, assets, count) = ConvertDocx(path, out var guessed);
+        var notice = Strings.Tr("Word の文書を Markdown に変換して開きました。見出し・リスト・表・リンク・画像は戻り、色や配置は戻りません。保存すると Markdown ファイルになります（Word の文書は変わりません）。");
+        if (guessed > 0)
+        {
+            notice += Strings.SentenceJoin + string.Format(Strings.Tr("見出しのスタイルがないため、文字の大きさから {0} 個の段落を見出しにしました。"), guessed);
+        }
+
+        ApplyImported(markdown, assets, name + ".md", false, notice);
         _suggestFolder = Path.GetDirectoryName(path);
         _importAssets = count > 0 ? Path.Combine(assets, name + FilesSuffix) : null;
+    }
+
+    // A PDF opens as Markdown (see PdfImport): text in reading order, headings guessed
+    // from text size, lists, and pictures, which are handled like a Word document's.
+    // The PDF itself is never written.
+    private void ImportPdf(string path)
+    {
+        var name = Path.GetFileNameWithoutExtension(path);
+        var assets = NewImportFolder();
+        var options = PdfImportOptions.Load();
+        options.FigureTextInPicture = _pdfFigureTextOnce ?? _pdfFigureText == "picture";
+        options.TablesAsPictures = _pdfTablesOnce ?? _pdfTables == "picture";
+        _pdfTablesOnce = null;
+        options.Align = _pdfAlign;
+        options.PagePictures = _pdfPagePictures;
+        _pdfFigureTextOnce = null;
+        var result = PdfImport.ToMarkdown(path, assets, name + FilesSuffix, options);
+        var notices = new List<string>
+        {
+            Strings.Tr("PDF を Markdown に変換して開きました。できる範囲で変換したもので、元の PDF を Markdown で忠実に再現したものではありません。")
+        };
+        if (!result.HasText && result.OutlinePages.Count == 0)
+        {
+            notices.Add(Strings.Tr("この PDF からは文字を取り出せませんでした。画像だけでできた PDF（スキャンしたものなど）の可能性があります。"));
+        }
+
+        if (result.ReadPages < result.Pages)
+        {
+            notices.Add(string.Format(Strings.Tr("ページが多いため、最初の {0} ページだけを開きました（全部で {1} ページ）。"), result.ReadPages, result.Pages));
+        }
+
+        if (result.ImagePages.Count > 0)
+        {
+            notices.Add(string.Format(Strings.Tr("{0} ページ目は、文字を読み取れない書体（文字化けする書体）で書かれているため、ページ全体を画像（PNG）にしました。"),
+                string.Join(", ", result.ImagePages)));
+        }
+
+        if (result.OutlinePages.Count > 0)
+        {
+            notices.Add(string.Format(Strings.Tr("{0} ページ目は、文字が図形として描かれていて取り出せないため、ページ全体を画像（PNG）にしました。"),
+                string.Join(", ", result.OutlinePages)));
+        }
+
+        if (result.PicturePages.Count > 0)
+        {
+            notices.Add(string.Format(Strings.Tr("{0} ページ目は、文字の並び（縦書き・重なった文字など）を読み取れないため、ページ全体を画像（SVG）にしました。"),
+                string.Join(", ", result.PicturePages)));
+        }
+
+        if (result.Tagged)
+        {
+            notices.Add(Strings.Tr("PDF の中のタグ（見出し・段落・箇条書き・表と、その読む順）を使って読みました。"));
+        }
+        else if (result.Headings > 0)
+        {
+            notices.Add(string.Format(Strings.Tr("文字の大きさと番号から、{0} か所を見出しにしました。"), result.Headings));
+        }
+
+        foreach (var (count, text) in new[]
+                 {
+                     (result.Figures, "図 {0} 個を、線と文字から画像（SVG）に描き直しました。図の中の文字は画像の一部で、編集できません。"),
+                     (result.Formulas, "数式 {0} 個を画像（SVG）にしました。数式の文字は画像の説明（alt）に入れました。"),
+                     (result.Aligned, "右寄せ・中央寄せの {0} か所は、HTML（align）で書きました。"),
+                 })
+        {
+            if (count > 0)
+            {
+                notices.Add(string.Format(Strings.Tr(text), count));
+            }
+        }
+
+        // Tables and text around figures: the notice says which way they went, and its
+        // buttons reopen the PDF the other way.
+        string? reopenTables = null;
+        if (result.Tables > 0)
+        {
+            notices.Add(string.Format(Strings.Tr(result.TablesAsPictures ? "表 {0} 個を、線と文字から画像（SVG）に描き直しました（見た目優先）。表の中の文字は編集できません。" : "表 {0} 個を Markdown の表にしました。"), result.Tables));
+            reopenTables = Strings.Tr(result.TablesAsPictures ? "表を Markdown の表にする（編集優先・既定）" : "表を画像にする（見た目優先）");
+        }
+
+        string? reopen = null;
+        if (result.FigureText > 0)
+        {
+            notices.Add(string.Format(Strings.Tr(result.InPicture ? "図のまわりの文字 {0} か所を、図の画像に入れました（見た目優先）。" : "図のまわりの文字 {0} か所を、文字として残しました（編集優先）。"), result.FigureText));
+            reopen = Strings.Tr(result.InPicture ? "図のまわりの文字を文字として残す（編集優先）" : "図のまわりの文字を図に入れる（見た目優先・既定）");
+        }
+
+        ApplyImported(result.Markdown, assets, name + ".md", false, string.Join(Strings.SentenceJoin, notices), reopen, reopenTables);
+        _lastPdf = path;
+        _lastPdfMarkdown = result.Markdown;
+        _lastPdfInPicture = result.InPicture;
+        _lastPdfTablesAsPictures = result.TablesAsPictures;
+        // The original PDF can be shown in place of the editor (see the notice's button),
+        // scrolling with the preview by where each item came from.
+        _originalPdf = path;
+        _originalToken = Guid.NewGuid().ToString("N");
+        lock (_originalPages)
+        {
+            _originalPages.Clear();
+        }
+
+        SendToPage(new
+        {
+            type = "original",
+            kind = "pdf",
+            url = $"https://{OriginalHost}/{_originalToken}/",
+            pages = (result.PageSizes ?? []).Select(size => new { w = size.Width, h = size.Height }),
+            anchors = (result.Anchors ?? []).Select(anchor => new { line = anchor.Line, page = anchor.Page, y = anchor.Y })
+        });
+        _suggestFolder = Path.GetDirectoryName(path);
+        _importAssets = result.Images > 0 ? Path.Combine(assets, name + FilesSuffix) : null;
+    }
+
+    // For the Markdown check: the relative links and pictures of the document whose file is
+    // not there, looked for from the document's folder (or the folder it was imported from).
+    // A document never saved has no folder, so nothing is reported.
+    private List<string> MissingLinkTargets(IEnumerable<string> targets)
+    {
+        var missing = new List<string>();
+        var folders = DocumentFolders().ToList();
+        if (folders.Count == 0)
+        {
+            return missing;
+        }
+
+        foreach (var target in targets.Distinct().Take(500))
+        {
+            var pathPart = target.Split('#', 2)[0].Split('?', 2)[0];
+            if (pathPart.Length == 0)
+            {
+                continue;
+            }
+
+            try
+            {
+                var relative = Uri.UnescapeDataString(pathPart).Replace('/', Path.DirectorySeparatorChar);
+                if (!folders.Any(folder => Path.GetFullPath(Path.Combine(folder, relative)) is var full && (File.Exists(full) || Directory.Exists(full))))
+                {
+                    missing.Add(target);
+                }
+            }
+            catch (Exception ex) when (ex is ArgumentException or NotSupportedException or PathTooLongException or UriFormatException)
+            {
+                // A target that is no path at all is not this check's to report.
+            }
+        }
+
+        return missing;
+    }
+
+    // Settings > "初期設定に戻す", after asking: everything in the Settings dialog goes back
+    // to its default, the host's settings here and the page's (resetDisplay), and
+    // pdf-import.json gets its default values. The key for New from clipboard (it would
+    // remove a desktop shortcut) and the keyboard shortcuts (they have their own reset) stay.
+    private void ResetSettings()
+    {
+        if (MessageBox.Show(Strings.Tr("設定を初期設定に戻しますか？「設定」の画面のすべての項目と、PDF の取り込みの詳細設定ファイル（pdf-import.json）が初期設定になります。「クリップボードから新規作成」のキーと、キーボードショートカットはそのままです。"),
+                "mdEditor", MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
+        {
+            return;
+        }
+
+        _theme = NormalizeTheme(null);
+        SaveSetting("Theme", _theme);
+        ApplyTheme();
+        SendToPage(new { type = "theme", theme = _theme });
+        _paper = NormalizePaper(null);
+        SaveSetting("PaperSize", _paper);
+        SendPaper();
+        _externalImages = NormalizeExternal(null);
+        SaveSetting("ExternalImages", _externalImages);
+        _noticedBlocked = -1;
+        SendToPage(new { type = "externalImages", value = _externalImages });
+        _nearGitHub = false;
+        SaveSetting("NearGitHub", "off");
+        _nearGitHubAll = false;
+        SaveSetting("NearGitHubAll", "off");
+        _pdfPageNumbers = true;
+        SaveSetting("PdfPageNumbers", "on");
+        SendToPage(new { type = "pdfPageNumbers", enabled = _pdfPageNumbers });
+        _lineBreaks = true;
+        SaveSetting("LineBreaks", "on");
+        _markdownPipeline = BuildPipeline(_nearGitHub, _nearGitHubAll, _lineBreaks);
+        SendToPage(new { type = "nearGitHub", enabled = _nearGitHub, all = _nearGitHubAll });
+        SendToPage(new { type = "lineBreaks", enabled = _lineBreaks });
+        _autoBackup = true;
+        SaveSetting("AutoBackup", "on");
+        WriteRecoveryCopy();
+        SendToPage(new { type = "autoBackup", enabled = _autoBackup });
+        _pdfFigureText = "picture";
+        _pdfTables = "text";
+        SaveSetting("PdfTables", _pdfTables);
+        _pdfAlign = true;
+        _pdfPagePictures = true;
+        SaveSetting("PdfFigureText", _pdfFigureText);
+        SaveSetting("PdfAlign", "on");
+        SaveSetting("PdfPagePictures", "on");
+        SendPdfOptions();
+        _zipLinks = "local";
+        SaveSetting("ZipLinks", _zipLinks);
+        SendToPage(new { type = "zipLinks", value = _zipLinks });
+        try
+        {
+            PdfImportOptions.WriteDefaults(overwrite: true);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            MessageBox.Show($"{Strings.Tr("PDF の詳細設定ファイルを開けませんでした。")}\n\n{ex.Message}", "mdEditor", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+
+        SendToPage(new { type = "resetDisplay" });
+        SendPreview();
+    }
+
+    private void SendPdfOptions() =>
+        SendToPage(new { type = "pdfOptions", figureText = _pdfFigureText, tables = _pdfTables, align = _pdfAlign, pagePictures = _pdfPagePictures, file = PdfImportOptions.FilePath });
+
+    // The advanced numbers of PDF import, in pdf-import.json: written with the defaults when
+    // there is none, and opened in Notepad (mdEditor would open JSON as a document).
+    private void OpenPdfOptionsFile()
+    {
+        try
+        {
+            PdfImportOptions.WriteDefaults();
+            Process.Start(new ProcessStartInfo("notepad.exe", $"\"{PdfImportOptions.FilePath}\"") { UseShellExecute = false });
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or System.ComponentModel.Win32Exception)
+        {
+            MessageBox.Show($"{Strings.Tr("PDF の詳細設定ファイルを開けませんでした。")}\n\n{ex.Message}", "mdEditor", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+    }
+
+    private void WriteFixRules(string path, string json, string failure)
+    {
+        try
+        {
+            FixRules.Write(path, json);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
+        {
+            MessageBox.Show($"{Strings.Tr(failure)}\n\n{ex.Message}", "mdEditor", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+    }
+
+    // The rules as a file to keep or to take to another PC.
+    private void ExportFixRules(string json)
+    {
+        var dialog = new SaveFileDialog
+        {
+            Filter = Strings.Tr("自動修正のルール (*.json)|*.json"),
+            DefaultExt = ".json",
+            AddExtension = true,
+            FileName = "fix-rules.json"
+        };
+        if (dialog.ShowDialog(this) == true)
+        {
+            WriteFixRules(dialog.FileName, json, "自動修正のルールを書き出せませんでした。");
+        }
+    }
+
+    // The page decides how the rules read join the ones it has.
+    private void ImportFixRules()
+    {
+        var dialog = new OpenFileDialog
+        {
+            Filter = Strings.Tr("自動修正のルール (*.json)|*.json"),
+            CheckFileExists = true,
+            Multiselect = false
+        };
+        if (dialog.ShowDialog(this) != true)
+        {
+            return;
+        }
+
+        if (FixRules.Read(dialog.FileName) is { } json)
+        {
+            SendToPage(new { type = "fixRulesImported", json });
+        }
+        else
+        {
+            MessageBox.Show(Strings.Tr("このファイルは自動修正のルールとして読めませんでした。"), "mdEditor", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+    }
+
+    // The notice's buttons: the PDF just opened is opened again with its figures' text, or
+    // its tables, the other way (this once; Settings keep the default; the other choice stays
+    // as it was). Changes made since are asked about.
+    private async Task ReopenPdfAsync(bool tables)
+    {
+        if (_lastPdf is not { } path || !File.Exists(path) || _text != _lastPdfMarkdown && !await ConfirmSaveChangesAsync())
+        {
+            return;
+        }
+
+        _pdfFigureTextOnce = tables ? _lastPdfInPicture : !_lastPdfInPicture;
+        _pdfTablesOnce = tables ? !_lastPdfTablesAsPictures : _lastPdfTablesAsPictures;
+        await LoadDocumentAsync(path);
     }
 
     private static string NewImportFolder() =>
         Path.Combine(Path.GetTempPath(), "mdEditor-import-" + Guid.NewGuid().ToString("N"));
 
     // Word to Markdown; its images are written to "name_files" in a new temporary folder.
-    private static (string Markdown, string Assets, int Images) ConvertDocx(string path)
+    // Headings made only by a larger text size become headings too (DocxHeadings).
+    private static (string Markdown, string Assets, int Images) ConvertDocx(string path) =>
+        ConvertDocx(path, out _);
+
+    private static (string Markdown, string Assets, int Images) ConvertDocx(string path, out int guessedHeadings)
     {
         var imagesName = Path.GetFileNameWithoutExtension(path) + FilesSuffix;
         var assets = NewImportFolder();
         var count = 0;
+        var (source, guessed) = DocxHeadings.Prepare(path, Path.Combine(assets, "word"));
+        guessedHeadings = guessed;
         var converter = new Mammoth.DocumentConverter().ImageConverter(image =>
         {
             var extension = image.ContentType switch
@@ -1540,7 +2164,16 @@ public partial class MainWindow : Window
                 ["alt"] = image.AltText ?? string.Empty
             };
         });
-        var html = converter.ConvertToHtml(path).Value;
+        string html;
+        try
+        {
+            html = converter.ConvertToHtml(source).Value;
+        }
+        finally
+        {
+            Directory.Delete(Path.Combine(assets, "word"), true);
+        }
+
         return (HtmlImport.ToMarkdown(html, null, _ => true).Markdown, assets, count);
     }
 
@@ -1551,9 +2184,13 @@ public partial class MainWindow : Window
         var name = Path.GetFileNameWithoutExtension(path);
         var imagesName = name + FilesSuffix;
         var assets = Path.Combine(Path.GetTempPath(), "mdEditor-import-" + Guid.NewGuid().ToString("N"));
-        var result = MailImport.ToMarkdown(path, assets, imagesName, Strings.Language == "ja");
+        var result = MailImport.ToMarkdown(path, assets, imagesName, Strings.Language);
         ApplyImported(result.Markdown, assets, name + ".md", false, Strings.Tr(
             "メールを Markdown に変換して開きました。件名・差出人・宛先・日付と本文を読み込み、添付ファイルは名前だけを載せました。保存すると Markdown ファイルになります（メールのファイルは変わりません）。"));
+        if (MailOriginalHtml(path) is var (original, parts))
+        {
+            SendOriginalHtml(original, null, parts);
+        }
         _suggestFolder = Path.GetDirectoryName(path);
         _importAssets = result.Images > 0 ? Path.Combine(assets, imagesName) : null;
     }
@@ -1562,9 +2199,19 @@ public partial class MainWindow : Window
     private void ImportTable(string path, DecodedDocument decoded)
     {
         var separator = string.Equals(Path.GetExtension(path), ".tsv", StringComparison.OrdinalIgnoreCase) ? '\t' : ',';
-        ApplyImported(TableFiles.ToMarkdown(decoded.Text, separator), Path.GetDirectoryName(path)!,
+        var markdown = TableFiles.ToMarkdown(decoded.Text, separator);
+        ApplyImported(markdown, Path.GetDirectoryName(path)!,
             Path.GetFileNameWithoutExtension(path) + ".md", false, Strings.Tr(
                 "表のファイルを Markdown の表にして開きました。1 行目を見出しの行にしています。保存すると Markdown ファイルになります（元のファイルは変わりません）。"));
+        // Row by row: the header is line 0 of both, and row n of the table (line n + 1 of the
+        // Markdown, after the line under the header) is line n of the file, when no field
+        // runs over a line of its own.
+        var sourceLines = decoded.Text.Replace("\r\n", "\n").TrimEnd('\n').Split('\n');
+        var tableLines = markdown.TrimEnd('\n').Split('\n');
+        var rowByRow = tableLines.Length == sourceLines.Length + 1;
+        SendOriginalText(decoded.Text, rowByRow
+            ? Enumerable.Range(0, sourceLines.Length).Select(line => (line == 0 ? 0 : line + 1, line))
+            : []);
     }
 
     // An image or a video opens as a new document that shows it, ready for a
@@ -1611,6 +2258,7 @@ public partial class MainWindow : Window
         };
         ApplyImported(markdown, Path.GetDirectoryName(path)!, Path.GetFileNameWithoutExtension(path) + ".md", false,
             Strings.Tr(notice) + Strings.Tr("保存すると Markdown ファイルになります（元のファイルは変わりません）。"));
+        SendOriginalText(decoded.Text, []);
     }
 
     private static string EscapeAlt(string text) => text.Replace("\\", "\\\\").Replace("[", "\\[").Replace("]", "\\]");
@@ -1628,7 +2276,7 @@ public partial class MainWindow : Window
     private async Task InsertFilesAsync(IReadOnlyList<string> files, byte[]? pasted, string pastedExtension = ".png")
     {
         var contents = new Dictionary<string, (string Markdown, string[] Folders)>();
-        foreach (var file in files.Where(IsDocumentPath))
+        foreach (var file in files.Where(InsertsContent))
         {
             try
             {
@@ -1644,7 +2292,7 @@ public partial class MainWindow : Window
             }
         }
 
-        var needsFolder = pasted is not null || files.Any(file => !IsDocumentPath(file))
+        var needsFolder = pasted is not null || files.Any(file => !InsertsContent(file))
             || contents.Values.Any(content => RebaseReferences(content.Markdown, content.Folders, null).Count > 0);
         if (_filePath is null && needsFolder)
         {
@@ -1720,6 +2368,7 @@ public partial class MainWindow : Window
             {
                 notices.Add(string.Format(Strings.Tr("「{0}」の中身を入れました。ファイルとして開くときは、編集画面の外にドロップしてください（Ctrl+Z で取り消せます）。"),
                     string.Join(Strings.Language == "en" ? ", " : "、", contents.Keys.Select(Path.GetFileName))));
+                // Japanese and Chinese both list names with 、.
             }
 
             if (filesFolder is not null)
@@ -1739,7 +2388,7 @@ public partial class MainWindow : Window
 
             if (notices.Count > 0)
             {
-                SendToPage(new { type = "notice", text = string.Join(Strings.Language == "en" ? " " : string.Empty, notices) });
+                SendToPage(new { type = "notice", text = string.Join(Strings.SentenceJoin, notices) });
             }
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException)
@@ -1748,10 +2397,7 @@ public partial class MainWindow : Window
         }
     }
 
-    // File names in a notice: 「a.png」「b.pdf」 in Japanese, "a.png", "b.pdf" in English.
-    private static string NameList(IEnumerable<string> names) => Strings.Language == "en"
-        ? string.Join(", ", names.Select(name => $"\"{name}\""))
-        : string.Concat(names.Select(name => $"「{name}」"));
+    private static string NameList(IEnumerable<string> names) => Strings.NameList(names);
 
     private static bool IsInside(string path, string folder) =>
         path.StartsWith(folder.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase);
@@ -1834,7 +2480,7 @@ public partial class MainWindow : Window
         if (extension == ".eml")
         {
             var assets = NewImportFolder();
-            return (MailImport.ToMarkdown(path, assets, imagesName, Strings.Language == "ja").Markdown, [assets, folder]);
+            return (MailImport.ToMarkdown(path, assets, imagesName, Strings.Language).Markdown, [assets, folder]);
         }
 
         var text = DecodeDocument(await File.ReadAllBytesAsync(path)).Text;
@@ -2004,6 +2650,211 @@ public partial class MainWindow : Window
     // never writes over its source.
     // A sample from the Samples dialog opens the same way: a new, unsaved
     // document under the sample's own name, never written over the open file.
+    // --- New document from the clipboard (--paste) ---
+
+    // Started from the desktop shortcut made in Settings: what the user copied goes into
+    // the new document. One copied file that mdEditor opens is opened (as a drop outside
+    // the editor); other files and pictures are placed as a drop on the editor places them;
+    // formatted content (HTML from a web page or Word) becomes Markdown as "Open" does.
+    private async Task PasteClipboardAsync()
+    {
+        try
+        {
+            if (Clipboard.ContainsFileDropList())
+            {
+                var files = Clipboard.GetFileDropList().Cast<string>().Where(File.Exists).ToList();
+                // One file mdEditor opens is opened, as when dropped outside the editor;
+                // several files (or one it cannot open) go into the new document as a drop
+                // on the editor puts them.
+                if (files.Count == 1 && (IsDocumentPath(files[0]) || IsMediaPath(files[0])))
+                {
+                    await LoadDocumentAsync(files[0]);
+                    return;
+                }
+
+                if (files.Count > 0)
+                {
+                    await InsertFilesAsync(files, null);
+                    return;
+                }
+            }
+
+            var html = Clipboard.ContainsText(TextDataFormat.Html) ? Clipboard.GetText(TextDataFormat.Html) : null;
+            var picture = ClipboardPicture();
+            if (html is not null)
+            {
+                var (fragment, source) = ReadClipboardHtml(html);
+                var document = new AngleSharp.Html.Parser.HtmlParser().ParseDocument(fragment);
+                var onlyPictures = string.IsNullOrWhiteSpace(document.Body?.TextContent)
+                    && document.QuerySelector("img") is not null;
+                // "Copy image" in a browser puts both the picture and an <img> pointing at
+                // the internet; the picture itself is what the user copied.
+                if (!(onlyPictures && picture is not null)
+                    && document.QuerySelector("h1, h2, h3, h4, h5, h6, table, ul, ol, a[href], img, strong, b, em, i, pre, blockquote") is not null)
+                {
+                    var markdown = HtmlImport.ToMarkdown(fragment, source, null).Markdown.Trim('\n');
+                    if (markdown.Length > 0)
+                    {
+                        SendToPage(new { type = "insertText", text = markdown + "\n", block = true });
+                        SendToPage(new { type = "notice", text = Strings.Tr("クリップボードの書式付きの内容（HTML）を Markdown にして、新しい文書に入れました。見出し・表・リンクなどは残り、色や配置は残りません。") });
+                        return;
+                    }
+                }
+            }
+
+            if (picture is not null && !Clipboard.ContainsText())
+            {
+                await InsertFilesAsync([], picture, ".png");
+                return;
+            }
+
+            if (Clipboard.ContainsText())
+            {
+                var text = Clipboard.GetText().Replace("\r\n", "\n");
+                SendToPage(new { type = "insertText", text = text.EndsWith('\n') ? text : text + "\n", block = false });
+                SendToPage(new { type = "notice", text = Strings.Tr("クリップボードのテキストを新しい文書に入れました。") });
+                return;
+            }
+
+            if (picture is not null)
+            {
+                await InsertFilesAsync([], picture, ".png");
+                return;
+            }
+
+            SendToPage(new { type = "notice", text = Strings.Tr("クリップボードに、文書に入れられるもの（テキスト・画像・ファイル）がありません。コピーしてから、もう一度お試しください。") });
+        }
+        catch (Exception ex) when (ex is COMException or ExternalException or InvalidOperationException)
+        {
+            SendToPage(new { type = "notice", text = Strings.Tr("クリップボードを読み込めませんでした。少し待ってから、もう一度お試しください。") });
+        }
+    }
+
+    // A copied picture as PNG: the "PNG" format keeps transparency; other apps only
+    // put a bitmap.
+    private static byte[]? ClipboardPicture()
+    {
+        if (Clipboard.GetData("PNG") is MemoryStream png && png.Length > 0)
+        {
+            return png.ToArray();
+        }
+
+        if (!Clipboard.ContainsImage() || Clipboard.GetImage() is not { } bitmap)
+        {
+            return null;
+        }
+
+        var encoder = new PngBitmapEncoder();
+        encoder.Frames.Add(BitmapFrame.Create(bitmap));
+        using var stream = new MemoryStream();
+        encoder.Save(stream);
+        return stream.ToArray();
+    }
+
+    // CF_HTML: a header (Version, StartHTML, ..., SourceURL) and the copied part
+    // between <!--StartFragment--> and <!--EndFragment-->.
+    private static (string Html, Uri? Source) ReadClipboardHtml(string data)
+    {
+        Uri? source = null;
+        foreach (var line in data.Split('\n').TakeWhile(line => !line.TrimStart().StartsWith('<')))
+        {
+            if (line.StartsWith("SourceURL:", StringComparison.OrdinalIgnoreCase)
+                && Uri.TryCreate(line["SourceURL:".Length..].Trim(), UriKind.Absolute, out var url)
+                && url.Scheme is "https" or "http")
+            {
+                source = url;
+            }
+        }
+
+        const string startMarker = "<!--StartFragment-->";
+        var start = data.IndexOf(startMarker, StringComparison.Ordinal);
+        var end = data.IndexOf("<!--EndFragment-->", StringComparison.Ordinal);
+        var html = start >= 0 && end > start
+            ? data[(start + startMarker.Length)..end]
+            : data[Math.Max(0, data.IndexOf('<'))..];
+        return (html, source);
+    }
+
+    // Settings > New from clipboard: the key is given to a desktop shortcut that starts
+    // mdEditor with --paste, made only after the user agrees.
+    private void SendPasteHotkey()
+    {
+        var letter = LoadSetting("PasteHotkey") ?? string.Empty;
+        var exists = letter.Length == 1 && PasteShortcut.Exists(LoadSetting("PasteShortcut"), letter);
+        SendToPage(new { type = "pasteHotkey", key = letter, exists });
+    }
+
+    private void SetPasteHotkey(string? letter)
+    {
+        letter = (letter ?? string.Empty).Trim().ToUpperInvariant();
+        var oldPath = LoadSetting("PasteShortcut");
+        var oldExists = !string.IsNullOrEmpty(oldPath) && File.Exists(oldPath);
+        try
+        {
+            if (letter.Length == 0)
+            {
+                if (oldExists)
+                {
+                    var name = Path.GetFileNameWithoutExtension(oldPath!);
+                    if (MessageBox.Show(string.Format(Strings.Tr("デスクトップのショートカット「{0}」を削除しますか？"), name),
+                            "mdEditor", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                    {
+                        SendPasteHotkey();
+                        return;
+                    }
+
+                    File.Delete(oldPath!);
+                    SendToPage(new { type = "notice", text = string.Format(Strings.Tr("デスクトップのショートカット「{0}」を削除しました。"), name) });
+                }
+
+                SaveSetting("PasteHotkey", string.Empty);
+                SaveSetting("PasteShortcut", string.Empty);
+                SendPasteHotkey();
+                return;
+            }
+
+            if (letter.Length != 1 || !char.IsAsciiLetterOrDigit(letter[0]))
+            {
+                SendPasteHotkey();
+                return;
+            }
+
+            var path = PasteShortcut.NewPath();
+            var shortcutName = Path.GetFileNameWithoutExtension(path);
+            var key = PasteShortcut.Hotkey(letter);
+            var message = string.Format(Strings.Tr("デスクトップに「{0}」のショートカットを作り、{1} を割り当てます。Windows では、このキーはデスクトップかスタートメニューのショートカットにしか割り当てられません。作ってもいいですか？"), shortcutName, key);
+            var others = PasteShortcut.OthersUsing(letter, oldPath);
+            if (others.Count > 0)
+            {
+                message += "\n\n" + string.Format(Strings.Tr("{0} は、ほかのショートカット（{1}）でも使われています。Windows がどちらを起動するかは決まっていないため、別のキーを選ぶことをお勧めします。"), key, NameList(others));
+            }
+
+            message += "\n\n" + Strings.Tr("mdEditor を削除（アンインストール）する前に、このキーを「なし」に戻してください。ショートカットは自動では消えません。");
+            if (MessageBox.Show(message, "mdEditor", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+            {
+                SendPasteHotkey();
+                return;
+            }
+
+            if (oldExists && !string.Equals(oldPath, path, StringComparison.OrdinalIgnoreCase))
+            {
+                File.Delete(oldPath!);
+            }
+
+            PasteShortcut.Create(path, letter);
+            SaveSetting("PasteHotkey", letter);
+            SaveSetting("PasteShortcut", path);
+            SendPasteHotkey();
+            SendToPage(new { type = "notice", text = string.Format(Strings.Tr("デスクトップに「{0}」を作りました。テキストや画像をコピーしてから {1} を押すと、mdEditor の新しい文書に入ります。"), shortcutName, key) });
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or COMException or Microsoft.CSharp.RuntimeBinder.RuntimeBinderException)
+        {
+            SendPasteHotkey();
+            MessageBox.Show($"{Strings.Tr("デスクトップのショートカットを作れませんでした。")}\n\n{ex.Message}",
+                "mdEditor", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+    }
+
     private async Task OpenSampleAsync(string? text, string? name)
     {
         if (text is null || !await ConfirmSaveChangesAsync())
@@ -2019,8 +2870,9 @@ public partial class MainWindow : Window
         _suggestFolder = null;
     }
 
-    private void ApplyImported(string markdown, string? folder, string name, bool allowExternal, string? notice)
+    private void ApplyImported(string markdown, string? folder, string name, bool allowExternal, string? notice, string? reopen = null, string? reopenTables = null)
     {
+        _lastPdf = null;
         RememberLeftDocument(null);
         DeleteRecoveryCopy();
         _filePath = null;
@@ -2041,7 +2893,7 @@ public partial class MainWindow : Window
         SendEncodingNotice();
         if (notice is not null)
         {
-            SendToPage(new { type = "notice", text = notice });
+            SendToPage(new { type = "notice", text = notice, reopen, reopenTables });
         }
 
         SendPreview();
@@ -2125,6 +2977,10 @@ public partial class MainWindow : Window
             ApplyImported(markdown, null, name, true, string.Format(
                 Strings.Tr("{0} を開きました。スクリプトは実行しないため、後から読み込まれる内容は入りません。保存すると Markdown ファイルになります。"),
                 final.AbsoluteUri));
+            if (!isMarkdown)
+            {
+                SendOriginalHtml(text, null, browserTarget: final.AbsoluteUri);
+            }
         }
         catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or InvalidOperationException or IOException)
         {
@@ -2338,31 +3194,46 @@ public partial class MainWindow : Window
     {
         path = string.Empty;
         contentType = string.Empty;
-        var folder = _filePath is null ? _importFolder : Path.GetDirectoryName(_filePath);
-        if (folder is null)
+        foreach (var folder in DocumentFolders())
         {
-            return false;
-        }
-
-        try
-        {
-            var root = Path.GetFullPath(folder).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
-            var relative = Uri.UnescapeDataString(relativeUrlPath).TrimStart('/');
-            path = Path.GetFullPath(Path.Combine(root, relative));
-            if (!path.StartsWith(root, StringComparison.OrdinalIgnoreCase)
-                || !ImageContentTypes.TryGetValue(Path.GetExtension(path), out var type)
-                || !File.Exists(path))
+            try
             {
-                return false;
+                var root = Path.GetFullPath(folder).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+                // Without the file time ResolveImageAddress puts first (/~time/).
+                var relative = System.Text.RegularExpressions.Regex.Replace(Uri.UnescapeDataString(relativeUrlPath), @"^/~\d+/", "/").TrimStart('/');
+                path = Path.GetFullPath(Path.Combine(root, relative));
+                if (path.StartsWith(root, StringComparison.OrdinalIgnoreCase)
+                    && ImageContentTypes.TryGetValue(Path.GetExtension(path), out var type)
+                    && File.Exists(path))
+                {
+                    contentType = type;
+                    return true;
+                }
             }
-
-            contentType = type;
-            return true;
+            catch (Exception ex) when (ex is ArgumentException or NotSupportedException or PathTooLongException
+                                           or SecurityException or UriFormatException)
+            {
+                // Not a path in this folder.
+            }
         }
-        catch (Exception ex) when (ex is ArgumentException or NotSupportedException or PathTooLongException
-                                       or SecurityException or UriFormatException)
+
+        path = string.Empty;
+        return false;
+    }
+
+    // Where a document's relative pictures and links are looked for: its folder, and,
+    // until an HTML file's conversion is first saved, the temporary folder holding the
+    // pictures drawn in it (ImportHtml), which saving copies beside the Markdown file.
+    private IEnumerable<string> DocumentFolders()
+    {
+        if ((_filePath is null ? _importFolder : Path.GetDirectoryName(_filePath)) is { } folder)
         {
-            return false;
+            yield return folder;
+        }
+
+        if (_filePath is null && _importAssets is not null && Path.GetDirectoryName(_importAssets) is { } assets)
+        {
+            yield return assets;
         }
     }
 
@@ -2538,6 +3409,12 @@ public partial class MainWindow : Window
         }
 
         using var deferral = e.GetDeferral();
+        if (uri.Host.Equals(OriginalHost, StringComparison.OrdinalIgnoreCase))
+        {
+            e.Response = await ServeOriginalPageAsync(environment, uri);
+            return;
+        }
+
         if (e.ResourceContext == CoreWebView2WebResourceContext.Media)
         {
             var range = e.Request.Headers.Contains("Range") ? e.Request.Headers.GetHeader("Range") : null;
@@ -2574,6 +3451,163 @@ public partial class MainWindow : Window
         {
             e.Response = environment.CreateWebResourceResponse(null, 404, "Not Found", "");
         }
+    }
+
+    // The original of a document opened from HTML, a web page, or an e-mail, shown in place of
+    // the editor (see app.js): the page draws it with no scripts and nothing from the
+    // internet. Base is where its relative pictures come from (the document's folder for an
+    // HTML file), or null.
+    private void SendOriginalHtml(string html, string? baseAddress, List<(string Type, byte[] Data)>? parts = null, string? browserTarget = null)
+    {
+        _originalPdf = null;
+        _originalToken = Guid.NewGuid().ToString("N");
+        _originalParts = parts ?? [];
+        _originalBrowserTarget = browserTarget;
+        SendToPage(new { type = "original", kind = "html", html = html.Replace("cid-part:", $"https://{OriginalHost}/{_originalToken}/cid/"), @base = baseAddress, browser = browserTarget is not null });
+    }
+
+    // "Open in browser": the HTML file (in the default web browser, not in the program
+    // .html files open with, which can be mdEditor itself) or the web page's address.
+    private void OpenOriginalInBrowser()
+    {
+        if (_originalBrowserTarget is not { } target)
+        {
+            return;
+        }
+
+        if (Uri.TryCreate(target, UriKind.Absolute, out var page) && page.Scheme is "https" or "http")
+        {
+            OpenExternalLink(page.AbsoluteUri);
+            return;
+        }
+
+        var address = new Uri(target).AbsoluteUri;
+        try
+        {
+            if (DefaultBrowserCommand() is var (browser, arguments))
+            {
+                Process.Start(new ProcessStartInfo(browser, arguments.Contains("%1", StringComparison.Ordinal)
+                    ? arguments.Replace("%1", address, StringComparison.Ordinal)
+                    : $"{arguments} \"{address}\"".Trim()) { UseShellExecute = false });
+            }
+            else
+            {
+                Process.Start(new ProcessStartInfo(target) { UseShellExecute = true });
+            }
+        }
+        catch (Exception ex) when (ex is Win32Exception or InvalidOperationException)
+        {
+            MessageBox.Show(
+                $"{Strings.Tr("ブラウザーで開けませんでした。ブラウザーやエクスプローラーから開いてください。")}\n\n{ex.Message}",
+                "mdEditor",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
+    }
+
+    // The program Windows opens https addresses with (the default browser) and the rest of
+    // its command line, from the user's choice in Settings, or null.
+    private static (string Program, string Arguments)? DefaultBrowserCommand()
+    {
+        using var choice = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice");
+        if (choice?.GetValue("ProgId") is not string progId || progId.Length == 0)
+        {
+            return null;
+        }
+
+        using var command = Registry.ClassesRoot.OpenSubKey($@"{progId}\shell\open\command");
+        if (command?.GetValue(null) is not string line)
+        {
+            return null;
+        }
+
+        var match = System.Text.RegularExpressions.Regex.Match(line, @"^\s*(?:""([^""]+)""|(\S+))\s*(.*)$");
+        var program = match.Groups[1].Success ? match.Groups[1].Value : match.Groups[2].Value;
+        return match.Success && File.Exists(program) ? (program, match.Groups[3].Value) : null;
+    }
+
+    // The original text of a CSV, TSV, JSON, or XML file, with the Markdown line and the file's
+    // line of each row where they match (none: they scroll together by position).
+    private void SendOriginalText(string text, IEnumerable<(int Line, int Source)> anchors)
+    {
+        _originalPdf = null;
+        SendToPage(new { type = "original", kind = "text", text, anchors = anchors.Select(anchor => new { line = anchor.Line, source = anchor.Source }) });
+    }
+
+    // An e-mail as a page to show as it was sent: who it is from and to, when, and its subject
+    // above its HTML body (or its text); pictures in the body (cid:) become cid-part:{n},
+    // which SendOriginalHtml turns into addresses it serves (parts).
+    private static (string Html, List<(string Type, byte[] Data)> Parts)? MailOriginalHtml(string path)
+    {
+        try
+        {
+            var message = MimeKit.MimeMessage.Load(path);
+            var body = message.HtmlBody ?? $"<pre style=\"white-space: pre-wrap; font-family: inherit\">{System.Net.WebUtility.HtmlEncode(message.TextBody ?? string.Empty)}</pre>";
+            var parts = new List<(string Type, byte[] Data)>();
+            foreach (var part in message.BodyParts.OfType<MimeKit.MimePart>().Where(part => !string.IsNullOrEmpty(part.ContentId)))
+            {
+                using var data = new MemoryStream();
+                part.Content?.DecodeTo(data);
+                body = body.Replace("cid:" + part.ContentId, $"cid-part:{parts.Count}", StringComparison.OrdinalIgnoreCase);
+                parts.Add((part.ContentType.MimeType, data.ToArray()));
+            }
+
+            string Row(string name, string? value) => string.IsNullOrWhiteSpace(value) ? string.Empty
+                : $"<tr><th style=\"text-align: left; padding-right: 1em\">{System.Net.WebUtility.HtmlEncode(name)}</th><td>{System.Net.WebUtility.HtmlEncode(value)}</td></tr>";
+            var header = "<table style=\"font-family: sans-serif; font-size: 0.9em; margin-bottom: 1em\">"
+                + Row(Strings.Tr("差出人"), message.From.ToString()) + Row(Strings.Tr("宛先"), message.To.ToString())
+                + Row("Cc", message.Cc.ToString()) + Row(Strings.Tr("日付"), message.Date.ToLocalTime().ToString("yyyy-MM-dd HH:mm"))
+                + Row(Strings.Tr("件名"), message.Subject) + "</table><hr>";
+            return ($"<!doctype html><html><head><meta charset=\"utf-8\"></head><body>{header}{body}</body></html>", parts);
+        }
+        catch (Exception ex) when (ex is IOException or FormatException or MimeKit.ParseException or InvalidOperationException or NotSupportedException)
+        {
+            return null;
+        }
+    }
+
+    // A page of the original PDF as a PNG, drawn the first time it is asked for at that width
+    // (the last 40 are kept); 404 for a PDF no longer open or a page PDFium cannot draw.
+    private async Task<CoreWebView2WebResourceResponse> ServeOriginalPageAsync(CoreWebView2Environment environment, Uri uri)
+    {
+        var part = System.Text.RegularExpressions.Regex.Match(uri.AbsolutePath, @"^/([0-9a-f]{32})/cid/(\d{1,4})$");
+        if (part.Success && part.Groups[1].Value == _originalToken && int.Parse(part.Groups[2].Value) is var index && index < _originalParts.Count)
+        {
+            var (type, data) = _originalParts[index];
+            return environment.CreateWebResourceResponse(new MemoryStream(data), 200, "OK", $"Content-Type: {type}");
+        }
+
+        var match = System.Text.RegularExpressions.Regex.Match(uri.AbsolutePath, @"^/([0-9a-f]{32})/page-(\d{1,4})\.png$");
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+        if (!match.Success || match.Groups[1].Value != _originalToken || _originalPdf is not { } path
+            || !int.TryParse(match.Groups[2].Value, out var number) || !int.TryParse(query["w"], out var pixels))
+        {
+            return environment.CreateWebResourceResponse(null, 404, "Not Found", "");
+        }
+
+        byte[]? png;
+        lock (_originalPages)
+        {
+            _originalPages.TryGetValue((number, pixels), out png);
+        }
+
+        png ??= await Task.Run(() => PdfImport.PagePicture(path, number, pixels));
+        if (png is null)
+        {
+            return environment.CreateWebResourceResponse(null, 404, "Not Found", "");
+        }
+
+        lock (_originalPages)
+        {
+            if (_originalPages.Count >= 40)
+            {
+                _originalPages.Clear();
+            }
+
+            _originalPages[(number, pixels)] = png;
+        }
+
+        return environment.CreateWebResourceResponse(new MemoryStream(png), 200, "OK", "Content-Type: image/png");
     }
 
     private const long VideoChunkBytes = 4L * 1024 * 1024;
@@ -3017,7 +4051,7 @@ public partial class MainWindow : Window
     {
         try
         {
-            var text = PlainTextExport.Convert(_text, _markdownPipeline, Strings.Language == "ja");
+            var text = PlainTextExport.Convert(_text, _markdownPipeline, Strings.Language);
             await WriteAtomicallyAsync(path, Utf8NoBom.GetBytes(text));
             MessageBox.Show($"{Strings.Tr("記号なしのテキストを保存しました。")}\n\n{path}", Strings.Tr("テキストの書き出し"),
                 MessageBoxButton.OK, MessageBoxImage.Information);
@@ -3034,7 +4068,7 @@ public partial class MainWindow : Window
     private async Task ExportTablesAsync(string path, string format)
     {
         var title = Strings.Tr(format switch { ".tsv" => "TSVの書き出し", ".json" => "JSONの書き出し", _ => "CSVの書き出し" });
-        var tables = TableFiles.Tables(_text, _markdownPipeline, Strings.Language == "ja");
+        var tables = TableFiles.Tables(_text, _markdownPipeline, Strings.Language);
         if (tables.Count == 0)
         {
             MessageBox.Show(Strings.Tr("この文書には表がありません。表（| で区切った行）のある文書で保存してください。"), title,
@@ -3069,7 +4103,10 @@ public partial class MainWindow : Window
     // A ZIP to hand the document to someone: the Markdown file and its name_files
     // folder, under the names the links use. Files in the folder the document does
     // not refer to are left out and, when the user agrees, moved to the Recycle Bin
-    // first. Without a folder (or a saved document), the ZIP holds the text only.
+    // first. As Settings say (_zipLinks), files the document links to elsewhere on the
+    // PC, and files on the internet, are copied into name_files in the ZIP too, and the
+    // Markdown in the ZIP links to the copies; the document itself is not changed.
+    // Without a saved document, only those copies (and the text) go in.
     private async Task ExportZipAsync(string path)
     {
         var title = Strings.Tr("配布用 ZIP の書き出し");
@@ -3094,7 +4131,7 @@ public partial class MainWindow : Window
             if (documentFolder is not null && filesFolder is not null)
             {
                 var referenced = ReferencedFiles(_text, documentFolder, filesFolder);
-                outside = referenced.Count(file => !IsInside(file, filesFolder));
+                outside = _zipLinks == "folder" ? referenced.Count(file => !IsInside(file, filesFolder)) : 0;
                 if (Directory.Exists(filesFolder))
                 {
                     var all = Directory.GetFiles(filesFolder, "*", SearchOption.AllDirectories);
@@ -3126,6 +4163,21 @@ public partial class MainWindow : Window
                 }
             }
 
+            // Linked files outside the folder, copied in under names of their own.
+            var filesName = filesFolder is not null ? Path.GetFileName(filesFolder) : Path.GetFileNameWithoutExtension(documentName) + FilesSuffix;
+            var (text, copies, notFetched) = await CollectLinkedFilesAsync(documentFolder, filesFolder, filesName, included);
+            if (copies.Count > 0)
+            {
+                try
+                {
+                    bytes = EncodeDocument(text, _encoding);
+                }
+                catch (EncoderFallbackException)
+                {
+                    bytes = EncodeDocument(text, Utf8NoBom);
+                }
+            }
+
             var tempPath = Path.Combine(Path.GetDirectoryName(Path.GetFullPath(path))!, $".mdEditor-{Guid.NewGuid():N}.tmp");
             try
             {
@@ -3144,6 +4196,19 @@ public partial class MainWindow : Window
                                 + Path.GetRelativePath(filesFolder!, file).Replace(Path.DirectorySeparatorChar, '/');
                             archive.CreateEntryFromFile(file, name, CompressionLevel.Optimal);
                         }
+
+                        foreach (var copy in copies)
+                        {
+                            if (copy.Source is { } source)
+                            {
+                                archive.CreateEntryFromFile(source, filesName + "/" + copy.Name, CompressionLevel.Optimal);
+                            }
+                            else
+                            {
+                                using var entry = archive.CreateEntry(filesName + "/" + copy.Name, CompressionLevel.Optimal).Open();
+                                entry.Write(copy.Bytes);
+                            }
+                        }
                     }
 
                     File.Move(tempPath, path, overwrite: true);
@@ -3157,10 +4222,20 @@ public partial class MainWindow : Window
                 }
             }
 
-            var message = included.Count == 0
+            var message = included.Count + copies.Count == 0
                 ? string.Format(Strings.Tr("「{0}」を ZIP に保存しました。"), documentName)
                 : string.Format(Strings.Tr("「{0}」と「{1}」フォルダーのファイル {2} 個を ZIP に保存しました。"),
-                    documentName, Path.GetFileName(filesFolder!), included.Count);
+                    documentName, filesName, included.Count + copies.Count);
+            if (copies.Count > 0)
+            {
+                message += "\n\n" + string.Format(Strings.Tr("そのうち {0} 個は、文書がリンクしている「{1}」フォルダーの外のファイルを写したものです。ZIP の中の文書は、写したファイルにリンクしています（元の文書は変わりません）。"),
+                    copies.Count, filesName);
+            }
+
+            if (notFetched > 0)
+            {
+                message += "\n\n" + string.Format(Strings.Tr("インターネット上のファイル {0} 個は、ダウンロードできなかったため、リンクのまま残しました。"), notFetched);
+            }
             if (outside > 0)
             {
                 message += "\n\n" + string.Format(Strings.Tr("文書から参照している「{0}」フォルダーの外のファイル {1} 個は、ZIP に入っていません。"),
@@ -3179,6 +4254,22 @@ public partial class MainWindow : Window
     // through reference definitions) and src/href/poster in raw HTML. A file in
     // name_files whose path from the document is written anywhere in the text
     // counts too, so a file is only left out when nothing in the document can mean it.
+    // The addresses the document links to, as written: Markdown links, pictures, and
+    // reference definitions, and src, href, poster, and data in HTML. Media says whether the
+    // address is shown in the page (a picture, a video) rather than followed.
+    private static List<(string Url, bool Media)> LinkUrls(string markdown)
+    {
+        var parsed = Markdig.Markdown.Parse(markdown, ReferencePipeline);
+        return parsed.Descendants<LinkInline>().Where(link => link.Url is not null).Select(link => (Url: link.Url!, Media: link.IsImage))
+            .Concat(parsed.Descendants<LinkReferenceDefinition>().Where(definition => definition.Url is not null).Select(definition => (Url: definition.Url!, Media: false)))
+            .Concat(System.Text.RegularExpressions.Regex.Matches(markdown,
+                    """\b(src|href|poster|data)\s*=\s*(?:"([^"]*)"|'([^']*)')""",
+                    System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+                .Select(match => (Url: System.Net.WebUtility.HtmlDecode(match.Groups[2].Success ? match.Groups[2].Value : match.Groups[3].Value),
+                    Media: !match.Groups[1].Value.Equals("href", StringComparison.OrdinalIgnoreCase))))
+            .Select(link => (Url: link.Url.Trim(), link.Media)).Where(link => link.Url.Length > 0).ToList();
+    }
+
     private static HashSet<string> ReferencedFiles(string markdown, string documentFolder, string filesFolder)
     {
         var parsed = Markdig.Markdown.Parse(markdown, ReferencePipeline);
@@ -3213,6 +4304,208 @@ public partial class MainWindow : Window
         }
 
         return result;
+    }
+
+    private sealed record ZipCopy(string Name, string? Source, byte[]? Bytes);
+
+    // Web pages are links, not files to take along.
+    private static readonly HashSet<string> PageExtensions = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "", ".html", ".htm", ".xhtml", ".php", ".asp", ".aspx", ".jsp", ".cgi"
+    };
+
+    private const long MaxZipDownloadBytes = 50 * 1024 * 1024;
+
+    // For the sharing ZIP (_zipLinks "local" or "all"): the files the document links to
+    // outside its name_files folder, to copy into it. A file on the PC is found from the
+    // document's folder, or by its full path (C:\…, file:///…); with "all", a picture or
+    // video on the internet, and a link to a file there (not a web page), is downloaded
+    // (https and http only, public addresses, 50 MB at most each). Each gets a name not
+    // used yet in name_files, and the returned text links to it there; the same file is
+    // copied once. NotFetched counts downloads that failed (their links stay).
+    private async Task<(string Text, List<ZipCopy> Copies, int NotFetched)> CollectLinkedFilesAsync(
+        string? documentFolder, string? filesFolder, string filesName, IReadOnlyList<string> included)
+    {
+        var text = _text;
+        var copies = new List<ZipCopy>();
+        var notFetched = 0;
+        if (_zipLinks == "folder")
+        {
+            return (text, copies, notFetched);
+        }
+
+        var used = new HashSet<string>(included.Select(file => Path.GetRelativePath(filesFolder!, file).Replace(Path.DirectorySeparatorChar, '/')),
+            StringComparer.OrdinalIgnoreCase);
+        var copied = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        string NameFor(string fileName)
+        {
+            var stem = Path.GetFileNameWithoutExtension(fileName);
+            var extension = Path.GetExtension(fileName);
+            var name = fileName;
+            for (var i = 1; used.Contains(name); i++)
+            {
+                name = $"{stem} ({i}){extension}";
+            }
+
+            used.Add(name);
+            return name;
+        }
+
+        foreach (var (url, media) in LinkUrls(_text).DistinctBy(link => link.Url))
+        {
+            if (LinkedLocalFile(url, documentFolder) is { } local)
+            {
+                if (filesFolder is not null && IsInside(local.Path, filesFolder))
+                {
+                    continue;
+                }
+
+                if (!copied.TryGetValue(local.Path, out var name))
+                {
+                    name = NameFor(Path.GetFileName(local.Path));
+                    copied[local.Path] = name;
+                    copies.Add(new ZipCopy(name, local.Path, null));
+                }
+
+                text = ReplaceLinkUrl(text, url, filesName + "/" + Uri.EscapeDataString(name) + local.Suffix);
+                continue;
+            }
+
+            if (_zipLinks != "all" || !Uri.TryCreate(url, UriKind.Absolute, out var uri) || uri.Scheme is not ("https" or "http")
+                || !media && PageExtensions.Contains(Path.GetExtension(uri.AbsolutePath)))
+            {
+                continue;
+            }
+
+            if (!copied.TryGetValue(uri.AbsoluteUri, out var downloaded))
+            {
+                var bytes = await DownloadFileAsync(uri);
+                if (bytes is null)
+                {
+                    notFetched++;
+                    continue;
+                }
+
+                var fileName = string.Concat(Path.GetFileName(Uri.UnescapeDataString(uri.AbsolutePath)).Split(Path.GetInvalidFileNameChars()));
+                downloaded = NameFor(fileName.Length > 0 ? fileName : "file");
+                copied[uri.AbsoluteUri] = downloaded;
+                copies.Add(new ZipCopy(downloaded, null, bytes));
+            }
+
+            text = ReplaceLinkUrl(text, url, filesName + "/" + Uri.EscapeDataString(downloaded) + uri.Fragment);
+        }
+
+        return (text, copies, notFetched);
+    }
+
+    // A file on the PC a link points to: relative to the document's folder, or a full path
+    // (C:\… or C:/…) or file: address. Null for anything else, or a file that is not there.
+    private static (string Path, string Suffix)? LinkedLocalFile(string url, string? documentFolder)
+    {
+        try
+        {
+            if (url.StartsWith("file:", StringComparison.OrdinalIgnoreCase) && Uri.TryCreate(url, UriKind.Absolute, out var fileUri) && fileUri.IsFile)
+            {
+                return File.Exists(fileUri.LocalPath) ? (fileUri.LocalPath, fileUri.Fragment) : null;
+            }
+
+            if (System.Text.RegularExpressions.Regex.IsMatch(url, @"^[A-Za-z]:[\\/]"))
+            {
+                var cut = url.IndexOf('#');
+                var full = Path.GetFullPath(Uri.UnescapeDataString(cut < 0 ? url : url[..cut]));
+                return File.Exists(full) ? (full, cut < 0 ? string.Empty : url[cut..]) : null;
+            }
+        }
+        catch (Exception ex) when (ex is ArgumentException or NotSupportedException or PathTooLongException or UriFormatException)
+        {
+            return null;
+        }
+
+        return documentFolder is null ? null : ResolveLocalFile(url, [documentFolder]);
+    }
+
+    // The link written as old, in Markdown ((old), (<old>)) or HTML ("old", 'old'), made to
+    // point to replacement; examples in code (fenced blocks and `code`) stay as written.
+    private static string ReplaceLinkUrl(string text, string old, string replacement)
+    {
+        var code = CodeRanges(text);
+        return System.Text.RegularExpressions.Regex.Replace(text,
+            $"""(?<=[(<"'])({System.Text.RegularExpressions.Regex.Escape(old)})(?=[)>"'\s])""",
+            match => code.Any(range => match.Index >= range.Start && match.Index < range.End) ? match.Value : replacement);
+    }
+
+    // Where the code is in Markdown: fenced blocks (``` or ~~~) and `code` spans on one line.
+    private static List<(int Start, int End)> CodeRanges(string text)
+    {
+        var ranges = new List<(int Start, int End)>();
+        string? fence = null;
+        var fenceStart = 0;
+        var at = 0;
+        foreach (var line in text.Split('\n'))
+        {
+            var mark = System.Text.RegularExpressions.Regex.Match(line, @"^ {0,3}(`{3,}|~{3,})");
+            if (fence is not null)
+            {
+                if (mark.Success && mark.Groups[1].Value[0] == fence[0] && mark.Groups[1].Length >= fence.Length && line.Trim().Trim('`', '~').Length == 0)
+                {
+                    ranges.Add((fenceStart, at + line.Length));
+                    fence = null;
+                }
+            }
+            else if (mark.Success)
+            {
+                fence = mark.Groups[1].Value;
+                fenceStart = at;
+            }
+            else
+            {
+                foreach (System.Text.RegularExpressions.Match span in System.Text.RegularExpressions.Regex.Matches(line, @"(`+)[^`]*?\1"))
+                {
+                    ranges.Add((at + span.Index, at + span.Index + span.Length));
+                }
+            }
+
+            at += line.Length + 1;
+        }
+
+        if (fence is not null)
+        {
+            ranges.Add((fenceStart, text.Length));
+        }
+
+        return ranges;
+    }
+
+    // A file on the internet, for the sharing ZIP, or null when it cannot be had.
+    private static async Task<byte[]?> DownloadFileAsync(Uri uri)
+    {
+        try
+        {
+            using var response = await Http.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead);
+            if (!response.IsSuccessStatusCode || response.Content.Headers.ContentLength > MaxZipDownloadBytes)
+            {
+                return null;
+            }
+
+            await using var stream = await response.Content.ReadAsStreamAsync();
+            using var buffer = new MemoryStream();
+            var chunk = new byte[81920];
+            int read;
+            while ((read = await stream.ReadAsync(chunk)) > 0)
+            {
+                buffer.Write(chunk, 0, read);
+                if (buffer.Length > MaxZipDownloadBytes)
+                {
+                    return null;
+                }
+            }
+
+            return buffer.ToArray();
+        }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or IOException or InvalidOperationException)
+        {
+            return null;
+        }
     }
 
     // To the Recycle Bin, so a file left out by mistake can be put back.
@@ -3286,6 +4579,96 @@ public partial class MainWindow : Window
         return TryResolveDocumentImage(url.Replace('\\', '/'), out var path, out _) ? path : null;
     }
 
+    // Files beside the document and in the folders under it (two levels), as links write them
+    // ("images/a.png"), for completing a link's address. Hidden folders and a saved document
+    // only: a new one has no folder yet.
+    private List<string> DocumentFolderFiles()
+    {
+        var files = new List<string>();
+        if (_filePath is null || Path.GetDirectoryName(_filePath) is not { } folder)
+        {
+            return files;
+        }
+
+        void Visit(string directory, string prefix, int depth)
+        {
+            try
+            {
+                foreach (var file in Directory.EnumerateFiles(directory))
+                {
+                    var name = Path.GetFileName(file);
+                    if (!name.StartsWith('.') && files.Count < 500)
+                    {
+                        files.Add(prefix + name);
+                    }
+                }
+
+                if (depth == 0)
+                {
+                    return;
+                }
+
+                foreach (var sub in Directory.EnumerateDirectories(directory))
+                {
+                    var name = Path.GetFileName(sub);
+                    if (!name.StartsWith('.') && name is not ("node_modules" or "bin" or "obj") && files.Count < 500)
+                    {
+                        Visit(sub, prefix + name + "/", depth - 1);
+                    }
+                }
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+            }
+        }
+
+        Visit(folder, string.Empty, 2);
+        return files;
+    }
+
+    private const string PdfPageNumberFooter =
+        "<div style=\"width:100%;text-align:center;font-size:9pt;color:#4a4a4a;font-family:'BIZ UDPGothic','Yu Gothic UI','Microsoft YaHei UI',sans-serif\">"
+        + "<span class=\"pageNumber\"></span> / <span class=\"totalPages\"></span></div>";
+
+    // The page printed to a tagged PDF with the same paper, margins, and backgrounds as
+    // the print settings; false when DevTools cannot print it (the plain print that is then
+    // used has no page numbers).
+    private async Task<bool> PrintTaggedPdfAsync(string path, CoreWebView2PrintSettings settings)
+    {
+        try
+        {
+            var parameters = JsonSerializer.Serialize(new
+            {
+                paperWidth = settings.PageWidth,
+                paperHeight = settings.PageHeight,
+                marginTop = settings.MarginTop,
+                marginBottom = settings.MarginBottom,
+                marginLeft = settings.MarginLeft,
+                marginRight = settings.MarginRight,
+                landscape = settings.Orientation == CoreWebView2PrintOrientation.Landscape,
+                printBackground = settings.ShouldPrintBackgrounds,
+                // Page numbers only: an empty header, and "2 / 5" centered in the bottom margin.
+                displayHeaderFooter = _pdfPageNumbers,
+                headerTemplate = "<div></div>",
+                footerTemplate = PdfPageNumberFooter,
+                generateTaggedPDF = true,
+            });
+            var result = await EditorWebView.CoreWebView2.CallDevToolsProtocolMethodAsync("Page.printToPDF", parameters);
+            using var json = JsonDocument.Parse(result);
+            if (!json.RootElement.TryGetProperty("data", out var data) || data.GetString() is not { Length: > 0 } base64)
+            {
+                return false;
+            }
+
+            await File.WriteAllBytesAsync(path, Convert.FromBase64String(base64));
+            return true;
+        }
+        catch (Exception ex) when (ex is COMException or InvalidOperationException or JsonException or FormatException or IOException or UnauthorizedAccessException or ArgumentException)
+        {
+            return false;
+        }
+    }
+
     private async Task ExportPdfAsync(string? presetPath = null)
     {
         if (_pdfExportActive)
@@ -3351,9 +4734,11 @@ public partial class MainWindow : Window
                 tempPath = Path.Combine(
                     Path.GetDirectoryName(Path.GetFullPath(targetPath))!,
                     $".mdEditor-{Guid.NewGuid():N}.tmp");
-                saved = await EditorWebView.CoreWebView2.PrintToPdfAsync(
-                    tempPath,
-                    settings);
+                // A tagged PDF keeps what is a heading, a paragraph, a list, or a table (opening
+                // it again reads them back, and screen readers use them). WebView2's own print
+                // has no such setting, so DevTools prints it; if that fails, the plain print.
+                saved = await PrintTaggedPdfAsync(tempPath, settings)
+                        || await EditorWebView.CoreWebView2.PrintToPdfAsync(tempPath, settings);
                 if (saved)
                 {
                     File.Move(tempPath, targetPath, overwrite: true);
@@ -3449,6 +4834,14 @@ public partial class MainWindow : Window
         {
             SendToPage(new { type = "paper", paper = _paper, autoPaper = RegionPaper() });
         }
+    }
+
+    // "Closer to GitHub" with the other settings following it too leaves out what GitHub does
+    // not show: line breaks in paragraphs and \(x\) math.
+    private static MarkdownPipeline BuildPipeline(bool nearGitHub, bool all, bool lineBreaks)
+    {
+        var github = nearGitHub && all;
+        return MarkdownPipelines.Build(nearGitHub, lineBreaks && !github, latexMath: !github);
     }
 
     private static string? LoadSetting(string name)
@@ -3761,6 +5154,7 @@ public partial class MainWindow : Window
                 type = "preview",
                 html,
                 lines,
+                softBreaks = _softBreaks,
                 mapsAllowed = _mapsAllowedHere,
                 notifyRendered,
                 forPrint,
@@ -3805,6 +5199,7 @@ public partial class MainWindow : Window
         renderer.ObjectRenderers.ReplaceOrAdd<HtmlInlineRenderer>(new RawHtmlInlineRenderer(EditorOffset));
         renderer.ObjectRenderers.ReplaceOrAdd<Markdig.Extensions.Yaml.YamlFrontMatterHtmlRenderer>(new FrontMatterTableRenderer());
         var document = Markdown.Parse(text, _markdownPipeline);
+        _softBreaks = LineBreaksExtension.SoftBreaks(document);
         ResolveRelativeImages(document);
         foreach (var image in document.Descendants<LinkInline>().Where(link => link.IsImage))
         {
@@ -3903,9 +5298,17 @@ public partial class MainWindow : Window
         }
 
         var hasFolder = _filePath is not null || _importFolder is not null;
-        return hasFolder && !url.StartsWith('/') && Uri.TryCreate(new Uri($"https://{DocumentHost}/"), url.Replace('\\', '/'), out var resolved)
-            ? (resolved.AbsoluteUri, null)
-            : (null, null);
+        if (!hasFolder || url.StartsWith('/') || !Uri.TryCreate(new Uri($"https://{DocumentHost}/"), url.Replace('\\', '/'), out var resolved))
+        {
+            return (null, null);
+        }
+
+        // The file's time goes in the address (/~time/name_files/a.png; TryResolveDocumentImage
+        // leaves it out again), so a picture written again under the same name (a PDF opened
+        // again another way, a picture replaced) is not shown from the page's cache.
+        return TryResolveDocumentImage(resolved.AbsolutePath, out var file, out _)
+            ? ($"https://{DocumentHost}/~{File.GetLastWriteTimeUtc(file).Ticks.ToString(System.Globalization.CultureInfo.InvariantCulture)}{resolved.AbsolutePath}{resolved.Fragment}", null)
+            : (resolved.AbsoluteUri, null);
     }
 
     // An image written as HTML (<img>, or <source> in <picture>, as GitHub READMEs
@@ -4160,6 +5563,7 @@ public partial class MainWindow : Window
 
         var core = window.WebView.CoreWebView2;
         core.Settings.AreDevToolsEnabled = false;
+        core.Settings.IsReputationCheckingRequired = false;
         window.WebView.ZoomFactor = LoadZoom("PreviewZoom");
         window.WebView.ZoomFactorChanged += (_, _) => SaveSetting(
             "PreviewZoom",
@@ -4218,6 +5622,11 @@ public partial class MainWindow : Window
             case "attachPreview":
                 window.Close();
                 break;
+            case "zoom":
+                // Ctrl + 0 in the preview window goes back to the default zoom, as in this window.
+                window.WebView.ZoomFactor = DefaultZoom;
+                SaveSetting("PreviewZoom", DefaultZoom.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture));
+                break;
             case "externalLink":
                 OpenExternalLink(root.GetProperty("url").GetString());
                 break;
@@ -4231,7 +5640,7 @@ public partial class MainWindow : Window
                 window.Fullscreen.Set(window, false);
                 break;
             case "dropFile":
-                await HandleDropAsync(e, false);
+                await HandleDropAsync(e, false, window);
                 break;
         }
     }
@@ -4276,7 +5685,7 @@ public partial class MainWindow : Window
 
     private void ShowFileError(string title, Exception ex)
     {
-        var stop = Strings.Language == "en" ? "." : "。";
+        var stop = Strings.Language == "en" ? "." : "。"; // Chinese ends sentences with 。 as Japanese does
         MessageBox.Show(
             $"{Strings.Tr(title)}{stop}\n\n{ex.Message}",
             "mdEditor",

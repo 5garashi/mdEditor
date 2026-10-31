@@ -21,8 +21,8 @@
   <link rel="icon" href="assets/5garashi_mark_simple.svg" type="image/svg+xml">
   <link rel="stylesheet" href="lib/katex/katex.min.css">
   <link rel="stylesheet" href="styles.css">
-  <script src="lib/katex/katex.min.js" defer></script>
-  <script src="lib/mermaid/mermaid.min.js" defer></script>
+  <!-- KaTeX (lib/katex/katex.min.js) and Mermaid (lib/mermaid/mermaid.min.js) are loaded by
+       app.js the first time a document has math or a diagram, so they do not slow down startup. -->
   <script src="lib/codemirror/codemirror.min.js" defer></script>
   <script src="lib/highlight/highlight.min.js" defer></script>
   <script src="lib/highlight/languages/powershell.min.js" defer></script>
@@ -39,28 +39,35 @@
       </picture>
       <h1>mdEditor</h1>
     </div>
+    <!-- The open document sits in the header between the logotype and the mark, clear of
+         both (Identity 3-5, 9-1), so the toolbar below has a whole row for its buttons. -->
+    <div class="document-status" aria-live="polite">
+      <span id="document-name">新しい文書.md</span>
+      <span id="save-state">保存済み</span>
+      <button id="encoding-button" class="status-button" type="button" aria-haspopup="dialog">UTF-8</button>
+    </div>
     <!-- The symbol mark stays red (volt) in dark mode too, by the owner's choice. -->
     <picture>
       <img class="brand-mark" src="assets/5garashi_mark_simple.svg" alt="" aria-hidden="true">
     </picture>
   </header>
   <section class="toolbar" data-i18n-attr="aria-label:toolbar">
-    <div class="document-status" aria-live="polite">
-      <span id="document-name">新しい文書.md</span>
-      <span id="save-state">保存済み</span>
-      <button id="encoding-button" class="status-button" type="button" aria-haspopup="dialog">UTF-8</button>
-    </div>
     <div class="actions">
       <button id="open-button" type="button" data-i18n="open">開く</button>
       <button id="restore-button" type="button" data-i18n="restoreDiscarded" hidden>前の文書に戻す</button>
       <button id="url-button" type="button" data-i18n="openUrl" aria-haspopup="dialog">URLを開く</button>
       <button id="save-button" class="primary" type="button" data-i18n="save">保存</button>
-      <button id="save-as-button" type="button" data-i18n="saveAs">名前を付けて保存</button>      <button id="paper-button" type="button">用紙: 自動（A4）</button>
-      <button id="theme-button" type="button">表示: 自動</button>
+      <button id="save-as-button" type="button" data-i18n="saveAs">名前を付けて保存</button>
+      <!-- Theme and paper are in Settings (Ctrl+Shift+T / Ctrl+Shift+A switch them anywhere). -->
       <button id="settings-button" type="button" data-i18n="settings" aria-haspopup="dialog">設定</button>
       <button id="sample-button" type="button" data-i18n="sample" aria-haspopup="dialog">サンプル</button>
       <button id="about-button" type="button" data-i18n="about" aria-haspopup="dialog">このアプリについて</button>
-      <button id="language-button" type="button" lang="en" data-i18n="languageToggle" data-i18n-attr="aria-label:languageLabel">English</button>
+      <label class="language-picker"><span lang="en">Language</span>
+        <select id="language-select">
+          <option value="ja" lang="ja">日本語</option>
+          <option value="en" lang="en">English</option>
+          <option value="zh" lang="zh-CN">简体中文</option>
+        </select></label>
     </div>
   </section>
   <div id="notice" class="notice" role="status" hidden>
@@ -69,18 +76,26 @@
     <button id="notice-encoding" type="button" data-i18n="noticeChoose">文字コードを選ぶ</button>
     <button id="notice-action" type="button" data-i18n="loadExternal" hidden>画像を読み込む</button>
     <button id="notice-maps" type="button" data-i18n="loadMaps" hidden>詳細な地図を読み込む</button>
+    <button id="notice-fix" type="button" aria-pressed="false" hidden></button>
+    <button id="notice-fix-details" type="button" data-i18n="fixDetails" aria-haspopup="dialog" hidden>内訳</button>
+    <button id="notice-line-breaks" type="button" aria-pressed="true" hidden></button>
+    <button id="notice-original" type="button" aria-pressed="false" hidden></button>
+    <button id="notice-browser" type="button" data-i18n="originalBrowser" data-i18n-attr="title:originalBrowserTitle" title="いつものブラウザーで開きます。ページのスクリプトが動き、インターネットから地図などを読み込みます。" hidden>ブラウザーで開く</button>
+    <button id="notice-reopen" type="button" hidden></button>
+    <button id="notice-reopen-tables" type="button" hidden></button>
     <button id="notice-close" type="button" data-i18n="close">閉じる</button>
   </div>
   <main class="workspace">
     <section class="pane editor-pane" aria-labelledby="editor-heading">
       <div class="pane-heading">
-        <h2 id="editor-heading" data-i18n="editorHeading">Markdown を編集</h2>
+        <!-- Kept for screen readers (it names the pane); hidden so the buttons fit on one line. -->
+        <h2 id="editor-heading" class="visually-hidden" data-i18n="editorHeading">Markdown を編集</h2>
         <button id="replace-button" type="button" data-i18n="findReplace">検索・置換</button>
         <button id="toc-button" type="button" data-i18n="toc">目次</button>
         <button id="image-button" type="button" data-i18n="imageButton" aria-haspopup="dialog">画像の調整</button>
         <button id="help-button" type="button" data-i18n="help" aria-haspopup="dialog">書き方</button>
         <button id="shortcuts-button" type="button" data-i18n="shortcuts" aria-haspopup="dialog">キー操作</button>
-        <button class="pane-fullscreen-button" type="button" data-fullscreen-mode="editor" aria-pressed="false">編集画面をウィンドウ全体に表示</button>
+        <button class="pane-fullscreen-button" type="button" data-fullscreen-mode="editor" aria-pressed="false" aria-label="編集画面をウィンドウ全体に表示">ウィンドウ全体に表示</button>
         <button type="button" data-detach="editor" hidden>プレビューを本体に戻す</button>
       </div>
       <div id="find-bar" class="find-bar" role="search" hidden>
@@ -90,6 +105,7 @@
           <button id="find-prev" type="button" data-i18n="findPrev">前へ</button>
           <button id="find-next" type="button" data-i18n="findNext">次へ</button>
           <label class="find-case"><input id="find-case" type="checkbox"> <span data-i18n="matchCase">大文字小文字を区別</span></label>
+          <label class="find-case"><input id="find-regex" type="checkbox"> <span data-i18n="findRegex">正規表現</span></label>
           <button id="find-close" type="button" data-i18n="close" data-i18n-attr="aria-label:close">閉じる</button>
         </div>
         <div class="find-row replace-section">
@@ -97,11 +113,14 @@
           <input id="replace-input" type="text" data-i18n-attr="placeholder:replacePlaceholder;aria-label:replacePlaceholder" autocomplete="off" spellcheck="false">
           <button id="replace-one" type="button" data-i18n="replaceOne">置換</button>
           <button id="replace-all" type="button" data-i18n="replaceAll">すべて置換</button>
+          <button id="find-save-rule" type="button" data-i18n="saveAsRule" aria-haspopup="dialog">ルールに保存</button>
           <span id="find-status" class="find-status" aria-live="polite"></span>
         </div>
       </div>
       <!-- CodeMirror 6 mounts here (app.js); its content element carries the label. -->
       <div id="editor" class="editor-host"></div>
+      <div id="original-view" class="original-view" tabindex="0" role="region" aria-label="元の PDF（ページの画像）" hidden></div>
+      <button id="lint-status" class="lint-status" type="button" hidden></button>
     </section>
     <div id="pane-divider"
          class="pane-divider"
@@ -124,7 +143,7 @@
           <button id="reader-stop" type="button" data-i18n="readerStop" disabled>停止</button>
         </div>
         <button type="button" data-detach="preview">別ウィンドウで表示</button>
-        <button class="pane-fullscreen-button" type="button" data-fullscreen-mode="preview" aria-pressed="false">プレビューをウィンドウ全体に表示</button>
+        <button class="pane-fullscreen-button" type="button" data-fullscreen-mode="preview" aria-pressed="false" aria-label="プレビューをウィンドウ全体に表示">ウィンドウ全体に表示</button>
       </div>
       <!-- tabindex lets keyboard users focus and scroll a long preview (Identity 7-3 (2)). -->
       <article id="preview"
@@ -179,12 +198,20 @@
       <label class="settings-check"><input id="setting-full-width" type="checkbox"> <span data-i18n="settingsFullWidth">プレビューの本文の幅を制限しない（広い画面で1行を長くする）</span></label>
     </fieldset>
     <fieldset class="settings-group">
+      <legend data-i18n="settingsThemePaper">表示テーマと PDF の用紙</legend>
+      <div class="settings-row theme-paper-row">
+        <button id="theme-button" type="button">表示: 自動</button>
+        <button id="paper-button" type="button">用紙: 自動（A4）</button>
+      </div>
+      <p class="settings-note" data-i18n="settingsThemePaperNote"></p>
+    </fieldset>
+    <fieldset class="settings-group">
       <legend data-i18n="settingsZoom">画面全体の表示倍率</legend>
       <div class="settings-row zoom-row">
         <button id="zoom-out" type="button" data-i18n="zoomOut">縮小</button>
-        <output id="zoom-value" aria-live="polite">100%</output>
+        <output id="zoom-value" aria-live="polite">90%</output>
         <button id="zoom-in" type="button" data-i18n="zoomIn">拡大</button>
-        <button id="zoom-reset" type="button" data-i18n="zoomReset">100% に戻す</button>
+        <button id="zoom-reset" type="button" data-i18n="zoomReset">初期値（90%）に戻す</button>
       </div>
       <p class="settings-note" data-i18n="zoomNote"></p>
     </fieldset>
@@ -192,6 +219,11 @@
       <legend data-i18n="settingsEditor">編集欄</legend>
       <label class="settings-check"><input id="setting-active-line" type="checkbox"> <span data-i18n="settingsActiveLine">いまの行を強調する</span></label>
       <label class="settings-check"><input id="setting-thick-caret" type="checkbox"> <span data-i18n="settingsThickCaret">カーソルを太くする</span></label>
+      <label class="settings-check"><input id="setting-colors" type="checkbox" checked> <span data-i18n="settingsColors">Markdown の書き方を色分けする（見出し、強調、リンク、コード、数式など）</span></label>
+      <label class="settings-check"><input id="setting-lint" type="checkbox" checked> <span data-i18n="settingsLint">Markdown の書き方を確かめる（問題のある所に波線を引き、行に印を付ける）</span></label>
+      <label class="settings-check"><input id="setting-completion" type="checkbox" checked> <span data-i18n="settingsCompletion">入力の候補を出す（リンク先の見出しとファイル、数式の命令）</span></label>
+      <div class="settings-row"><button id="setting-fix-rules" type="button" data-i18n="settingsFixRules" aria-haspopup="dialog">自動修正のルール…</button></div>
+      <p class="settings-note" data-i18n="settingsFixRulesNote"></p>
     </fieldset>
     <fieldset class="settings-group">
       <legend data-i18n="settingsReader">読み上げ</legend>
@@ -216,6 +248,7 @@
           <option value="auto" data-i18n="readerLangAuto">自動（段落ごとに判定）</option>
           <option value="ja" data-i18n="readerLangJa">日本語</option>
           <option value="en" data-i18n="readerLangEn">英語</option>
+          <option value="zh" data-i18n="readerLangZh">中国語（簡体字）</option>
         </select></label>
       <label class="settings-row"><span data-i18n="settingsReaderVoice">音声</span>
         <select id="setting-reader-voice"></select></label>
@@ -251,12 +284,53 @@
     <fieldset class="settings-group">
       <legend data-i18n="settingsMarkdown">Markdown の書き方</legend>
       <label class="settings-check"><input id="setting-near-github" type="checkbox"> <span data-i18n="settingsNearGitHub">GitHub での表示に近づける（mdEditor 独自の書き方を使わない）</span></label>
+      <div class="settings-choices" role="radiogroup" data-i18n-attr="aria-label:settingsNearGitHubScope" aria-label="ほかの表示の設定">
+        <label class="settings-check"><input id="setting-near-github-all" type="radio" name="near-github-scope" disabled> <span data-i18n="settingsNearGitHubAll">ほかの表示の設定も GitHub に合わせる（段落の中の改行・\(…\) の数式を使わない）</span></label>
+        <label class="settings-check"><input id="setting-near-github-own" type="radio" name="near-github-scope" checked disabled> <span data-i18n="settingsNearGitHubOwn">ほかの表示の設定はそのまま使う</span></label>
+      </div>
       <p class="settings-note" data-i18n="settingsNearGitHubNote"></p>
+      <label class="settings-check"><input id="setting-line-breaks" type="checkbox" checked> <span data-i18n="settingsLineBreaks">段落の中の改行も、そのまま改行して表示する</span></label>
+      <p id="setting-line-breaks-github" class="settings-note" data-i18n="settingsLineBreaksGitHub" hidden></p>
+      <p class="settings-note" data-i18n="settingsLineBreaksNote"></p>
+    </fieldset>
+    <fieldset class="settings-group">
+      <legend data-i18n="settingsPdf">PDF の取り込み</legend>
+      <label class="settings-row"><span data-i18n="settingsPdfFigureText">図のまわりの文字</span>
+        <select id="setting-pdf-figure-text">
+          <option value="picture" data-i18n="pdfFigureTextPicture">図に入れる（見た目優先・初期設定）</option>
+          <option value="text" data-i18n="pdfFigureTextText">文字として残す（編集優先）</option>
+        </select></label>
+      <p class="settings-note" data-i18n="settingsPdfFigureTextNote"></p>
+      <label class="settings-row"><span data-i18n="settingsPdfTables">表</span>
+        <select id="setting-pdf-tables">
+          <option value="text" data-i18n="pdfTablesText">Markdown の表にする（編集優先・初期設定）</option>
+          <option value="picture" data-i18n="pdfTablesPicture">画像にする（見た目優先）</option>
+        </select></label>
+      <label class="settings-check"><input id="setting-pdf-align" type="checkbox" checked> <span data-i18n="settingsPdfAlign">右寄せ・中央寄せの文を HTML（align）で書いて、位置を残す</span></label>
+      <label class="settings-check"><input id="setting-pdf-page-pictures" type="checkbox" checked> <span data-i18n="settingsPdfPagePictures">文字を読み取れないページ（縦書き・文字化けする書体・図形で描いた文字）を、ページ全体の画像にする</span></label>
+      <div class="settings-row"><button id="setting-pdf-file" type="button" data-i18n="settingsPdfFile">詳細な数値を開く</button></div>
+      <p class="settings-note"><span data-i18n="settingsPdfFileNote"></span> <span id="setting-pdf-file-path"></span></p>
     </fieldset>
     <fieldset class="settings-group">
       <legend data-i18n="settingsExport">書き出し</legend>
-      <label class="settings-check"><input id="setting-html-source" type="checkbox"> <span data-i18n="settingsHtmlSource">HTMLに保存するとき、元の Markdown も入れる（mdEditor で開くと元どおりに戻せる）</span></label>
+      <label class="settings-check"><input id="setting-html-source" type="checkbox" checked> <span data-i18n="settingsHtmlSource">HTMLに保存するとき、元の Markdown も入れる（mdEditor で開くと元どおりに戻せる）</span></label>
+      <label class="settings-check"><input id="setting-pdf-page-numbers" type="checkbox" checked> <span data-i18n="settingsPdfPageNumbers">PDF の各ページの下にページ番号（2 / 5 の形）を入れる</span></label>
       <p class="settings-note" data-i18n="settingsHtmlSourceNote"></p>
+      <label class="settings-row"><span data-i18n="settingsZipLinks">配布用 ZIP に入れるファイル</span>
+        <select id="setting-zip-links">
+          <option value="folder" data-i18n="zipLinksFolder">「名前_files」フォルダーのファイルだけ</option>
+          <option value="local" data-i18n="zipLinksLocal" selected>PC の中のリンク先のファイルも「名前_files」に写す（初期設定）</option>
+          <option value="all" data-i18n="zipLinksAll">インターネット上のリンク先のファイルも「名前_files」に写す</option>
+        </select></label>
+      <p class="settings-note" data-i18n="settingsZipLinksNote"></p>
+    </fieldset>
+    <fieldset class="settings-group">
+      <legend data-i18n="settingsPasteKey">クリップボードから新規作成</legend>
+      <label class="settings-row"><span data-i18n="pasteKeyLabel">起動するキー</span>
+        <select id="setting-paste-key">
+          <option value="" data-i18n="pasteKeyNone">なし</option>
+        </select></label>
+      <p id="paste-key-note" class="settings-note" aria-live="polite"></p>
     </fieldset>
     <fieldset class="settings-group">
       <legend data-i18n="settingsBackup">自動バックアップ</legend>
@@ -264,7 +338,55 @@
       <p class="settings-note" data-i18n="settingsBackupNote"></p>
     </fieldset>
     <div class="encoding-actions shortcut-actions">
-      <button id="settings-reset" type="button" data-i18n="settingsReset">表示の設定を初期設定に戻す</button>
+      <button id="settings-reset" type="button" data-i18n="settingsReset">初期設定に戻す</button>
+    </div>
+  </dialog>
+  <dialog id="fix-rules-dialog" class="help-dialog" aria-labelledby="fix-rules-heading">
+    <div class="help-header">
+      <h2 id="fix-rules-heading" data-i18n="fixRulesHeading">自動修正のルール</h2>
+      <button id="fix-rules-close" type="button" data-i18n="close">閉じる</button>
+    </div>
+    <p class="help-intro" data-i18n="fixRulesIntro"></p>
+    <form id="fix-rule-form" class="fix-rule-form settings-group" aria-labelledby="fix-rule-heading" hidden>
+      <h3 id="fix-rule-heading">新しいルール</h3>
+      <label class="fix-rule-field"><span data-i18n="fixRuleName">名前</span><input id="fix-rule-name" type="text" autocomplete="off"></label>
+      <label class="fix-rule-field"><span data-i18n="fixRulePattern">探す（正規表現）</span><input id="fix-rule-pattern" class="fix-rule-code" type="text" autocomplete="off" spellcheck="false"></label>
+      <label class="fix-rule-field"><span data-i18n="fixRuleReplacement">置き換え</span><input id="fix-rule-replacement" class="fix-rule-code" type="text" autocomplete="off" spellcheck="false" aria-describedby="fix-rule-replacement-note"></label>
+      <p id="fix-rule-replacement-note" class="settings-note" data-i18n="fixRuleReplacementNote"></p>
+      <label class="settings-check"><input id="fix-rule-case" type="checkbox"> <span data-i18n="fixRuleCase">大文字と小文字を区別する</span></label>
+      <label class="settings-check"><input id="fix-rule-multiline" type="checkbox"> <span data-i18n="fixRuleMultiline">行をまたいで探す（^ と $ は行の始めと終わり）</span></label>
+      <fieldset class="fix-rule-skip">
+        <legend data-i18n="fixRuleSkip">読まない所</legend>
+        <label class="settings-check"><input id="fix-rule-skip-code" type="checkbox" checked> <span data-i18n="fixRuleSkipCode">コード</span></label>
+        <label class="settings-check"><input id="fix-rule-skip-math" type="checkbox" checked> <span data-i18n="fixRuleSkipMath">数式</span></label>
+        <label class="settings-check"><input id="fix-rule-skip-html" type="checkbox" checked> <span data-i18n="fixRuleSkipHtml">HTML のタグ</span></label>
+      </fieldset>
+      <label class="settings-row"><span data-i18n="fixRuleWhen">当てる時</span><select id="fix-rule-when"></select></label>
+      <p id="fix-rule-problem" class="fix-rule-problem" role="alert"></p>
+      <div class="fix-rule-buttons">
+        <button id="fix-rule-test" type="button" data-i18n="fixRuleTest">この文書で試す</button>
+        <button id="fix-rule-save" class="primary" type="submit" data-i18n="fixRuleSave">保存</button>
+        <button id="fix-rule-cancel" type="button" data-i18n="fixRuleCancel">取り消す</button>
+      </div>
+      <div id="fix-rule-result" class="fix-rule-result" aria-live="polite"></div>
+    </form>
+    <ol id="fix-rules-list" class="fix-rules-list"></ol>
+    <div class="encoding-actions">
+      <button id="fix-rules-new" type="button" data-i18n="fixRulesNew">新しいルール</button>
+      <button id="fix-rules-export" type="button" data-i18n="fixRulesExport">書き出す…</button>
+      <button id="fix-rules-import" type="button" data-i18n="fixRulesImport">読み込む…</button>
+      <button id="fix-rules-restore" type="button" data-i18n="fixRulesRestore">削除した例を戻す</button>
+    </div>
+    <p id="fix-rules-status" class="settings-note fix-rules-status" aria-live="polite"></p>
+  </dialog>
+  <dialog id="fix-details-dialog" class="help-dialog settings-dialog" aria-labelledby="fix-details-heading">
+    <div class="help-header">
+      <h2 id="fix-details-heading" data-i18n="fixDetailsHeading">自動修正の内訳</h2>
+      <button id="fix-details-close" type="button" data-i18n="close">閉じる</button>
+    </div>
+    <ol id="fix-details-list" class="fix-rules-list"></ol>
+    <div class="encoding-actions fix-details-actions">
+      <button id="fix-details-rules" type="button" data-i18n="fixDetailsRules">ルールを開く</button>
     </div>
   </dialog>
   <dialog id="shortcut-dialog" class="help-dialog" aria-labelledby="shortcut-heading">
@@ -377,7 +499,7 @@
     <p class="help-intro"><span data-i18n="aboutVersion">バージョン</span> <span id="app-version"></span></p>
     <ul class="about-links">
       <li><a href="https://www.5garashi.com/" data-i18n="aboutCompany">5garashi.com Design Office の紹介</a></li>
-      <li><a href="https://github.com/5garashi" data-i18n="aboutWorks">作品・ほかのアプリ</a></li>
+      <li hidden><a href="https://github.com/5garashi" data-i18n="aboutWorks">作品・ほかのアプリ</a></li>
       <li><a href="https://github.com/5garashi/mdEditor/issues" data-i18n="aboutSupport">サポート・お問い合わせ</a></li>
       <li><a href="https://github.com/5garashi/mdEditor/blob/main/PRIVACY.md" data-i18n="aboutPrivacy">プライバシーポリシー</a></li>
     </ul>

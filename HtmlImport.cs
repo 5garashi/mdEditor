@@ -6,9 +6,12 @@
   License: MIT
   SPDX-License-Identifier: MIT
 */
+using System.IO;
+using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
+using AngleSharp;
 using AngleSharp.Dom;
 using AngleSharp.Html.Parser;
 
@@ -64,13 +67,37 @@ internal static class HtmlImport
 
     // The Markdown for an HTML file, and whether it is the embedded original
     // (exact) rather than a conversion (headings, lists, tables, links, and
-    // images survive; colors, layout, and drawn diagrams do not).
-    public static (string Markdown, bool Exact) ToMarkdown(string html, Uri? pageUrl = null, Func<string, bool>? existsLocally = null)
+    // images survive; colors and layout do not). Diagrams mdEditor drew come back as
+    // their code when the HTML keeps it (data-mdeditor-code); other drawn pictures
+    // (SVG, and images written into the page as data:) are handed to keepPicture,
+    // which stores them and gives the address to use, or are left out without it.
+    public static (string Markdown, bool Exact) ToMarkdown(string html, Uri? pageUrl = null, Func<string, bool>? existsLocally = null,
+        Func<byte[], string, string?>? keepPicture = null, Func<IReadOnlyList<MapTile>, byte[]?>? drawMap = null)
     {
         var document = new HtmlParser().ParseDocument(html);
         if (document.GetElementById(SourceId) is { } source && TryReadSource(source.TextContent, out var original))
         {
             return (original, true);
+        }
+
+        // A box with a picture as its background (style="background-image: url(...)", as a
+        // site's title banner often is) gets the picture as an image before its content:
+        // Markdown cannot put words over a picture, so they follow it.
+        foreach (var box in document.QuerySelectorAll("[style*='background']").ToList())
+        {
+            if (box.LocalName is "span" or "a" or "img" or "body" or "html" || box.Closest("svg, a, button") is not null
+                || System.Text.RegularExpressions.Regex.Match(box.GetAttribute("style")!, @"background(?:-image)?\s*:[^;]*url\(\s*['""]?([^'"")]+)['""]?\s*\)",
+                    System.Text.RegularExpressions.RegexOptions.IgnoreCase) is not { Success: true } match)
+            {
+                continue;
+            }
+
+            var paragraph = document.CreateElement("p");
+            var image = document.CreateElement("img");
+            image.SetAttribute("src", match.Groups[1].Value.Trim());
+            image.SetAttribute("alt", string.Empty);
+            paragraph.AppendChild(image);
+            box.Prepend(paragraph);
         }
 
         // Relative images and links that are not beside the file (a page from the
@@ -159,6 +186,61 @@ internal static class HtmlImport
             }
         }
 
+        // Diagrams saved by mdEditor with their code return as code blocks (placeholders,
+        // as for math below, keep the converter from escaping the code).
+        var fences = new List<string>();
+        foreach (var element in document.QuerySelectorAll("[data-mdeditor-fence][data-mdeditor-code]").ToList())
+        {
+            var language = System.Text.RegularExpressions.Regex.Replace(element.GetAttribute("data-mdeditor-fence")!, "[^A-Za-z0-9_+-]", "");
+            var code = element.GetAttribute("data-mdeditor-code")!.Replace("\r\n", "\n").TrimEnd('\n');
+            var longest = System.Text.RegularExpressions.Regex.Matches(code, "`+").Select(match => match.Length).DefaultIfEmpty(0).Max();
+            var fence = new string('`', Math.Max(3, longest + 1));
+            fences.Add($"{fence}{language}\n{code}\n{fence}");
+            var paragraph = document.CreateElement("p");
+            paragraph.TextContent = $"MDEDITORFENCE{fences.Count - 1}X";
+            element.Replace(paragraph);
+        }
+
+        // A Leaflet map's saved tiles, laid out as they were, become one picture (drawMap
+        // joins them) in place of the map; its controls and credits stay.
+        if (keepPicture is not null && drawMap is not null)
+        {
+            foreach (var pane in document.QuerySelectorAll(".leaflet-container .leaflet-map-pane").ToList())
+            {
+                var tiles = MapTiles(pane);
+                if (tiles.Count > 0 && drawMap(tiles) is { } png && keepPicture(png, ".png") is { } address)
+                {
+                    var paragraph = document.CreateElement("p");
+                    var image = document.CreateElement("img");
+                    image.SetAttribute("src", address);
+                    image.SetAttribute("alt", Strings.Tr("地図（保存した時点の表示）"));
+                    paragraph.AppendChild(image);
+                    pane.Replace(paragraph);
+                }
+            }
+        }
+
+        // What only works on the page (buttons, choices, closed dialogs, what is hidden,
+        // canvases, and a Leaflet map's tiles and controls) is not part of the text.
+        foreach (var element in document.QuerySelectorAll(
+                     "button, select, input, textarea, label, dialog:not([open]), [hidden], [aria-hidden='true'], canvas, .leaflet-pane, .leaflet-control-zoom").ToList())
+        {
+            element.Remove();
+        }
+
+        foreach (var element in document.QuerySelectorAll("[style]").ToList())
+        {
+            if (System.Text.RegularExpressions.Regex.IsMatch(element.GetAttribute("style")!, @"(^|;)\s*(display\s*:\s*none|visibility\s*:\s*hidden)", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+            {
+                element.Remove();
+            }
+        }
+
+        if (keepPicture is not null)
+        {
+            KeepPictures(document, keepPicture);
+        }
+
         foreach (var element in document.QuerySelectorAll("script, style, noscript, template, svg, iframe, frame, frameset, object, embed, applet, noembed").ToList())
         {
             element.Remove();
@@ -208,10 +290,43 @@ internal static class HtmlImport
             element.Remove();
         }
 
+        // Centered and right-aligned text (style="text-align: ..." on the paragraph or a box
+        // around it) is marked before the boxes go, and kept below as <p align>.
+        foreach (var element in document.QuerySelectorAll("p, div").ToList())
+        {
+            if (element.Closest("[style*='text-align']") is { } aligned
+                && System.Text.RegularExpressions.Regex.Match(aligned.GetAttribute("style")!, @"text-align\s*:\s*(center|right)",
+                    System.Text.RegularExpressions.RegexOptions.IgnoreCase) is { Success: true } alignment)
+            {
+                element.SetAttribute("data-mdeditor-align", alignment.Groups[1].Value.ToLowerInvariant());
+            }
+        }
+
+        // A box holding only words (no headings, paragraphs, or lists inside) is a
+        // paragraph of its own, so the words of boxes side by side do not run together.
         foreach (var element in document.QuerySelectorAll("main, article, section, header, footer, nav, aside, div, span").ToList())
         {
             if (element.Parent is null)
             {
+                continue;
+            }
+
+            if (element.LocalName != "span" && !string.IsNullOrWhiteSpace(element.TextContent)
+                && element.QuerySelector(BlockElements) is null
+                && element.Closest("p, li, dt, dd, td, th, h1, h2, h3, h4, h5, h6, pre, blockquote, a, figcaption") is null)
+            {
+                var paragraph = document.CreateElement("p");
+                if (element.GetAttribute("data-mdeditor-align") is { } align)
+                {
+                    paragraph.SetAttribute("data-mdeditor-align", align);
+                }
+
+                while (element.FirstChild is { } child)
+                {
+                    paragraph.AppendChild(child);
+                }
+
+                element.Replace(paragraph);
                 continue;
             }
 
@@ -229,6 +344,35 @@ internal static class HtmlImport
             image.Replace(document.CreateTextNode(image.GetAttribute("alt") ?? string.Empty));
         }
 
+        // Aligned paragraphs and images given a width stay as HTML (<p align="center">,
+        // <img width="...">), as GitHub shows them; placeholders keep the converter from
+        // escaping it.
+        var raw = new List<string>();
+        string Placeholder(string markup)
+        {
+            raw.Add(markup);
+            return $"MDEDITORHTML{raw.Count - 1}X";
+        }
+
+        foreach (var paragraph in document.QuerySelectorAll("p[data-mdeditor-align]").ToList())
+        {
+            if (paragraph.Closest("li, td, th, blockquote") is null
+                && (!string.IsNullOrWhiteSpace(paragraph.TextContent) || paragraph.QuerySelector("img") is not null))
+            {
+                var placeholder = document.CreateElement("p");
+                placeholder.TextContent = Placeholder($"<p align=\"{paragraph.GetAttribute("data-mdeditor-align")}\">{InlineHtml(paragraph).Trim()}</p>");
+                paragraph.Replace(placeholder);
+            }
+        }
+
+        foreach (var image in document.QuerySelectorAll("img[src]").ToList())
+        {
+            if (ImageWidth(image) is { } width)
+            {
+                image.Replace(document.CreateTextNode(Placeholder(ImageHtml(image, width))));
+            }
+        }
+
         var converter = new ReverseMarkdown.Converter(new ReverseMarkdown.Config
         {
             // The default output already uses GitHub tables; the GitHub flavor setting
@@ -244,7 +388,324 @@ internal static class HtmlImport
             markdown = markdown.Replace($"MDEDITORMATH{index}X", math[index]);
         }
 
+        for (var index = 0; index < fences.Count; index++)
+        {
+            markdown = markdown.Replace($"MDEDITORFENCE{index}X", fences[index]);
+        }
+
+        for (var index = raw.Count - 1; index >= 0; index--)
+        {
+            markdown = markdown.Replace($"MDEDITORHTML{index}X", raw[index]);
+        }
+
         return (markdown.Trim() + "\n", false);
+    }
+
+    // An image's width in pixels as the page set it (width="300" or style="width: 300px"),
+    // or null.
+    private static int? ImageWidth(IElement image)
+    {
+        var value = image.GetAttribute("width");
+        if (System.Text.RegularExpressions.Regex.Match(image.GetAttribute("style") ?? string.Empty, @"(?:^|;)\s*width\s*:\s*([\d.]+)px",
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase) is { Success: true } style)
+        {
+            value = style.Groups[1].Value;
+        }
+
+        return double.TryParse(value?.Trim(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var width)
+               && width >= 1 && width <= 10000
+            ? (int)Math.Round(width)
+            : null;
+    }
+
+    private static string ImageHtml(IElement image, int? width)
+    {
+        static string Encode(string value) => System.Net.WebUtility.HtmlEncode(value);
+        var title = image.GetAttribute("title") is { Length: > 0 } text ? $" title=\"{Encode(text)}\"" : string.Empty;
+        return $"<img src=\"{Encode(image.GetAttribute("src")!)}\" alt=\"{Encode(image.GetAttribute("alt") ?? string.Empty)}\"{title}"
+               + (width is { } pixels ? $" width=\"{pixels}\"" : string.Empty) + ">";
+    }
+
+    // The content of an aligned paragraph as HTML that keeps only what Markdown would:
+    // links, images (with their width), emphasis, code, and line breaks. Other tags give
+    // way to their content, and text is encoded.
+    private static string InlineHtml(INode node)
+    {
+        var html = new StringBuilder();
+        foreach (var child in node.ChildNodes)
+        {
+            if (child is IText text)
+            {
+                // One line: an empty line would end the HTML in Markdown.
+                html.Append(System.Net.WebUtility.HtmlEncode(System.Text.RegularExpressions.Regex.Replace(text.Data, @"\s+", " ")));
+            }
+            else if (child is IElement element)
+            {
+                switch (element.LocalName)
+                {
+                    case "br":
+                        html.Append("<br>");
+                        break;
+                    case "img" when element.HasAttribute("src"):
+                        html.Append(ImageHtml(element, ImageWidth(element)));
+                        break;
+                    case "a" when element.GetAttribute("href") is { Length: > 0 } href:
+                        html.Append($"<a href=\"{System.Net.WebUtility.HtmlEncode(href)}\">{InlineHtml(element)}</a>");
+                        break;
+                    case "strong" or "b" or "em" or "i" or "code" or "sup" or "sub" or "s" or "del" or "kbd":
+                        var tag = element.LocalName switch { "b" => "strong", "i" => "em", var other => other };
+                        html.Append($"<{tag}>{InlineHtml(element)}</{tag}>");
+                        break;
+                    default:
+                        html.Append(InlineHtml(element));
+                        break;
+                }
+            }
+        }
+
+        return html.ToString();
+    }
+
+    // One saved map tile: its picture (src as written), where it was in the map (pixels from
+    // the map's top left, after the moves and zoom of the boxes around it), and how opaque.
+    public sealed record MapTile(string Source, double X, double Y, double Width, double Height, double Opacity);
+
+    // The picture tiles of a Leaflet map pane, placed as the page placed them: each box from
+    // the tile up to the pane moves it (translate3d / translate, or left and top) and may
+    // zoom it (scale, from its top left as Leaflet sets). Drawn tiles (canvas) hold nothing
+    // once saved and are left out.
+    private static List<MapTile> MapTiles(IElement pane)
+    {
+        static double Number(string value) =>
+            double.TryParse(value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var number) ? number : 0;
+        var tiles = new List<MapTile>();
+        foreach (var tile in pane.QuerySelectorAll("img.leaflet-tile[src]"))
+        {
+            double x = 0, y = 0, scale = 1, opacity = 1;
+            var size = (Width: 256.0, Height: 256.0);
+            var styleOf = (IElement element) => element.GetAttribute("style") ?? string.Empty;
+            var own = styleOf(tile);
+            if (System.Text.RegularExpressions.Regex.Match(own, @"(?:^|;)\s*width\s*:\s*([\d.]+)px") is { Success: true } width)
+            {
+                size.Width = Number(width.Groups[1].Value);
+            }
+
+            if (System.Text.RegularExpressions.Regex.Match(own, @"(?:^|;)\s*height\s*:\s*([\d.]+)px") is { Success: true } height)
+            {
+                size.Height = Number(height.Groups[1].Value);
+            }
+
+            for (var element = tile; element is not null; element = element == pane ? null : element.ParentElement)
+            {
+                var style = styleOf(element);
+                var move = System.Text.RegularExpressions.Regex.Match(style, @"translate(?:3d)?\(\s*(-?[\d.]+)px\s*,\s*(-?[\d.]+)px");
+                var zoom = System.Text.RegularExpressions.Regex.Match(style, @"scale\(\s*([\d.]+)\s*\)");
+                var left = System.Text.RegularExpressions.Regex.Match(style, @"(?:^|;)\s*left\s*:\s*(-?[\d.]+)px");
+                var top = System.Text.RegularExpressions.Regex.Match(style, @"(?:^|;)\s*top\s*:\s*(-?[\d.]+)px");
+                var fade = System.Text.RegularExpressions.Regex.Match(style, @"(?:^|;)\s*opacity\s*:\s*([\d.]+)");
+                // transform: translate(t) scale(s) takes a point p to t + s * p.
+                var s = zoom.Success ? Number(zoom.Groups[1].Value) : 1;
+                x = (move.Success ? Number(move.Groups[1].Value) : 0) + (left.Success ? Number(left.Groups[1].Value) : 0) + s * x;
+                y = (move.Success ? Number(move.Groups[2].Value) : 0) + (top.Success ? Number(top.Groups[1].Value) : 0) + s * y;
+                scale *= s;
+                opacity *= fade.Success ? Math.Clamp(Number(fade.Groups[1].Value), 0, 1) : 1;
+            }
+
+            tiles.Add(new MapTile(tile.GetAttribute("src")!, x, y, size.Width * scale, size.Height * scale, opacity));
+        }
+
+        return tiles;
+    }
+
+    private const string BlockElements =
+        "p, div, main, article, section, header, footer, nav, aside, h1, h2, h3, h4, h5, h6, ul, ol, li, dl, table, pre, blockquote, figure, hr, form, fieldset, details";
+
+    // Drawn pictures become picture files: each SVG drawing (a diagram mdEditor drew, or
+    // any drawing at least 48 pixels on a side, so icons are left out) as an .svg of its
+    // own, and each image written into the page (data:) as its file. The drawing's box
+    // (.mermaid, .graphviz, .geo-map) gives way to the picture.
+    private static void KeepPictures(IDocument document, Func<byte[], string, string?> keepPicture)
+    {
+        foreach (var svg in document.QuerySelectorAll("svg").ToList())
+        {
+            if (svg.Parent is null || svg.ParentElement?.Closest("svg, a, button") is not null)
+            {
+                continue;
+            }
+
+            var box = svg.ParentElement?.Closest(".mermaid, .graphviz, .geo-map");
+            if (box is null && !LargeEnough(svg))
+            {
+                continue;
+            }
+
+            var alt = svg.GetAttribute("aria-label")
+                      ?? svg.Children.FirstOrDefault(child => child.LocalName == "title")?.TextContent.Trim()
+                      ?? (box?.ClassList.FirstOrDefault() is { } kind ? kind switch { "mermaid" => "Mermaid", "graphviz" => "Graphviz", _ => "" } : "");
+            if (keepPicture(System.Text.Encoding.UTF8.GetBytes(StandaloneSvg(svg)), ".svg") is not { } address)
+            {
+                continue;
+            }
+
+            var image = document.CreateElement("img");
+            image.SetAttribute("src", address);
+            image.SetAttribute("alt", alt);
+            if (box is not null)
+            {
+                var paragraph = document.CreateElement("p");
+                paragraph.AppendChild(image);
+                box.Replace(paragraph);
+            }
+            else
+            {
+                svg.Replace(image);
+            }
+        }
+
+        foreach (var image in document.QuerySelectorAll("img[src^='data:']").ToList())
+        {
+            var match = System.Text.RegularExpressions.Regex.Match(image.GetAttribute("src")!, @"^data:image/(png|jpeg|gif|webp|svg\+xml);base64,([A-Za-z0-9+/=\s]+)$");
+            if (!match.Success)
+            {
+                continue;
+            }
+
+            try
+            {
+                var extension = match.Groups[1].Value switch { "jpeg" => ".jpg", "svg+xml" => ".svg", var other => "." + other };
+                if (keepPicture(Convert.FromBase64String(match.Groups[2].Value), extension) is { } address)
+                {
+                    image.SetAttribute("src", address);
+                }
+            }
+            catch (FormatException)
+            {
+                // Not a picture after all; the description stays (below).
+            }
+        }
+    }
+
+    // Whether an SVG is a picture rather than an icon: its size from width and height,
+    // or from its viewBox when they are missing or relative (width="100%").
+    private static bool LargeEnough(IElement svg)
+    {
+        static double? Length(string? value) =>
+            value is not null && System.Text.RegularExpressions.Regex.Match(value, @"^\s*([\d.]+)\s*(px|pt)?\s*$") is { Success: true } match
+                && double.TryParse(match.Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture, out var number)
+                ? number * (match.Groups[2].Value == "pt" ? 4.0 / 3 : 1)
+                : null;
+        var box = (svg.GetAttribute("viewBox") ?? string.Empty).Split([' ', ','], StringSplitOptions.RemoveEmptyEntries);
+        double? Box(int index) => box.Length == 4 && double.TryParse(box[index], System.Globalization.CultureInfo.InvariantCulture, out var number) ? number : null;
+        var width = Length(svg.GetAttribute("width")) ?? Box(2);
+        var height = Length(svg.GetAttribute("height")) ?? Box(3);
+        return width >= 48 && height >= 48;
+    }
+
+    // The SVG as a file of its own: written as XML (so <br> and &nbsp; inside labels stay
+    // valid), with its namespaces, and with a size when the page gave it only a relative
+    // one (Mermaid's width="100%" with max-width), so it shows at the size it had.
+    private static string StandaloneSvg(IElement svg)
+    {
+        var copy = (IElement)svg.Clone(true);
+        copy.SetAttribute("xmlns", "http://www.w3.org/2000/svg");
+        if (copy.OuterHtml.Contains("xlink:", StringComparison.Ordinal))
+        {
+            copy.SetAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
+        }
+
+        var box = (copy.GetAttribute("viewBox") ?? string.Empty).Split([' ', ','], StringSplitOptions.RemoveEmptyEntries)
+            .Select(part => double.TryParse(part, System.Globalization.CultureInfo.InvariantCulture, out var number) ? number : 0).ToArray();
+        if (box.Length == 4 && box[2] > 0 && box[3] > 0 && (copy.GetAttribute("width")?.Contains('%') ?? true))
+        {
+            var widest = System.Text.RegularExpressions.Regex.Match(copy.GetAttribute("style") ?? string.Empty, @"max-width\s*:\s*([\d.]+)px");
+            var width = widest.Success && double.TryParse(widest.Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture, out var limit) ? limit : box[2];
+            copy.SetAttribute("width", width.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture));
+            copy.SetAttribute("height", (width * box[3] / box[2]).ToString("0.##", System.Globalization.CultureInfo.InvariantCulture));
+        }
+
+        return copy.ToHtml(AngleSharp.Xhtml.XhtmlMarkupFormatter.Instance);
+    }
+
+    // For the original of an HTML file: its stylesheets beside it (<link rel="stylesheet">)
+    // put into the page as <style>, since the frame that shows it loads no files but
+    // pictures; addresses inside the styles (url(...)) are made whole, so pictures they
+    // name come from the document's folder (documentAddress). Only files inside the
+    // document's folder are read, up to 4 MB each. Pictures written into the page (data:),
+    // which the frame does not load either, become cid-part:{n} with their data in parts,
+    // as an e-mail's pictures do (SendOriginalHtml serves them).
+    public static (string Html, List<(string Type, byte[] Data)> Parts) ForOriginal(string html, string folder, string documentAddress)
+    {
+        var document = new HtmlParser().ParseDocument(html);
+        var root = Path.GetFullPath(folder).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+        string? Inside(string baseFolder, string relative)
+        {
+            try
+            {
+                var path = Path.GetFullPath(Path.Combine(baseFolder, Uri.UnescapeDataString(relative.Split('#', 2)[0].Split('?', 2)[0]).Replace('/', Path.DirectorySeparatorChar)));
+                return path.StartsWith(root, StringComparison.OrdinalIgnoreCase) ? path : null;
+            }
+            catch (Exception ex) when (ex is ArgumentException or NotSupportedException or PathTooLongException or UriFormatException)
+            {
+                return null;
+            }
+        }
+
+        string Address(string path) =>
+            documentAddress + string.Join('/', Path.GetRelativePath(root, path).Split(Path.DirectorySeparatorChar).Select(Uri.EscapeDataString));
+        // url(x) relative to the stylesheet's folder, made whole; data: and full addresses stay.
+        string Rewrite(string css, string cssFolder) => System.Text.RegularExpressions.Regex.Replace(css,
+            @"url\(\s*(['""]?)([^'"")]+)\1\s*\)",
+            match => Uri.TryCreate(match.Groups[2].Value, UriKind.Absolute, out _) || match.Groups[2].Value.StartsWith('#')
+                ? match.Value
+                : Inside(cssFolder, match.Groups[2].Value) is { } path ? $"url(\"{Address(path)}\")" : "url(\"\")");
+
+        foreach (var link in document.QuerySelectorAll("link[rel][href]").ToList())
+        {
+            if (!(link.GetAttribute("rel") ?? string.Empty).Split(' ').Contains("stylesheet", StringComparer.OrdinalIgnoreCase)
+                || Uri.TryCreate(link.GetAttribute("href"), UriKind.Absolute, out _)
+                || Inside(root, link.GetAttribute("href")!) is not { } path
+                || !File.Exists(path) || new FileInfo(path).Length > 4 * 1024 * 1024)
+            {
+                continue;
+            }
+
+            var style = document.CreateElement("style");
+            if (link.GetAttribute("media") is { } media)
+            {
+                style.SetAttribute("media", media);
+            }
+
+            style.TextContent = Rewrite(File.ReadAllText(path), Path.GetDirectoryName(path)!);
+            link.Replace(style);
+        }
+
+        foreach (var style in document.QuerySelectorAll("style").ToList())
+        {
+            if (style.TextContent.Contains("url(", StringComparison.OrdinalIgnoreCase))
+            {
+                style.TextContent = Rewrite(style.TextContent, root);
+            }
+        }
+
+        var parts = new List<(string Type, byte[] Data)>();
+        foreach (var image in document.QuerySelectorAll("img[src^='data:']").ToList())
+        {
+            var match = System.Text.RegularExpressions.Regex.Match(image.GetAttribute("src")!, @"^data:(image/(?:png|jpeg|gif|webp|svg\+xml));base64,([A-Za-z0-9+/=\s]+)$");
+            try
+            {
+                if (match.Success)
+                {
+                    parts.Add((match.Groups[1].Value, Convert.FromBase64String(match.Groups[2].Value)));
+                    image.SetAttribute("src", $"cid-part:{parts.Count - 1}");
+                }
+            }
+            catch (FormatException)
+            {
+                // Left as it was; the frame shows no picture for it.
+            }
+        }
+
+        return ("<!doctype html>" + document.DocumentElement.OuterHtml, parts);
     }
 
     private static Uri? FindPageAddress(IDocument document)

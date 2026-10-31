@@ -7,11 +7,67 @@
   SPDX-License-Identifier: MIT
 */
 // Build with: npm ci && npm run build (writes wwwroot/lib/codemirror/codemirror.min.js).
-import { EditorView, drawSelection, highlightActiveLine, keymap } from "@codemirror/view";
-import { Compartment, EditorSelection, EditorState } from "@codemirror/state";
+import { Decoration, EditorView, ViewPlugin, drawSelection, highlightActiveLine, keymap } from "@codemirror/view";
+import { Compartment, EditorSelection, EditorState, Prec, RangeSetBuilder } from "@codemirror/state";
+import { autocompletion, completionKeymap } from "@codemirror/autocomplete";
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
+import { closeLintPanel, diagnosticCount, forEachDiagnostic, forceLinting, linter, lintGutter, lintKeymap, openLintPanel } from "@codemirror/lint";
+import { HighlightStyle, Language, defineLanguageFacet, syntaxHighlighting } from "@codemirror/language";
+import { Tag, styleTags, tags } from "@lezer/highlight";
+import { GFM, parser } from "@lezer/markdown";
+
+// Math as mdEditor writes it: $…$, $$…$$, \(…\) and \[…\]. A single $ needs no space inside
+// its ends and no digit after it, so prices ($5 and $10) stay text; \$ never closes one.
+const mathDelimiters = [["$$", "$$"], ["\\[", "\\]"], ["\\(", "\\)"], ["$", "$"]];
+const MathSyntax = {
+  defineNodes: [
+    { name: "Math", style: tags.special(tags.string) },
+    { name: "MathMark", style: tags.processingInstruction }
+  ],
+  parseInline: [{
+    name: "Math",
+    before: "Escape",
+    parse(cx, next, pos) {
+      if (next !== 36 && next !== 92) return -1;
+      const rest = cx.slice(pos, cx.end);
+      for (const [open, close] of mathDelimiters) {
+        if (!rest.startsWith(open)) continue;
+        const single = open === "$";
+        if (single && /^\$\s/.test(rest)) return -1;
+        let end = rest.indexOf(close, open.length);
+        while (end > 0 && rest[end - 1] === "\\" && open !== "\\(" && open !== "\\[") end = rest.indexOf(close, end + 1);
+        if (single && end > 0 && (/\s/.test(rest[end - 1]) || /\d/.test(rest[end + 1] ?? ""))) return -1;
+        if (end <= open.length || (open !== "$$" && open !== "\\[" && rest.slice(0, end).includes("\n"))) return -1;
+        return cx.addElement(cx.elt("Math", pos, pos + end + close.length, [
+          cx.elt("MathMark", pos, pos + open.length),
+          cx.elt("MathMark", pos + end, pos + end + close.length)
+        ]));
+      }
+      return -1;
+    }
+  }]
+};
+// The marks that start a heading, a list item, and a quote (#, -, 1., >) get tags of their
+// own under processingInstruction, so they can be colored apart from the other marks.
+const markTags = {
+  heading: Tag.define(tags.processingInstruction),
+  list: Tag.define(tags.processingInstruction),
+  quote: Tag.define(tags.processingInstruction)
+};
+// GitHub's Markdown (tables, task lists, strikethrough, bare addresses), math, and HTML tags.
+const markdownLanguage = new Language(
+  defineLanguageFacet({ commentTokens: { block: { open: "<!--", close: "-->" } } }),
+  parser.configure([GFM, MathSyntax, {
+    props: [styleTags({ "HTMLTag HTMLBlock": tags.tagName, HeaderMark: markTags.heading, ListMark: markTags.list, QuoteMark: markTags.quote })]
+  }]),
+  [],
+  "markdown"
+);
 
 window.CodeMirror = {
-  Compartment, EditorSelection, EditorState, EditorView,
-  defaultKeymap, drawSelection, highlightActiveLine, history, historyKeymap, keymap
+  Compartment, Decoration, EditorSelection, EditorState, EditorView, Prec, RangeSetBuilder, ViewPlugin,
+  autocompletion, completionKeymap,
+  defaultKeymap, drawSelection, highlightActiveLine, history, historyKeymap, keymap,
+  closeLintPanel, diagnosticCount, forEachDiagnostic, forceLinting, linter, lintGutter, lintKeymap, openLintPanel,
+  HighlightStyle, markTags, markdownLanguage, syntaxHighlighting, tags
 };

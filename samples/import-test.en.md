@@ -8,7 +8,7 @@
 -->
 # Open and export tests
 
-These files check every format mdEditor opens and every type in Save As. Open each file with Open or drag and drop, and compare it with the expected result. The Japanese versions are the files without `.en` ([import-test.md](import-test.md)).
+These files check every format mdEditor opens and every type in Save As. Open each file with Open or drag and drop, and compare it with the expected result. The Japanese versions are the files without `.en` ([import-test.md](import-test.md)). The steps in Chinese are in [import-test.zh-CN.md](import-test.zh-CN.md), using the English files.
 
 > The external-image results assume Settings → Internet is set to Ask (the default).
 
@@ -19,6 +19,9 @@ These files check every format mdEditor opens and every type in Save As. Open ea
 | [text-test.en.txt](text-test.en.txt) | Text | Opening and saving as is, line breaks, export without marks |
 | [html-test.en.html](html-test.en.html) | HTML | Conversion to Markdown, removed parts, images |
 | [word-test.en.docx](word-test.en.docx) | Word | Conversion to Markdown, images taken out |
+| [word-headings-test.en.docx](word-headings-test.en.docx) | Word (no heading styles) | Headings guessed from text size |
+| [pdf-test.en.pdf](pdf-test.en.pdf) | PDF | Conversion to Markdown, headings guessed, images taken out |
+| [pdf-toc-test.en.pdf](pdf-toc-test.en.pdf) | PDF (contents, numbered headings) | Contents lines, numbered headings in another typeface, a bullet set apart |
 | [mail-test.en.eml](mail-test.en.eml) | E-mail (HTML) | Subject and other fields, a picture in the mail, an attachment, an external image |
 | [mail-text-test.en.eml](mail-text-test.en.eml) | E-mail (text only) | Line breaks |
 | [table-test.en.csv](table-test.en.csv) | CSV (UTF-8) | Conversion to a table, cells with special characters |
@@ -27,7 +30,7 @@ These files check every format mdEditor opens and every type in Save As. Open ea
 | [json-config-test.en.json](json-config-test.en.json) | JSON (settings and such) | A code block, comments and trailing commas |
 | [xml-test.en.xml](xml-test.en.xml) | XML | A code block, a value containing "```" |
 | [notebook-test.en.ipynb](notebook-test.en.ipynb) | Jupyter Notebook | Cells, outputs (text, table, picture, error), pictures in cells, saving back |
-| [import-test-images/sample.png](import-test-images/sample.png) | Image | Opening an image and inserting it into the editor; also used by the HTML file |
+| [import-test_files/sample.png](import-test_files/sample.png) | Image | Opening an image and inserting it into the editor; also used by the HTML file |
 
 ## 2. Open
 
@@ -63,8 +66,8 @@ Expected:
 
 - The notice says the Word document was converted, and the file name becomes word-test.en.md.
 - Headings 1 to 3, bold, italic, the link, both lists, the table, and the image become Markdown.
-- The image shows in the preview and points to `word-test.en-images/image1.png` in the editor.
-- Saving as Markdown with Save As creates a word-test.en-images folder with the image beside the file.
+- The image shows in the preview and points to `word-test.en_files/image1.png` in the editor.
+- Saving as Markdown with Save As creates a word-test.en_files folder with the image beside the file.
 
 ### 2.4 mail-test.en.eml
 
@@ -74,7 +77,7 @@ Expected:
 - The first line is the subject "[Test] Opening e-mail in mdEditor" as a heading.
 - From (Sam Sender <sato@example.com>), To, Cc, Date (09:30 Japan time, shown in this PC's time zone), and Attachments (note.txt) are listed.
 - The bold text, link, list, and table in the body become Markdown.
-- The picture inside the mail (cid) shows and points to `mail-test.en-images/image1.png`.
+- The picture inside the mail (cid) shows and points to `mail-test.en_files/image1.png`.
 - The internet image (a 1-pixel tracker, as an example) does not load, and Load images appears in the notice bar.
 - No script remains, and the attachment is not extracted.
 
@@ -122,7 +125,7 @@ Expected:
 - The notice says the XML was opened in a code block.
 - The content goes into the code block as it is. The "```" in a value does not close the block early (the block uses four backticks).
 
-### 2.11 import-test-images/sample.png (opening an image)
+### 2.11 import-test_files/sample.png (opening an image)
 
 Expected:
 
@@ -138,8 +141,8 @@ Expected:
 
 Expected:
 
-- `![sample](name-images/sample.png)` is inserted where it was dropped, and the image is copied into a "name-images" folder beside the document.
-- `![](name-images/image-date-time.png)` is inserted where it was pasted.
+- `![sample](name_files/sample.png)` is inserted where it was dropped, and the image is copied into a "name_files" folder beside the document.
+- `![](name_files/image-date-time.png)` is inserted where it was pasted.
 - A new document that has not been saved asks where to save first.
 - An image dropped anywhere other than the editor (such as the toolbar) opens as an image document, as in 2.11.
 
@@ -152,6 +155,45 @@ Expected:
 - Code is in ```python blocks with outputs below: "run 0" to "run 2" (an output block), the name and qty table, the sample image, and ZeroDivisionError (plain text without color codes).
 - The raw cell's text is a code block without a language.
 - Saving with Save As as Jupyter Notebook gives a notebook with only Markdown cells and the four code cells; outputs are not included.
+
+### 2.14 word-headings-test.en.docx (Word without heading styles)
+
+Expected results:
+
+- The notice says the Word document was converted, followed by "The document has no heading styles, so 3 paragraphs were made headings from their text size."
+- "A Word document without heading styles" (20 pt bold) becomes a `#` heading, "A large bold heading" (14 pt bold) `##`, and "A large heading, not bold" (14 pt) `###`.
+- "Bold at the body size" is not a heading; it stays a bold paragraph (`**…**`).
+- word-test.en.docx, which uses heading styles, does not show this notice (the same result as 2.3).
+
+### 2.15 pdf-test.en.pdf
+
+Expected results:
+
+- The notice says the PDF was converted to Markdown, and the file name becomes pdf-test.en.md.
+- "Opening a PDF" becomes a `#` heading, "Headings and paragraphs", "Image", "Table", "Code", "Bullets", "To do", and "Figure" `##`, and "A smaller heading" `###`.
+- The paragraph starting "A long paragraph" comes back as one paragraph, whatever the line breaks in the PDF, with no space before the periods.
+- The sample image shows in the preview and points to `pdf-test.en_files/image1.png` in the editor.
+- The table comes back as a Markdown table (`| Item | Cost |`).
+- The Python under "Code" becomes a fenced code block, with its indentation.
+- "Bullets" becomes `- The first item`, with `  - A nested item` indented under it. "To do" becomes `- [x] A finished task` and `- [ ] A task still to do`.
+- The flowchart under "Figure" is redrawn as an SVG picture (`<p align="center"><img src="pdf-test.en_files/image….svg" …></p>`): the preview shows its boxes, arrows, and the labels "Write", "Save", and "Share" laid out as in the PDF. Its labels do not appear in the text.
+- Under "Math", $E = mc^2$ in the sentence becomes a picture in its place (`![E=mc2](pdf-test.en_files/image….svg)`), and the fraction on a line of its own a centered picture.
+- "Image size and position" becomes `<p align="center">…width="50%"…</p>`, and an image with `width="25%" align="left"` followed by the paragraph that flows around it and `<br clear="all">`.
+- "Video" comes back as the address on a line of its own (`https://www.w3schools.com/html/mov_bbb.mp4`); the PDF has the "not loaded" note.
+- Dropping pdf-test.en.pdf on the editor inserts a link to the PDF copied into the "name_files" folder, not its content.
+
+### 2.16 pdf-toc-test.en.pdf (contents and numbered headings)
+
+A PDF modelled on an official guideline: Times body text, and numbered headings in Helvetica at the same size.
+
+Expected results:
+
+- The contents become a list nested as the PDF indents it (`- 1\. Introduction …… 2`, under it `  - 2.1 Definitions …… 2`, and under that `    - (1) First condition …… 3`). Contents lines are not headings.
+- "1. Introduction" and "2. Requirements" become `##` headings, "2.1 Definitions" `###`, and "(1) First condition" and "(2) Second condition" `####`.
+- The cover title, the date, and "Contents" become `#`. "1 April 2026" is not a numbered heading, as its number has no period.
+- The line whose "•" is set apart from its text becomes the list item `- A definition item, …`.
+- "File Number: E12345" and "Type: A-1", on one line with a wide gap between them, become the one line `File Number: E12345 Type: A-1`, and "Main board" below it stays a paragraph of its own.
+- Copying this file in File Explorer and pressing the New from clipboard key opens it.
 
 ## 3. Save As
 

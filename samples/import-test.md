@@ -8,7 +8,7 @@
 -->
 # 読み込みと書き出しのテスト
 
-mdEditor で開ける形式と、「名前を付けて保存」で選べる形式を確かめるためのファイルです。各ファイルを「開く」かドラッグ＆ドロップで開き、「期待する結果」と見比べてください。英語版は、名前に `.en` が付いたファイルです（[import-test.en.md](import-test.en.md)）。
+mdEditor で開ける形式と、「名前を付けて保存」で選べる形式を確かめるためのファイルです。各ファイルを「開く」かドラッグ＆ドロップで開き、「期待する結果」と見比べてください。英語版は、名前に `.en` が付いたファイルです（[import-test.en.md](import-test.en.md)）。中国語の手順は [import-test.zh-CN.md](import-test.zh-CN.md) で、英語版のファイルを使います。
 
 > 外部の画像を確かめる項目は、「設定」→「インターネット」が「確認する」（初期設定）のときの結果です。
 
@@ -19,6 +19,9 @@ mdEditor で開ける形式と、「名前を付けて保存」で選べる形�
 | [text-test.txt](text-test.txt) | テキスト | そのまま開く・保存する、改行のしかた、記号なしの書き出し |
 | [html-test.html](html-test.html) | HTML | Markdown への変換、取り除かれるもの、画像 |
 | [word-test.docx](word-test.docx) | Word | Markdown への変換、画像の取り出し |
+| [word-headings-test.docx](word-headings-test.docx) | Word（見出しのスタイルなし） | 文字の大きさから見出しを推し量る |
+| [pdf-test.pdf](pdf-test.pdf) | PDF | Markdown への変換、見出しの推測、画像の取り出し |
+| [pdf-toc-test.en.pdf](pdf-toc-test.en.pdf) | PDF（目次・番号付きの見出し） | 目次の行、別の書体の番号付き見出し、離れた「・」 |
 | [mail-test.eml](mail-test.eml) | メール（HTML） | 件名などの情報、メールの中の画像、添付ファイル、外部の画像 |
 | [mail-text-test.eml](mail-text-test.eml) | メール（文字だけ・ISO-2022-JP） | 文字コード、改行 |
 | [table-test.csv](table-test.csv) | CSV（Shift_JIS） | 表への変換、特別な文字を含むセル |
@@ -27,7 +30,7 @@ mdEditor で開ける形式と、「名前を付けて保存」で選べる形�
 | [json-config-test.json](json-config-test.json) | JSON（設定など） | コードの枠、コメントと末尾のカンマ |
 | [xml-test.xml](xml-test.xml) | XML | コードの枠、「```」を含む値 |
 | [notebook-test.ipynb](notebook-test.ipynb) | Jupyter Notebook | セル、実行結果（文字・表・画像・エラー）、セルの画像、保存し直し |
-| [import-test-images/sample.png](import-test-images/sample.png) | 画像 | 画像を開く・編集画面に入れる。HTML からも使う |
+| [import-test_files/sample.png](import-test_files/sample.png) | 画像 | 画像を開く・編集画面に入れる。HTML からも使う |
 
 ## 2. 開く
 
@@ -63,8 +66,8 @@ mdEditor で開ける形式と、「名前を付けて保存」で選べる形�
 
 - お知らせ欄に「Word の文書を Markdown に変換して開きました」と出る。ファイル名は「word-test.md」になる。
 - 見出し（1〜3）・太字・斜体・リンク・リスト・番号付きリスト・表・画像が Markdown になる。
-- 画像はプレビューに表示され、編集画面では `word-test-images/image1.png` を指している。
-- 「名前を付けて保存」で Markdown として保存すると、保存先に「word-test-images」フォルダーができ、画像が入る。
+- 画像はプレビューに表示され、編集画面では `word-test_files/image1.png` を指している。
+- 「名前を付けて保存」で Markdown として保存すると、保存先に「word-test_files」フォルダーができ、画像が入る。
 
 ### 2.4 mail-test.eml
 
@@ -74,7 +77,7 @@ mdEditor で開ける形式と、「名前を付けて保存」で選べる形�
 - 1 行目が件名「【テスト】mdEditor のメール読み込み」の見出しになる。
 - 差出人（佐藤 花子 <sato@example.com>）・宛先・CC・日付（2026-10-16 09:30）・添付（メモ.txt）がリストになる。
 - 本文の太字・リンク・リスト・表が Markdown になる。
-- メールの中の画像（cid）は表示され、編集画面では `mail-test-images/image1.png` を指している。
+- メールの中の画像（cid）は表示され、編集画面では `mail-test_files/image1.png` を指している。
 - インターネット上の画像（1 ピクセルの受信確認用を想定）は読み込まれず、お知らせ欄に「画像を読み込む」が出る。
 - スクリプトは残らない。添付ファイルの中身は取り出されない。
 
@@ -124,7 +127,7 @@ mdEditor で開ける形式と、「名前を付けて保存」で選べる形�
 - お知らせ欄に「XML をコードの枠に入れて開きました」と出る。
 - 中身がそのままコードの枠に入る。値の中の「```」で枠が途中で閉じない（枠は「````」の 4 つになる）。
 
-### 2.11 import-test-images/sample.png（画像を開く）
+### 2.11 import-test_files/sample.png（画像を開く）
 
 期待する結果:
 
@@ -140,8 +143,8 @@ mdEditor で開ける形式と、「名前を付けて保存」で選べる形�
 
 期待する結果:
 
-- ドロップした位置に `![sample](文書名-images/sample.png)` が入り、文書の横の「文書名-images」フォルダーに画像が写される。
-- 貼り付けた位置に `![](文書名-images/image-日付-時刻.png)` が入る。
+- ドロップした位置に `![sample](文書名_files/sample.png)` が入り、文書の横の「文書名_files」フォルダーに画像が写される。
+- 貼り付けた位置に `![](文書名_files/image-日付-時刻.png)` が入る。
 - 保存していない新しい文書では、先に保存先を聞かれる。
 - 編集画面以外（ボタンの並びなど）にドロップした画像は、2.11 と同じように画像の文書として開く。
 
@@ -154,6 +157,45 @@ mdEditor で開ける形式と、「名前を付けて保存」で選べる形�
 - コードは ```python の枠になり、その下に実行結果が出る: 「0 回目〜2 回目」（output の枠）、名前と数の表、サンプル画像、ZeroDivisionError（色の記号のない文字だけ）。
 - raw セルの文は、言語のないコードの枠になる。
 - 「名前を付けて保存」で種類を Jupyter Notebook にして保存すると、Markdown のセルとコードのセル（4 つ）だけのノートブックになり、実行結果は入らない。
+
+### 2.14 word-headings-test.docx（見出しのスタイルがない Word）
+
+期待する結果:
+
+- お知らせ欄に「Word の文書を Markdown に変換して開きました」に続けて「文字の大きさから 3 個の段落を見出しにしました」と出る。
+- 「見出しのスタイルがない Word 文書」（20 ポイントの太字）が `#`、「大きく太くした見出し」（14 ポイントの太字）が `##`、「大きくしただけの見出し」（14 ポイント）が `###` の見出しになる。
+- 「本文と同じ大きさの太字」は見出しにならず、`**…**` の太字の段落のまま。
+- 見出しのスタイルを使った word-test.docx では、このお知らせは出ない（2.3 と同じ結果）。
+
+### 2.15 pdf-test.pdf
+
+期待する結果:
+
+- お知らせ欄に「PDF を Markdown に変換して開きました」と出る。ファイル名は「pdf-test.md」になる。
+- 「PDF を開く試験」が `#`、「見出しと段落」「画像」「表」「コード」「箇条書き」「やること」「図」が `##`、「小見出し」が `###` の見出しになる。
+- 「長い段落は、…」の段落は、PDF での折り返しに関係なく 1 つの段落になる。
+- サンプル画像はプレビューに表示され、編集画面では `pdf-test_files/image1.png` を指している。
+- 表は Markdown の表（`| 項目 | 金額 |`）に戻る。
+- 「コード」の Python は ``` で囲んだコードのブロックになり、字下げも残る。
+- 「箇条書き」は `- 一つ目の項目` と、その下に字下げした `  - 入れ子の項目` になる。「やること」は `- [x] 済んだ作業` と `- [ ] まだの作業` になる。
+- 「図」の流れ図は SVG の画像（`<p align="center"><img src="pdf-test_files/image….svg" …></p>`）に描き直され、プレビューで箱・矢印・「書く」「保存する」「渡す」の文字が PDF と同じ配置で見える。本文には図の中の文字は出ない。
+- 「数式」の文中の $E = mc^2$ は、文の中の画像（`![E=mc2](pdf-test_files/image….svg)`）になり、1 行に単独の分数は中央寄せの画像になる。
+- 「画像の大きさと位置」は、`<p align="center">…width="50%"…</p>` と、`width="25%" align="left"` の画像の後に回り込む段落と `<br clear="all">` になる。
+- 「動画」は、アドレスだけの行（`https://www.w3schools.com/html/mov_bbb.mp4`）に戻る（PDF では「読み込んでいません」の注記）。
+- 編集画面に pdf-test.pdf をドロップすると、中身ではなく、「名前_files」フォルダーに写した PDF へのリンクが入る。
+
+### 2.16 pdf-toc-test.en.pdf（目次と番号付きの見出し）
+
+本文は Times、番号付きの見出しは同じ大きさの Helvetica で書いた、公的なガイドラインに似せた PDF です。
+
+期待する結果:
+
+- 目次は、PDF の字下げのとおりに入れ子にした箇条書きになる（`- 1\. Introduction …… 2`、その下に `  - 2.1 Definitions …… 2`、さらに下に `    - (1) First condition …… 3`）。目次の行は見出しにならない。
+- 「1. Introduction」「2. Requirements」が `##`、「2.1 Definitions」が `###`、「(1) First condition」「(2) Second condition」が `####` の見出しになる。
+- 表紙の題・日付・「Contents」は `#` になる。「1 April 2026」は、番号の後に点がないので番号付きの見出しにならない。
+- 本文と離れた「•」の行は、`- A definition item, …` の箇条書きになる。
+- 広い間隔をあけて同じ行にある「File Number: E12345」と「Type: A-1」は、1 行の `File Number: E12345 Type: A-1` になり、その下の「Main board」は別の段落になる。
+- エクスプローラーでこのファイルをコピーし、「クリップボードから新規作成」のキーを押すと、このファイルが開く。
 
 ## 3. 名前を付けて保存
 

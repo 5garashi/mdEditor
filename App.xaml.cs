@@ -22,10 +22,18 @@ public partial class App : Application
         DispatcherUnhandledException += OnDispatcherUnhandledException;
         string? path = null;
         string? anchor = null;
+        var paste = false;
         for (var i = 0; i < e.Args.Length; i++)
         {
             var arg = e.Args[i];
             string? value = null;
+            if (string.Equals(arg, "--paste", StringComparison.OrdinalIgnoreCase))
+            {
+                // A new document with what is on the clipboard (the desktop shortcut made in Settings).
+                paste = true;
+                continue;
+            }
+
             if (arg.StartsWith("--lang=", StringComparison.OrdinalIgnoreCase))
             {
                 value = arg["--lang=".Length..];
@@ -46,15 +54,11 @@ public partial class App : Application
                 continue;
             }
 
-            Strings.ForcedLanguage = value?.Trim().ToLowerInvariant() switch
-            {
-                "en" => "en",
-                "ja" => "ja",
-                _ => Strings.ForcedLanguage
-            };
+            // ja, en, or zh (zh-CN and zh-Hans are accepted too); anything else is ignored.
+            Strings.ForcedLanguage = Strings.Normalize(value) ?? Strings.ForcedLanguage;
         }
 
-        MainWindow = new MainWindow(path, anchor);
+        MainWindow = new MainWindow(path, anchor, paste);
         MainWindow.Show();
     }
 

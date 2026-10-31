@@ -20,6 +20,9 @@
     <!-- The version is kept only in the VERSION file at the repository root. -->
     <Version>$([System.IO.File]::ReadAllText('$(MSBuildProjectDirectory)\VERSION').Trim())</Version>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <!-- Published copies (setup.ps1, store\build-msix.ps1) are compiled ahead of time, so less
+         code is compiled while the window opens. -->
+    <PublishReadyToRun>true</PublishReadyToRun>
   </PropertyGroup>
   <ItemGroup>
     <!-- WebView2 serves these from a real folder, so keep them beside the single-file exe. -->
@@ -36,7 +39,7 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </None>
     <!-- The rendering tests in samples/ also open from the Samples dialog. -->
-    <Content Include="samples\diagram-test.md;samples\diagram-test.en.md">
+    <Content Include="samples\diagram-test.md;samples\diagram-test.en.md;samples\diagram-test.zh-CN.md">
       <Link>wwwroot\samples\%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -44,8 +47,8 @@
     </Content>
     <!-- The video that diagram-test plays (21-3) and the official 5garashi.com assets its
          image size and position examples use (22), unmodified, beside it as in samples/. -->
-    <Content Include="samples\import-test-images\cube5.mp4;samples\import-test-images\5garashi_*.svg;samples\import-test-images\5garashi_*.png">
-      <Link>wwwroot\samples\import-test-images\%(Filename)%(Extension)</Link>
+    <Content Include="samples\import-test_files\cube5.mp4;samples\import-test_files\5garashi_*.svg;samples\import-test_files\5garashi_*.png">
+      <Link>wwwroot\samples\import-test_files\%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
@@ -55,11 +58,14 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DocumentFormat.OpenXml" Version="3.5.1" />
+    <!-- PDFium (BSD-3-Clause and permissive third-party licenses; THIRD-PARTY-NOTICES.md) draws a PDF page whose letters cannot be read as a picture (PdfRender.cs). -->
+    <PackageReference Include="bblanchon.PDFium.Win32" Version="158.0.8111" />
     <PackageReference Include="HtmlSanitizer" Version="9.2.1039" />
     <PackageReference Include="Mammoth" Version="1.13.0" />
     <PackageReference Include="Markdig" Version="1.4.0" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4258.31" />
     <PackageReference Include="MimeKitLite" Version="4.18.1" />
+    <PackageReference Include="PdfPig" Version="0.1.16" />
     <PackageReference Include="ReverseMarkdown" Version="6.2.1" />
     <PackageReference Include="YamlDotNet" Version="18.1.0" />
   </ItemGroup>

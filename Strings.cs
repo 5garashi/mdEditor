@@ -1,6 +1,6 @@
 /*
   ファイル名 / File: Strings.cs
-  概要 / Description: Japanese and English text for native dialogs and messages
+  概要 / Description: Japanese, English, and Simplified Chinese text for native dialogs and messages
   作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
   作成日 / Created: 2026-10-10
   ライセンス / License: MIT
@@ -8,7 +8,7 @@
 */
 namespace MdEditor;
 
-internal static class Strings
+internal static partial class Strings
 {
     private static readonly Dictionary<string, string> English = new()
     {
@@ -59,8 +59,8 @@ internal static class Strings
         ["Word 文書を書き込めません。同じ名前の文書を Word で開いている場合は閉じるか、別の名前で保存してください"] =
             "The Word document cannot be written. If Word has a document with this name open, close it there, or save under another name",
         ["Word 文書を書き出せません。少し待ってから、もう一度お試しください"] = "The Word document cannot be exported. Wait a moment, then try again",
-        ["開けるファイル|*.md;*.markdown;*.txt;*.html;*.htm;*.docx;*.eml;*.csv;*.tsv;*.json;*.xml;*.ipynb;*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp;*.mp4;*.m4v;*.webm;*.ogv;*.mov|Markdown ファイル (*.md;*.markdown)|*.md;*.markdown|テキスト ファイル (*.txt)|*.txt|HTML ファイル (*.html;*.htm)|*.html;*.htm|Word 文書 (*.docx)|*.docx|メール (*.eml)|*.eml|CSV / TSV (*.csv;*.tsv)|*.csv;*.tsv|JSON / XML (*.json;*.xml)|*.json;*.xml|Jupyter Notebook (*.ipynb)|*.ipynb|画像 (*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp)|*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp|動画 (*.mp4;*.m4v;*.webm;*.ogv;*.mov)|*.mp4;*.m4v;*.webm;*.ogv;*.mov|すべてのファイル (*.*)|*.*"] =
-            "Files mdEditor can open|*.md;*.markdown;*.txt;*.html;*.htm;*.docx;*.eml;*.csv;*.tsv;*.json;*.xml;*.ipynb;*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp;*.mp4;*.m4v;*.webm;*.ogv;*.mov|Markdown files (*.md;*.markdown)|*.md;*.markdown|Text files (*.txt)|*.txt|HTML files (*.html;*.htm)|*.html;*.htm|Word documents (*.docx)|*.docx|E-mail (*.eml)|*.eml|CSV / TSV (*.csv;*.tsv)|*.csv;*.tsv|JSON / XML (*.json;*.xml)|*.json;*.xml|Jupyter Notebook (*.ipynb)|*.ipynb|Images (*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp)|*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp|Videos (*.mp4;*.m4v;*.webm;*.ogv;*.mov)|*.mp4;*.m4v;*.webm;*.ogv;*.mov|All files (*.*)|*.*",
+        ["開けるファイル|*.md;*.markdown;*.txt;*.html;*.htm;*.docx;*.eml;*.csv;*.tsv;*.json;*.xml;*.ipynb;*.pdf;*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp;*.mp4;*.m4v;*.webm;*.ogv;*.mov|Markdown ファイル (*.md;*.markdown)|*.md;*.markdown|テキスト ファイル (*.txt)|*.txt|HTML ファイル (*.html;*.htm)|*.html;*.htm|Word 文書 (*.docx)|*.docx|メール (*.eml)|*.eml|CSV / TSV (*.csv;*.tsv)|*.csv;*.tsv|JSON / XML (*.json;*.xml)|*.json;*.xml|Jupyter Notebook (*.ipynb)|*.ipynb|PDF (*.pdf)|*.pdf|画像 (*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp)|*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp|動画 (*.mp4;*.m4v;*.webm;*.ogv;*.mov)|*.mp4;*.m4v;*.webm;*.ogv;*.mov|すべてのファイル (*.*)|*.*"] =
+            "Files mdEditor can open|*.md;*.markdown;*.txt;*.html;*.htm;*.docx;*.eml;*.csv;*.tsv;*.json;*.xml;*.ipynb;*.pdf;*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp;*.mp4;*.m4v;*.webm;*.ogv;*.mov|Markdown files (*.md;*.markdown)|*.md;*.markdown|Text files (*.txt)|*.txt|HTML files (*.html;*.htm)|*.html;*.htm|Word documents (*.docx)|*.docx|E-mail (*.eml)|*.eml|CSV / TSV (*.csv;*.tsv)|*.csv;*.tsv|JSON / XML (*.json;*.xml)|*.json;*.xml|Jupyter Notebook (*.ipynb)|*.ipynb|PDF (*.pdf)|*.pdf|Images (*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp)|*.png;*.jpg;*.jpeg;*.gif;*.bmp;*.webp|Videos (*.mp4;*.m4v;*.webm;*.ogv;*.mov)|*.mp4;*.m4v;*.webm;*.ogv;*.mov|All files (*.*)|*.*",
         ["Markdown ファイル (*.md)|*.md|テキスト ファイル (*.txt)|*.txt|すべてのファイル (*.*)|*.*"] =
             "Markdown files (*.md)|*.md|Text files (*.txt)|*.txt|All files (*.*)|*.*",
         ["Markdown ファイル (*.md)|*.md|テキスト（そのまま）(*.txt)|*.txt|テキスト（記号なし）(*.txt)|*.txt|PDF (*.pdf)|*.pdf|HTML (*.html)|*.html|PNG 画像 (*.png)|*.png|Word 文書 (*.docx)|*.docx|CSV（文書の中の表）(*.csv)|*.csv|TSV（文書の中の表）(*.tsv)|*.tsv|JSON（文書の中の表）(*.json)|*.json|Jupyter Notebook (*.ipynb)|*.ipynb|配布用 ZIP（文書と「名前_files」フォルダー）(*.zip)|*.zip"] =
@@ -84,8 +84,8 @@ internal static class Strings
             "The page could not be opened. Check the address and your internet connection, then try again.",
         ["Markdown・HTML ファイル (*.md;*.markdown;*.html;*.htm)|*.md;*.markdown;*.html;*.htm|Markdown ファイル (*.md;*.markdown)|*.md;*.markdown|HTML ファイル (*.html;*.htm)|*.html;*.htm|すべてのファイル (*.*)|*.*"] =
             "Markdown and HTML files (*.md;*.markdown;*.html;*.htm)|*.md;*.markdown;*.html;*.htm|Markdown files (*.md;*.markdown)|*.md;*.markdown|HTML files (*.html;*.htm)|*.html;*.htm|All files (*.*)|*.*",
-        ["開けるファイル（.md、.txt、.html、.docx、.eml、.csv、.tsv、.json、.xml、.ipynb、画像、動画）は、1つだけドロップしてください。編集画面にドロップすると、ファイルの中身・画像・動画・リンクを文書に入れます。フォルダーはドロップできません。"] =
-            "Drop only one file that mdEditor opens (.md, .txt, .html, .docx, .eml, .csv, .tsv, .json, .xml, .ipynb, an image, or a video). Files dropped on the editor go into the document instead, as their content, images and videos, or links. Folders cannot be dropped.",
+        ["開けるファイル（.md、.txt、.html、.docx、.pdf、.eml、.csv、.tsv、.json、.xml、.ipynb、画像、動画）は、1つだけドロップしてください。編集画面にドロップすると、ファイルの中身・画像・動画・リンクを文書に入れます。フォルダーはドロップできません。"] =
+            "Drop only one file that mdEditor opens (.md, .txt, .html, .docx, .pdf, .eml, .csv, .tsv, .json, .xml, .ipynb, an image, or a video). Files dropped on the editor go into the document instead, as their content, images and videos, or links. Folders cannot be dropped.",
         ["mdEditor では開けないファイルです。編集画面にドロップすると、リンクとして入ります。"] =
             "mdEditor cannot open this file. Drop it on the editor to insert it as a link.",
         ["「{0}」の中身を入れました。ファイルとして開くときは、編集画面の外にドロップしてください（Ctrl+Z で取り消せます）。"] =
@@ -157,6 +157,26 @@ internal static class Strings
             "The table was saved.",
         ["文書の中の表を、1 つずつ別のファイルに保存しました。"] =
             "Each table in the document was saved as its own file.",
+        ["そのうち {0} 個は、文書がリンクしている「{1}」フォルダーの外のファイルを写したものです。ZIP の中の文書は、写したファイルにリンクしています（元の文書は変わりません）。"] =
+            "{0} of them are copies of files outside the \"{1}\" folder that the document links to. The document in the ZIP links to the copies (the document itself is not changed).",
+        ["インターネット上のファイル {0} 個は、ダウンロードできなかったため、リンクのまま残しました。"] =
+            "{0} files on the internet could not be downloaded, so their links were kept.",
+        ["設定を初期設定に戻しますか？「設定」の画面のすべての項目と、PDF の取り込みの詳細設定ファイル（pdf-import.json）が初期設定になります。「クリップボードから新規作成」のキーと、キーボードショートカットはそのままです。"] =
+            "Restore the default settings? Everything in Settings, and the advanced settings file for opening PDFs (pdf-import.json), goes back to its default. The key for New from clipboard and the keyboard shortcuts stay as they are.",
+        ["表 {0} 個を、線と文字から画像（SVG）に描き直しました（見た目優先）。表の中の文字は編集できません。"] =
+            "{0} tables were redrawn as pictures (SVG) from their lines and text (looks like the page). The text in them cannot be edited.",
+        ["表を画像にする（見た目優先）"] =
+            "Make tables pictures (looks like the page)",
+        ["表を Markdown の表にする（編集優先・既定）"] =
+            "Make tables Markdown tables (can be edited, default)",
+        ["差出人"] =
+            "From",
+        ["宛先"] =
+            "To",
+        ["日付"] =
+            "Date",
+        ["件名"] =
+            "Subject",
         ["配布用 ZIP の書き出し"] =
             "ZIP for sharing",
         ["「{0}」フォルダーに、文書から参照されていないファイルが {1} 個あります。ごみ箱に移してから ZIP にしますか？\n\n{2}\n\n「いいえ」を選ぶと、ファイルは残したまま、ZIP には入れません。"] =
@@ -169,8 +189,11 @@ internal static class Strings
             "{1} files the document refers to outside the {0} folder are not in the ZIP.",
         ["mdEditor で保存した HTML から、元の Markdown を開きました。保存すると Markdown ファイルになります（HTML ファイルは変わりません）。"] =
             "Opened the original Markdown kept in this HTML file by mdEditor. Saving makes a Markdown file (the HTML file stays as it is).",
-        ["HTML を Markdown に変換して開きました。色や配置、図の絵は元に戻りません。保存すると Markdown ファイルになります（HTML ファイルは変わりません）。"] =
-            "Converted the HTML to Markdown. Colors, layout, and drawn diagrams do not come back. Saving makes a Markdown file (the HTML file stays as it is).",
+        ["地図（保存した時点の表示）"] = "Map (as it was when saved)",
+        ["ブラウザーで開けませんでした。ブラウザーやエクスプローラーから開いてください。"] =
+            "Could not open it in the browser. Open it from your browser or File Explorer.",
+        ["HTML を Markdown に変換して開きました。色や配置は元に戻りません。図は画像にしました。保存すると Markdown ファイルになります（HTML ファイルは変わりません）。"] =
+            "Converted the HTML to Markdown. Colors and layout do not come back; diagrams became pictures. Saving makes a Markdown file (the HTML file stays as it is).",
         ["HTML ファイル (*.html)|*.html"] = "HTML files (*.html)|*.html",
         ["新しい文書.html"] = "Untitled.html",
         ["HTMLの保存先を選択してください"] = "Choose where to save the HTML file",
@@ -201,7 +224,74 @@ internal static class Strings
         ["未保存の変更を破棄して、選んだ文字コードで開き直しますか？"] =
             "Discard unsaved changes and reopen the file in the selected encoding?",
         ["この文書には、選んだ文字コードで読めなかった文字（�）が含まれています。上書きすると、元のファイルのその部分は失われます。上書き保存しますか？"] =
-            "This document contains characters that could not be read in the selected encoding (�). Overwriting the file loses those parts of the original. Overwrite anyway?"
+            "This document contains characters that could not be read in the selected encoding (�). Overwriting the file loses those parts of the original. Overwrite anyway?",
+        ["見出しのスタイルがないため、文字の大きさから {0} 個の段落を見出しにしました。"] =
+            "The document has no heading styles, so {0} paragraphs were made headings from their text size.",
+        ["PDF を Markdown に変換して開きました。できる範囲で変換したもので、元の PDF を Markdown で忠実に再現したものではありません。"] =
+            "Converted the PDF to Markdown. This is a best-effort conversion, not a faithful copy of the PDF in Markdown.",
+        ["この PDF からは文字を取り出せませんでした。画像だけでできた PDF（スキャンしたものなど）の可能性があります。"] =
+            "No text could be taken from this PDF. It may be made of images only (a scan, for example).",
+        ["ページが多いため、最初の {0} ページだけを開きました（全部で {1} ページ）。"] =
+            "The PDF is long, so only the first {0} pages were opened ({1} pages in all).",
+        ["PDF の中のタグ（見出し・段落・箇条書き・表と、その読む順）を使って読みました。"] =
+            "The PDF's tags (headings, paragraphs, lists, tables, and their order) were used to read it.",
+        ["文字の大きさと番号から、{0} か所を見出しにしました。"] =
+            "{0} lines became headings, from their text size and numbering.",
+        ["図 {0} 個を、線と文字から画像（SVG）に描き直しました。図の中の文字は画像の一部で、編集できません。"] =
+            "{0} figures were redrawn as pictures (SVG) from their lines and labels. The text in a figure is part of its picture and cannot be edited.",
+        ["数式 {0} 個を画像（SVG）にしました。数式の文字は画像の説明（alt）に入れました。"] =
+            "{0} formulas became pictures (SVG). Their text is in each picture's description (alt).",
+        ["表 {0} 個を Markdown の表にしました。"] =
+            "{0} tables became Markdown tables.",
+        ["右寄せ・中央寄せの {0} か所は、HTML（align）で書きました。"] =
+            "{0} right-aligned or centered paragraphs were written as HTML (align).",
+        ["図のまわりの文字 {0} か所を、図の画像に入れました（見た目優先）。"] =
+            "{0} blocks of text around figures went into the figures' pictures (looks like the page).",
+        ["図のまわりの文字 {0} か所を、文字として残しました（編集優先）。"] =
+            "{0} blocks of text around figures were kept as text (can be edited).",
+        ["図のまわりの文字を文字として残す（編集優先）"] =
+            "Keep text around figures as text (can be edited)",
+        ["図のまわりの文字を図に入れる（見た目優先・既定）"] =
+            "Put text around figures in their pictures (looks like the page, default)",
+        ["自動修正のルールを保存できませんでした。"] =
+            "The fix rules could not be saved.",
+        ["自動修正のルールを書き出せませんでした。"] =
+            "The fix rules could not be exported.",
+        ["自動修正のルール (*.json)|*.json"] =
+            "Fix rules (*.json)|*.json",
+        ["このファイルは自動修正のルールとして読めませんでした。"] =
+            "This file could not be read as fix rules.",
+        ["PDF の詳細設定ファイルを開けませんでした。"] =
+            "The PDF import settings file could not be opened.",
+        ["{0} ページ目は、文字が図形として描かれていて取り出せないため、ページ全体を画像（PNG）にしました。"] =
+            "Page {0} draws its text as shapes, so no text could be taken from it, and the whole page became a picture (PNG).",
+        ["{0} ページ目は、文字を読み取れない書体（文字化けする書体）で書かれているため、ページ全体を画像（PNG）にしました。"] =
+            "Page {0} is set in fonts whose letters cannot be read (they would come out garbled), so the whole page became a picture (PNG).",
+        ["{0} ページ目は、文字の並び（縦書き・重なった文字など）を読み取れないため、ページ全体を画像（SVG）にしました。"] =
+            "The text of page {0} could not be read in order (vertical writing, text set over text, and so on), so the whole page became a picture (SVG).",
+        ["パスワードで保護された PDF は開けません。保護を外した PDF を開いてください"] =
+            "A password-protected PDF cannot be opened. Open a copy without the protection",
+        ["PDF を読み込めません。PDF を表示するアプリで開けるか確かめてから、もう一度開いてください"] =
+            "The PDF cannot be read. Check that it opens in a PDF viewer, then try again",
+        ["mdEditor（クリップボードから新規作成）"] = "mdEditor (new from clipboard)",
+        ["コピーしたテキストや画像を、mdEditor の新しい文書に入れます。"] = "Puts copied text or pictures in a new mdEditor document.",
+        ["デスクトップのショートカット「{0}」を削除しますか？"] = "Delete the desktop shortcut \"{0}\"?",
+        ["デスクトップのショートカット「{0}」を削除しました。"] = "Deleted the desktop shortcut \"{0}\".",
+        ["デスクトップに「{0}」のショートカットを作り、{1} を割り当てます。Windows では、このキーはデスクトップかスタートメニューのショートカットにしか割り当てられません。作ってもいいですか？"] =
+            "mdEditor will create the shortcut \"{0}\" on the desktop and give it {1}. Windows lets such keys start only shortcuts on the desktop or in the Start menu. Create it?",
+        ["{0} は、ほかのショートカット（{1}）でも使われています。Windows がどちらを起動するかは決まっていないため、別のキーを選ぶことをお勧めします。"] =
+            "{0} is also used by other shortcuts ({1}). Windows may start either one, so choosing another key is recommended.",
+        ["mdEditor を削除（アンインストール）する前に、このキーを「なし」に戻してください。ショートカットは自動では消えません。"] =
+            "Before removing (uninstalling) mdEditor, set this key back to None. The shortcut is not removed automatically.",
+        ["デスクトップに「{0}」を作りました。テキストや画像をコピーしてから {1} を押すと、mdEditor の新しい文書に入ります。"] =
+            "Created \"{0}\" on the desktop. Copy text or a picture, then press {1} to put it in a new mdEditor document.",
+        ["デスクトップのショートカットを作れませんでした。"] = "Could not create the desktop shortcut.",
+        ["クリップボードのテキストを新しい文書に入れました。"] = "Put the text from the clipboard in a new document.",
+        ["クリップボードの書式付きの内容（HTML）を Markdown にして、新しい文書に入れました。見出し・表・リンクなどは残り、色や配置は残りません。"] =
+            "Converted the formatted content on the clipboard (HTML) to Markdown and put it in a new document. Headings, tables, and links stay; colors and layout do not.",
+        ["クリップボードに、文書に入れられるもの（テキスト・画像・ファイル）がありません。コピーしてから、もう一度お試しください。"] =
+            "The clipboard has nothing that can go into a document (text, a picture, or files). Copy something, then try again.",
+        ["クリップボードを読み込めませんでした。少し待ってから、もう一度お試しください。"] = "Could not read the clipboard. Wait a moment and try again."
     };
 
     public static string Language { get; set; } = DefaultLanguage();
@@ -209,14 +299,40 @@ internal static class Strings
     // Set by the --lang command-line option; takes priority over the saved choice.
     public static string? ForcedLanguage { get; set; }
 
+    // "ja", "en", or "zh" (Simplified Chinese), from the Windows display language.
     public static string DefaultLanguage() =>
-        System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ja"
-            ? "ja"
-            : "en";
+        System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName switch
+        {
+            "ja" => "ja",
+            "zh" => "zh",
+            _ => "en"
+        };
 
-    // Source strings are Japanese; English is looked up when the UI language is English.
-    public static string Tr(string japanese) =>
-        Language == "en" && English.TryGetValue(japanese, out var english)
-            ? english
-            : japanese;
+    // The language codes the app accepts (--lang, the page's Language list).
+    public static string? Normalize(string? language) => language?.Trim().ToLowerInvariant() switch
+    {
+        "ja" or "ja-jp" => "ja",
+        "en" or "en-us" => "en",
+        "zh" or "zh-cn" or "zh-hans" => "zh",
+        _ => null
+    };
+
+    // Source strings are Japanese; English or Chinese is looked up for those UI languages.
+    public static string Tr(string japanese) => Language switch
+    {
+        "en" when English.TryGetValue(japanese, out var english) => english,
+        "zh" when Chinese.TryGetValue(japanese, out var chinese) => chinese,
+        _ => japanese
+    };
+
+    // Between sentences joined into one notice: a space in English, nothing in Japanese and Chinese.
+    public static string SentenceJoin => Language == "en" ? " " : string.Empty;
+
+    // Names in a notice: 「a.png」「b.pdf」, "a.png", "b.pdf", or “a.png”“b.pdf”.
+    public static string NameList(IEnumerable<string> names) => Language switch
+    {
+        "en" => string.Join(", ", names.Select(name => $"\"{name}\"")),
+        "zh" => string.Concat(names.Select(name => $"“{name}”")),
+        _ => string.Concat(names.Select(name => $"「{name}」"))
+    };
 }

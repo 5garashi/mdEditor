@@ -43,6 +43,9 @@
   --code-added-background: #DAFBE1;
   --code-removed: #82071E;
   --code-removed-background: #FFEBE9;
+  /* Lines with a problem in the editor: faint volt for a mistake, faint steel for a hint. */
+  --problem-warning: #FCEAE6;
+  --problem-info: #F5EEE6;
   /* Identity Art. 6: on Windows, Yu Gothic then Meiryo. */
   font-family: "Yu Gothic UI", "Meiryo", sans-serif;
   color: var(--ink);
@@ -90,6 +93,8 @@
     --code-added-background: #033A16;
     --code-removed: #FFA198;
     --code-removed-background: #490202;
+    --problem-warning: #33201C;
+    --problem-info: #29251F;
   }
 }
 
@@ -100,11 +105,23 @@
   font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Noto Sans", "Yu Gothic UI", "Meiryo", sans-serif;
 }
 
+/* Simplified Chinese UI: the OS UI face for Latin, then Windows' Simplified Chinese
+   face, so Chinese characters take Chinese forms rather than Japanese ones.
+   (Identity Art. 6 names faces for Japanese and English only.) */
+:root:lang(zh-CN) {
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+}
+
 /* Settings: BIZ UD Gothic, a Universal Design face shipped with Windows, for
    readers who find it easier. Chosen by the user, so it overrides Art. 6. */
 :root.font-ud,
 :root.font-ud:lang(en) {
   font-family: "BIZ UDPGothic", "BIZ UDGothic", "Yu Gothic UI", "Meiryo", sans-serif;
+}
+
+/* BIZ UD Gothic is a Japanese face; Chinese characters it lacks fall back to the Chinese face. */
+:root.font-ud:lang(zh-CN) {
+  font-family: "BIZ UDPGothic", "BIZ UDGothic", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
 }
 
 * {
@@ -146,6 +163,32 @@ button:hover {
   background: var(--paper);
 }
 
+/* Language: the label stays "Language" in every language, beside a list of the
+   three display languages, each written in itself. Sized like the buttons. */
+.language-picker {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 4px 0 12px;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  color: var(--ink);
+  background: var(--card);
+  font-weight: 700;
+}
+
+.language-picker select {
+  min-height: 36px;
+  padding: 2px 6px;
+  border: 1px solid var(--ink);
+  border-radius: 4px;
+  color: var(--ink);
+  background: var(--card);
+  font: inherit;
+  cursor: pointer;
+}
+
 /* Primary button: head on ink (Art. 7-1, day 6.66:1 and night 6.74:1). */
 button.primary {
   color: var(--head);
@@ -164,7 +207,9 @@ button.primary:hover {
 
 .brand-bar {
   display: flex;
-  flex: 0 0 72px;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  min-height: 72px;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
@@ -293,6 +338,11 @@ button.primary:hover {
   min-width: 0;
 }
 
+/* Markdown quoted in the notice, in the editor's font: a Japanese UI font draws \ as a yen sign. */
+.notice-text code {
+  font-family: Consolas, "Cascadia Mono", monospace;
+}
+
 .notice button {
   min-height: 44px;
   padding: 4px 10px;
@@ -323,16 +373,45 @@ body.dragging {
   pointer-events: none;
 }
 
+/* Dropping on the editor puts the files in at the cursor: the label and the editor's
+   frame turn red (volt) so it is not taken for opening them. */
+body.drop-insert .drop-hint {
+  border-color: var(--volt);
+  color: var(--volt);
+}
+
+body.drop-insert .editor-pane {
+  border-color: var(--volt);
+}
+
 .actions {
   flex: 1 1 auto;
   flex-wrap: wrap;
   justify-content: flex-end;
 }
 
-/* Keep room for the file name; the buttons wrap to the next row first. */
-.document-status {
-  flex: 1 1 380px;
+/* The open document sits in the header between the logotype and the mark. The
+   margins keep well clear of both (Identity 3-5 asks for at least one chili of the
+   mark around them); a long name is shortened, with the full name in its tooltip. */
+.brand-bar .document-status {
+  flex: 1 1 0;
+  margin-inline: 24px;
+}
+
+.brand-bar #document-name {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+/* Settings > Theme and PDF paper: the two switches side by side. */
+.theme-paper-row {
+  display: flex;
   flex-wrap: wrap;
+  gap: 10px;
+}
+
+.theme-paper-row button {
+  min-height: 44px;
 }
 
 .workspace {
@@ -403,6 +482,11 @@ body.dragging {
   background: var(--paper);
 }
 
+/* The editor's heading is read by screen readers only, so its buttons start at the left. */
+.editor-pane .pane-heading {
+  justify-content: flex-start;
+}
+
 .pane-heading h2 {
   margin: 0;
   font-size: 16px;
@@ -418,7 +502,6 @@ body.dragging {
 
 #replace-button {
   min-height: 44px;
-  margin-left: auto;
   padding: 4px 10px;
   font-size: 13px;
 }
@@ -499,6 +582,27 @@ body.dragging {
 }
 
 .help-table > tbody > tr > th {
+  white-space: nowrap;
+}
+
+/* The keys that write a row, under its name. */
+.help-key {
+  display: block;
+  max-width: 13em;
+  margin-top: 4px;
+  font-weight: 400;
+  font-size: 12px;
+  white-space: normal;
+}
+
+/* The key on its own line, so a long label below it wraps under it. */
+.help-key kbd {
+  display: table;
+  margin-bottom: 2px;
+  padding: 0 4px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  font-family: Consolas, "Cascadia Mono", monospace;
   white-space: nowrap;
 }
 
@@ -1001,6 +1105,244 @@ body.capture-export .preview-content {
   border-left: 3px solid var(--document-foreground);
 }
 
+/* The Markdown check: mistakes underlined in volt, hints dotted in steel, and the list of
+   problems under the editor in the app's colors. */
+#editor .cm-lintRange-warning,
+#editor .cm-lintRange-info {
+  background-image: none;
+  text-decoration-skip-ink: none;
+  text-underline-offset: 3px;
+}
+
+#editor .cm-lintRange-warning {
+  text-decoration: underline wavy var(--volt) 1.5px;
+}
+
+#editor .cm-lintRange-info {
+  text-decoration: underline dotted var(--steel) 2px;
+}
+
+#editor .cm-panels {
+  background: var(--card);
+  color: var(--ink);
+}
+
+#editor .cm-panels-bottom {
+  border-top: 2px solid var(--line);
+}
+
+#editor .cm-panel.cm-panel-lint ul {
+  max-height: 30vh;
+}
+
+#editor .cm-panel.cm-panel-lint ul [aria-selected] {
+  background: var(--head);
+  color: var(--ink);
+}
+
+#editor .cm-panel.cm-panel-lint ul:focus [aria-selected] {
+  background: var(--ink);
+  color: var(--card);
+}
+
+#editor .cm-panel.cm-panel-lint button[name="close"] {
+  color: var(--ink);
+}
+
+#editor .cm-diagnostic-warning {
+  border-left-color: var(--volt);
+}
+
+#editor .cm-diagnostic-info {
+  border-left-color: var(--steel);
+}
+
+/* The lines with a problem: a mark in the gutter and a faint background, a triangle for a
+   mistake and a dot for a hint, so the kind does not rest on color alone. The same marks
+   begin each entry of the list and of the tooltip (left unread: the entry says it). */
+#editor .cm-gutters {
+  background: var(--document-background);
+  border-right: 1px solid var(--document-rule);
+}
+
+#editor .cm-gutter-lint {
+  width: 1.5em;
+}
+
+#editor .cm-lint-marker {
+  content: normal;
+  width: auto;
+  height: auto;
+  line-height: 1;
+  font-size: 0.85em;
+  text-align: center;
+}
+
+#editor .cm-lint-marker-warning::before,
+#editor .cm-diagnostic-warning::before {
+  content: "\25B2" / "";
+  color: var(--volt);
+}
+
+#editor .cm-lint-marker-info::before,
+#editor .cm-diagnostic-info::before {
+  content: "\25CF" / "";
+  color: var(--steel);
+}
+
+#editor .cm-diagnostic-warning::before,
+#editor .cm-diagnostic-info::before {
+  margin-right: 0.5em;
+}
+
+#editor .cm-problem-line-warning {
+  background: var(--problem-warning);
+}
+
+#editor .cm-problem-line-info {
+  background: var(--problem-info);
+}
+
+/* Markdown colors (Settings): the theme's code colors, which keep at least 5.3:1 on the
+   document in both themes; the marks in the muted gray, but those that start a line
+   (#, -, 1., >) in colors of their own. */
+#editor .md-heading { color: var(--code-keyword); font-weight: 700; }
+#editor .md-strong { font-weight: 700; }
+#editor .md-emphasis { font-style: italic; }
+#editor .md-strikethrough { text-decoration: line-through; }
+#editor .md-link { color: var(--code-number); }
+#editor .md-url { color: var(--code-string); }
+#editor .md-code { color: var(--code-tag); }
+#editor .md-quote { color: var(--code-comment); }
+#editor .md-math { color: var(--code-title); }
+#editor .md-html { color: var(--code-attr); }
+#editor .md-comment { color: var(--code-comment); font-style: italic; }
+#editor .md-label { color: var(--code-attr); }
+#editor .md-escape { color: var(--code-number); }
+#editor .md-mark { color: var(--document-muted); }
+#editor .md-heading-mark { color: var(--code-keyword); }
+#editor .md-list-mark { color: var(--code-attr); font-weight: 700; }
+#editor .md-quote-mark { color: var(--code-tag); font-weight: 700; }
+
+/* The original PDF in place of the editor: its pages one under another, on the paper. */
+.original-view {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 12px;
+  background: var(--paper);
+}
+
+.original-view[hidden] {
+  display: none;
+}
+
+.original-view img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 0 12px;
+  background: #FFFFFF;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 25%);
+}
+
+/* An original drawn from HTML (as tall as its page), and an original file's text, line
+   by line with its line numbers. */
+.original-frame {
+  display: block;
+  width: 100%;
+  min-height: 100%;
+  border: 0;
+  background: #FFFFFF;
+}
+
+.original-text {
+  padding: 8px 12px;
+  background: var(--document-background);
+  color: var(--document-foreground);
+  font-family: Consolas, "Cascadia Mono", monospace;
+  font-size: calc(14px * var(--doc-scale, 1));
+  line-height: 1.6;
+}
+
+.original-line {
+  padding-left: 6ch;
+  text-indent: -6ch;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.original-line::before {
+  content: attr(data-number);
+  display: inline-block;
+  width: 5ch;
+  margin-right: 1ch;
+  text-indent: 0;
+  text-align: right;
+  color: var(--document-muted);
+  user-select: none;
+}
+
+#editor[hidden] {
+  display: none;
+}
+
+/* The strip under the editor with the number of problems. */
+.lint-status {
+  flex: 0 0 auto;
+  margin: 0;
+  border: 0;
+  border-top: 2px solid var(--line);
+  border-radius: 0;
+  padding: 4px 12px;
+  background: var(--card);
+  color: var(--volt-deep);
+  text-align: left;
+  font-size: 0.85rem;
+}
+
+.lint-status:hover {
+  background: var(--head);
+}
+
+#editor .cm-tooltip.cm-tooltip-lint {
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+/* Completions: the app's card, 44px rows, and the chosen one in the head color. */
+#editor .cm-tooltip.cm-tooltip-autocomplete {
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+#editor .cm-tooltip.cm-tooltip-autocomplete > ul {
+  max-height: 264px;
+  font-family: inherit;
+}
+
+#editor .cm-tooltip.cm-tooltip-autocomplete > ul > li {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 12px;
+  padding: 0 12px;
+}
+
+#editor .cm-tooltip.cm-tooltip-autocomplete > ul > li[aria-selected] {
+  background: var(--head);
+  color: var(--ink);
+}
+
+#editor .cm-tooltip.cm-tooltip-autocomplete .cm-completionDetail {
+  margin-left: auto;
+  font-style: normal;
+  color: var(--steel);
+}
+
 /* Same thick focus ring as the rest of the app (Identity 7-3 (2)), drawn inside. */
 #editor .cm-editor.cm-focused {
   outline: 3px solid var(--volt);
@@ -1425,11 +1767,13 @@ body.capture-export .preview-content {
     flex-direction: column;
   }
 
-  /* Narrow screens wrap the status row so the full file name stays readable.
-     The toolbar is a column here, so the 380px basis would become a height. */
-  .document-status {
+  /* Narrow screens give the open document a row of its own under the logotype and
+     mark, and wrap it so the full file name stays readable. */
+  .brand-bar .document-status {
     flex: 0 0 auto;
+    order: 3;
     width: 100%;
+    margin-inline: 0;
     flex-wrap: wrap;
   }
 
@@ -1460,7 +1804,7 @@ body.capture-export .preview-content {
   }
 
   .brand-bar {
-    flex-basis: 64px;
+    min-height: 64px;
   }
 
   .brand-logo {
@@ -1661,6 +2005,108 @@ body.capture-export .preview-content pre {
   }
 }
 
+/* Fix rules: the rules in order, each with its pattern and its buttons, and the form that
+   writes one. Patterns and examples are in the editor's font (a Japanese UI font draws \ as a
+   yen sign). */
+.fix-rules-list {
+  margin: 0 16px;
+  padding: 0;
+  list-style: none;
+}
+
+.fix-rule {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.fix-rule-name {
+  margin: 0;
+  font-weight: 800;
+}
+
+.fix-rule-what {
+  margin: 4px 0 8px;
+  color: var(--steel);
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.fix-rule-what code,
+.fix-rule-result code,
+.fix-rule-code {
+  font-family: Consolas, "Cascadia Mono", monospace;
+}
+
+.fix-rule-actions,
+.fix-rule-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.fix-rule-actions select,
+.fix-rule-form select,
+.fix-rule-field input {
+  min-height: 44px;
+  padding: 4px 8px;
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  color: var(--ink);
+  background: var(--card);
+  font: inherit;
+}
+
+.fix-rule-form h3 {
+  margin: 4px 0;
+  font-size: 16px;
+}
+
+.fix-rule-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 8px 0;
+}
+
+.fix-rule-skip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 16px;
+  margin: 8px 0;
+  padding: 4px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.fix-rule-problem {
+  margin: 8px 0;
+  color: var(--volt-deep);
+  font-weight: 800;
+}
+
+.fix-rule-problem:empty {
+  display: none;
+}
+
+.fix-rule-result {
+  margin: 8px 0 0;
+  overflow-wrap: anywhere;
+}
+
+.fix-rule-result ol {
+  margin: 4px 0 0;
+  padding-left: 1.5em;
+}
+
+.fix-rules-status {
+  margin: 8px 16px 16px;
+}
+
+.fix-details-actions {
+  margin-bottom: 16px;
+}
+
 /* Settings dialog and the read-aloud controls */
 .settings-dialog {
   width: min(640px, calc(100vw - 32px));
@@ -1715,6 +2161,16 @@ body.capture-export .preview-content pre {
   flex: 0 0 auto;
   margin: 0;
   accent-color: var(--ink);
+}
+
+/* Choices that belong to the setting above them, set in under it. */
+.settings-choices {
+  padding-left: 30px;
+}
+
+.settings-check:has(input:disabled) {
+  cursor: default;
+  color: var(--document-muted);
 }
 
 .zoom-row output {
