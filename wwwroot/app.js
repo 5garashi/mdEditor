@@ -68,7 +68,14 @@
       settingsZipLinksNote: "文書がリンクしている「名前_files」フォルダーの外のファイル（ほかのフォルダーの画像・資料など）を、ZIP の中の「名前_files」に写し、ZIP の中の文書はその写しにリンクします。元の文書とファイルは変わりません。「インターネット上…」では、インターネット上の画像・動画と、ファイル（.pdf など）へのリンクもダウンロードして入れます（1 個 50 MB まで。Web ページへのリンクはリンクのまま）。ダウンロードすると、そのサーバーに IP アドレスなどが伝わります。",
       settingsMarkdown: "Markdown の書き方",
       settingsNearGitHub: "GitHub での表示に近づける（mdEditor 独自の書き方を使わない）",
+      settingsNearGitHubScope: "ほかの表示の設定",
+      settingsNearGitHubAll: "ほかの表示の設定も GitHub に合わせる（段落の中の改行・\\(…\\) の数式を使わない）",
+      settingsNearGitHubOwn: "ほかの表示の設定はそのまま使う",
+      settingsLineBreaksGitHub: "「GitHub での表示に近づける」で、ほかの表示の設定も GitHub に合わせているため、いまは使いません（GitHub と同じく空白でつなぎます）。",
       settingsNearGitHubNote: "オンにすると、GitHub にない mdEditor 独自の書き方（x^2^ の上付き、H~2~O の下付き、==強調==、++挿入++、定義リスト、::: の囲み、{#id} などの属性、略語、罫線の表、a. の番号）を、GitHub と同じく書いたとおりの文字で表示し、~文字~ を取り消し線にします。PDF などの書き出しも同じです。表示を GitHub に近づけるための設定で、GitHub と完全に同じにはなりません（図・地図・3D モデル、コードの色分け、数式の描き方などは mdEditor のままです）。",
+      settingsLineBreaks: "段落の中の改行も、そのまま改行して表示する",
+      settingsLineBreaksNote: "Markdown では、空行をはさまずに続く行は1つの段落になり、行の間の改行は空白として表示されます（GitHub も同じです）。初期設定はオンで、書いた行のとおりに改行して表示します（VS Code の Markdown Preview Enhanced の既定と同じ）。オフにすると、Markdown の決まりどおりにつなぎます。PDF・HTML・Word などの書き出しも同じです。ファイルの中身は変わりませんが、GitHub など他のアプリでは改行されないことがあります。",
+      settingsPdfPageNumbers: "PDF の各ページの下にページ番号（2 / 5 の形）を入れる",
       settingsHtmlSource: "HTMLに保存するとき、元の Markdown も入れる（mdEditor で開くと元どおりに戻せる）",
       settingsHtmlSourceNote: "HTML の中に、元の文章がそのまま入ります。画面に出ないコメント（<!-- -->）も含まれるので、人に渡す前に確かめてください。入れない場合も、mdEditor で開くと Markdown に変換して開けます（色や配置、図の絵は戻りません）。",
       sampleLoadFailed: "サンプルを読み込めませんでした。mdEditor を入れ直してから、もう一度お試しください。",
@@ -125,6 +132,10 @@
       unfixRule: "元に戻す",
       fixAll: "すべて直す",
       unfixAll: "すべて元に戻す",
+      noticeLineBreaks: (count) => `段落の中の改行 ${count} か所を、書いたとおりに改行して表示しています。`,
+      noticeLineBreaksJoined: (count) => `段落の中の改行 ${count} か所を、Markdown の決まりどおり空白でつないで表示しています（「設定」の「Markdown の書き方」でも切り替えられます）。`,
+      lineBreaksJoin: "1行につなげる",
+      lineBreaksShow: "改行して表示する",
       fixDetails: "内訳",
       noticeRule: (name, count, example) => `「${name}」で直せる書き方が ${count} か所あります（例: ${example}）。`,
       noticeRuleDone: (name, count, example) => `「${name}」で ${count} か所を直しました（例: ${example}）。`,
@@ -211,6 +222,10 @@
       imageChanged: (size, position) => `画像を「${size}・${position}」にしました。Ctrl+Z で取り消せます。`,
       imageSizeWords: { original: "元の大きさ", pixels: (px) => `幅 ${px} ピクセル`, percent: (p) => `本文の幅の ${p}%` },
       imagePositionWords: { none: "位置の指定なし", center: "中央", right: "右", floatLeft: "左に置いて回り込み", floatRight: "右に置いて回り込み" },
+      tableNotFound: "表が見つかりません。カーソルを表の中（| で区切った行）に置いてから押してください。",
+      tableFormatted: (columns, rows) => `表を整えました（${columns} 列、${rows} 行）。`,
+      sectionNumbersAdded: (count) => `見出し ${count} か所に番号を付けました。もう一度押すと外します。`,
+      sectionNumbersRemoved: (count) => `見出し ${count} か所の番号を外しました。`,
       tocUpdated: "目次を新しくしました。", tocInserted: "カーソルの位置に目次を入れました。見出しを変えたら、もう一度「目次」を押すと新しくなります。",
       help: "書き方", helpTitle: "Markdown の書き方 (F1)", helpHeading: "Markdown の簡単な書き方",
       shortcuts: "キー操作", shortcutHeading: "キーボードショートカット",
@@ -229,6 +244,7 @@
       settingsFullWidth: "プレビューの本文の幅を制限しない（広い画面で1行を長くする）",
       settingsEditor: "編集欄", settingsActiveLine: "いまの行を強調する", settingsThickCaret: "カーソルを太くする",
       settingsColors: "Markdown の書き方を色分けする（見出し、強調、リンク、コード、数式など）",
+      settingsCompletion: "入力の候補を出す（リンク先の見出しとファイル、数式の命令）",
       settingsLint: "Markdown の書き方を確かめる（問題のある所に波線を引き、行に印を付ける）",
       lintStatus: (count) => `書き方の問題 ${count} 件（押すと一覧を表示）`,
       lintPhrases: {"Diagnostics": "書き方の確認", "No diagnostics": "問題は見つかりませんでした", "close": "閉じる"},
@@ -270,7 +286,7 @@
         help: "Markdown の書き方", shortcuts: "キー操作の一覧", fullscreenEditor: "編集画面をウィンドウ全体に表示",
         fullscreenPreview: "プレビューをウィンドウ全体に表示", nextPane: "次の欄へ移動", previousPane: "前の欄へ移動",
         windowFullscreen: "ウィンドウの全画面表示", settings: "設定", readAloud: "読み上げ・一時停止", stopReading: "読み上げを停止", html: "HTMLに保存", png: "PNGに保存", docx: "Wordに保存", openUrl: "URLを開く",
-        detachPreview: "プレビューを別ウィンドウで表示・本体に戻す", image: "画像の大きさと位置"
+        detachPreview: "プレビューを別ウィンドウで表示・本体に戻す", image: "画像の大きさと位置", bold: "太字", italic: "斜体", formatTable: "表を整える", sectionNumbers: "見出しの番号を付ける・外す"
       },
       helpIntro: "左の書き方で入力すると、右のように表示されます。「挿入」を押すと、編集欄のカーソル位置に例を入れます。",
       helpItem: "項目", helpSyntax: "書き方", helpResult: "表示", helpInsert: "挿入",
@@ -335,7 +351,14 @@
       settingsZipLinksNote: "把文档链接的“名称_files”文件夹以外的文件（其他文件夹中的图像、资料等）复制到 ZIP 中的“名称_files”，ZIP 中的文档链接到这些副本。原文档和文件不会改变。选择“网络上…”时，网络上的图像、视频以及指向文件（.pdf 等）的链接也会下载并放入（每个最多 50 MB；指向网页的链接仍保留为链接）。下载时，这些服务器会得知你的 IP 地址等信息。",
       settingsMarkdown: "Markdown 写法",
       settingsNearGitHub: "显示效果接近 GitHub（不使用 mdEditor 独有的写法）",
+      settingsNearGitHubScope: "其他显示设置",
+      settingsNearGitHubAll: "其他显示设置也与 GitHub 一致（不使用段落中的换行和 \\(…\\) 公式）",
+      settingsNearGitHubOwn: "其他显示设置照常使用",
+      settingsLineBreaksGitHub: "由于“显示效果接近 GitHub”让其他显示设置也与 GitHub 一致，目前不使用此设置（与 GitHub 一样用空格连接）。",
       settingsNearGitHubNote: "开启后，GitHub 没有的 mdEditor 独有写法（x^2^ 上标、H~2~O 下标、==强调==、++插入++、定义列表、::: 容器、{#id} 等属性、缩写、网格表格、a. 编号）会像在 GitHub 上一样按原文显示，~文字~ 显示为删除线。导出 PDF 等时也一样。此设置只是让显示接近 GitHub，并不会与 GitHub 完全相同（图表、地图、3D 模型、代码着色和公式的绘制方式仍是 mdEditor 的方式）。",
+      settingsLineBreaks: "段落中的换行也按原样换行显示",
+      settingsLineBreaksNote: "在 Markdown 中，中间没有空行的连续几行属于同一个段落，行间的换行显示为空格（GitHub 也是如此）。默认开启，按照书写的行换行显示（与 VS Code 的 Markdown Preview Enhanced 的默认设置相同）。关闭后按 Markdown 的规则连接。导出 PDF、HTML、Word 等时也一样。文件内容不会改变，但在 GitHub 等其他应用中可能不会换行。",
+      settingsPdfPageNumbers: "在 PDF 每页底部加入页码（2 / 5 的形式）",
       settingsHtmlSource: "保存为 HTML 时，同时放入原来的 Markdown（用 mdEditor 打开时可以恢复原样）",
       settingsHtmlSourceNote: "原文会原样放入 HTML 中，其中也包括不在画面上显示的注释（<!-- -->），交给别人之前请先检查。不放入时，用 mdEditor 打开也能转换为 Markdown（颜色、排版和图表的图形不会恢复）。",
       sampleLoadFailed: "无法加载示例。请重新安装 mdEditor 后再试。",
@@ -392,6 +415,10 @@
       unfixRule: "恢复原样",
       fixAll: "全部修正",
       unfixAll: "全部恢复原样",
+      noticeLineBreaks: (count) => `段落中的 ${count} 处换行已按原样换行显示。`,
+      noticeLineBreaksJoined: (count) => `段落中的 ${count} 处换行已按 Markdown 的规则用空格连接显示（也可以在“设置”的“Markdown 写法”中切换）。`,
+      lineBreaksJoin: "连成一行",
+      lineBreaksShow: "换行显示",
       fixDetails: "详情",
       noticeRule: (name, count, example) => `有 ${count} 处可以用“${name}”修正（例: ${example}）。`,
       noticeRuleDone: (name, count, example) => `已用“${name}”修正 ${count} 处（例: ${example}）。`,
@@ -478,6 +505,10 @@
       imageChanged: (size, position) => `已将图像设为“${size}、${position}”。可以用 Ctrl+Z 撤销。`,
       imageSizeWords: { original: "原始大小", pixels: (px) => `宽 ${px} 像素`, percent: (p) => `正文宽度的 ${p}%` },
       imagePositionWords: { none: "不指定位置", center: "居中", right: "右", floatLeft: "放在左边并环绕文字", floatRight: "放在右边并环绕文字" },
+      tableNotFound: "找不到表格。请把光标放在表格中（用 | 分隔的行）后再按。",
+      tableFormatted: (columns, rows) => `已整理表格（${columns} 列，${rows} 行）。`,
+      sectionNumbersAdded: (count) => `已为 ${count} 个标题添加编号。再按一次即可去掉。`,
+      sectionNumbersRemoved: (count) => `已去掉 ${count} 个标题的编号。`,
       tocUpdated: "已更新目录。", tocInserted: "已在光标位置插入目录。更改标题后，再按一次“目录”即可更新。",
       help: "写法", helpTitle: "Markdown 写法 (F1)", helpHeading: "Markdown 简明写法",
       shortcuts: "按键操作", shortcutHeading: "键盘快捷键",
@@ -496,6 +527,7 @@
       settingsFullWidth: "不限制预览正文的宽度（在宽屏上每行更长）",
       settingsEditor: "编辑区", settingsActiveLine: "突出显示当前行", settingsThickCaret: "加粗光标",
       settingsColors: "按颜色区分 Markdown 写法（标题、强调、链接、代码、公式等）",
+      settingsCompletion: "显示输入候选（链接目标的标题和文件、公式命令）",
       settingsLint: "检查 Markdown 写法（在有问题的地方画波浪线，并在该行做标记）",
       lintStatus: (count) => `写法问题 ${count} 个（按下显示列表）`,
       lintPhrases: {"Diagnostics": "写法检查", "No diagnostics": "没有发现问题", "close": "关闭"},
@@ -537,7 +569,7 @@
         help: "Markdown 写法", shortcuts: "按键操作一览", fullscreenEditor: "编辑区填满窗口",
         fullscreenPreview: "预览填满窗口", nextPane: "移到下一个区域", previousPane: "移到上一个区域",
         windowFullscreen: "窗口全屏显示", settings: "设置", readAloud: "朗读／暂停", stopReading: "停止朗读", html: "保存为 HTML", png: "保存为 PNG", docx: "保存为 Word", openUrl: "打开 URL",
-        detachPreview: "在单独窗口中显示预览／返回主窗口", image: "图像的大小和位置"
+        detachPreview: "在单独窗口中显示预览／返回主窗口", image: "图像的大小和位置", bold: "粗体", italic: "斜体", formatTable: "整理表格", sectionNumbers: "添加或去掉标题编号"
       },
       helpIntro: "按左边的写法输入，就会显示为右边的样子。按“插入”可以把示例放到编辑区的光标位置。",
       helpItem: "项目", helpSyntax: "写法", helpResult: "显示", helpInsert: "插入",
@@ -602,7 +634,14 @@
       settingsZipLinksNote: "Files the document links to outside its name_files folder (pictures or papers in other folders, say) are copied into name_files in the ZIP, and the document in the ZIP links to the copies. The document and the files themselves are not changed. With \"on the internet\", pictures and videos on the internet, and links to files (.pdf and so on), are downloaded into it too (50 MB at most each; links to web pages stay links). Downloading lets those servers see information such as your IP address.",
       settingsMarkdown: "Markdown syntax",
       settingsNearGitHub: "Show documents closer to GitHub (no mdEditor-only syntax)",
+      settingsNearGitHubScope: "Other display settings",
+      settingsNearGitHubAll: "Make the other display settings follow GitHub too (no line breaks in paragraphs, no \\(…\\) math)",
+      settingsNearGitHubOwn: "Keep using the other display settings",
+      settingsLineBreaksGitHub: "Not used now: \"Show documents closer to GitHub\" makes the other display settings follow GitHub too (the lines are joined by spaces, as on GitHub).",
       settingsNearGitHubNote: "When on, mdEditor's own syntax that GitHub does not have (x^2^ superscript, H~2~O subscript, ==highlight==, ++insert++, definition lists, ::: containers, attributes such as {#id}, abbreviations, grid tables, and a. numbering) shows as the plain text you wrote, as on GitHub, and ~text~ is struck through. Exports such as PDF follow it too. This brings the display closer to GitHub but does not make it identical (diagrams, maps, 3D models, code colors, and how math is drawn stay mdEditor's own).",
+      settingsLineBreaks: "Show each line break in a paragraph as a line break",
+      settingsLineBreaksNote: "In Markdown, lines that follow one another with no blank line between them are one paragraph, and the line breaks between them show as spaces (GitHub does the same). On by default, the lines show as you wrote them (as in VS Code's Markdown Preview Enhanced by default); when off, they are joined by Markdown's rules. Exports such as PDF, HTML, and Word follow it too. The file itself does not change, but GitHub and other apps may not break the lines.",
+      settingsPdfPageNumbers: "Put page numbers (2 / 5) at the foot of each PDF page",
       settingsHtmlSource: "Keep the original Markdown in saved HTML (opens back exactly in mdEditor)",
       settingsHtmlSourceNote: "The original text goes into the HTML file as it is, including comments (<!-- -->) that are never shown, so check it before you share the file. Without it, mdEditor still opens the HTML by converting it to Markdown (colors, layout, and drawn diagrams do not come back).",
       sampleLoadFailed: "The sample could not be loaded. Reinstall mdEditor, then try again.",
@@ -659,6 +698,10 @@
       unfixRule: "Put back",
       fixAll: "Fix all",
       unfixAll: "Put all back",
+      noticeLineBreaks: (count) => `${count} line break(s) in paragraphs are shown as line breaks, as written.`,
+      noticeLineBreaksJoined: (count) => `${count} line break(s) in paragraphs are shown joined by spaces, by Markdown's rules (also in Settings > Markdown syntax).`,
+      lineBreaksJoin: "Join the lines",
+      lineBreaksShow: "Show line breaks",
       fixDetails: "Details",
       noticeRule: (name, count, example) => `"${name}" can fix ${count} place(s) (for example, ${example}).`,
       noticeRuleDone: (name, count, example) => `"${name}" fixed ${count} place(s) (for example, ${example}).`,
@@ -745,6 +788,10 @@
       imageChanged: (size, position) => `The image is now ${size}, ${position}. Ctrl+Z undoes it.`,
       imageSizeWords: { original: "original size", pixels: (px) => `${px} pixels wide`, percent: (p) => `${p}% of the text width` },
       imagePositionWords: { none: "position not set", center: "centered", right: "on the right", floatLeft: "on the left with text flowing", floatRight: "on the right with text flowing" },
+      tableNotFound: "No table here. Put the cursor in a table (lines split by |) and press it again.",
+      tableFormatted: (columns, rows) => `The table was put in columns (${columns} columns, ${rows} rows).`,
+      sectionNumbersAdded: (count) => `Numbered ${count} heading(s). Press it again to remove the numbers.`,
+      sectionNumbersRemoved: (count) => `Removed the numbers from ${count} heading(s).`,
       tocUpdated: "The table of contents was updated.", tocInserted: "A table of contents was inserted at the cursor. After changing headings, press Contents again to update it.",
       help: "Syntax", helpTitle: "Markdown syntax (F1)", helpHeading: "Markdown quick reference",
       shortcuts: "Keys", shortcutHeading: "Keyboard shortcuts",
@@ -763,6 +810,7 @@
       settingsFullWidth: "Don't limit the preview text width (longer lines on wide screens)",
       settingsEditor: "Editor", settingsActiveLine: "Highlight the current line", settingsThickCaret: "Use a thick cursor",
       settingsColors: "Color Markdown as you write it (headings, emphasis, links, code, math, and more)",
+      settingsCompletion: "Suggest as you type (headings and files for links, math commands)",
       settingsLint: "Check how Markdown is written (underline problems and mark their lines)",
       lintStatus: (count) => `${count} Markdown problem${count === 1 ? "" : "s"} (press to list them)`,
       lintPhrases: {},
@@ -804,7 +852,7 @@
         help: "Markdown syntax", shortcuts: "Keyboard shortcuts", fullscreenEditor: "Fill window with editor",
         fullscreenPreview: "Fill window with preview", nextPane: "Next pane", previousPane: "Previous pane",
         windowFullscreen: "Window full screen", settings: "Settings", readAloud: "Read aloud / pause", stopReading: "Stop reading", html: "Save as HTML", png: "Save as PNG", docx: "Save as Word", openUrl: "Open URL",
-        detachPreview: "Preview in its own window / return", image: "Image size and position"
+        detachPreview: "Preview in its own window / return", image: "Image size and position", bold: "Bold", italic: "Italic", formatTable: "Format table", sectionNumbers: "Add or remove section numbers"
       },
       helpIntro: "Type the syntax on the left to get the result on the right. Insert puts the example at the cursor in the editor.",
       helpItem: "Item", helpSyntax: "Syntax", helpResult: "Result", helpInsert: "Insert",
@@ -907,10 +955,10 @@
   const {
     Compartment, Decoration, EditorSelection, EditorState, EditorView, HighlightStyle, RangeSetBuilder, ViewPlugin,
     closeLintPanel, defaultKeymap, drawSelection, forEachDiagnostic, forceLinting, highlightActiveLine, history, historyKeymap,
-    keymap, lintGutter, linter, markTags, markdownLanguage, openLintPanel, syntaxHighlighting, tags
+    keymap, lintGutter, linter, markTags, markdownLanguage, openLintPanel, syntaxHighlighting, tags, autocompletion
   } = window.CodeMirror;
   const displayDefaults = {
-    font: "standard", size: "1", spacing: "1.7", fullWidth: false, htmlSource: true, activeLine: false, thickCaret: false, colors: true, lint: true,
+    font: "standard", size: "1", spacing: "1.7", fullWidth: false, htmlSource: true, activeLine: false, thickCaret: false, colors: true, lint: true, completion: true,
     reader: false, rate: "1", pause: "0.5", readerLang: "auto", readerVoice: "", mapBackground: "ask", videoAutoplay: "auto"
   };
   const displayStorageKey = "mdeditor-display";
@@ -1083,7 +1131,8 @@
     settings.activeLine ? highlightActiveLine() : [],
     settings.thickCaret ? drawSelection() : [],
     settings.colors ? markdownColors : [],
-    settings.lint ? markdownCheck() : []
+    settings.lint ? markdownCheck() : [],
+    settings.completion ? autocompletion({ override: [completeMarkdown], icons: false }) : []
   ];
   const editorAttributes = new Compartment();
   // The editor's label, and the words of the problem list in the page's language.
@@ -1093,9 +1142,448 @@
     }),
     EditorState.phrases.of(t("lintPhrases"))
   ];
+  // Writing help: Ctrl+B / Ctrl+I, lists that go on with Enter and move with Tab / Shift+Tab,
+  // tables put in columns, section numbers on headings, a URL pasted on selected text made a
+  // link, and completions. Lists and tables are read from the lines themselves (the syntax
+  // tree is there only while coloring is on).
+
+  // Inside a fenced code block (``` or ~~~) at this line?
+  const fenceLine = /^ {0,3}(`{3,}|~{3,})(.*)$/;
+  const inFence = (doc, lineNumber) => {
+    let fence = null;
+    for (let n = 1; n < lineNumber; n += 1) {
+      const match = fenceLine.exec(doc.line(n).text);
+      if (!match) continue;
+      if (!fence) fence = match[1];
+      else if (match[1][0] === fence[0] && match[1].length >= fence.length && !match[2].trim()) fence = null;
+    }
+    return fence !== null;
+  };
+
+  // Bold (two stars) and italic (one) go on and off: the selection, or the word marks around
+  // it, or the selected marks themselves. Spaces at the ends of the selection stay outside,
+  // where the marks still work.
+  const starRun = (state, pos, dir) => {
+    let count = 0;
+    while (count < 3) {
+      const at = dir < 0 ? pos - count - 1 : pos + count;
+      if (at < 0 || at >= state.doc.length || state.sliceDoc(at, at + 1) !== "*") break;
+      count += 1;
+    }
+    return count;
+  };
+  const hasStars = (run, size) => (size === 2 ? run >= 2 : run === 1 || run === 3);
+  const toggleEmphasis = (size) => (target) => {
+    const { state } = target;
+    const mark = "*".repeat(size);
+    target.dispatch(state.update(state.changeByRange((range) => {
+      const text = state.sliceDoc(range.from, range.to);
+      const lead = /^\**/.exec(text)[0].length;
+      const trail = /\**$/.exec(text)[0].length;
+      if (text.length > size * 2 && hasStars(Math.min(lead, 3), size) && hasStars(Math.min(trail, 3), size)) {
+        return {
+          changes: [{ from: range.from, to: range.from + size }, { from: range.to - size, to: range.to }],
+          range: EditorSelection.range(range.from, range.to - size * 2)
+        };
+      }
+      if (hasStars(starRun(state, range.from, -1), size) && hasStars(starRun(state, range.to, 1), size)) {
+        return {
+          changes: [{ from: range.from - size, to: range.from }, { from: range.to, to: range.to + size }],
+          range: EditorSelection.range(range.from - size, range.to - size)
+        };
+      }
+      const from = range.from + (text.length - text.trimStart().length);
+      const to = Math.max(from, range.to - (text.length - text.trimEnd().length));
+      return {
+        changes: [{ from, insert: mark }, { from: to, insert: mark }],
+        range: EditorSelection.range(from + size, to + size)
+      };
+    }), { scrollIntoView: true, userEvent: "input" }));
+    return true;
+  };
+
+  // A list item: > marks of a quote, its indent, the mark (- * + or 1. 1)), the spaces after
+  // it, and [ ] of a task. content: where its text starts, counted from after the quote.
+  const listLine = /^((?: {0,3}>[ ]?)*)( *)(?:([-*+])|(\d{1,9})([.)]))( +|$)(\[[ xX]\] +)?/;
+  const quoteLine = /^(?: {0,3}>[ ]?)+/;
+  const readListLine = (text) => {
+    const match = listLine.exec(text);
+    if (!match || !(match[3] || match[4])) return null;
+    const markLength = match[3] ? 1 : match[4].length + 1;
+    return {
+      quote: match[1], indent: match[2].length, bullet: match[3] ?? null,
+      number: match[4] ? Number(match[4]) : null, delimiter: match[5] ?? null,
+      space: match[6] || " ", task: match[7] ?? "", end: match[0].length,
+      content: match[2].length + markLength + Math.max(1, match[6].length)
+    };
+  };
+  // The numbers of the items after this one in its list, counted on from next.
+  const renumberFollowing = (doc, lineNumber, item, next) => {
+    const changes = [];
+    for (let n = lineNumber + 1; n <= doc.lines; n += 1) {
+      const line = doc.line(n);
+      if (!line.text.trim()) continue;
+      const other = readListLine(line.text);
+      if (other && other.quote === item.quote && other.indent === item.indent) {
+        if (other.number === null || other.delimiter !== item.delimiter) break;
+        next += 1;
+        if (other.number !== next) {
+          const at = line.from + other.quote.length + other.indent;
+          changes.push({ from: at, to: at + String(other.number).length, insert: String(next) });
+        }
+        continue;
+      }
+      // Its items' own lists and wrapped lines are set in further.
+      if (line.text.startsWith(item.quote) && /^ */.exec(line.text.slice(item.quote.length))[0].length > item.indent) continue;
+      break;
+    }
+    return changes;
+  };
+  // Enter in a list item starts the next one (the next number, an empty [ ] for a task), in
+  // a quote the next quoted line. On an empty item it ends the list instead (a nested one moves
+  // out a level), and on an empty > line, the quote.
+  const continueList = (target) => {
+    const { state } = target;
+    if (state.selection.ranges.length > 1) return false;
+    const range = state.selection.main;
+    const line = state.doc.lineAt(range.from);
+    if (state.doc.lineAt(range.to).number !== line.number) return false;
+    const item = readListLine(line.text);
+    const quote = item ? null : quoteLine.exec(line.text);
+    if (!item && !quote) return false;
+    const end = item ? item.end : quote[0].length;
+    if (range.from - line.from < end || inFence(state.doc, line.number)) return false;
+    if (!line.text.slice(end).trim()) {
+      if (item && item.indent > 0) return moveListItems(-1)(target);
+      const from = line.from + (item ? item.quote.length : 0);
+      target.dispatch({ changes: { from, to: line.to }, selection: { anchor: from }, userEvent: "input" });
+      return true;
+    }
+    const prefix = item
+      ? item.quote + " ".repeat(item.indent) + (item.bullet ?? `${item.number + 1}${item.delimiter}`) + item.space + (item.task ? "[ ] " : "")
+      : quote[0];
+    const to = range.to + /^[ \t]*/.exec(state.sliceDoc(range.to, line.to))[0].length;
+    const changes = [{ from: range.from, to, insert: `\n${prefix}` }];
+    if (item?.number !== null && item) changes.push(...renumberFollowing(state.doc, line.number, item, item.number + 1));
+    target.dispatch({
+      changes, selection: { anchor: range.from + 1 + prefix.length }, scrollIntoView: true, userEvent: "input"
+    });
+    return true;
+  };
+  // Tab sets the selected items in under the item above (a list of their own), Shift+Tab
+  // takes them out a level. A numbered item takes the number that follows in its new list.
+  // Off a list item, Tab moves the focus as before.
+  const moveListItems = (direction) => (target) => {
+    const { state } = target;
+    const lines = [];
+    for (const range of state.selection.ranges) {
+      for (let n = state.doc.lineAt(range.from).number; n <= state.doc.lineAt(range.to).number; n += 1) {
+        if (!lines.some((line) => line.number === n)) lines.push(state.doc.line(n));
+      }
+    }
+    const items = lines.map((line) => readListLine(line.text));
+    if (items.some((item) => !item) || inFence(state.doc, lines[0].number)) return false;
+    const changes = [];
+    for (const [index, line] of lines.entries()) {
+      const item = items[index];
+      const passed = [];
+      let goal = null;
+      let parent = null;
+      for (let n = line.number - 1; n >= 1; n -= 1) {
+        const above = state.doc.line(n);
+        if (!above.text.trim()) continue;
+        const other = readListLine(above.text);
+        if (!other || other.quote !== item.quote) {
+          if (/^ /.test(above.text.slice(item.quote.length))) continue;
+          break;
+        }
+        if (other.indent > item.indent) {
+          passed.push(other);
+          continue;
+        }
+        if (direction > 0) {
+          if (other.indent === item.indent) goal = other.content;
+          break;
+        }
+        if (other.indent < item.indent) {
+          goal = other.indent;
+          parent = other;
+          break;
+        }
+      }
+      if (direction < 0 && goal === null && item.indent > 0) goal = 0;
+      if (goal === null) continue;
+      const at = line.from + item.quote.length;
+      changes.push({ from: at, to: at + item.indent, insert: " ".repeat(goal) });
+      if (item.number !== null) {
+        const before = direction > 0 ? passed.find((other) => other.indent === goal) : parent;
+        const number = before?.number != null ? before.number + 1 : 1;
+        if (number !== item.number) changes.push({ from: at + item.indent, to: at + item.indent + String(item.number).length, insert: String(number) });
+      }
+    }
+    if (changes.length) target.dispatch({ changes, userEvent: "input" });
+    return true;
+  };
+
+  // A table put in columns: each column as wide as its widest cell (a full-width letter is two
+  // columns wide, as in the editor's font), the cells aligned as the line under the header
+  // says. Cells are split at | as GitHub splits them (\| stays in its cell).
+  const delimiterRow = /^ *\|? *:?-+:? *(?:\| *:?-+:? *)*\|? *$/;
+  const splitRow = (text) => {
+    let body = text.trim();
+    if (body.startsWith("|")) body = body.slice(1);
+    if (body.endsWith("|") && !body.endsWith("\\|")) body = body.slice(0, -1);
+    const cells = [];
+    let cell = "";
+    for (let i = 0; i < body.length; i += 1) {
+      if (body[i] === "\\" && i + 1 < body.length) {
+        cell += body[i] + body[i + 1];
+        i += 1;
+      } else if (body[i] === "|") {
+        cells.push(cell.trim());
+        cell = "";
+      } else {
+        cell += body[i];
+      }
+    }
+    cells.push(cell.trim());
+    return cells;
+  };
+  const wideLetter = (code) => (code >= 0x1100 && code <= 0x115f) || (code >= 0x2e80 && code <= 0xa4cf)
+    || (code >= 0xac00 && code <= 0xd7a3) || (code >= 0xf900 && code <= 0xfaff) || (code >= 0xfe30 && code <= 0xfe4f)
+    || (code >= 0xff00 && code <= 0xff60) || (code >= 0xffe0 && code <= 0xffe6) || (code >= 0x1f300 && code <= 0x1faff)
+    || (code >= 0x20000 && code <= 0x3fffd);
+  const textWidth = (text) => {
+    let width = 0;
+    for (const letter of text) {
+      const code = letter.codePointAt(0);
+      // Joiners, variation selectors, and accents take no room of their own.
+      if (code === 0x200d || (code >= 0xfe00 && code <= 0xfe0f) || (code >= 0x300 && code <= 0x36f)) continue;
+      width += wideLetter(code) ? 2 : 1;
+    }
+    return width;
+  };
+  const formatTable = (target) => {
+    const { state } = target;
+    const doc = state.doc;
+    const here = doc.lineAt(state.selection.main.head);
+    const isRow = (n) => n >= 1 && n <= doc.lines && doc.line(n).text.includes("|") && doc.line(n).text.trim() !== "";
+    let header = 0;
+    if (isRow(here.number) && !inFence(doc, here.number)) {
+      for (let n = isRow(here.number + 1) ? here.number + 1 : here.number; n >= 2 && isRow(n); n -= 1) {
+        if (delimiterRow.test(doc.line(n).text) && isRow(n - 1) && splitRow(doc.line(n - 1).text).length === splitRow(doc.line(n).text).length) {
+          header = n - 1;
+          break;
+        }
+      }
+    }
+    if (!header || here.number < header) {
+      showNoticeMessage(t("tableNotFound"));
+      return true;
+    }
+    let last = header + 1;
+    while (isRow(last + 1)) last += 1;
+    const indent = /^ */.exec(doc.line(header).text)[0];
+    const rows = [];
+    for (let n = header; n <= last; n += 1) rows.push(splitRow(doc.line(n).text));
+    const columns = rows[0].length;
+    const aligns = rows[1].map((cell) => (cell.startsWith(":") && cell.endsWith(":") ? "center" : cell.endsWith(":") ? "right" : cell.startsWith(":") ? "left" : ""));
+    const widths = Array.from({ length: columns }, (_, column) =>
+      Math.max(3, ...rows.filter((_, index) => index !== 1).map((cells) => textWidth(cells[column] ?? ""))));
+    const pad = (text, width, align) => {
+      const room = width - textWidth(text);
+      if (align === "right") return " ".repeat(room) + text;
+      if (align === "center") return " ".repeat(Math.floor(room / 2)) + text + " ".repeat(Math.ceil(room / 2));
+      return text + " ".repeat(room);
+    };
+    const dashes = (width, align) => (align === "center" ? `:${"-".repeat(width - 2)}:`
+      : align === "right" ? `${"-".repeat(width - 1)}:` : align === "left" ? `:${"-".repeat(width - 1)}` : "-".repeat(width));
+    const lines = rows.map((cells, index) => {
+      const shown = Array.from({ length: columns }, (_, column) =>
+        (index === 1 ? dashes(widths[column], aligns[column]) : pad(cells[column] ?? "", widths[column], aligns[column])));
+      // Cells past the header's are kept as they are (GitHub does not show them).
+      return `${indent}| ${[...shown, ...cells.slice(columns)].join(" | ")} |`;
+    });
+    const from = doc.line(header).from;
+    const to = doc.line(last).to;
+    const text = lines.join("\n");
+    // The cursor stays in its cell, at the cell's start.
+    const pipesBefore = (line, offset) => line.slice(0, offset).replace(/\\./g, "").split("|").length - 1;
+    const cell = Math.max(0, pipesBefore(here.text, state.selection.main.head - here.from) - (here.text.trimStart().startsWith("|") ? 1 : 0));
+    const lineOffset = lines.slice(0, here.number - header).reduce((sum, line) => sum + line.length + 1, 0);
+    const own = lines[here.number - header];
+    let at = indent.length;
+    for (let pipes = 0; pipes <= cell && at < own.length; at += 1) if (own[at] === "|" && own[at - 1] !== "\\") pipes += 1;
+    const anchor = from + lineOffset + Math.min(at + 1, own.length);
+    if (text !== doc.sliceString(from, to)) target.dispatch({ changes: { from, to, insert: text }, selection: { anchor }, userEvent: "input" });
+    showNoticeMessage(t("tableFormatted")(columns, rows.length - 2));
+    return true;
+  };
+
+  // Section numbers on the headings (1., 1.1, 1.1.1 …) from the top level, or from ## when the
+  // document has one # title. Pressed again with the numbers right, it takes them off; numbers
+  // gone wrong after headings were added are put right. A table of contents is made new.
+  let sectionNotice = "";
+  const headingLine = /^( {0,3})(#{1,6})([ \t]+)(.*)$/;
+  const sectionNumber = /^\d+(?:\.\d+)*\.?[ \t]+/;
+  const toggleSectionNumbers = (target) => {
+    const { state } = target;
+    const doc = state.doc;
+    const headings = [];
+    let fence = null;
+    let start = 1;
+    // Front matter (--- … --- at the top) is not the document's text.
+    if (doc.lines > 1 && doc.line(1).text.trim() === "---") {
+      for (let n = 2; n <= doc.lines; n += 1) {
+        if (/^(---|\.\.\.)\s*$/.test(doc.line(n).text)) {
+          start = n + 1;
+          break;
+        }
+      }
+    }
+    for (let n = start; n <= doc.lines; n += 1) {
+      const line = doc.line(n);
+      const match = fenceLine.exec(line.text);
+      if (match && !fence) {
+        fence = match[1];
+        continue;
+      }
+      if (match && fence && match[1][0] === fence[0] && match[1].length >= fence.length && !match[2].trim()) {
+        fence = null;
+        continue;
+      }
+      if (fence) continue;
+      const heading = headingLine.exec(line.text);
+      if (heading) {
+        headings.push({ level: heading[2].length, from: line.from + heading[1].length + heading[2].length + heading[3].length, title: heading[4] });
+      }
+    }
+    const titles = headings.filter((heading) => heading.level === 1).length;
+    const numbered = titles === 1 ? headings.filter((heading) => heading.level > 1) : headings;
+    if (!numbered.length) {
+      showNoticeMessage(t("tocNoHeadings"));
+      return true;
+    }
+    const top = Math.min(...numbered.map((heading) => heading.level));
+    const counts = [0, 0, 0, 0, 0, 0];
+    const wanted = numbered.map((heading) => {
+      const depth = heading.level - top;
+      counts[depth] += 1;
+      counts.fill(0, depth + 1);
+      const number = counts.slice(0, depth + 1).join(".");
+      return { ...heading, number: depth === 0 ? `${number}.` : number, now: sectionNumber.exec(heading.title)?.[0] ?? "" };
+    });
+    const right = wanted.every(({ number, now }) => now.trim().replace(/\.$/, "") === number.replace(/\.$/, ""));
+    target.dispatch({
+      changes: wanted.map(({ from, number, now }) => ({ from, to: from + now.length, insert: right ? "" : `${number} ` })),
+      userEvent: "input"
+    });
+    const message = t(right ? "sectionNumbersRemoved" : "sectionNumbersAdded")(wanted.length);
+    if (findToc(target.state.doc.toString())) {
+      sectionNotice = message;
+      post({ type: "toc" });
+    } else {
+      showNoticeMessage(message);
+    }
+    return true;
+  };
+
+  // A URL pasted on selected text (on one line, not itself a URL) makes it a link.
+  const pasteLink = EditorView.domEventHandlers({
+    paste: (event, target) => {
+      const url = event.clipboardData?.getData("text/plain")?.trim() ?? "";
+      const range = target.state.selection.main;
+      if (!/^https?:\/\/\S+$/.test(url) || range.empty || target.state.selection.ranges.length > 1) return false;
+      const text = target.state.sliceDoc(range.from, range.to);
+      if (text.includes("\n") || /^\s*https?:\/\//.test(text) || inFence(target.state.doc, target.state.doc.lineAt(range.from).number)) return false;
+      event.preventDefault();
+      const address = url.replace(/[()]/g, (letter) => (letter === "(" ? "%28" : "%29"));
+      const link = `[${text}](${address})`;
+      target.dispatch({ changes: { from: range.from, to: range.to, insert: link }, selection: { anchor: range.from + link.length }, userEvent: "input.paste" });
+      return true;
+    }
+  });
+
+  // Completions: a heading after ](# (its link as GitHub makes it), a file beside the document
+  // after ]( (asked of the host each time), and a LaTeX command after \ in math on one line.
+  let fileListWaiters = [];
+  const documentFiles = () => new Promise((resolve) => {
+    fileListWaiters.push(resolve);
+    post({ type: "listFiles" });
+    setTimeout(() => resolve([]), 1000);
+  });
+  const headingSlugs = (doc) => {
+    const seen = new Map();
+    const slugs = [];
+    let fence = null;
+    for (let n = 1; n <= doc.lines; n += 1) {
+      const text = doc.line(n).text;
+      const match = fenceLine.exec(text);
+      if (match && !fence) fence = match[1];
+      else if (match && fence && match[1][0] === fence[0] && !match[2].trim()) fence = null;
+      if (fence || match) continue;
+      const heading = headingLine.exec(text);
+      if (!heading) continue;
+      const title = heading[4].replace(/[ \t]+#+[ \t]*$/, "").trim();
+      const base = title.toLowerCase().replace(/[^\p{L}\p{N}\p{M} _-]/gu, "").replace(/ /g, "-");
+      const count = seen.get(base) ?? 0;
+      seen.set(base, count + 1);
+      slugs.push({ title, slug: count ? `${base}-${count}` : base });
+    }
+    return slugs;
+  };
+  const mathCommands = () => [...new Set([...lostMathCommands, "text", "mathbf", "mathit", "operatorname", "left", "right",
+    "begin", "end", "quad", "qquad", "overline", "underline", "hat", "bar", "vec", "dot", "ddot", "tilde", "binom",
+    "infty", "cdots", "vdots", "ddots", "in", "ni", "to", "mid", "parallel", "perp", "angle", "circ", "deg"])].sort();
+  const completeMarkdown = async (context) => {
+    const line = context.state.doc.lineAt(context.pos);
+    const before = line.text.slice(0, context.pos - line.from);
+    if (inFence(context.state.doc, line.number)) return null;
+    let match = /\]\(#([^\s)]*)$/.exec(before);
+    if (match) {
+      return {
+        from: context.pos - match[1].length,
+        options: headingSlugs(context.state.doc).map(({ title, slug }) => ({ label: slug, detail: title, type: "heading" })),
+        validFor: /^[^\s)]*$/
+      };
+    }
+    match = /\]\(([^\s)#]*)$/.exec(before);
+    if (match) {
+      const files = await documentFiles();
+      if (!files.length) return null;
+      return {
+        from: context.pos - match[1].length,
+        options: files.map((file) => ({ label: file.replace(/ /g, "%20"), type: "file" })),
+        validFor: /^[^\s)#]*$/
+      };
+    }
+    match = /\\([A-Za-z]*)$/.exec(before);
+    const opened = (before.slice(0, match ? match.index : 0).match(/(?<!\\)\$/g)?.length ?? 0) % 2 === 1;
+    if (match && opened && (match[1] || context.explicit)) {
+      return {
+        from: context.pos - match[1].length,
+        options: mathCommands().map((name) => ({ label: name, type: "keyword" })),
+        validFor: /^[A-Za-z]*$/
+      };
+    }
+    return null;
+  };
+  // Esc that closes the completions is not the Esc that restores the layout.
+  let completionsOpen = false;
+  document.addEventListener("keydown", (event) => {
+    completionsOpen = event.key === "Escape" && document.querySelector(".cm-tooltip-autocomplete") !== null;
+  }, true);
+  const writingKeymap = [
+    { key: "Enter", run: continueList },
+    { key: "Tab", run: moveListItems(1) },
+    { key: "Shift-Tab", run: moveListItems(-1) }
+  ];
+
   const editorExtensions = () => [
     history(),
-    keymap.of([...defaultKeymap, ...historyKeymap]),
+    // Ctrl+I is italic here, not the selection of the enclosing syntax.
+    keymap.of([...writingKeymap, ...defaultKeymap.filter((binding) => binding.key !== "Mod-i"), ...historyKeymap]),
+    pasteLink,
     EditorView.lineWrapping,
     editorAttributes.of(editorAttributeValues()),
     editorExtras.of(editorExtrasFor(displaySettings)),
@@ -1677,6 +2165,21 @@
     }
   };
   const shownFixes = () => fixRules.rules.filter((rule) => fixStates.has(rule.id));
+  // Line breaks in paragraphs: the first preview of a document opened says how many there are
+  // (when they are shown as line breaks), and the notice's button turns the setting on and off.
+  let softBreaks = 0;
+  let lineBreaksPending = false;
+  let lineBreaksNotice = false;
+  const lineBreaksButton = document.getElementById("notice-line-breaks");
+  const lineBreaksSentence = () => {
+    const shown = lineBreaksNotice && softBreaks > 0 && !document.getElementById("setting-line-breaks").disabled;
+    lineBreaksButton.hidden = !shown;
+    if (!shown) return [];
+    const on = document.getElementById("setting-line-breaks").checked;
+    lineBreaksButton.textContent = t(on ? "lineBreaksJoin" : "lineBreaksShow");
+    lineBreaksButton.setAttribute("aria-pressed", String(on));
+    return [t(on ? "noticeLineBreaks" : "noticeLineBreaksJoined")(softBreaks)];
+  };
   const fixButton = document.getElementById("notice-fix");
   const fixDetailsButton = document.getElementById("notice-fix-details");
   // One rule: its own sentence, with an example. More: how many rules and places, and the
@@ -1717,7 +2220,7 @@
   const updateNotice = () => {
     const askMaps = mapsWaiting > 0 && !mapNoticeClosed;
     document.getElementById("notice-maps").hidden = !askMaps;
-    const fixed = fixSentences();
+    const fixed = [...fixSentences(), ...lineBreaksSentence()];
     if (!noticeState && !askMaps && !fixed.length) {
       notice.hidden = true;
       return;
@@ -2011,6 +2514,7 @@
     noticeState = null;
     mapNoticeClosed = true;
     fixStates.clear();
+    lineBreaksNotice = false;
     updateNotice();
     view.focus();
   });
@@ -2028,6 +2532,13 @@
     view.focus();
   });
   fixDetailsButton.addEventListener("click", () => openFixDetails());
+  lineBreaksButton.addEventListener("click", () => {
+    const checkbox = document.getElementById("setting-line-breaks");
+    checkbox.checked = !checkbox.checked;
+    post({ type: "setLineBreaks", enabled: checkbox.checked });
+    updateNotice();
+    view.focus();
+  });
   document.getElementById("encoding-close").addEventListener("click", () => encodingDialog.close());
   encodingDialog.addEventListener("click", (event) => {
     if (event.target === encodingDialog) encodingDialog.close();
@@ -2592,6 +3103,7 @@
     thickCaret: document.getElementById("setting-thick-caret"),
     colors: document.getElementById("setting-colors"),
     lint: document.getElementById("setting-lint"),
+    completion: document.getElementById("setting-completion"),
     reader: document.getElementById("setting-reader"),
     rate: document.getElementById("setting-reader-rate"),
     pause: document.getElementById("setting-reader-pause"),
@@ -2687,6 +3199,30 @@
   // Closer to GitHub changes how the host reads Markdown, so the host keeps it.
   const nearGitHubCheckbox = document.getElementById("setting-near-github");
   nearGitHubCheckbox.addEventListener("change", () => post({ type: "setNearGitHub", enabled: nearGitHubCheckbox.checked }));
+  const pdfPageNumbersCheckbox = document.getElementById("setting-pdf-page-numbers");
+  pdfPageNumbersCheckbox.addEventListener("change", () => post({ type: "setPdfPageNumbers", enabled: pdfPageNumbersCheckbox.checked }));
+  const lineBreaksCheckbox = document.getElementById("setting-line-breaks");
+  lineBreaksCheckbox.addEventListener("change", () => {
+    post({ type: "setLineBreaks", enabled: lineBreaksCheckbox.checked });
+    updateNotice();
+  });
+  // With closer to GitHub on: whether the other display settings follow GitHub too. Line breaks
+  // in paragraphs are then not used (kept as set, for when it is turned off again).
+  const nearGitHubAll = document.getElementById("setting-near-github-all");
+  const nearGitHubOwn = document.getElementById("setting-near-github-own");
+  const updateNearGitHubChoices = () => {
+    nearGitHubAll.disabled = nearGitHubOwn.disabled = !nearGitHubCheckbox.checked;
+    lineBreaksCheckbox.disabled = nearGitHubCheckbox.checked && nearGitHubAll.checked;
+    document.getElementById("setting-line-breaks-github").hidden = !lineBreaksCheckbox.disabled;
+    updateNotice();
+  };
+  nearGitHubCheckbox.addEventListener("change", updateNearGitHubChoices);
+  for (const radio of [nearGitHubAll, nearGitHubOwn]) {
+    radio.addEventListener("change", () => {
+      post({ type: "setNearGitHubAll", enabled: nearGitHubAll.checked });
+      updateNearGitHubChoices();
+    });
+  }
   document.getElementById("zoom-in").addEventListener("click", () => post({ type: "zoom", action: "in" }));
   document.getElementById("zoom-out").addEventListener("click", () => post({ type: "zoom", action: "out" }));
   document.getElementById("zoom-reset").addEventListener("click", () => post({ type: "zoom", action: "reset" }));
@@ -3269,6 +3805,11 @@
     { id: "findReplace", keys: "Ctrl+H", button: "replace-button", run: () => openFindBar() },
     { id: "toc", keys: "Ctrl+Shift+J", button: "toc-button", run: () => post({ type: "toc" }) },
     { id: "image", keys: "Ctrl+Shift+F", button: "image-button", run: (at) => openImageDialog(at) },
+    // Writing: these act on the editor, which takes the focus.
+    { id: "bold", keys: "Ctrl+B", run: () => { view.focus(); toggleEmphasis(2)(view); } },
+    { id: "italic", keys: "Ctrl+I", run: () => { view.focus(); toggleEmphasis(1)(view); } },
+    { id: "formatTable", keys: "Ctrl+Shift+W", run: () => { view.focus(); formatTable(view); } },
+    { id: "sectionNumbers", keys: "Ctrl+Shift+N", run: () => { view.focus(); toggleSectionNumbers(view); } },
     { id: "findNext", keys: "F3", button: "find-next", run: () => (findBar.hidden ? openFindBar() : findText(true)) },
     { id: "findPrev", keys: "Shift+F3", button: "find-prev", run: () => (findBar.hidden ? openFindBar() : findText(false)) },
     { id: "replaceAll", keys: "Ctrl+Shift+H", button: "replace-all", run: () => (findBar.hidden || !findInput.value ? openFindBar() : replaceAll()) },
@@ -3551,6 +4092,7 @@
     if (document.querySelector("dialog[open]")) return;
     // Esc always restores the layout or leaves full screen; it is not configurable.
     if (event.key === "Escape" && !event.ctrlKey && !event.altKey && !event.shiftKey) {
+      if (completionsOpen) return;
       event.preventDefault();
       if (reader) {
         stopReading();
@@ -4845,7 +5387,8 @@
         selection: { anchor: found.index },
         scrollIntoView: true
       });
-      showNoticeMessage(t("tocUpdated"));
+      showNoticeMessage(sectionNotice ? [sectionNotice, t("tocUpdated")].join(language === "en" ? " " : "") : t("tocUpdated"));
+      sectionNotice = "";
     } else {
       let { from, to } = view.state.selection.main;
       // With the cursor still at the very start, the table goes after the title.
@@ -4865,7 +5408,10 @@
 
   window.chrome.webview.addEventListener("message", (event) => {
     const message = event.data;
-    if (message.type === "tocText") {
+    if (message.type === "fileList") {
+      for (const resolve of fileListWaiters) resolve(message.files ?? []);
+      fileListWaiters = [];
+    } else if (message.type === "tocText") {
       if (message.text) placeToc(message.text);
       else showNoticeMessage(t("tocNoHeadings"));
     } else if (message.type === "applyEdits") {
@@ -4964,6 +5510,14 @@
       document.getElementById("setting-pdf-file-path").textContent = message.file;
     } else if (message.type === "nearGitHub") {
       nearGitHubCheckbox.checked = Boolean(message.enabled);
+      nearGitHubAll.checked = Boolean(message.all);
+      nearGitHubOwn.checked = !message.all;
+      updateNearGitHubChoices();
+    } else if (message.type === "pdfPageNumbers") {
+      pdfPageNumbersCheckbox.checked = Boolean(message.enabled);
+    } else if (message.type === "lineBreaks") {
+      lineBreaksCheckbox.checked = Boolean(message.enabled);
+      updateNotice();
     } else if (message.type === "encodingNotice") {
       // No encoding to announce clears the line, but never the held-back image
       // notice: that one changes only with the images (externalNotice).
@@ -4979,6 +5533,8 @@
       updateThemeButton();
     } else if (message.type === "setText") {
       mapNoticeClosed = false;
+      lineBreaksNotice = false;
+      lineBreaksPending = true;
       // Another document: the original PDF of the last one goes (a PDF just opened sends
       // originalPdf right after).
       setOriginal(null);
@@ -4991,6 +5547,12 @@
       if (previewDetached) post({ type: "syncLine", line: 0, edge: "top" });
     } else if (message.type === "preview") {
       mapsAllowed = Boolean(message.mapsAllowed);
+      softBreaks = message.softBreaks ?? 0;
+      if (lineBreaksPending) {
+        lineBreaksPending = false;
+        lineBreaksNotice = softBreaks > 0 && lineBreaksCheckbox.checked && !lineBreaksCheckbox.disabled;
+      }
+      if (lineBreaksNotice) updateNotice();
       renderPreview(message.html, message.forPrint, message.lines).finally(() => {
         if (message.notifyRendered) post({ type: "previewRendered", requestId: message.requestId });
       });

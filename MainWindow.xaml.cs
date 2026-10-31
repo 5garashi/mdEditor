@@ -42,6 +42,15 @@ public partial class MainWindow : Window
     private readonly bool _initialPaste;
     // "Closer to GitHub" (Settings > Markdown) leaves out mdEditor's own syntax.
     private bool _nearGitHub = LoadSetting("NearGitHub") == "on";
+    // With it, whether the other display settings follow GitHub too (line breaks in paragraphs
+    // and \(x\) math are then not used) or are used as they are (the default).
+    private bool _nearGitHubAll = LoadSetting("NearGitHubAll") == "on";
+    // Page numbers ("2 / 5") at the foot of each PDF page (Settings > Export), on by default.
+    private bool _pdfPageNumbers = LoadSetting("PdfPageNumbers") != "off";
+    // Each line break in a paragraph shown as a line break (Settings > Markdown), on by default.
+    private bool _lineBreaks = LoadSetting("LineBreaks") != "off";
+    // How many line breaks in paragraphs the last preview had, for the notice on opening.
+    private int _softBreaks;
     // PDF import (Settings): text around a figure in its picture ("picture") or kept as text
     // ("text"), alignment as HTML, and pages that cannot be read as pictures of themselves.
     private string _pdfFigureText = LoadSetting("PdfFigureText") == "text" ? "text" : "picture";
@@ -61,7 +70,8 @@ public partial class MainWindow : Window
     private bool _lastPdfTablesAsPictures;
     private bool? _pdfFigureTextOnce;
     private bool? _pdfTablesOnce;
-    private MarkdownPipeline _markdownPipeline = MarkdownPipelines.Build(LoadSetting("NearGitHub") == "on");
+    private MarkdownPipeline _markdownPipeline = BuildPipeline(
+        LoadSetting("NearGitHub") == "on", LoadSetting("NearGitHubAll") == "on", LoadSetting("LineBreaks") != "off");
     private readonly HtmlSanitizer _htmlSanitizer = new();
     private readonly DispatcherTimer _previewTimer = new()
     {
@@ -459,7 +469,9 @@ public partial class MainWindow : Window
                 SendPaper();
                 SendZoom();
                 SendToPage(new { type = "autoBackup", enabled = _autoBackup });
-                SendToPage(new { type = "nearGitHub", enabled = _nearGitHub });
+                SendToPage(new { type = "nearGitHub", enabled = _nearGitHub, all = _nearGitHubAll });
+                SendToPage(new { type = "lineBreaks", enabled = _lineBreaks });
+                SendToPage(new { type = "pdfPageNumbers", enabled = _pdfPageNumbers });
                 SendPdfOptions();
                 SendToPage(new { type = "zipLinks", value = _zipLinks });
                 SendToPage(new { type = "appInfo", version = AppVersion });
@@ -554,7 +566,23 @@ public partial class MainWindow : Window
             case "setNearGitHub":
                 _nearGitHub = root.GetProperty("enabled").GetBoolean();
                 SaveSetting("NearGitHub", _nearGitHub ? "on" : "off");
-                _markdownPipeline = MarkdownPipelines.Build(_nearGitHub);
+                _markdownPipeline = BuildPipeline(_nearGitHub, _nearGitHubAll, _lineBreaks);
+                SendPreview();
+                break;
+            case "setNearGitHubAll":
+                _nearGitHubAll = root.GetProperty("enabled").GetBoolean();
+                SaveSetting("NearGitHubAll", _nearGitHubAll ? "on" : "off");
+                _markdownPipeline = BuildPipeline(_nearGitHub, _nearGitHubAll, _lineBreaks);
+                SendPreview();
+                break;
+            case "setPdfPageNumbers":
+                _pdfPageNumbers = root.GetProperty("enabled").GetBoolean();
+                SaveSetting("PdfPageNumbers", _pdfPageNumbers ? "on" : "off");
+                break;
+            case "setLineBreaks":
+                _lineBreaks = root.GetProperty("enabled").GetBoolean();
+                SaveSetting("LineBreaks", _lineBreaks ? "on" : "off");
+                _markdownPipeline = BuildPipeline(_nearGitHub, _nearGitHubAll, _lineBreaks);
                 SendPreview();
                 break;
             case "setAutoBackup":
@@ -598,6 +626,9 @@ public partial class MainWindow : Window
                 break;
             case "restoreDiscarded":
                 await RestoreDiscardedAsync();
+                break;
+            case "listFiles":
+                SendToPage(new { type = "fileList", files = DocumentFolderFiles() });
                 break;
             case "toc":
                 SendToPage(new { type = "tocText", text = TableOfContents.Build(_text, _markdownPipeline) });
@@ -1969,8 +2000,16 @@ public partial class MainWindow : Window
         SendToPage(new { type = "externalImages", value = _externalImages });
         _nearGitHub = false;
         SaveSetting("NearGitHub", "off");
-        _markdownPipeline = MarkdownPipelines.Build(_nearGitHub);
-        SendToPage(new { type = "nearGitHub", enabled = _nearGitHub });
+        _nearGitHubAll = false;
+        SaveSetting("NearGitHubAll", "off");
+        _pdfPageNumbers = true;
+        SaveSetting("PdfPageNumbers", "on");
+        SendToPage(new { type = "pdfPageNumbers", enabled = _pdfPageNumbers });
+        _lineBreaks = true;
+        SaveSetting("LineBreaks", "on");
+        _markdownPipeline = BuildPipeline(_nearGitHub, _nearGitHubAll, _lineBreaks);
+        SendToPage(new { type = "nearGitHub", enabled = _nearGitHub, all = _nearGitHubAll });
+        SendToPage(new { type = "lineBreaks", enabled = _lineBreaks });
         _autoBackup = true;
         SaveSetting("AutoBackup", "on");
         WriteRecoveryCopy();
@@ -4540,8 +4579,60 @@ public partial class MainWindow : Window
         return TryResolveDocumentImage(url.Replace('\\', '/'), out var path, out _) ? path : null;
     }
 
+    // Files beside the document and in the folders under it (two levels), as links write them
+    // ("images/a.png"), for completing a link's address. Hidden folders and a saved document
+    // only: a new one has no folder yet.
+    private List<string> DocumentFolderFiles()
+    {
+        var files = new List<string>();
+        if (_filePath is null || Path.GetDirectoryName(_filePath) is not { } folder)
+        {
+            return files;
+        }
+
+        void Visit(string directory, string prefix, int depth)
+        {
+            try
+            {
+                foreach (var file in Directory.EnumerateFiles(directory))
+                {
+                    var name = Path.GetFileName(file);
+                    if (!name.StartsWith('.') && files.Count < 500)
+                    {
+                        files.Add(prefix + name);
+                    }
+                }
+
+                if (depth == 0)
+                {
+                    return;
+                }
+
+                foreach (var sub in Directory.EnumerateDirectories(directory))
+                {
+                    var name = Path.GetFileName(sub);
+                    if (!name.StartsWith('.') && name is not ("node_modules" or "bin" or "obj") && files.Count < 500)
+                    {
+                        Visit(sub, prefix + name + "/", depth - 1);
+                    }
+                }
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+            }
+        }
+
+        Visit(folder, string.Empty, 2);
+        return files;
+    }
+
+    private const string PdfPageNumberFooter =
+        "<div style=\"width:100%;text-align:center;font-size:9pt;color:#4a4a4a;font-family:'BIZ UDPGothic','Yu Gothic UI','Microsoft YaHei UI',sans-serif\">"
+        + "<span class=\"pageNumber\"></span> / <span class=\"totalPages\"></span></div>";
+
     // The page printed to a tagged PDF with the same paper, margins, and backgrounds as
-    // the print settings; false when DevTools cannot print it.
+    // the print settings; false when DevTools cannot print it (the plain print that is then
+    // used has no page numbers).
     private async Task<bool> PrintTaggedPdfAsync(string path, CoreWebView2PrintSettings settings)
     {
         try
@@ -4556,7 +4647,10 @@ public partial class MainWindow : Window
                 marginRight = settings.MarginRight,
                 landscape = settings.Orientation == CoreWebView2PrintOrientation.Landscape,
                 printBackground = settings.ShouldPrintBackgrounds,
-                displayHeaderFooter = settings.ShouldPrintHeaderAndFooter,
+                // Page numbers only: an empty header, and "2 / 5" centered in the bottom margin.
+                displayHeaderFooter = _pdfPageNumbers,
+                headerTemplate = "<div></div>",
+                footerTemplate = PdfPageNumberFooter,
                 generateTaggedPDF = true,
             });
             var result = await EditorWebView.CoreWebView2.CallDevToolsProtocolMethodAsync("Page.printToPDF", parameters);
@@ -4740,6 +4834,14 @@ public partial class MainWindow : Window
         {
             SendToPage(new { type = "paper", paper = _paper, autoPaper = RegionPaper() });
         }
+    }
+
+    // "Closer to GitHub" with the other settings following it too leaves out what GitHub does
+    // not show: line breaks in paragraphs and \(x\) math.
+    private static MarkdownPipeline BuildPipeline(bool nearGitHub, bool all, bool lineBreaks)
+    {
+        var github = nearGitHub && all;
+        return MarkdownPipelines.Build(nearGitHub, lineBreaks && !github, latexMath: !github);
     }
 
     private static string? LoadSetting(string name)
@@ -5052,6 +5154,7 @@ public partial class MainWindow : Window
                 type = "preview",
                 html,
                 lines,
+                softBreaks = _softBreaks,
                 mapsAllowed = _mapsAllowedHere,
                 notifyRendered,
                 forPrint,
@@ -5096,6 +5199,7 @@ public partial class MainWindow : Window
         renderer.ObjectRenderers.ReplaceOrAdd<HtmlInlineRenderer>(new RawHtmlInlineRenderer(EditorOffset));
         renderer.ObjectRenderers.ReplaceOrAdd<Markdig.Extensions.Yaml.YamlFrontMatterHtmlRenderer>(new FrontMatterTableRenderer());
         var document = Markdown.Parse(text, _markdownPipeline);
+        _softBreaks = LineBreaksExtension.SoftBreaks(document);
         ResolveRelativeImages(document);
         foreach (var image in document.Descendants<LinkInline>().Where(link => link.IsImage))
         {

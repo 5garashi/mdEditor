@@ -28,7 +28,9 @@ internal static class MarkdownPipelines
     // mdEditor's own pipeline adds Markdig's extras GitHub does not have (x^2^, H~2~O,
     // ==mark==, definition lists, ::: containers, {#id} attributes, and so on). "Closer
     // to GitHub" keeps only what GitHub shows, and ~text~ is struck through as there.
-    public static MarkdownPipeline Build(bool nearGitHub)
+    // lineBreaks shows each line break in a paragraph as a line break, not a space;
+    // latexMath reads \(x\) and \[x\] as math (GitHub does neither).
+    public static MarkdownPipeline Build(bool nearGitHub, bool lineBreaks = false, bool latexMath = true)
     {
         // GitHub-style heading ids keep Japanese text, so links like [x](#セットアップ) work.
         var builder = new MarkdownPipelineBuilder().UseAutoIdentifiers(AutoIdentifierOptions.GitHub);
@@ -50,13 +52,47 @@ internal static class MarkdownPipelines
             builder.UseAdvancedExtensions();
         }
 
-        builder.Extensions.AddIfNotAlready<LatexMathDelimitersExtension>();
+        builder.Extensions.Add(new LatexMathDelimitersExtension(latexMath));
 
         // As on GitHub: front matter becomes a table and :smile: an emoji
         // (smileys such as :) stay text).
         builder.UseYamlFrontMatter().UseEmojiAndSmiley(enableSmileys: false);
         builder.Extensions.AddIfNotAlready<GfmDetailsExtension>();
+        builder.Extensions.Add(new LineBreaksExtension(lineBreaks));
         return builder.Build();
+    }
+}
+
+// Each line break in a paragraph kept as a line break, as some previews show it (VS Code's
+// Markdown Preview Enhanced by default). The breaks are made hard in the document itself,
+// not only in the HTML renderer, so the Word export and the rest follow it too. Either way
+// the document keeps how many there were (SoftBreaks), for the notice on opening.
+internal sealed class LineBreaksExtension(bool show) : IMarkdownExtension
+{
+    public static int SoftBreaks(MarkdownDocument document) => document.GetData(typeof(LineBreaksExtension)) as int? ?? 0;
+
+    public void Setup(MarkdownPipelineBuilder pipeline)
+    {
+        pipeline.DocumentProcessed += Process;
+    }
+
+    public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+    {
+    }
+
+    private void Process(MarkdownDocument document)
+    {
+        var count = 0;
+        foreach (var block in document.Descendants<LeafBlock>().Where(block => block.Inline is not null))
+        {
+            foreach (var lineBreak in block.Inline!.Descendants<LineBreakInline>().Where(lineBreak => !lineBreak.IsHard))
+            {
+                count += 1;
+                lineBreak.IsHard = show;
+            }
+        }
+
+        document.SetData(typeof(LineBreaksExtension), count);
     }
 }
 
@@ -65,32 +101,103 @@ internal static class MarkdownPipelines
 // \( as an escaped "("). The math is the same MathInline, so preview, PDF, HTML, and Word
 // draw it as they draw $x$; \[x\] is marked math-display. Both pipelines read it, though
 // GitHub itself shows \( as an escaped parenthesis: the math is wanted more than the
-// difference.
-internal sealed class LatexMathDelimitersExtension : IMarkdownExtension
+// difference, unless the other settings follow GitHub too (latex is then false). The rest
+// here ($$x$$ on a line of its own, a letter after the closing $) is always read.
+internal sealed class LatexMathDelimitersExtension(bool latex) : IMarkdownExtension
 {
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
-        if (!pipeline.InlineParsers.Contains<LatexMathInlineParser>())
+        if (latex && !pipeline.InlineParsers.Contains<LatexMathInlineParser>())
         {
             pipeline.InlineParsers.InsertBefore<EscapeInlineParser>(new LatexMathInlineParser());
-            // $$x$$ inside a paragraph is shown on a line of its own too, as GitHub does
-            // (and \tag, which KaTeX allows only there, then works).
-            pipeline.DocumentProcessed += document =>
+        }
+
+        // $$x$$ inside a paragraph is shown on a line of its own too, as GitHub does
+        // (and \tag, which KaTeX allows only there, then works).
+        pipeline.DocumentProcessed += document =>
+        {
+            foreach (var math in document.Descendants<MathInline>())
             {
-                foreach (var math in document.Descendants<MathInline>())
+                var attributes = math.GetAttributes();
+                if (math.DelimiterCount >= 2 && attributes.Classes?.Contains("math-display") != true)
                 {
-                    var attributes = math.GetAttributes();
-                    if (math.DelimiterCount >= 2 && attributes.Classes?.Contains("math-display") != true)
-                    {
-                        attributes.AddClass("math-display");
-                    }
+                    attributes.AddClass("math-display");
                 }
-            };
+            }
+        };
+
+        if (pipeline.InlineParsers.Contains<MathInlineParser>() && !pipeline.InlineParsers.Contains<LetterAfterMathInlineParser>())
+        {
+            pipeline.InlineParsers.InsertBefore<MathInlineParser>(new LetterAfterMathInlineParser());
         }
     }
 
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
+    }
+}
+
+// $x$ (or $$x$$) followed at once by a letter, as Japanese and Chinese write it ($d$という,
+// with no space): Markdig does not close math before any letter, so the whole of it stayed
+// text, though the editor colors it as math. Only that case is read here, by the editor's
+// rules ($x$: no space just inside either $, no digit after the closing $, one line);
+// everything else, and an ASCII letter after it ($x$abc), is left to Markdig as before.
+internal sealed class LetterAfterMathInlineParser : InlineParser
+{
+    public LetterAfterMathInlineParser()
+    {
+        OpeningCharacters = ['$'];
+    }
+
+    public override bool Match(InlineProcessor processor, ref StringSlice slice)
+    {
+        var text = slice.Text;
+        var count = slice.Start + 1 <= slice.End && text[slice.Start + 1] == '$' ? 2 : 1;
+        var mark = new string('$', count);
+        var start = slice.Start + count;
+        if (start > slice.End || text[start] is '$' || count == 1 && char.IsWhiteSpace(text[start]))
+        {
+            return false;
+        }
+
+        var end = start;
+        while (true)
+        {
+            end = text.IndexOf(mark, end, slice.End - end + 1, StringComparison.Ordinal);
+            if (end < 0)
+            {
+                return false;
+            }
+
+            if (text[end - 1] != '\\')
+            {
+                break;
+            }
+
+            end += 1;
+        }
+
+        var after = end + count <= slice.End ? text[end + count] : '\0';
+        if (end == start || !char.IsLetter(after) || after < 0x80
+            || count == 1 && (text.AsSpan(start, end - start).IndexOfAny('\n', '\r') >= 0 || char.IsWhiteSpace(text[end - 1])))
+        {
+            return false;
+        }
+
+        // $$x$$ in a paragraph is marked math-display when the document is done, as Markdig's own.
+        var math = new MathInline
+        {
+            Delimiter = '$',
+            DelimiterCount = count,
+            Content = new StringSlice(text, start, end - 1),
+            Span = new SourceSpan(processor.GetSourcePosition(slice.Start, out var line, out var column), processor.GetSourcePosition(end + count - 1)),
+            Line = line,
+            Column = column
+        };
+        math.GetAttributes().AddClass("math");
+        processor.Inline = math;
+        slice.Start = end + count;
+        return true;
     }
 }
 

@@ -1291,6 +1291,37 @@ body.capture-export .preview-content {
   border: 1px solid var(--line);
 }
 
+/* Completions: the app's card, 44px rows, and the chosen one in the head color. */
+#editor .cm-tooltip.cm-tooltip-autocomplete {
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+#editor .cm-tooltip.cm-tooltip-autocomplete > ul {
+  max-height: 264px;
+  font-family: inherit;
+}
+
+#editor .cm-tooltip.cm-tooltip-autocomplete > ul > li {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 12px;
+  padding: 0 12px;
+}
+
+#editor .cm-tooltip.cm-tooltip-autocomplete > ul > li[aria-selected] {
+  background: var(--head);
+  color: var(--ink);
+}
+
+#editor .cm-tooltip.cm-tooltip-autocomplete .cm-completionDetail {
+  margin-left: auto;
+  font-style: normal;
+  color: var(--steel);
+}
+
 /* Same thick focus ring as the rest of the app (Identity 7-3 (2)), drawn inside. */
 #editor .cm-editor.cm-focused {
   outline: 3px solid var(--volt);
@@ -2109,6 +2140,16 @@ body.capture-export .preview-content pre {
   flex: 0 0 auto;
   margin: 0;
   accent-color: var(--ink);
+}
+
+/* Choices that belong to the setting above them, set in under it. */
+.settings-choices {
+  padding-left: 30px;
+}
+
+.settings-check:has(input:disabled) {
+  cursor: default;
+  color: var(--document-muted);
 }
 
 .zoom-row output {

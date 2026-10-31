@@ -78,6 +78,7 @@
     <button id="notice-maps" type="button" data-i18n="loadMaps" hidden>詳細な地図を読み込む</button>
     <button id="notice-fix" type="button" aria-pressed="false" hidden></button>
     <button id="notice-fix-details" type="button" data-i18n="fixDetails" aria-haspopup="dialog" hidden>内訳</button>
+    <button id="notice-line-breaks" type="button" aria-pressed="true" hidden></button>
     <button id="notice-original" type="button" aria-pressed="false" hidden></button>
     <button id="notice-browser" type="button" data-i18n="originalBrowser" data-i18n-attr="title:originalBrowserTitle" title="いつものブラウザーで開きます。ページのスクリプトが動き、インターネットから地図などを読み込みます。" hidden>ブラウザーで開く</button>
     <button id="notice-reopen" type="button" hidden></button>
@@ -220,6 +221,7 @@
       <label class="settings-check"><input id="setting-thick-caret" type="checkbox"> <span data-i18n="settingsThickCaret">カーソルを太くする</span></label>
       <label class="settings-check"><input id="setting-colors" type="checkbox" checked> <span data-i18n="settingsColors">Markdown の書き方を色分けする（見出し、強調、リンク、コード、数式など）</span></label>
       <label class="settings-check"><input id="setting-lint" type="checkbox" checked> <span data-i18n="settingsLint">Markdown の書き方を確かめる（問題のある所に波線を引き、行に印を付ける）</span></label>
+      <label class="settings-check"><input id="setting-completion" type="checkbox" checked> <span data-i18n="settingsCompletion">入力の候補を出す（リンク先の見出しとファイル、数式の命令）</span></label>
       <div class="settings-row"><button id="setting-fix-rules" type="button" data-i18n="settingsFixRules" aria-haspopup="dialog">自動修正のルール…</button></div>
       <p class="settings-note" data-i18n="settingsFixRulesNote"></p>
     </fieldset>
@@ -282,7 +284,14 @@
     <fieldset class="settings-group">
       <legend data-i18n="settingsMarkdown">Markdown の書き方</legend>
       <label class="settings-check"><input id="setting-near-github" type="checkbox"> <span data-i18n="settingsNearGitHub">GitHub での表示に近づける（mdEditor 独自の書き方を使わない）</span></label>
+      <div class="settings-choices" role="radiogroup" data-i18n-attr="aria-label:settingsNearGitHubScope" aria-label="ほかの表示の設定">
+        <label class="settings-check"><input id="setting-near-github-all" type="radio" name="near-github-scope" disabled> <span data-i18n="settingsNearGitHubAll">ほかの表示の設定も GitHub に合わせる（段落の中の改行・\(…\) の数式を使わない）</span></label>
+        <label class="settings-check"><input id="setting-near-github-own" type="radio" name="near-github-scope" checked disabled> <span data-i18n="settingsNearGitHubOwn">ほかの表示の設定はそのまま使う</span></label>
+      </div>
       <p class="settings-note" data-i18n="settingsNearGitHubNote"></p>
+      <label class="settings-check"><input id="setting-line-breaks" type="checkbox" checked> <span data-i18n="settingsLineBreaks">段落の中の改行も、そのまま改行して表示する</span></label>
+      <p id="setting-line-breaks-github" class="settings-note" data-i18n="settingsLineBreaksGitHub" hidden></p>
+      <p class="settings-note" data-i18n="settingsLineBreaksNote"></p>
     </fieldset>
     <fieldset class="settings-group">
       <legend data-i18n="settingsPdf">PDF の取り込み</legend>
@@ -305,6 +314,7 @@
     <fieldset class="settings-group">
       <legend data-i18n="settingsExport">書き出し</legend>
       <label class="settings-check"><input id="setting-html-source" type="checkbox" checked> <span data-i18n="settingsHtmlSource">HTMLに保存するとき、元の Markdown も入れる（mdEditor で開くと元どおりに戻せる）</span></label>
+      <label class="settings-check"><input id="setting-pdf-page-numbers" type="checkbox" checked> <span data-i18n="settingsPdfPageNumbers">PDF の各ページの下にページ番号（2 / 5 の形）を入れる</span></label>
       <p class="settings-note" data-i18n="settingsHtmlSourceNote"></p>
       <label class="settings-row"><span data-i18n="settingsZipLinks">配布用 ZIP に入れるファイル</span>
         <select id="setting-zip-links">

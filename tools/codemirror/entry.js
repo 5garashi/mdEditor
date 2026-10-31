@@ -8,7 +8,8 @@
 */
 // Build with: npm ci && npm run build (writes wwwroot/lib/codemirror/codemirror.min.js).
 import { Decoration, EditorView, ViewPlugin, drawSelection, highlightActiveLine, keymap } from "@codemirror/view";
-import { Compartment, EditorSelection, EditorState, RangeSetBuilder } from "@codemirror/state";
+import { Compartment, EditorSelection, EditorState, Prec, RangeSetBuilder } from "@codemirror/state";
+import { autocompletion, completionKeymap } from "@codemirror/autocomplete";
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
 import { closeLintPanel, diagnosticCount, forEachDiagnostic, forceLinting, linter, lintGutter, lintKeymap, openLintPanel } from "@codemirror/lint";
 import { HighlightStyle, Language, defineLanguageFacet, syntaxHighlighting } from "@codemirror/language";
@@ -64,7 +65,8 @@ const markdownLanguage = new Language(
 );
 
 window.CodeMirror = {
-  Compartment, Decoration, EditorSelection, EditorState, EditorView, RangeSetBuilder, ViewPlugin,
+  Compartment, Decoration, EditorSelection, EditorState, EditorView, Prec, RangeSetBuilder, ViewPlugin,
+  autocompletion, completionKeymap,
   defaultKeymap, drawSelection, highlightActiveLine, history, historyKeymap, keymap,
   closeLintPanel, diagnosticCount, forEachDiagnostic, forceLinting, linter, lintGutter, lintKeymap, openLintPanel,
   HighlightStyle, markTags, markdownLanguage, syntaxHighlighting, tags
