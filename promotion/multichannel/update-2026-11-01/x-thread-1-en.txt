@@ -1,0 +1,1 @@
+mdEditor 1.0.20 — Open PDFs and AI Chat Answers as Markdown

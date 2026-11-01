@@ -1,0 +1,50 @@
+mdEditor 1.0.20 — Open PDFs and AI Chat Answers as Markdown
+
+https://www.youtube.com/watch?v=AkYYP5qnGDU
+
+Starts with a rotating 3D model, then shows an AI chat answer being fixed, PDF import and export, and the Markdown check, followed by a top-to-bottom tour of the key features and diagram samples.
+
+What is new
+
+Open PDF and Word files as Markdown. AI chat answers open with their formatting quirks fixed. Save a PDF that looks like the preview, in one click.
+
+Write beside a live preview. Mermaid, Graphviz, math, 3D models and maps, offline. Markdown mistakes are underlined, and Ctrl+Shift+W aligns table columns.
+
+Key features
+
+• Open PDF and Word files as Markdown, offline
+• Headings, lists, tables, code, and pictures come back from PDFs
+• Save as PDF in one click, looking as the preview does
+• Save as Word, HTML, PNG, CSV, JSON, text, or a ZIP
+• Live preview beside your text, scrolling together
+• Markdown from AI chats reproduced as closely as possible
+• Preview on a second display, following the line you edit
+• Markdown colored as you type, with a check for mistakes
+• Bold, italic, lists, tables, and heading numbers in one key
+• Mermaid and Graphviz diagrams and math, offline
+• 3D models (STL) and maps (GeoJSON), offline
+• Colored code for about 40 languages, and a table of contents
+• GitHub-style alerts, front matter, and collapsible sections
+• Also opens HTML, e-mail, CSV, JSON, Jupyter Notebooks, and images
+• Drop or paste pictures straight into your document
+• Copy anything, press a key, and it opens as a new document
+• Safe saving and automatic crash recovery
+• Opens Shift_JIS, EUC-JP, and UTF-8 files correctly
+• No ads, no tracking, no account; web content loads only when you allow it
+• Keyboard, screen reader, read-aloud, and dark mode support
+
+Recording and limits
+
+Windows only, free. PDF import is best effort: multi-column layouts and scanned PDFs do not come back. AI chat answers are reproduced as closely as possible. Recorded from source build 1.0.20.
+
+Developed and produced with AI assistance (Claude, Codex). The music was composed and generated with Codex.
+
+https://5garashi.github.io/mdEditor/en.html
+
+Credits
+
+Music: "Light Steps" by 5garashi.com Design Office (composed and generated with Codex), CC BY 4.0. Changes: excerpt, looped, faded out at the end.
+https://5garashi.github.io/5garashi-identity/ / https://creativecommons.org/licenses/by/4.0/
+Sample film: "Big Buck Bunny" © 2008 Blender Foundation, CC BY 3.0. Shown as it plays inside a sample document; not edited.
+https://peach.blender.org/ / https://creativecommons.org/licenses/by/3.0/
+Map data: © OpenStreetMap contributors (ODbL) https://www.openstreetmap.org/copyright

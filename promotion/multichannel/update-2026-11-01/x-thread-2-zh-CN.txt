@@ -1,0 +1,5 @@
+把 PDF 和 Word 作为 Markdown 打开。AI 聊天回答的格式问题会自动修正，并可保存与预览一致的 PDF。Windows 版，免费。
+https://5garashi.github.io/mdEditor/zh-CN.html
+开发使用了 AI 辅助（Claude、Codex）。
+背景音乐：Light Steps — 5garashi.com Design Office（Codex）CC BY 4.0
+#mdEditor #Markdown
