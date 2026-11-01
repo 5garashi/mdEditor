@@ -326,9 +326,9 @@
       settingsPdf: "PDF 导入",
       settingsPdfFigureText: "图表周围的文字",
       settingsPdfTables: "表格",
-      pdfTablesText: "作为 Markdown 表格（编辑优先・默认）",
+      pdfTablesText: "作为 Markdown 表格（编辑优先，默认）",
       pdfTablesPicture: "作为图片（外观优先）",
-      pdfFigureTextPicture: "放入图片（外观优先・默认）",
+      pdfFigureTextPicture: "放入图片（外观优先，默认）",
       pdfFigureTextText: "保留为文字（编辑优先）",
       settingsPdfFigureTextNote: "选择把延伸到图表范围内的文字（插图旁边的说明等）放入图表的图片以保持外观，还是保留为文字以便编辑。打开 PDF 后，也可以用通知栏中的按钮以另一种方式重新打开。",
       settingsPdfAlign: "用 HTML（align）写出靠右和居中的文字，保留位置",
@@ -405,8 +405,8 @@
       settingsMapTilesNote: "```geojson 和 ```topojson 的地图会先绘制在电脑中的简单世界地图上。带有道路和地名的详细地图需要从 OpenStreetMap 通过互联网加载，此时地图服务器会得知显示的地点和你的 IP 地址。保存的 HTML 中不包含详细地图。",
       noticeMaps: (count) => `此文档中有 ${count} 个地图。加载详细地图（OpenStreetMap）后，地图服务器会得知显示的地点和你的 IP 地址等信息。`,
       loadMaps: "加载详细地图",
-      noticeMath: (count, example) => `有 ${count} 处看起来像是丢失了 $ 的公式（例: ${example}）。改为公式后，预览中会显示为公式。`,
-      noticeMathDone: (count, example) => `已将 ${count} 处看起来丢失了 $ 的写法（例: ${example}）改为公式。`,
+      noticeMath: (count, example) => `有 ${count} 处看起来像是丢失了 $ 的公式（例如：${example}）。改为公式后，预览中会显示为公式。`,
+      noticeMathDone: (count, example) => `已将 ${count} 处看起来丢失了 $ 的写法（例如：${example}）改为公式。`,
       fixMath: "改为公式",
       unfixMath: "恢复原样",
       fixRuleMath: "将丢失了 $ 的公式写法改为公式（内置）",
@@ -420,8 +420,8 @@
       lineBreaksJoin: "连成一行",
       lineBreaksShow: "换行显示",
       fixDetails: "详情",
-      noticeRule: (name, count, example) => `有 ${count} 处可以用“${name}”修正（例: ${example}）。`,
-      noticeRuleDone: (name, count, example) => `已用“${name}”修正 ${count} 处（例: ${example}）。`,
+      noticeRule: (name, count, example) => `有 ${count} 处可以用“${name}”修正（例如：${example}）。`,
+      noticeRuleDone: (name, count, example) => `已用“${name}”修正 ${count} 处（例如：${example}）。`,
       noticeRulesDone: (rules, count) => `已用 ${rules} 条自动修正规则修正 ${count} 处。`,
       noticeRulesAsk: (rules, count) => `有 ${count} 处可以用 ${rules} 条自动修正规则修正。`,
       noticeRuleSlow: (name) => `“${name}”耗时过长，未应用。`,
@@ -429,8 +429,8 @@
       noticeRuleError: (name) => `“${name}”的正则表达式不正确，未应用。`,
       fixDetailsHeading: "自动修正详情",
       fixDetailsRules: "打开规则",
-      fixDetailsDone: (count) => `已修正 ${count} 处。例:`,
-      fixDetailsAsk: (count) => `有 ${count} 处可以修正。例:`,
+      fixDetailsDone: (count) => `已修正 ${count} 处。例如：`,
+      fixDetailsAsk: (count) => `有 ${count} 处可以修正。例如：`,
       fixRulesHeading: "自动修正规则",
       fixRulesIntro: "打开文档时修正特定写法的规则，按从上到下的顺序应用。每条规则都可以选择：打开时修正、打开时在通知栏中询问，或仅在按“应用”时使用。修正的地方可以用通知栏的按钮恢复原样。保存之前，文件不会改变。",
       fixRulesNew: "新建规则",
@@ -482,8 +482,8 @@
       findBadPattern: "正则表达式不正确",
       settingsFixRules: "自动修正规则…",
       settingsFixRulesNote: "打开文档时，修正丢失了 $ 的公式写法、强调的 ** 被原样显示的写法，以及 Gemini、ChatGPT、Claude 等留下的标记。",
-      noticeEmphasis: (count, example) => `有 ${count} 处强调的 ** 被原样显示（例: ${example}）。改为 <strong> 等标签后，预览中会显示为粗体。`,
-      noticeEmphasisDone: (count, example) => `已将 ${count} 处强调的 ** 被原样显示的写法（例: ${example}）改为 <strong> 等标签。`,
+      noticeEmphasis: (count, example) => `有 ${count} 处强调的 ** 被原样显示（例如：${example}）。改为 <strong> 等标签后，预览中会显示为粗体。`,
+      noticeEmphasisDone: (count, example) => `已将 ${count} 处强调的 ** 被原样显示的写法（例如：${example}）改为 <strong> 等标签。`,
       fixEmphasis: "修正强调",
       unfixEmphasis: "恢复强调原样",
       modelLabel: "3D 模型（STL）。拖动旋转，滚轮缩放", modelEmpty: "没有三角形",
@@ -521,7 +521,7 @@
       settingsSize125: "大（125%）", settingsSize150: "很大（150%）", settingsSize200: "最大（200%）",
       settingsSpacing: "行距", settingsSpacingNormal: "标准", settingsSpacingWide: "较宽", settingsSpacingWider: "很宽",
       settingsThemePaper: "显示主题和 PDF 纸张",
-      settingsThemePaperNote: "每按一次切换一次。显示主题按 自动（跟随 Windows）→ 白天 → 夜间 的顺序，纸张按 自动 → A4 → Letter 的顺序切换。也可以不打开设置，用 Ctrl+Shift+T 和 Ctrl+Shift+A 切换。",
+      settingsThemePaperNote: "每按一次切换一次。显示主题按 自动（跟随 Windows）→ 浅色 → 深色 的顺序，纸张按 自动 → A4 → Letter 的顺序切换。也可以不打开设置，用 Ctrl+Shift+T 和 Ctrl+Shift+A 切换。",
       settingsZoom: "整个画面的缩放比例",zoomOut: "缩小", zoomIn: "放大", zoomReset: "恢复为默认值（90%）",
       zoomNote: "也可以用 Ctrl + 鼠标滚轮、Ctrl + 加号／减号、Ctrl + 0 更改。下次启动时会保留缩放比例。",
       settingsFullWidth: "不限制预览正文的宽度（在宽屏上每行更长）",
@@ -531,7 +531,7 @@
       settingsLint: "检查 Markdown 写法（在有问题的地方画波浪线，并在该行做标记）",
       lintStatus: (count) => `写法问题 ${count} 个（按下显示列表）`,
       lintPhrases: {"Diagnostics": "写法检查", "No diagnostics": "没有发现问题", "close": "关闭"},
-      lint: {"MD001": "标题级别跳跃了（例如 # 之后是 ###）。请逐级降低。", "MD011": "链接的写法反了。请按 [文字](地址) 的顺序书写。", "MD018": "标题的 # 后面没有空格（#标题 → # 标题）。", "MD023": "标题没有从行首开始。请删除前面的空格。", "MD024": "同一级别中有同名的标题，目录和链接无法区分。", "MD037": "强调符号（* 或 _）内侧有空格，不会显示为强调。", "MD038": "代码（`）内侧的前后有空格。", "MD039": "链接文字的前后有空格。", "MD042": "链接目标为空。", "MD045": "图像没有说明（替代文字）。写成 ![说明](…)，屏幕阅读器也能读出。", "MD051": "找不到页内链接（#…）指向的标题。", "MD052": "引用链接 [文字][名称] 的名称没有定义。", "MD056": "表格这一行的列数与标题行不同。", "MD058": "表格前后没有空行，可能不会显示为表格。", "fence": "代码块（``` 或 ~~~）没有结束，文档末尾之前都会成为代码。", "missing": "找不到链接的文件："},
+      lint: {"MD001": "标题级别跳跃了（例如 # 之后是 ###）。请逐级使用标题（# 之后用 ##）。", "MD011": "链接的写法反了。请按 [文字](地址) 的顺序书写。", "MD018": "标题的 # 后面没有空格（#标题 → # 标题）。", "MD023": "标题没有从行首开始。请删除前面的空格。", "MD024": "同一级别中有同名的标题，目录和链接无法区分。", "MD037": "强调符号（* 或 _）内侧有空格，不会显示为强调。", "MD038": "代码（`）内侧的前后有空格。", "MD039": "链接文字的前后有空格。", "MD042": "链接目标为空。", "MD045": "图像没有说明（替代文字）。写成 ![说明](…)，屏幕阅读器也能读出。", "MD051": "找不到页内链接（#…）指向的标题。", "MD052": "引用链接 [文字][名称] 的名称没有定义。", "MD056": "表格这一行的列数与标题行不同。", "MD058": "表格前后没有空行，可能不会显示为表格。", "fence": "代码块（``` 或 ~~~）没有结束，文档末尾之前都会成为代码。", "missing": "找不到链接的文件："},
       settingsReader: "朗读", settingsReaderOn: "使用朗读功能（在预览的标题栏显示操作按钮）",
       settingsReaderRate: "速度", rateSlow: "慢", rateSlower: "稍慢", rateNormal: "正常",
       rateFaster: "稍快", rateFast: "快", settingsReaderPause: "段落间隔", pauseNone: "不停顿",
@@ -4005,14 +4005,17 @@
   const samples = [
     { ja: "図と数式", en: "Diagrams and math", zh: "图表和公式",
       text: {
-        ja: "# 図と数式のサンプル\n\nMarkdown を書くと、右のプレビューにすぐ反映されます。\n\n## 図（Mermaid）\n\n```mermaid\nflowchart LR\n  A[書く] --> B[確認する]\n  B --> C[PDFに保存]\n```\n\n## 数式（KaTeX）\n\n円の面積は $S = \\pi r^2$ です。\n\n$$\\int_0^1 x^2\\,dx = \\frac{1}{3}$$\n\n## 表とチェックリスト\n\n| 名前 | 数 |\n| --- | ---: |\n| りんご | 3 |\n| みかん | 5 |\n\n- [x] 図を見る\n- [ ] PDFに保存する\n",
-        en: "# Diagrams and math sample\n\nWhat you type appears in the preview on the right right away.\n\n## Diagram (Mermaid)\n\n```mermaid\nflowchart LR\n  A[Write] --> B[Check]\n  B --> C[Save as PDF]\n```\n\n## Math (KaTeX)\n\nThe area of a circle is $S = \\pi r^2$.\n\n$$\\int_0^1 x^2\\,dx = \\frac{1}{3}$$\n\n## Table and checklist\n\n| Name | Qty |\n| --- | ---: |\n| Apple | 3 |\n| Orange | 5 |\n\n- [x] See the diagram\n- [ ] Save as PDF\n",
-        zh: "# 图表和公式示例\n\n写下 Markdown，右边的预览会立即更新。\n\n## 图表（Mermaid）\n\n```mermaid\nflowchart LR\n  A[写作] --> B[检查]\n  B --> C[保存为 PDF]\n```\n\n## 公式（KaTeX）\n\n圆的面积是 $S = \\pi r^2$。\n\n$$\\int_0^1 x^2\\,dx = \\frac{1}{3}$$\n\n## 表格和任务列表\n\n| 名称 | 数量 |\n| --- | ---: |\n| 苹果 | 3 |\n| 橘子 | 5 |\n\n- [x] 查看图表\n- [ ] 保存为 PDF\n" } },
+        ja: "# 図と数式のサンプル\n\nMarkdown を書くと、右のプレビューにすぐ反映されます。図も数式も、テキストだけで書けます。\n\n## 流れ図（Mermaid）\n\n```mermaid\n%%{init: {\"theme\": \"base\", \"themeVariables\": {\"primaryColor\": \"#FFE699\", \"primaryTextColor\": \"#385723\", \"primaryBorderColor\": \"#385723\", \"lineColor\": \"#385723\", \"textColor\": \"#385723\", \"secondaryColor\": \"#F9EFCB\", \"tertiaryColor\": \"#FFFDF2\", \"mainBkg\": \"#FFE699\", \"nodeBorder\": \"#385723\", \"edgeLabelBackground\": \"#FFFDF2\"}}}%%\nflowchart LR\n    A[\"書く\"] --> B[\"確かめる\"]\n    B --> C{\"直す？\"}\n    C -- \"はい\" --> A\n    C -- \"いいえ\" --> D[\"PDF に保存\"]\n    style A fill:#F07B5F,stroke:#1A2212,stroke-width:2px,color:#1A2212\n    style B fill:#9FCC7E,stroke:#1A2212,stroke-width:2px,color:#1A2212\n    style C fill:#FFE699,stroke:#385723,stroke-width:2px,color:#385723\n    style D fill:#F7A58E,stroke:#1A2212,stroke-width:2px,color:#1A2212\n```\n\n## シーケンス図（Mermaid）\n\n```mermaid\n%%{init: {\"theme\": \"base\", \"themeVariables\": {\"primaryColor\": \"#FFE699\", \"primaryTextColor\": \"#385723\", \"primaryBorderColor\": \"#385723\", \"lineColor\": \"#385723\", \"textColor\": \"#385723\", \"secondaryColor\": \"#F9EFCB\", \"tertiaryColor\": \"#FFFDF2\", \"mainBkg\": \"#FFE699\", \"nodeBorder\": \"#385723\", \"edgeLabelBackground\": \"#FFFDF2\", \"actorBkg\": \"#F7A58E\", \"actorTextColor\": \"#1A2212\", \"actorBorder\": \"#1A2212\", \"actorLineColor\": \"#385723\", \"signalColor\": \"#385723\", \"signalTextColor\": \"#385723\"}}}%%\nsequenceDiagram\n    participant あなた\n    participant M as mdEditor\n    あなた->>M: Markdown を書く\n    rect rgb(255, 230, 153)\n    M-->>あなた: プレビューに表示\n    end\n    あなた->>M: Ctrl+Shift+P\n    M-->>あなた: PDF のできあがり\n```\n\n## 円グラフ（Mermaid）\n\n```mermaid\n%%{init: {\"theme\": \"base\", \"themeVariables\": {\"primaryColor\": \"#FFE699\", \"primaryTextColor\": \"#385723\", \"primaryBorderColor\": \"#385723\", \"lineColor\": \"#385723\", \"textColor\": \"#385723\", \"secondaryColor\": \"#F9EFCB\", \"tertiaryColor\": \"#FFFDF2\", \"mainBkg\": \"#FFE699\", \"nodeBorder\": \"#385723\", \"edgeLabelBackground\": \"#FFFDF2\", \"pie1\": \"#F07B5F\", \"pie2\": \"#9FCC7E\", \"pie3\": \"#F7A58E\", \"pie4\": \"#FFE699\", \"pieStrokeColor\": \"#1A2212\", \"pieOuterStrokeColor\": \"#385723\", \"pieSectionTextColor\": \"#1A2212\", \"pieTitleTextColor\": \"#385723\", \"pieLegendTextColor\": \"#385723\", \"pieOpacity\": \"1\"}}}%%\npie title 1 日の作業時間\n    \"書く\" : 45\n    \"図を描く\" : 25\n    \"見直す\" : 20\n    \"PDF にする\" : 10\n```\n\n## 図（Graphviz）\n\n```dot\ndigraph {\n    graph [rankdir=LR, bgcolor=\"transparent\"];\n    node  [shape=box, style=\"rounded,filled\", fontname=\"Helvetica\", color=\"#1A2212\", fontcolor=\"#1A2212\", penwidth=1.6];\n    edge  [color=\"#385723\", penwidth=1.6];\n    md    [label=\"Markdown\", fillcolor=\"#FFE699\", color=\"#385723\", fontcolor=\"#385723\", penwidth=2.4];\n    pdf   [label=\"PDF\", fillcolor=\"#F07B5F\"];\n    word  [label=\"Word\", fillcolor=\"#9FCC7E\"];\n    html  [label=\"HTML\", fillcolor=\"#F7A58E\"];\n    md -> {pdf word html};\n}\n```\n\n## 数式（KaTeX）\n\n円の面積は $S = \\pi r^2$ です。二次方程式 $ax^2 + bx + c = 0$ の解は、次のとおりです。\n\n$$x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$$\n\n$$\\int_0^1 x^2\\,dx = \\frac{1}{3} \\qquad \\sum_{k=1}^{n} k = \\frac{n(n+1)}{2}$$\n\n$$\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}^{-1} = \\frac{1}{ad - bc} \\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$$\n\n## 表とチェックリスト\n\n| 名前 | 数 |\n| --- | ---: |\n| りんご | 3 |\n| みかん | 5 |\n\n- [x] 図を見る\n- [x] 数式を見る\n- [ ] PDF に保存する（<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>）\n\n> [!TIP]\n> 図と数式の書き方は <kbd>F1</kbd>（書き方）で一覧できます。すべての種類を試すには、サンプルの「図・チャート表示テスト」を開いてください。\n",
+        en: "# Diagrams and math sample\n\nWhat you type appears in the preview on the right right away. Diagrams and math are written as plain text, too.\n\n## Flowchart (Mermaid)\n\n```mermaid\n%%{init: {\"theme\": \"base\", \"themeVariables\": {\"primaryColor\": \"#FFE699\", \"primaryTextColor\": \"#385723\", \"primaryBorderColor\": \"#385723\", \"lineColor\": \"#385723\", \"textColor\": \"#385723\", \"secondaryColor\": \"#F9EFCB\", \"tertiaryColor\": \"#FFFDF2\", \"mainBkg\": \"#FFE699\", \"nodeBorder\": \"#385723\", \"edgeLabelBackground\": \"#FFFDF2\"}}}%%\nflowchart LR\n    A[\"Write\"] --> B[\"Check\"]\n    B --> C{\"Fix it?\"}\n    C -- \"Yes\" --> A\n    C -- \"No\" --> D[\"Save as PDF\"]\n    style A fill:#F07B5F,stroke:#1A2212,stroke-width:2px,color:#1A2212\n    style B fill:#9FCC7E,stroke:#1A2212,stroke-width:2px,color:#1A2212\n    style C fill:#FFE699,stroke:#385723,stroke-width:2px,color:#385723\n    style D fill:#F7A58E,stroke:#1A2212,stroke-width:2px,color:#1A2212\n```\n\n## Sequence diagram (Mermaid)\n\n```mermaid\n%%{init: {\"theme\": \"base\", \"themeVariables\": {\"primaryColor\": \"#FFE699\", \"primaryTextColor\": \"#385723\", \"primaryBorderColor\": \"#385723\", \"lineColor\": \"#385723\", \"textColor\": \"#385723\", \"secondaryColor\": \"#F9EFCB\", \"tertiaryColor\": \"#FFFDF2\", \"mainBkg\": \"#FFE699\", \"nodeBorder\": \"#385723\", \"edgeLabelBackground\": \"#FFFDF2\", \"actorBkg\": \"#F7A58E\", \"actorTextColor\": \"#1A2212\", \"actorBorder\": \"#1A2212\", \"actorLineColor\": \"#385723\", \"signalColor\": \"#385723\", \"signalTextColor\": \"#385723\"}}}%%\nsequenceDiagram\n    participant You\n    participant M as mdEditor\n    You->>M: Write Markdown\n    rect rgb(255, 230, 153)\n    M-->>You: Show it in the preview\n    end\n    You->>M: Ctrl+Shift+P\n    M-->>You: Your PDF is ready\n```\n\n## Pie chart (Mermaid)\n\n```mermaid\n%%{init: {\"theme\": \"base\", \"themeVariables\": {\"primaryColor\": \"#FFE699\", \"primaryTextColor\": \"#385723\", \"primaryBorderColor\": \"#385723\", \"lineColor\": \"#385723\", \"textColor\": \"#385723\", \"secondaryColor\": \"#F9EFCB\", \"tertiaryColor\": \"#FFFDF2\", \"mainBkg\": \"#FFE699\", \"nodeBorder\": \"#385723\", \"edgeLabelBackground\": \"#FFFDF2\", \"pie1\": \"#F07B5F\", \"pie2\": \"#9FCC7E\", \"pie3\": \"#F7A58E\", \"pie4\": \"#FFE699\", \"pieStrokeColor\": \"#1A2212\", \"pieOuterStrokeColor\": \"#385723\", \"pieSectionTextColor\": \"#1A2212\", \"pieTitleTextColor\": \"#385723\", \"pieLegendTextColor\": \"#385723\", \"pieOpacity\": \"1\"}}}%%\npie title A day's work\n    \"Writing\" : 45\n    \"Diagrams\" : 25\n    \"Review\" : 20\n    \"PDF\" : 10\n```\n\n## Diagram (Graphviz)\n\n```dot\ndigraph {\n    graph [rankdir=LR, bgcolor=\"transparent\"];\n    node  [shape=box, style=\"rounded,filled\", fontname=\"Helvetica\", color=\"#1A2212\", fontcolor=\"#1A2212\", penwidth=1.6];\n    edge  [color=\"#385723\", penwidth=1.6];\n    md    [label=\"Markdown\", fillcolor=\"#FFE699\", color=\"#385723\", fontcolor=\"#385723\", penwidth=2.4];\n    pdf   [label=\"PDF\", fillcolor=\"#F07B5F\"];\n    word  [label=\"Word\", fillcolor=\"#9FCC7E\"];\n    html  [label=\"HTML\", fillcolor=\"#F7A58E\"];\n    md -> {pdf word html};\n}\n```\n\n## Math (KaTeX)\n\nThe area of a circle is $S = \\pi r^2$. The roots of $ax^2 + bx + c = 0$ are:\n\n$$x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$$\n\n$$\\int_0^1 x^2\\,dx = \\frac{1}{3} \\qquad \\sum_{k=1}^{n} k = \\frac{n(n+1)}{2}$$\n\n$$\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}^{-1} = \\frac{1}{ad - bc} \\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$$\n\n## Table and checklist\n\n| Name | Qty |\n| --- | ---: |\n| Apple | 3 |\n| Orange | 5 |\n\n- [x] See the diagrams\n- [x] See the math\n- [ ] Save as PDF (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>)\n\n> [!TIP]\n> <kbd>F1</kbd> (Syntax) lists how to write diagrams and math. To try every type, open the \"Diagram and chart test\" sample.\n",
+        zh: "# 图表和公式示例\n\n写下 Markdown，右边的预览会立即更新。图表和公式也只用文本就能写。\n\n## 流程图（Mermaid）\n\n```mermaid\n%%{init: {\"theme\": \"base\", \"themeVariables\": {\"primaryColor\": \"#FFE699\", \"primaryTextColor\": \"#385723\", \"primaryBorderColor\": \"#385723\", \"lineColor\": \"#385723\", \"textColor\": \"#385723\", \"secondaryColor\": \"#F9EFCB\", \"tertiaryColor\": \"#FFFDF2\", \"mainBkg\": \"#FFE699\", \"nodeBorder\": \"#385723\", \"edgeLabelBackground\": \"#FFFDF2\"}}}%%\nflowchart LR\n    A[\"写作\"] --> B[\"检查\"]\n    B --> C{\"要修改吗？\"}\n    C -- \"是\" --> A\n    C -- \"否\" --> D[\"保存为 PDF\"]\n    style A fill:#F07B5F,stroke:#1A2212,stroke-width:2px,color:#1A2212\n    style B fill:#9FCC7E,stroke:#1A2212,stroke-width:2px,color:#1A2212\n    style C fill:#FFE699,stroke:#385723,stroke-width:2px,color:#385723\n    style D fill:#F7A58E,stroke:#1A2212,stroke-width:2px,color:#1A2212\n```\n\n## 时序图（Mermaid）\n\n```mermaid\n%%{init: {\"theme\": \"base\", \"themeVariables\": {\"primaryColor\": \"#FFE699\", \"primaryTextColor\": \"#385723\", \"primaryBorderColor\": \"#385723\", \"lineColor\": \"#385723\", \"textColor\": \"#385723\", \"secondaryColor\": \"#F9EFCB\", \"tertiaryColor\": \"#FFFDF2\", \"mainBkg\": \"#FFE699\", \"nodeBorder\": \"#385723\", \"edgeLabelBackground\": \"#FFFDF2\", \"actorBkg\": \"#F7A58E\", \"actorTextColor\": \"#1A2212\", \"actorBorder\": \"#1A2212\", \"actorLineColor\": \"#385723\", \"signalColor\": \"#385723\", \"signalTextColor\": \"#385723\"}}}%%\nsequenceDiagram\n    participant 你\n    participant M as mdEditor\n    你->>M: 写 Markdown\n    rect rgb(255, 230, 153)\n    M-->>你: 显示在预览中\n    end\n    你->>M: Ctrl+Shift+P\n    M-->>你: PDF 完成\n```\n\n## 饼图（Mermaid）\n\n```mermaid\n%%{init: {\"theme\": \"base\", \"themeVariables\": {\"primaryColor\": \"#FFE699\", \"primaryTextColor\": \"#385723\", \"primaryBorderColor\": \"#385723\", \"lineColor\": \"#385723\", \"textColor\": \"#385723\", \"secondaryColor\": \"#F9EFCB\", \"tertiaryColor\": \"#FFFDF2\", \"mainBkg\": \"#FFE699\", \"nodeBorder\": \"#385723\", \"edgeLabelBackground\": \"#FFFDF2\", \"pie1\": \"#F07B5F\", \"pie2\": \"#9FCC7E\", \"pie3\": \"#F7A58E\", \"pie4\": \"#FFE699\", \"pieStrokeColor\": \"#1A2212\", \"pieOuterStrokeColor\": \"#385723\", \"pieSectionTextColor\": \"#1A2212\", \"pieTitleTextColor\": \"#385723\", \"pieLegendTextColor\": \"#385723\", \"pieOpacity\": \"1\"}}}%%\npie title 一天的工作时间\n    \"写作\" : 45\n    \"画图\" : 25\n    \"检查\" : 20\n    \"生成 PDF\" : 10\n```\n\n## 图（Graphviz）\n\n```dot\ndigraph {\n    graph [rankdir=LR, bgcolor=\"transparent\"];\n    node  [shape=box, style=\"rounded,filled\", fontname=\"Helvetica\", color=\"#1A2212\", fontcolor=\"#1A2212\", penwidth=1.6];\n    edge  [color=\"#385723\", penwidth=1.6];\n    md    [label=\"Markdown\", fillcolor=\"#FFE699\", color=\"#385723\", fontcolor=\"#385723\", penwidth=2.4];\n    pdf   [label=\"PDF\", fillcolor=\"#F07B5F\"];\n    word  [label=\"Word\", fillcolor=\"#9FCC7E\"];\n    html  [label=\"HTML\", fillcolor=\"#F7A58E\"];\n    md -> {pdf word html};\n}\n```\n\n## 公式（KaTeX）\n\n圆的面积是 $S = \\pi r^2$。二次方程 $ax^2 + bx + c = 0$ 的解如下。\n\n$$x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$$\n\n$$\\int_0^1 x^2\\,dx = \\frac{1}{3} \\qquad \\sum_{k=1}^{n} k = \\frac{n(n+1)}{2}$$\n\n$$\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}^{-1} = \\frac{1}{ad - bc} \\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix}$$\n\n## 表格和任务列表\n\n| 名称 | 数量 |\n| --- | ---: |\n| 苹果 | 3 |\n| 橘子 | 5 |\n\n- [x] 查看图表\n- [x] 查看公式\n- [ ] 保存为 PDF（<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>）\n\n> [!TIP]\n> 按 <kbd>F1</kbd>（写法）可以查看图表和公式的写法一览。要试用所有类型，请打开示例中的“图表显示测试”。\n" } },
     { ja: "基本の書き方", en: "Basic writing", zh: "基本写法",
       text: {
-        ja: "# はじめての Markdown\n\n**太字**、*斜体*、[リンク](https://example.com) が使えます。\n\n1. 見出し\n2. リスト\n3. 引用\n\n> 引用はこのように書きます。\n\n```\nコードはこのように書きます。\n```\n",
-        en: "# Your first Markdown\n\nYou can use **bold**, *italic*, and [links](https://example.com).\n\n1. Headings\n2. Lists\n3. Quotes\n\n> Quotes look like this.\n\n```\nCode looks like this.\n```\n",
-        zh: "# 第一次使用 Markdown\n\n可以使用**粗体**、*斜体*和[链接](https://example.com)。\n\n1. 标题\n2. 列表\n3. 引用\n\n> 引用这样写。\n\n```\n代码这样写。\n```\n" } },
+        ja: "# はじめての Markdown\n\nMarkdown は、記号を少し足すだけで書式を付けられる書き方です。右のプレビューで、どう見えるかを確かめてください。\n\n## 文字の飾り\n\n**太字**（<kbd>Ctrl</kbd>+<kbd>B</kbd>）、*斜体*（<kbd>Ctrl</kbd>+<kbd>I</kbd>）、~~取り消し線~~、`コード`、[リンク](https://example.com) が使えます。\n\n## 見出し\n\n行の頭に `#` を付けると見出しになります。`#` が多いほど小さな見出しです。\n\n### 小さな見出し\n\n## リスト\n\n- 箇条書きは `-` で始めます\n- <kbd>Enter</kbd> で次の項目、<kbd>Tab</kbd> で一段下げます\n  - 下げた項目\n\n1. 番号付きのリスト\n2. 番号は順に並びます\n\n- [x] 済んだこと\n- [ ] これからすること\n\n## 引用と注意書き\n\n> 引用は、行の頭に `>` を付けます。\n\n> [!NOTE]\n> GitHub と同じ注意書きも書けます。\n\n> [!TIP]\n> 書き方の一覧は <kbd>F1</kbd> で開きます。\n\n> [!IMPORTANT]\n> 保存するまで、ファイルは変わりません。\n\n## 表\n\n| 果物 | 産地 | 数 |\n| :--- | :---: | ---: |\n| りんご | 青森 | 3 |\n| みかん | 愛媛 | 5 |\n\n<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>W</kbd> で列の幅をそろえられます。\n\n## 画像\n\n<p align=\"center\"><img src=\"import-test_files/5garashi_mark_simple.svg\" alt=\"5garashi.com設計事務所シンボルマーク\" width=\"64\"></p>\n\n画像の行で <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd> を押すと、大きさと位置を選べます。\n\n## コード\n\n```python\nprint(\"Hello, mdEditor!\")\n```\n\n## 折りたたみ\n\n<details>\n<summary>クリックで開く</summary>\n\n開いたときだけ、中身が見えます。\n\n</details>\n\n## 図も書ける\n\n```mermaid\n%%{init: {\"theme\": \"base\", \"themeVariables\": {\"primaryColor\": \"#FFE699\", \"primaryTextColor\": \"#385723\", \"primaryBorderColor\": \"#385723\", \"lineColor\": \"#385723\", \"textColor\": \"#385723\", \"secondaryColor\": \"#F9EFCB\", \"tertiaryColor\": \"#FFFDF2\", \"mainBkg\": \"#FFE699\", \"nodeBorder\": \"#385723\", \"edgeLabelBackground\": \"#FFFDF2\"}}}%%\nflowchart LR\n    A[\"書く\"] --> B[\"見る\"] --> D[\"渡す\"]\n    style A fill:#F07B5F,stroke:#1A2212,stroke-width:2px,color:#1A2212\n    style B fill:#9FCC7E,stroke:#1A2212,stroke-width:2px,color:#1A2212\n    style D fill:#F7A58E,stroke:#1A2212,stroke-width:2px,color:#1A2212\n```\n\n色付きの図は、サンプルの「図と数式」にもっとあります。\n\n---\n\n区切り線は `---` です。書き終えたら <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> で PDF にできます。\n",
+        en: "# Your first Markdown\n\nMarkdown adds formatting with a few marks. Check how each part looks in the preview on the right.\n\n## Text\n\nYou can use **bold** (<kbd>Ctrl</kbd>+<kbd>B</kbd>), *italic* (<kbd>Ctrl</kbd>+<kbd>I</kbd>), ~~strikethrough~~, `code`, and [links](https://example.com).\n\n## Headings\n\nA line that starts with `#` is a heading. More `#` makes a smaller heading.\n\n### A smaller heading\n\n## Lists\n\n- Start a bullet with `-`\n- <kbd>Enter</kbd> adds the next item, <kbd>Tab</kbd> indents it\n  - An indented item\n\n1. A numbered list\n2. The numbers follow in order\n\n- [x] Done\n- [ ] To do\n\n## Quotes and alerts\n\n> Start a quote with `>`.\n\n> [!NOTE]\n> Alerts work the same way as on GitHub.\n\n> [!TIP]\n> <kbd>F1</kbd> opens the list of how to write things.\n\n> [!IMPORTANT]\n> The file does not change until you save.\n\n## Tables\n\n| Fruit | From | Qty |\n| :--- | :---: | ---: |\n| Apple | Aomori | 3 |\n| Orange | Ehime | 5 |\n\n<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>W</kbd> lines up the columns.\n\n## Images\n\n<p align=\"center\"><img src=\"import-test_files/5garashi_mark_simple.svg\" alt=\"5garashi.com Design Office symbol mark\" width=\"64\"></p>\n\nPress <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd> on an image's line to choose its size and position.\n\n## Code\n\n```python\nprint(\"Hello, mdEditor!\")\n```\n\n## Details\n\n<details>\n<summary>Click to open</summary>\n\nWhat is inside shows only when it is open.\n\n</details>\n\n## Diagrams, too\n\n```mermaid\n%%{init: {\"theme\": \"base\", \"themeVariables\": {\"primaryColor\": \"#FFE699\", \"primaryTextColor\": \"#385723\", \"primaryBorderColor\": \"#385723\", \"lineColor\": \"#385723\", \"textColor\": \"#385723\", \"secondaryColor\": \"#F9EFCB\", \"tertiaryColor\": \"#FFFDF2\", \"mainBkg\": \"#FFE699\", \"nodeBorder\": \"#385723\", \"edgeLabelBackground\": \"#FFFDF2\"}}}%%\nflowchart LR\n    A[\"Write\"] --> B[\"View\"] --> D[\"Share\"]\n    style A fill:#F07B5F,stroke:#1A2212,stroke-width:2px,color:#1A2212\n    style B fill:#9FCC7E,stroke:#1A2212,stroke-width:2px,color:#1A2212\n    style D fill:#F7A58E,stroke:#1A2212,stroke-width:2px,color:#1A2212\n```\n\nThe \"Diagrams and math\" sample has more diagrams in color.\n\n---\n\nA rule is `---`. When you are done, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> makes a PDF.\n",
+        zh: "# 第一次使用 Markdown\n\nMarkdown 只需加上少量符号就能设置格式。请在右边的预览中查看效果。\n\n## 文字\n\n可以使用**粗体**（<kbd>Ctrl</kbd>+<kbd>B</kbd>）、*斜体*（<kbd>Ctrl</kbd>+<kbd>I</kbd>）、~~删除线~~、`代码`和[链接](https://example.com)。\n\n## 标题\n\n行首加 `#` 就是标题。`#` 越多，标题越小。\n\n### 较小的标题\n\n## 列表\n\n- 项目符号以 `-` 开头\n- 按 <kbd>Enter</kbd> 添加下一项，按 <kbd>Tab</kbd> 缩进\n  - 缩进的项目\n\n1. 编号列表\n2. 编号按顺序排列\n\n- [x] 已完成\n- [ ] 待完成\n\n## 引用和提示\n\n> 引用在行首加 `>`。\n\n> [!NOTE]\n> 也可以写与 GitHub 相同的提示。\n\n> [!TIP]\n> 按 <kbd>F1</kbd> 打开写法一览。\n\n> [!IMPORTANT]\n> 在保存之前，文件不会改变。\n\n## 表格\n\n| 水果 | 产地 | 数量 |\n| :--- | :---: | ---: |\n| 苹果 | 青森 | 3 |\n| 橘子 | 爱媛 | 5 |\n\n按 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>W</kbd> 可以对齐各列。\n\n## 图片\n\n<p align=\"center\"><img src=\"import-test_files/5garashi_mark_simple.svg\" alt=\"5garashi.com设计事务所标志\" width=\"64\"></p>\n\n在图片所在行按 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd>，可以选择大小和位置。\n\n## 代码\n\n```python\nprint(\"Hello, mdEditor!\")\n```\n\n## 折叠\n\n<details>\n<summary>点击展开</summary>\n\n展开时才能看到里面的内容。\n\n</details>\n\n## 也能画图\n\n```mermaid\n%%{init: {\"theme\": \"base\", \"themeVariables\": {\"primaryColor\": \"#FFE699\", \"primaryTextColor\": \"#385723\", \"primaryBorderColor\": \"#385723\", \"lineColor\": \"#385723\", \"textColor\": \"#385723\", \"secondaryColor\": \"#F9EFCB\", \"tertiaryColor\": \"#FFFDF2\", \"mainBkg\": \"#FFE699\", \"nodeBorder\": \"#385723\", \"edgeLabelBackground\": \"#FFFDF2\"}}}%%\nflowchart LR\n    A[\"编写\"] --> B[\"查看\"] --> D[\"交付\"]\n    style A fill:#F07B5F,stroke:#1A2212,stroke-width:2px,color:#1A2212\n    style B fill:#9FCC7E,stroke:#1A2212,stroke-width:2px,color:#1A2212\n    style D fill:#F7A58E,stroke:#1A2212,stroke-width:2px,color:#1A2212\n```\n\n示例中的“图表和公式”还有更多彩色的图。\n\n---\n\n分隔线是 `---`。写完后按 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> 即可生成 PDF。\n" } },
+    // The feature tour, in the app's language (samples/key-features*.md).
+    { ja: "主な機能", en: "Key features", zh: "主要功能",
+      file: { ja: "samples/key-features.md", en: "samples/key-features.en.md", zh: "samples/key-features.zh-CN.md" } },
     // The full rendering tests from samples/ (bundled with the app as wwwroot/samples/).
     { ja: "図・チャート表示テスト（すべての種類・日本語）", en: "Diagram and chart test (every type, Japanese)", zh: "图表显示测试（所有类型，日语）", file: "samples/diagram-test.md" },
     { ja: "図・チャート表示テスト（すべての種類・英語）", en: "Diagram and chart test (every type, English)", zh: "图表显示测试（所有类型，英语）", file: "samples/diagram-test.en.md" },
@@ -4024,6 +4027,8 @@
     sampleList.replaceChildren();
     for (const sample of samples) {
       const name = sample[language];
+      // A sample's file is one path, or one per language.
+      const file = typeof sample.file === "object" ? sample.file[language] : sample.file;
       const item = document.createElement("li");
       const label = document.createElement("span");
       label.textContent = name;
@@ -4031,13 +4036,13 @@
       button.type = "button";
       button.textContent = t("sampleOpen");
       button.setAttribute("aria-label", t("sampleOpenLabel")(name));
-      if (sample.file) button.dataset.file = sample.file;
+      if (file) button.dataset.file = file;
       button.addEventListener("click", async () => {
         sampleDialog.close();
         let text = sample.text?.[language];
-        if (sample.file) {
+        if (file) {
           try {
-            const response = await fetch(sample.file);
+            const response = await fetch(file);
             if (!response.ok) throw new Error(String(response.status));
             text = await response.text();
           } catch {
@@ -4047,7 +4052,7 @@
         }
         // A sample opens as a new, unsaved document under its own name (the app
         // asks to save changes to the open document first), never over the open file.
-        const fileName = sample.file ? sample.file.split("/").pop() : `${name}.md`;
+        const fileName = file ? file.split("/").pop() : `${name}.md`;
         post({ type: "openSample", text, name: fileName });
       });
       item.append(label, button);
@@ -4850,8 +4855,13 @@
     threeLoaded = null;
     throw error;
   });
-  const createModelView = (source) => {
+  const createModelView = (text) => {
     const T = window.MdThree;
+    // A solid named background with a color and no facets ("solid background #F9EFCB",
+    // then "endsolid background") sets the stage instead of being drawn: the user's
+    // colors come first (Identity 4-4 (1)). Other STL viewers draw nothing for it.
+    const stage = text.match(/^[ \t]*solid[ \t]+background\b[^\n]*?(#[0-9a-f]{6})/im)?.[1];
+    const source = stage ? text.replace(/^[ \t]*solid[ \t]+background\b[\s\S]*?^[ \t]*endsolid\b[^\n]*(\n|$)/im, "") : text;
     const geometry = new T.STLLoader().parse(source);
     if (!geometry.attributes.position?.count) throw new Error(t("modelEmpty"));
     geometry.computeVertexNormals();
@@ -4859,14 +4869,14 @@
     const box = new T.Box3().setFromBufferAttribute(geometry.attributes.position);
     const size = Math.max(box.getSize(new T.Vector3()).length(), 1e-6);
     const scene = new T.Scene();
-    // A dark stage, so the cream body stands out (11.0:1; Identity 4-4 (4)).
-    scene.background = new T.Color("#2B3A20");
+    // A dark stage unless the model names one, so the cream body stands out (11.0:1; Identity 4-4 (4)).
+    scene.background = new T.Color(stage ?? "#2B3A20");
     // Colors from the 5garashi palette: the first solid is cream, the others
     // (letters on a body, say) volt. A solid whose name has a color in it
     // ("solid letters #0969DA") takes that color.
     const names = geometry.userData.groupNames ?? [];
     const materials = (geometry.groups.length > 1 ? geometry.groups : [null]).map((_, index) => new T.MeshStandardMaterial({
-      color: names[index]?.match(/#[0-9a-f]{6}/i)?.[0] ?? (index === 0 ? "#FFF3D6" : "#B92613"),
+      color: names[index]?.match(/#[0-9a-f]{6}\b/i)?.[0] ?? (index === 0 ? "#FFF3D6" : "#B92613"),
       metalness: 0.05,
       roughness: 0.6
     }));

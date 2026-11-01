@@ -315,6 +315,8 @@ th, td {
   border: 1px solid var(--document-foreground);
   text-align: left;
   vertical-align: top;
+  /* As in the preview, a word keeps a column at least its width. The table scrolls. */
+  overflow-wrap: break-word;
 }
 
 th {
@@ -407,10 +409,14 @@ math[display="block"] {
     max-width: none;
   }
 
-  /* Printed pages cannot scroll, so long code lines wrap. */
+  /* Printed pages cannot scroll, so long code lines and table words wrap. */
   pre {
     overflow: visible;
     white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  th, td {
     overflow-wrap: anywhere;
   }
 

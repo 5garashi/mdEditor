@@ -18,26 +18,26 @@ Since 1.0.16 the listing leads with opening PDF and Word files as Markdown and s
 **Product name:** mdEditor by 5garashi.com
 
 **Short description (one line):**
-Open PDF and Word files as Markdown, read Markdown from AI chats as it was meant, and save as PDF or Word. Offline, private, ad-free.
+Open PDF and Word files as Markdown, reproduce Markdown from AI chats as best it can, and save as PDF or Word. Offline, private, ad-free.
 
 **Description:**
 
 Turn PDFs, Word files, e-mails, and web pages into clean Markdown, and back into PDF or Word, offline on Windows. Open a file and its text, headings, lists, and pictures come back as Markdown you can read and fix right away, beside a live preview. There is nothing else to set up: no Python, no command line, no account. Your documents stay on your PC, with no ads.
 
 Open as Markdown
-- PDF: the text comes back in reading order, wrapped lines join into paragraphs, and headings (from text size and numbering), lists, the table of contents, and pictures come back. Ruled tables and code come back too. Diagrams, charts, and math are redrawn as pictures from their lines and labels; column layout and tables without cell borders do not come back (their text remains), and a scanned PDF has no text to take.
+- PDF: the text comes back in reading order, wrapped lines join into paragraphs, and headings (from text size and numbering), lists, the table of contents, and pictures come back. Ruled tables and code come back too. Diagrams, charts, and math are redrawn as pictures from their lines and labels; column layout and tables without cell borders do not come back (their text remains), and no text can be taken from a PDF that is only scanned images.
 - Word: headings, lists, tables, links, and pictures come back (colors and layout do not). When a document has no heading styles, headings are guessed from text size.
 - Also HTML, web pages, e-mail (.eml), CSV, TSV, JSON, XML, Jupyter Notebooks, and images. The original file is never changed, and it can be shown beside the preview to compare.
 - Check and fix the result before you share it or paste it into an AI chat.
 
-Markdown from AI chats, shown as meant
-- Open or paste an answer from an AI chat and it shows the way the chat showed it. Math written `\(…\)` and `\[…\]`, `$$…$$` inside a line, and math followed straight by Japanese or Chinese text all show as math.
+Markdown from AI chats, reproduced as closely as possible
+- Open or paste an answer from an AI chat and mdEditor reproduces it as closely as it can. Math written `\(…\)` and `\[…\]`, `$$…$$` inside a line, and math followed straight by Japanese or Chinese text show as math. Not every way of writing can be fixed, so check the result.
 - Bold whose `**` shows as written (common beside Japanese brackets) and math that lost its `$` are found when the document opens and fixed, with a button to put them back.
 - Citation marks, hidden characters, and other leftovers that AI chats put in copied text are taken out by ready-made fix rules, and rules of your own can fix more.
 - Each line break shows as written, and a check underlines mistakes such as a skipped heading level.
 
 Save as PDF and Word
-- One click saves a PDF that looks exactly like the preview: diagrams, math, tables, 3D models, maps, and colored code included, on A4 or Letter (Auto follows your region). Pages are numbered, and the PDF is tagged so screen readers can follow its headings, lists, and tables.
+- One click saves a PDF that looks like the preview: diagrams, math, tables, 3D models, maps, and colored code included, on A4 or Letter (Auto follows your region). Pages are numbered, and the PDF is tagged so screen readers can follow its headings, lists, and tables.
 - Save As also writes Word, HTML, PNG, CSV, TSV, JSON, Jupyter Notebook, and plain text, and a ZIP for sharing that holds the document and its name_files folder.
 - Printing and PDF always use a white page, even in dark mode.
 
@@ -73,7 +73,7 @@ Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Des
 - Saved PDFs have page numbers and are tagged for screen readers. Word files without heading styles get headings from text size.
 - Writing help: Markdown is colored as you type. Ctrl+B / Ctrl+I add bold and italic, lists go on with Enter and Tab, Ctrl+Shift+W lines up a table, Ctrl+Shift+N numbers the headings, a URL pasted on selected text makes a link, and links and math commands are suggested.
 - A Markdown check underlines mistakes such as a skipped heading level or a link to nowhere.
-- Markdown from AI chats shows as meant: `\(…\)` and `\[…\]` math, bold beside Japanese brackets, and math that lost its `$` are fixed on opening, with a button to undo.
+- Markdown from AI chats is reproduced as closely as possible: `\(…\)` and `\[…\]` math shows as math, and bold whose `**` shows beside Japanese brackets and math that lost its `$` are fixed on opening, with a button to undo.
 - Line breaks in a paragraph show as written (can be turned off).
 - Simplified Chinese, New from clipboard, and about twice as fast to start.
 - 3D models (STL), maps, Graphviz, GitHub-style Markdown (alerts, front matter, collapsible sections, videos), and code colored for about 40 languages.
@@ -83,10 +83,10 @@ Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Des
 **Features (bullets):**
 - Open PDF and Word files as Markdown, offline
 - Headings, lists, tables, code, and pictures come back from PDFs
-- Save as PDF in one click, exactly as the preview looks
+- Save as PDF in one click, looking as the preview does
 - Save as Word, HTML, PNG, CSV, JSON, text, or a ZIP
 - Live preview beside your text, scrolling together
-- Markdown from AI chats shows as meant: `\(…\)` math, bold, line breaks
+- Markdown from AI chats reproduced as closely as possible
 - Preview on a second display, following the line you edit
 - Markdown colored as you type, with a check for mistakes
 - Bold, italic, lists, tables, and heading numbers in one key
@@ -110,8 +110,8 @@ Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Des
 
 **Screenshots (1366 x 768, the Store minimum; English UI) with captions:**
 1. `docs/images/10-pdf-open.en.png` — Open a PDF and it becomes Markdown on your PC: text, headings, lists, tables, and pictures come back. The notice says the conversion is best-effort.
-2. `docs/images/9-pdf.en.png` — One click saves a PDF that looks exactly like the preview: diagrams, tables, math, and colored code included, on A4 or Letter.
-3. `docs/images/11-ai-chat.en.png` — Open an answer from an AI chat and it shows as meant: `\(…\)` and `\[…\]` math, bold, and line breaks. The notice tells what was fixed, with a button to put it back.
+2. `docs/images/9-pdf.en.png` — One click saves a PDF that looks like the preview: diagrams, tables, math, and colored code included, on A4 or Letter.
+3. `docs/images/11-ai-chat.en.png` — Open an answer from an AI chat and it is reproduced as closely as possible: `\(…\)` and `\[…\]` math, bold, and line breaks. The notice tells what was fixed, with a button to put it back.
 4. `docs/images/1-main.en.png` — Type Markdown on the left and the preview on the right updates at once. A 3D model written in STL turns when you drag it.
 5. `docs/images/2-dark.en.png` — Day and night palettes follow Windows, or choose one with the Theme button in Settings. Printing and PDF always use a white page.
 6. `docs/images/3-preview-window.en.png` — Put the preview on a second display to keep writing and reading apart. It scrolls with your editing.
@@ -139,7 +139,7 @@ The app's own logos (Start, taskbar, File Explorer) are in `store/assets/` and a
 **製品名:** mdEditor by 5garashi.com
 
 **簡単な説明:**
-PDF や Word を Markdown として開いて直し、PDF や Word で渡せます。AI のチャットの Markdown も、意図どおりに表示します。PC の中だけで動き、広告もありません。
+PDF や Word を Markdown として開いて直し、PDF や Word で渡せます。AI のチャットの Markdown も、できる範囲で再現します。PC の中だけで動き、広告もありません。
 
 **説明:**
 
@@ -151,8 +151,8 @@ Markdown として開く
 - HTML・Web ページ・メール（.eml）・CSV・TSV・JSON・XML・Jupyter Notebook・画像も開けます。元のファイルは書き換えず、プレビューの横に元のファイルを並べて見比べられます。
 - 取り込んだ結果は、人に渡す前や AI のチャットに貼る前に、確かめて直せます。
 
-AI のチャットの Markdown を、意図どおりに
-- AI のチャットの回答を開くか貼り付けると、チャットで見たとおりに表示します。`\(…\)`・`\[…\]` で書いた数式、行の中の `$$…$$`、すぐ後に日本語が続く数式も、数式になります。
+AI のチャットの Markdown を、できる範囲で再現
+- AI のチャットの回答を開くか貼り付けると、できる範囲で再現します。`\(…\)`・`\[…\]` で書いた数式、行の中の `$$…$$`、すぐ後に日本語が続く数式も、数式になります。すべての書き方を直せるわけではないので、結果を確かめてください。
 - `**` がそのまま出てしまう太字（「」などのかっこの隣でよく起きます）や、`$` が抜けた数式は、開いたときに見つけて直します（元に戻すボタン付き）。
 - AI のチャットからコピーした文に残る引用の印・見えない文字などは、初めから用意した「自動修正のルール」で取り除きます。自分でルールを足して、ほかの書き方も直せます。
 - 行ごとの改行は書いたとおりに改行して表示し、見出しの段階の飛びなどの書き間違いには波線を引きます。
@@ -194,7 +194,7 @@ PDF や Word で保存する
 - 保存した PDF にページ番号が入り、画面読み上げ用のタグも付きます。見出しのスタイルがない Word 文書は、文字の大きさから見出しを推測します。
 - 書く手助け: 書くそばから Markdown を色分けします。Ctrl+B / Ctrl+I で太字・斜体、Enter と Tab でリストの続きと段、Ctrl+Shift+W で表を整え、Ctrl+Shift+N で見出しに番号を付けます。選んだ文字に URL を貼るとリンクになり、リンク先と数式の命令を候補に出します。
 - 書き方の確認: 見出しの段階の飛びや行き先のないリンクなどの書き間違いに、波線を引きます。
-- AI のチャットの Markdown を意図どおりに表示します。`\(…\)`・`\[…\]` の数式を表示し、かっこの隣で `**` が出てしまう太字や `$` が抜けた数式は、開いたときに直します（元に戻すボタン付き）。コピーした文に残る引用の印なども取り除きます。
+- AI のチャットの Markdown を、できる範囲で再現します。`\(…\)`・`\[…\]` の数式を表示し、かっこの隣で `**` が出てしまう太字や `$` が抜けた数式は、開いたときに直します（元に戻すボタン付き）。コピーした文に残る引用の印なども取り除きます。
 - 段落の中の改行を、書いたとおりに改行して表示します（オフにすると GitHub と同じ）。
 - 簡体字中国語、「クリップボードから新規作成」に対応し、起動がおよそ 2 倍速くなりました。
 - 3D モデル（STL）・地図・Graphviz の図、GitHub と同じ書き方（注意書き、フロントマター、折りたたみ、動画）、約 40 の言語のコードの色分け（PDF・Word にも残る）に対応しました。
@@ -207,7 +207,7 @@ PDF や Word で保存する
 - ワンクリックで PDF に保存。プレビューと同じ見た目のまま
 - Word・HTML・PNG・CSV・JSON・テキスト・ZIP にも保存
 - 書きながら横で仕上がりを確認。スクロールも連動
-- AI のチャットの Markdown（`\(…\)` の数式・太字・改行）も意図どおり
+- AI のチャットの Markdown も、できる範囲で再現
 - プレビューを 2 台目のディスプレイに。編集中の行を表示
 - 書くそばから色分けし、書き間違いに波線を引く
 - 太字・斜体・リスト・表・見出しの番号をキー 1 つで
@@ -228,7 +228,7 @@ PDF や Word で保存する
 **スクリーンショット（1366 x 768。Store の最小の大きさ。日本語の画面）と説明文:**
 1. `docs/images/10-pdf-open.ja.png` — PDF を開くと、PC の中で Markdown になります。文字・見出し・箇条書き・表・画像が戻ります。できる範囲での変換であることを、お知らせ欄に示します。
 2. `docs/images/9-pdf.ja.png` — ワンクリックで、プレビューと同じ見た目の PDF に保存します。図・表・数式・色分けしたコードもそのまま入り、用紙は A4 か Letter です。
-3. `docs/images/11-ai-chat.ja.png` — AI のチャットの回答を開くと、意図どおりに表示します。`\(…\)`・`\[…\]` の数式、かっこの隣の太字、行ごとの改行。直したことはお知らせ欄に出て、元に戻すこともできます。
+3. `docs/images/11-ai-chat.ja.png` — AI のチャットの回答を開くと、できる範囲で再現します。`\(…\)`・`\[…\]` の数式、かっこの隣の太字、行ごとの改行。直したことはお知らせ欄に出て、元に戻すこともできます。
 4. `docs/images/1-main.ja.png` — 左に Markdown を書くと、右のプレビューにすぐ反映されます。STL で書いた 3D モデルも、ドラッグで回せます。
 5. `docs/images/2-dark.ja.png` — 昼と夜の配色は Windows の設定に合わせて切り替わり、「設定」の「表示」ボタンでも選べます。印刷と PDF は常に白地です。
 6. `docs/images/3-preview-window.ja.png` — プレビューを別のウィンドウにして 2 台目のディスプレイへ。書く画面と見る画面を分けられ、スクロールは編集と連動します。
@@ -239,23 +239,23 @@ PDF や Word で保存する
 
 ## 简体中文 (zh-CN)
 
-**产品名称:** mdEditor by 5garashi.com
+**产品名称：** mdEditor by 5garashi.com
 
-**简短说明:**
-把 PDF 和 Word 作为 Markdown 打开并修改，再保存为 PDF 或 Word。AI 聊天输出的 Markdown 也能按原意显示。只在电脑中运行，没有广告。
+**简短说明：**
+把 PDF 和 Word 作为 Markdown 打开并修改，再保存为 PDF 或 Word。AI 聊天输出的 Markdown 也会尽量还原。只在电脑中运行，没有广告。
 
-**说明:**
+**说明：**
 
 在 Windows 上离线把 PDF、Word、电子邮件和网页变成整洁的 Markdown，改好后再保存为 PDF 或 Word。打开文件后，文字、标题、列表和图片会变成 Markdown，可以一边看旁边的预览一边当场修改。不需要 Python、命令行或账户。文档留在你的电脑中，没有广告。
 
 作为 Markdown 打开
-- PDF：按阅读顺序取出文字，把折行合并为段落，标题（根据文字大小和编号推测）、列表、目录和图片也会取出。有边框的表格和代码也会取出。图表和公式会根据线条和文字重新绘制为图片，分栏排版和没有边框的表格不会恢复（文字会保留）。扫描得到的纯图像 PDF 无法取出文字。
-- Word：标题、列表、表格、链接和图片会取出（颜色和排版不会保留）。没有使用标题样式的文档，会根据文字大小推测标题。
+- PDF：按阅读顺序提取文字，把折行合并为段落，标题（根据文字大小和编号推测）、列表、目录和图片也会提取。有边框的表格和代码也会提取。图表和公式会根据线条和文字重新绘制为图片，分栏排版和没有边框的表格不会恢复（文字会保留）。扫描得到的纯图像 PDF 无法提取文字。
+- Word：标题、列表、表格、链接和图片会提取（颜色和排版不会保留）。没有使用标题样式的文档，会根据文字大小推测标题。
 - 也可以打开 HTML、网页、电子邮件（.eml）、CSV、TSV、JSON、XML、Jupyter Notebook 和图像。原文件不会被改写，还可以把原文件显示在预览旁边进行对照。
-- 在分享给别人或粘贴到 AI 聊天之前，可以先检查并修改取出的结果。
+- 在分享给别人或粘贴到 AI 聊天之前，可以先检查并修改提取的结果。
 
-按原意显示 AI 聊天的 Markdown
-- 打开或粘贴 AI 聊天的回答，会按聊天中看到的样子显示。`\(…\)`、`\[…\]` 写法的公式、行内的 `$$…$$`，以及后面紧跟中文或日文的公式，都会显示为公式。
+尽量还原 AI 聊天的 Markdown
+- 打开或粘贴 AI 聊天的回答，会尽量还原显示。`\(…\)`、`\[…\]` 写法的公式、行内的 `$$…$$`，以及后面紧跟中文或日文的公式，都会显示为公式。并非所有写法都能修正，请检查结果。
 - `**` 原样显示出来的粗体（常见于中文或日文括号旁边）和丢失了 `$` 的公式，会在打开文档时找出并修正（带撤销按钮）。
 - 从 AI 聊天复制的文字中残留的引用标记、不可见字符等，会由预先准备的“自动修正规则”去除。也可以自己添加规则，修正其他写法。
 - 每一行的换行按原样显示，标题层级跳跃等写法错误会加上波浪线。
@@ -268,7 +268,7 @@ PDF や Word で保存する
 写作和查看
 - 在左边输入，右边的预览立即更新。两边同步滚动。
 - 输入时 Markdown 会着色显示，标题层级跳跃、没有目标的链接等写法错误会加上波浪线。
-- 写作辅助：Ctrl+B、Ctrl+I 设置粗体和斜体，按 Enter 接续列表，一个键整理表格、给标题编号，在选中的文字上粘贴 URL 即成为链接，链接目标和公式命令会给出输入候选。
+- 写作辅助：Ctrl+B、Ctrl+I 设置粗体和斜体，按 Enter 继续列表，一个键整理表格、给标题编号，在选中的文字上粘贴 URL 即成为链接，链接目标和公式命令会给出输入候选。
 - 用几行文字就能画出流程图和甘特图（Mermaid）、Graphviz 图表和公式（KaTeX）。AI 聊天中 `\(…\)`、`\[…\]` 写法的公式也能显示。
 - 用鼠标旋转 3D 模型（文本格式的 STL），在简单的世界地图上绘制地图（GeoJSON、TopoJSON），全部离线完成。
 - 约 40 种语言的代码会着色显示，“目录”可以根据标题生成目录。
@@ -288,16 +288,16 @@ PDF や Word で保存する
 
 人人都好用
 - 所有操作都可以用键盘完成，快捷键可以更改。
-- 支持屏幕阅读器，并用电脑中的语音朗读文档（也可以只朗读选中的部分）。支持 BIZ UD 字体、文字大小和行距的调整、对比度主题和深色模式。
+- 支持屏幕阅读器，并用电脑中的语音朗读文档（也可以只朗读选中的部分）。支持 BIZ UD Gothic 字体、文字大小和行距的调整、对比度主题和深色模式。
 
 支持日语、英语和简体中文。由 5garashi.com Design Office 制作。公司介绍、支持和隐私政策的链接，可以在应用的“关于此应用”中打开。
 
-**此版本的新功能:**
-- 可以把 PDF 作为 Markdown 打开（在你的电脑中转换）。文字、标题、列表、目录、表格、代码和图片会取出，图表和公式重新绘制为图片。带标签的 PDF 按标签读取，原 PDF 可以显示在预览旁边对照。分栏排版不会恢复。
+**此版本的新功能：**
+- 可以把 PDF 作为 Markdown 打开（在你的电脑中转换）。文字、标题、列表、目录、表格、代码和图片会提取，图表和公式重新绘制为图片。带标签的 PDF 按标签读取，原 PDF 可以显示在预览旁边对照。分栏排版不会恢复。
 - 保存的 PDF 带有页码和供屏幕阅读器使用的标签。没有标题样式的 Word 文档，会根据文字大小推测标题。
-- 写作辅助：输入时 Markdown 会着色显示。Ctrl+B / Ctrl+I 设置粗体和斜体，Enter 和 Tab 接续列表并调整层级，Ctrl+Shift+W 整理表格，Ctrl+Shift+N 给标题编号。在选中的文字上粘贴 URL 即成为链接，链接目标和公式命令会给出候选。
+- 写作辅助：输入时 Markdown 会着色显示。Ctrl+B / Ctrl+I 设置粗体和斜体，Enter 和 Tab 继续列表并调整层级，Ctrl+Shift+W 整理表格，Ctrl+Shift+N 给标题编号。在选中的文字上粘贴 URL 即成为链接，链接目标和公式命令会给出候选。
 - 写法检查：标题层级跳跃、没有目标的链接等错误会加上波浪线。
-- 按原意显示 AI 聊天的 Markdown：`\(…\)`、`\[…\]` 写法的公式会显示为公式，括号旁 `**` 原样显示的粗体和丢失了 `$` 的公式会在打开时修正（带撤销按钮），复制文字中残留的引用标记等也会去除。
+- 尽量还原 AI 聊天的 Markdown：`\(…\)`、`\[…\]` 写法的公式会显示为公式，括号旁 `**` 原样显示的粗体和丢失了 `$` 的公式会在打开时修正（带撤销按钮），复制文字中残留的引用标记等也会去除。
 - 段落中的换行按原样换行显示（关闭后与 GitHub 相同）。
 - 支持简体中文和“从剪贴板新建”，启动速度提高约一倍。
 - 支持 3D 模型（STL）、地图、Graphviz 图表、与 GitHub 相同的写法（提示框、前置元数据、折叠、视频），约 40 种语言的代码着色（PDF 和 Word 中也保留）。
@@ -306,11 +306,11 @@ PDF や Word で保存する
 
 **产品功能（要点）:**
 - 把 PDF 和 Word 作为 Markdown 打开，在电脑中转换
-- 从 PDF 取出标题、列表、表格、代码和图片
+- 从 PDF 提取标题、列表、表格、代码和图片
 - 一键保存为 PDF，外观与预览完全相同
 - 也可保存为 Word、HTML、PNG、CSV、JSON、文本或 ZIP
 - 边写边在旁边查看效果，滚动同步
-- AI 聊天的 Markdown（`\(…\)` 公式、粗体、换行）按原意显示
+- 尽量还原 AI 聊天的 Markdown
 - 预览可放到第二个显示器上，跟随正在编辑的行
 - 输入时着色显示，写法错误加上波浪线
 - 一个键设置粗体、斜体、列表、表格和标题编号
@@ -328,10 +328,10 @@ PDF や Word で保存する
 
 **搜索词（最多 7 个）:** Markdown, Markdown编辑器, PDF转Markdown, Word转Markdown, Markdown转PDF, AI Markdown, Mermaid
 
-**屏幕截图（1366 x 768，Store 的最小尺寸；简体中文界面）及说明:**
-1. `docs/images/10-pdf-open.zh-CN.png` — 打开 PDF，就会在电脑中变成 Markdown。文字、标题、列表、表格和图片会取出，通知栏会说明这是尽力而为的转换。
+**屏幕截图（1366 x 768，Store 的最小尺寸；简体中文界面）及说明：**
+1. `docs/images/10-pdf-open.zh-CN.png` — 打开 PDF，就会在电脑中变成 Markdown。文字、标题、列表、表格和图片会提取，通知栏会说明转换会尽量保留原 PDF 的内容，但无法完整还原。
 2. `docs/images/9-pdf.zh-CN.png` — 一键保存与预览外观相同的 PDF。图表、表格、公式和着色的代码都会原样放入，纸张为 A4 或 Letter。
-3. `docs/images/11-ai-chat.zh-CN.png` — 打开 AI 聊天的回答，会按原意显示：`\(…\)`、`\[…\]` 公式、括号旁的粗体和每行的换行。修正的内容会显示在通知栏中，也可以撤销。
+3. `docs/images/11-ai-chat.zh-CN.png` — 打开 AI 聊天的回答，会尽量还原显示：`\(…\)`、`\[…\]` 公式、括号旁的粗体和每行的换行。修正的内容会显示在通知栏中，也可以撤销。
 4. `docs/images/1-main.zh-CN.png` — 在左边写 Markdown，右边的预览立即更新。用 STL 写的 3D 模型也可以拖动旋转。
 5. `docs/images/2-dark.zh-CN.png` — 白天和夜间的配色跟随 Windows 的设置，也可以在“设置”中用“显示”按钮选择。打印和 PDF 始终使用白色页面。
 6. `docs/images/3-preview-window.zh-CN.png` — 把预览放到第二个显示器上，写作和阅读分开进行。预览会跟随编辑滚动。

@@ -230,7 +230,7 @@ internal static class PlainTextExport
         var items = new List<string>();
         foreach (var item in list.OfType<ListItemBlock>())
         {
-            var marker = list.IsOrdered ? $"{number++}{list.OrderedDelimiter} " : context.Pick("・", "• ", "・");
+            var marker = list.IsOrdered ? $"{number++}{list.OrderedDelimiter} " : context.Pick("・", "• ", "• ");
             var body = Children(item, context, list.IsLoose ? "\n\n" : "\n");
             items.Add(Indent(body, marker, new string(' ', list.IsOrdered ? marker.Length : 2)));
         }

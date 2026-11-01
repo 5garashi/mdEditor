@@ -12,6 +12,26 @@
 
 The version number lives in [VERSION](./VERSION). Add each new version at the top, with a `## version — date` heading (used as the GitHub Release notes).
 
+## 1.0.20 — 2026-11-01
+
+- プレビューと HTML の表で、長い文章の列があると、隣の列が 1 文字の幅まで細くなっていたのを直した。セルの中は GitHub と同じく語の途中で折り返さず（表は横にスクロールする）、印刷と PDF・PNG・Word への保存では、これまでどおり語の途中でも折り返す。
+- 英語と簡体字中国語の訳を見直した（別の AI によるレビュー）。中国語の画面では、エラー文の言い回し、中黒「・」と半角「:」、テーマの説明（「浅色」「深色」）、見出しの段階の飛びの説明を直し、テキストへの書き出し（記号なし）のリストの印を「・」から「•」にした。ストアの掲載文・README・サンプルも、誤解を招く言い回しや、画面の表示と違う設定名を直した。訳を足すときの手順とレビューの依頼文を docs/translation-review.md に置き、項目のそろい・中国語に混じる日本語の記号・文書に書いた画面の名前を機械的に確かめるテストを appAutoTester に加えた。
+
+- Tables in the preview and in HTML: a column with long text no longer squeezes the column beside it to one character. As on GitHub, cells do not break words (the table scrolls); printing and saving as PDF, PNG, or Word still break them, as before.
+- The English and Simplified Chinese wording was reviewed (by another AI). In the Chinese interface, error messages, Japanese punctuation (・ and a half-width colon), the theme description (浅色 and 深色), and the heading-level hint are fixed, and saving as plain text marks list items with "•" instead of "・". The Store listing, READMEs, and samples no longer overstate, and name settings as the screen does. docs/translation-review.md sets out how translations are checked, with a review request to reuse, and appAutoTester gains tests for matching entries, Japanese marks in Chinese text, and screen names in the documents.
+
+## 1.0.19 — 2026-11-01
+
+- 3D モデル（```stl）で、solid の名前の後ろに書いた `#RRGGBB` の色が使われていなかったのを直した（1.0.12 から。色を取り出す式に、見えない制御文字が入っていた）。部品ごとに色を変えられる。
+- 3D モデルの背景の色を、STL の中に書けるようにした。面のない `solid background #F9EFCB`（続けて `endsolid background`）を書くと、その色が背景になり、その solid は描かない。書かなければ、これまでどおりの暗い緑。淡い背景にするときは、部品の色も背景の上で見える色にする。
+- サンプルに「主な機能」を加えた。図・数式・3D モデル・画像・地図で mdEditor の機能を一通り見せる文書で、表示の言語のもの（samples/key-features.md・.en.md・.zh-CN.md）を開く。
+- サンプルの「図と数式」に、シーケンス図・円グラフ・Graphviz の図と数式を足し、「基本の書き方」に、取り消し線・入れ子のリスト・チェックリスト・注意書き・表・画像・折りたたみ・図を足した。図の色は Identity の配色にした。
+
+- 3D models (```stl): a `#RRGGBB` after a solid's name was never used (since 1.0.12; a hidden control character had got into the pattern that reads it). Each part now takes its color.
+- A 3D model's background color can be written in the STL: an empty `solid background #F9EFCB` (followed by `endsolid background`) sets the background and is not drawn. Without it, the background stays dark green. With a light background, give the parts colors that show on it.
+- A new "Key features" sample: a tour of mdEditor through diagrams, math, a 3D model, images, and a map, opened in the display language (samples/key-features.md, .en.md, .zh-CN.md).
+- The "Diagrams and math" sample gains a sequence diagram, a pie chart, a Graphviz diagram, and more math; "Basic writing" gains strikethrough, nested lists, a checklist, alerts, a table, an image, details, and a diagram. Diagram colors follow the Identity palette.
+
 ## 1.0.18 — 2026-10-31
 
 - タグ付きの PDF（Word・Acrobat・LibreOffice・ブラウザーなどで作ったもの）を開いたときに、PDF の中のタグ（見出し・段落・箇条書き・表と、その読む順）を使うようにした。ページの文字のほとんどがタグに入っていれば、読む順・段落の区切り・見出しの段階（H1〜H6）・箇条書きをタグのとおりにし、罫線のない表も Markdown の表に戻し、柱やページ番号として印の付いた文字は省く。次のページに続いた箇条書きや段落の続きも、正しい場所に読む。タグのない PDF や、タグが文字を覆っていないページは、これまでどおり文字の位置から読む。図・数式・罫線のある表・コードは、タグがあってもこれまでどおり。

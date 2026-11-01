@@ -640,7 +640,7 @@ no language: def print const SELECT
 
 ### 21-1. 3D モデル（STL）
 
-本体（`solid cube`）と文字（`solid letters`）を別の solid にすると、mdEditor では 1 つ目をクリーム、2 つ目以降を volt で塗る（名前に `#RRGGBB` を書くとその色）。GitHub では 1 色で表示され、文字は凹凸で見える。
+本体（`solid cube`）と文字（`solid letters`）を別の solid にすると、mdEditor では 1 つ目をクリーム、2 つ目以降を volt で塗る（名前に `#RRGGBB` を書くとその色。面のない `solid background #RRGGBB` を書くと背景の色）。GitHub では 1 色で表示され、文字は凹凸で見える。
 
 ```stl
 solid cube
