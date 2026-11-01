@@ -19,12 +19,12 @@ SPDX-License-Identifier: MIT
 | YouTube 简体中文 | 同上 | [视频](https://www.youtube.com/watch?v=V60PrM1Y6pA) |
 | YouTube 旧動画（1.0.15） | 残した。説明に新しい版へのリンクが入ったことを確認 | — |
 | Zenn | 連携リポジトリの記事 1 件を更新（版 1.8.0）。公開ページに新しい動画と「2026-11-01更新」を確認 | [記事](https://zenn.dev/5garashi_com/articles/mdeditor-diagrams-math-pdf) |
-| X | 未投稿。所有者が手で投稿（本文 x-ja.txt、画像 social-ja.png、代替テキスト alt-ja.txt） | — |
-| LinkedIn | 未投稿。所有者が手で投稿（本文 post-en.txt、画像 social-en.png、代替テキスト alt-en.txt） | — |
-| TikTok 日英中 | 未投稿。所有者が手で投稿（縦型動画 mdEditor-vertical-*.mp4、説明 post-*.txt、AI 生成コンテンツの表示） | — |
+| X（@5garashi_com） | 15:56 に本文とリンクの投稿（画像なし、所有者が共有リンクから投稿）。16:27 にスレッド：1件目はタイトルと短縮版の動画（2:00）、2件目は本文・リンク・AI 支援の開示・BGM のクレジット。ログインした画面で表示と動画の再生ボタンを確認（X の公開 oEmbed は取得できず） | [投稿](https://x.com/5garashi_com/status/2116786332190339544) / [スレッド](https://x.com/5garashi_com/status/2116794339993268698) / [返信](https://x.com/5garashi_com/status/2116794341788365003) |
+| LinkedIn | 記事（Write article）。タイトル → YouTube 英語動画の埋め込み → 本文（見出し・20 機能・制限・AI 支援の開示・クレジット）。ログインしない状態で本文とクレジットを、ログインした画面で埋め込みの表示を確認 | [記事](https://www.linkedin.com/pulse/mdeditor-1020-open-pdfs-ai-chat-answers-markdown-motomasa-igarashi-5pxgc/) |
+| TikTok 日英中 | 縦型動画 3 本。公開範囲「誰でも」、「投稿コンテンツを開示 → あなたのブランド」と「AI 生成コンテンツ」をオン。TikTok Studio の一覧と、ログインしない状態の oEmbed で確認 | [日本語](https://www.tiktok.com/@5garashi_com/video/7703101767977864456) / [English](https://www.tiktok.com/@5garashi_com/video/7703101901339954440) / [简体中文](https://www.tiktok.com/@5garashi_com/video/7703101521927474440) |
 | Reddit | 対象外。アカウント BAN の異議申し立ての結果待ち | — |
 
-## 手で投稿する理由
+## 自動操作について
 
 2026-11-01 に各媒体の規約を確認しました。
 
@@ -33,6 +33,8 @@ SPDX-License-Identifier: MIT
 - TikTok：利用規約（2025-12-01 更新、その他の地域版）で、自動スクリプトによるサービスとのやり取りを禁止。
 
 YouTube は公式 API、Zenn は公式の GitHub 連携、紹介サイトは自社リポジトリの GitHub Pages で公開しました。
+
+X・LinkedIn・TikTok は、上の規約を所有者に伝えたうえで、所有者が「リスクを承知で自動操作」を選びました。本文の入力・ファイルの添付・設定（TikTok の開示と AI 生成の表示）を画面の自動操作で行い、投稿ボタンは所有者が押しました。今回限りの判断として記録します。
 
 ## AI 支援の開示
 
