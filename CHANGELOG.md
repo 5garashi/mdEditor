@@ -12,6 +12,14 @@
 
 The version number lives in [VERSION](./VERSION). Add each new version at the top, with a `## version — date` heading (used as the GitHub Release notes).
 
+## 1.0.20 — 2026-11-01
+
+- プレビューと HTML の表で、長い文章の列があると、隣の列が 1 文字の幅まで細くなっていたのを直した。セルの中は GitHub と同じく語の途中で折り返さず（表は横にスクロールする）、印刷と PDF・PNG・Word への保存では、これまでどおり語の途中でも折り返す。
+- 英語と簡体字中国語の訳を見直した（別の AI によるレビュー）。中国語の画面では、エラー文の言い回し、中黒「・」と半角「:」、テーマの説明（「浅色」「深色」）、見出しの段階の飛びの説明を直し、テキストへの書き出し（記号なし）のリストの印を「・」から「•」にした。ストアの掲載文・README・サンプルも、誤解を招く言い回しや、画面の表示と違う設定名を直した。訳を足すときの手順とレビューの依頼文を docs/translation-review.md に置き、項目のそろい・中国語に混じる日本語の記号・文書に書いた画面の名前を機械的に確かめるテストを appAutoTester に加えた。
+
+- Tables in the preview and in HTML: a column with long text no longer squeezes the column beside it to one character. As on GitHub, cells do not break words (the table scrolls); printing and saving as PDF, PNG, or Word still break them, as before.
+- The English and Simplified Chinese wording was reviewed (by another AI). In the Chinese interface, error messages, Japanese punctuation (・ and a half-width colon), the theme description (浅色 and 深色), and the heading-level hint are fixed, and saving as plain text marks list items with "•" instead of "・". The Store listing, READMEs, and samples no longer overstate, and name settings as the screen does. docs/translation-review.md sets out how translations are checked, with a review request to reuse, and appAutoTester gains tests for matching entries, Japanese marks in Chinese text, and screen names in the documents.
+
 ## 1.0.19 — 2026-11-01
 
 - 3D モデル（```stl）で、solid の名前の後ろに書いた `#RRGGBB` の色が使われていなかったのを直した（1.0.12 から。色を取り出す式に、見えない制御文字が入っていた）。部品ごとに色を変えられる。

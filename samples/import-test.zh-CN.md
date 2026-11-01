@@ -158,7 +158,7 @@
 
 ### 2.14 word-headings-test.en.docx（没有标题样式的 Word）
 
-期待的结果：
+预期结果：
 
 - 通知栏在“已将 Word 文档转换为 Markdown 打开”之后，显示“由于文档没有标题样式，已根据文字大小把 3 个段落设为标题。”。
 - “A Word document without heading styles”（20 磅粗体）成为 `#` 标题，“A large bold heading”（14 磅粗体）成为 `##`，“A large heading, not bold”（14 磅）成为 `###`。
@@ -167,7 +167,7 @@
 
 ### 2.15 pdf-test.en.pdf
 
-期待的结果：
+预期结果：
 
 - 通知栏显示“已将 PDF 转换为 Markdown 打开”，文件名变为 pdf-test.en.md。
 - “Opening a PDF”成为 `#` 标题，“Headings and paragraphs”“Image”“Table”“Code”“Bullets”“To do”“Figure”成为 `##`，“A smaller heading”成为 `###`。
@@ -186,7 +186,7 @@
 
 仿照官方指南制作的 PDF：正文为 Times，带编号的标题为同样大小的 Helvetica。
 
-期待的结果：
+预期结果：
 
 - 目录按 PDF 的缩进成为嵌套的列表（`- 1\. Introduction …… 2`，其下为 `  - 2.1 Definitions …… 2`，再下为 `    - (1) First condition …… 3`）。目录的行不会成为标题。
 - “1. Introduction”“2. Requirements”成为 `##` 标题，“2.1 Definitions”成为 `###`，“(1) First condition”“(2) Second condition”成为 `####`。
@@ -203,7 +203,7 @@
 | --- | --- |
 | Markdown | 将文档本身保存为 .md；之后“保存”会写入该文件 |
 | 文本（原样） | 将 Markdown 按原样保存为 .txt |
-| 文本（去掉标记） | 去掉标题和强调的标记；界面语言为中文时，列表用“・”，表格以制表符分隔，链接变为“文字（地址）”，图表变为“［图］”。正在编辑的文件不变 |
+| 文本（去掉标记） | 去掉标题和强调的标记；界面语言为中文时，列表用“•”，表格以制表符分隔，链接变为“文字（地址）”，图表变为“［图］”。正在编辑的文件不变 |
 | PDF | 将排版后的预览保存为 PDF |
 | HTML | 外观相同的单个 HTML 文件 |
 | PNG | 将预览保存为图片；长文档分为 名称-1.png、名称-2.png 等 |

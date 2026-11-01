@@ -87,7 +87,7 @@ mindmap
 | :--- | :--- | :---: |
 | **Open** | PDF, Word, web pages, email, CSV, JSON, XML and Jupyter notebooks, as Markdown | <kbd>Ctrl</kbd>+<kbd>O</kbd> |
 | **Write** | Colors as you type, and wavy lines under mistakes | <kbd>F1</kbd> |
-| **View** | Diagrams, math, 3D models and maps, shown at once in the preview beside | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>2</kbd> |
+| **View** | Diagrams, math, 3D models and maps, shown at once in the preview beside the editor | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>2</kbd> |
 | **Share** | A PDF that looks just like the preview, in one click | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> |
 
 ---
@@ -132,7 +132,7 @@ flowchart LR
 ```
 
 > [!NOTE]
-> Importing works as far as it can. Multi-column layouts, tables without rules and scanned PDFs do not come back as they were. Diagrams and math become images.
+> Importing keeps what it can, within these limits. Multi-column layouts, tables without rules and scanned PDFs do not come back as they were. Diagrams and math become images.
 
 ---
 
@@ -408,7 +408,7 @@ flowchart LR
 - [ ] Make a PDF with <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>
 
 > [!IMPORTANT]
-> Your documents are never sent anywhere. Converting to PDF and Word happens on your PC, too. No ads, no tracking, no account.
+> Your documents are never sent anywhere. Converting to and from PDF and Word happens on your PC, too. No ads, no tracking, no account.
 
 ---
 

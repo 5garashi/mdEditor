@@ -1612,6 +1612,9 @@ body.capture-export .preview-content {
   border: 1px solid var(--document-foreground);
   text-align: left;
   vertical-align: top;
+  /* As on GitHub, a word keeps a column at least its width; "anywhere" let a
+     column with long text squeeze its neighbor to one character. The table scrolls. */
+  overflow-wrap: break-word;
 }
 
 .preview-content th {
@@ -1894,10 +1897,14 @@ body.preview-focused .pane-heading {
   padding-inline: 18px;
 }
 
-/* Saved pages (PDF, PNG, Word) cannot scroll, so long code lines wrap instead. */
+/* Saved pages (PDF, PNG, Word) cannot scroll, so long code lines and table words wrap instead. */
 body.capture-export .preview-content pre {
   overflow: visible;
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+body.capture-export .preview-content :is(th, td) {
   overflow-wrap: anywhere;
 }
 
@@ -1906,6 +1913,10 @@ body.capture-export .preview-content pre {
   .preview-content pre {
     overflow: visible;
     white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .preview-content :is(th, td) {
     overflow-wrap: anywhere;
   }
 
