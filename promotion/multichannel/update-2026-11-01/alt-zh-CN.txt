@@ -1,0 +1,1 @@
+mdEditor 1.0.20 介绍图片。左：修正后的 AI 聊天回答。右：把 PDF 作为 Markdown 打开，与原 PDF 并排。把 PDF 和 Word 作为 Markdown 打开，尽量还原 AI 聊天回答，保存与预览一致的 PDF；无广告、无跟踪、无需账户。
