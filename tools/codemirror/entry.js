@@ -16,9 +16,11 @@ import { HighlightStyle, Language, defineLanguageFacet, syntaxHighlighting } fro
 import { Tag, styleTags, tags } from "@lezer/highlight";
 import { GFM, parser } from "@lezer/markdown";
 
-// Math as mdEditor writes it: $…$, $$…$$, \(…\) and \[…\]. A single $ needs no space inside
+// Math as mdEditor writes it: $…$, $$…$$, \(…\) and \[…\], and \\(…\\) and \\[…\\] as written
+// for pages that find math after Markdown has made the HTML. A single $ needs no space inside
 // its ends and no digit after it, so prices ($5 and $10) stay text; \$ never closes one.
-const mathDelimiters = [["$$", "$$"], ["\\[", "\\]"], ["\\(", "\\)"], ["$", "$"]];
+const mathDelimiters = [["$$", "$$"], ["\\\\[", "\\\\]"], ["\\\\(", "\\\\)"], ["\\[", "\\]"], ["\\(", "\\)"], ["$", "$"]];
+const latexOpen = new Set(["\\[", "\\(", "\\\\[", "\\\\("]);
 const MathSyntax = {
   defineNodes: [
     { name: "Math", style: tags.special(tags.string) },
@@ -35,9 +37,9 @@ const MathSyntax = {
         const single = open === "$";
         if (single && /^\$\s/.test(rest)) return -1;
         let end = rest.indexOf(close, open.length);
-        while (end > 0 && rest[end - 1] === "\\" && open !== "\\(" && open !== "\\[") end = rest.indexOf(close, end + 1);
+        while (end > 0 && rest[end - 1] === "\\" && !latexOpen.has(open)) end = rest.indexOf(close, end + 1);
         if (single && end > 0 && (/\s/.test(rest[end - 1]) || /\d/.test(rest[end + 1] ?? ""))) return -1;
-        if (end <= open.length || (open !== "$$" && open !== "\\[" && rest.slice(0, end).includes("\n"))) return -1;
+        if (end <= open.length || (open !== "$$" && !open.endsWith("[") && rest.slice(0, end).includes("\n"))) return -1;
         return cx.addElement(cx.elt("Math", pos, pos + end + close.length, [
           cx.elt("MathMark", pos, pos + open.length),
           cx.elt("MathMark", pos + end, pos + end + close.length)

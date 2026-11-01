@@ -21,7 +21,7 @@ tags: [markdown, windows, wpf, webview2]
 
 [English](./README.md) | [日本語](./README.ja.md) | 简体中文
 
-版本 / Version: 1.0.20（更改记录 / Changes: [CHANGELOG.md](./CHANGELOG.md)）
+版本 / Version: 1.0.21（更改记录 / Changes: [CHANGELOG.md](./CHANGELOG.md)）
 
 ## 特点
 
@@ -267,7 +267,7 @@ mdEditor.exe --lang ja "C:\docs\memo.md"
 
 文本的编码会自动识别：UTF-8（有无 BOM）、UTF-16 或 Windows 的默认代码页（日语 Windows 为 Shift_JIS，简体中文 Windows 为 GBK）。保存时保持原来的编码；如果有字符无法用该编码保存，会询问是否保存为 UTF-8。用推测的编码打开非 UTF-8 文件，或有字节无法读取（显示为 �）时，工具栏下方会显示提示；覆盖这样的文件之前会先确认，因为原文件中的这些部分会丢失。对于 EUC-JP 或 ISO-2022-JP 文件，请选择编码后重新打开。保存时先写入临时文件再替换，因此中途失败也不会损坏原文档。
 
-` ```mermaid ` 代码块用 [Mermaid](https://mermaid.js.org/) 绘制为图表（流程图、时序图、类图、状态图、ER 图、甘特图、饼图等）。`$...$` 和 `$$...$$` 中的公式用 [KaTeX](https://katex.org/) 显示。两者都随应用一起提供，因此离线也能使用，并会包含在 PDF 中。写了语言名的代码块（如 ` ```python `）用 [highlight.js](https://highlightjs.org/) 着色（约 40 种语言，包括 Python、JavaScript、TypeScript、C#、C/C++、Java、PowerShell、shell、SQL、HTML、CSS、JSON、YAML 和 diff）。颜色跟随预览的白天和夜间配色，保存为 PDF、PNG、HTML 或 Word 时也会保留。没有语言名的代码块不着色。语法有误的图表会显示错误信息和原始代码。可以用 [samples/diagram-test.zh-CN.md](./samples/diagram-test.zh-CN.md)（日语：[samples/diagram-test.md](./samples/diagram-test.md)，英语：[samples/diagram-test.en.md](./samples/diagram-test.en.md)）检查显示效果。
+` ```mermaid ` 代码块用 [Mermaid](https://mermaid.js.org/) 绘制为图表（流程图、时序图、类图、状态图、ER 图、甘特图、饼图等）。`$...$` 和 `$$...$$` 中的公式用 [KaTeX](https://katex.org/) 显示。`\(...\)` 和 `\[...\]`（AI 聊天和论文的写法），以及 `\\(...\\)` 和 `\\[...\\]`（为先把 Markdown 转为 HTML 再查找公式的页面而写的写法，其中的 `\_` 按 `_` 读取），以及没有用 `$$` 括起来的 `\begin{align}` … `\end{align}`（`equation`、`alignat`、`gather` 也一样，Jupyter 等的写法）也显示为公式。KaTeX 不支持的 `\label{…}` 不显示。两者都随应用一起提供，因此离线也能使用，并会包含在 PDF 中。写了语言名的代码块（如 ` ```python `）用 [highlight.js](https://highlightjs.org/) 着色（约 40 种语言，包括 Python、JavaScript、TypeScript、C#、C/C++、Java、PowerShell、shell、SQL、HTML、CSS、JSON、YAML 和 diff）。颜色跟随预览的白天和夜间配色，保存为 PDF、PNG、HTML 或 Word 时也会保留。没有语言名的代码块不着色。语法有误的图表会显示错误信息和原始代码。可以用 [samples/diagram-test.zh-CN.md](./samples/diagram-test.zh-CN.md)（日语：[samples/diagram-test.md](./samples/diagram-test.md)，英语：[samples/diagram-test.en.md](./samples/diagram-test.en.md)）检查显示效果。
 
 ### 支持的图表
 

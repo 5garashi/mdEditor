@@ -1930,10 +1930,10 @@
       pattern: String.raw`^[ \t]*\\\[[ \t]*\n([\s\S]+?)\n[ \t]*\\\][ \t]*$`, replacement: "$$$$\n$1\n$$$$",
       name: { ja: "ChatGPT などの別行の \\[ … \\] を $$ の数式にする（GitHub でも数式になる）", en: "Make \\[ … \\] on lines of their own (ChatGPT and others) into $$ math (math on GitHub too)", zh: "将 ChatGPT 等单独成行的 \\[ … \\] 改为 $$ 公式（在 GitHub 上也是公式）" } },
     { id: "latex-display-inline", when: "ask", skipMath: false,
-      pattern: String.raw`\\\[\s*((?:(?!\\\])[^\n])*?[\\^_=<>{}](?:(?!\\\])[^\n])*?)\s*\\\]`, replacement: "$$$$$1$$$$",
+      pattern: String.raw`(?<!\\)\\\[\s*((?:(?!\\\])[^\n])*?[\\^_=<>{}](?:(?!\\\])[^\n])*?)\s*\\\]`, was: [String.raw`\\\[\s*((?:(?!\\\])[^\n])*?[\\^_=<>{}](?:(?!\\\])[^\n])*?)\s*\\\]`], replacement: "$$$$$1$$$$",
       name: { ja: "文の中の \\[ … \\] を $$ … $$ にする", en: "Make \\[ … \\] in a sentence into $$ … $$", zh: "将句中的 \\[ … \\] 改为 $$ … $$" } },
     { id: "latex-inline", when: "ask", skipMath: false,
-      pattern: String.raw`\\\(\s*((?:(?!\\\))[^\n])*?[\\^_=<>{}](?:(?!\\\))[^\n])*?)\s*\\\)`, replacement: "$$$1$$",
+      pattern: String.raw`(?<!\\)\\\(\s*((?:(?!\\\))[^\n])*?[\\^_=<>{}](?:(?!\\\))[^\n])*?)\s*\\\)`, was: [String.raw`\\\(\s*((?:(?!\\\))[^\n])*?[\\^_=<>{}](?:(?!\\\))[^\n])*?)\s*\\\)`], replacement: "$$$1$$",
       name: { ja: "ChatGPT などの \\( … \\) を $ … $ にする", en: "Make \\( … \\) (ChatGPT and others) into $ … $", zh: "将 ChatGPT 等的 \\( … \\) 改为 $ … $" } },
     { id: "dollar-spaces", when: "ask",
       pattern: String.raw`(?<![\\$])\$[ \t]+([^$\n]*?[\\^_=][^$\n]*?)[ \t]+\$(?!\$)`, replacement: "$$$1$$",
@@ -1973,11 +1973,13 @@
     const enabled = rule.enabled !== false;
     if (builtinFixes[rule.id]) return { id: rule.id, builtin: true, when, enabled };
     if (typeof rule.pattern !== "string" || !rule.pattern) return null;
+    // A rule that came with mdEditor, as an older mdEditor wrote it, takes its pattern now.
+    const preset = fixPresets.find(({ id }) => id === rule.id);
     return {
       id: rule.id,
-      ...(fixPresets.some(({ id }) => id === rule.id) ? { preset: true } : {}),
+      ...(preset ? { preset: true } : {}),
       ...(typeof rule.name === "string" && rule.name.trim() ? { name: rule.name.trim() } : {}),
-      pattern: rule.pattern,
+      pattern: preset?.was?.includes(rule.pattern) ? preset.pattern : rule.pattern,
       replacement: typeof rule.replacement === "string" ? rule.replacement : "",
       ignoreCase: Boolean(rule.ignoreCase),
       multiline: Boolean(rule.multiline),
@@ -4534,7 +4536,10 @@
         .replace(/\\[)\]]$/, "")
         .trim()
         // GitHub also writes inline math as $`x`$; the backticks are not part of it.
-        .replace(/^`([\s\S]*)`$/, "$1");
+        .replace(/^`([\s\S]*)`$/, "$1")
+        // MathJax numbers equations to refer to by \label{…}; KaTeX has no \label and would
+        // show it as text.
+        .replace(/\\label\{[^{}]*\}/g, "");
       try {
         // \[x\] in a line is marked math-display by the host and shown on a line of its own.
         window.katex.render(source, element, {
