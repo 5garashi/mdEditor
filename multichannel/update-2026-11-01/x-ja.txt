@@ -1,0 +1,5 @@
+mdEditor 1.0.20（Windows・無料）
+PDFとWordをMarkdownとして開き、AIチャットの回答も書き方の癖を直して表示。プレビューどおりのPDFに保存できます。
+https://5garashi.github.io/mdEditor/
+AI（Claude・Codex）の支援で開発しています。
+#mdEditor #Markdown

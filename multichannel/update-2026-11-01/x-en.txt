@@ -1,0 +1,4 @@
+mdEditor 1.0.20 for Windows (free): open PDF and Word files as Markdown, fix the formatting quirks of AI chat answers, and save a PDF that looks like the preview.
+https://5garashi.github.io/mdEditor/en.html
+Built with AI assistance (Claude, Codex).
+#Markdown #Windows

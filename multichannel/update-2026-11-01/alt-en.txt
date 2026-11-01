@@ -1,0 +1,1 @@
+mdEditor 1.0.20 introduction image. Left: an AI chat answer after its fixes. Right: a PDF opened as Markdown beside the original PDF. Open PDF and Word files as Markdown, reproduce AI chat answers as closely as possible, save a PDF that looks like the preview; no ads, no tracking, no account.
