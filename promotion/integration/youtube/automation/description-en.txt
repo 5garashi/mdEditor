@@ -1,36 +1,45 @@
-Now in Simplified Chinese. Create a new document from the clipboard. Improved startup.
+Open PDF and Word files as Markdown. AI chat answers open with their formatting quirks fixed. Save a PDF that looks like the preview, in one click.
 
-Write beside a live preview. Render Mermaid, Graphviz and math offline. Rotate 3D, adjust images, and share PDF, Word or ZIP.
+Write beside a live preview. Mermaid, Graphviz, math, 3D models and maps, offline. Markdown mistakes are underlined, and Ctrl+Shift+W aligns table columns.
 
-Start with rotating 3D, tour diagram-test from top to bottom, then explore the main features, including image drag-and-drop, 50% width and centered alignment.
+Starts with a rotating 3D model, then shows an AI chat answer being fixed, PDF import and export, and the Markdown check, followed by a top-to-bottom tour of the key features and diagram samples.
 
+00:00 Intro and 3D model
+00:12 Fixing an AI chat answer
+00:25 PDF import and export
+00:52 Markdown check and tables
+01:02 Key features
+01:57 Diagrams and more features
+
+- Open PDF and Word files as Markdown, offline
+- Headings, lists, tables, code, and pictures come back from PDFs
+- Save as PDF in one click, looking as the preview does
+- Save as Word, HTML, PNG, CSV, JSON, text, or a ZIP
 - Live preview beside your text, scrolling together
+- Markdown from AI chats reproduced as closely as possible
 - Preview on a second display, following the line you edit
-- Also a viewer: the preview fills the window
+- Markdown colored as you type, with a check for mistakes
+- Bold, italic, lists, tables, and heading numbers in one key
 - Mermaid and Graphviz diagrams and math, offline
-- 3D models (STL) you turn with the mouse
-- Maps (GeoJSON), with OpenStreetMap when you allow it
-- Colored code for about 40 languages, kept in PDF and Word
-- Table of contents from your headings, updated with one press
+- 3D models (STL) and maps (GeoJSON), offline
+- Colored code for about 40 languages, and a table of contents
 - GitHub-style alerts, front matter, and collapsible sections
-- Videos play right in the preview
-- One-click PDF that looks exactly like the preview
-- Opens Word, HTML, e-mail, CSV, JSON, Jupyter Notebooks, and images
-- Saves as HTML, PNG, Word, CSV, JSON, Jupyter Notebook, or text; sharing ZIP
-- Drop or paste images; adjust their size and centered alignment
+- Also opens HTML, e-mail, CSV, JSON, Jupyter Notebooks, and images
+- Drop or paste pictures straight into your document
+- Copy anything, press a key, and it opens as a new document
 - Safe saving and automatic crash recovery
-- Create a new document from copied text, pictures or files
-- Internet images, videos, and maps load only when you allow them
-- No ads, no tracking, no account
-- Everything from the keyboard, with custom shortcuts
-- Screen reader support, read-aloud, and dark mode
+- Opens Shift_JIS, EUC-JP, and UTF-8 files correctly
+- No ads, no tracking, no account; web content loads only when you allow it
+- Keyboard, screen reader, read-aloud, and dark mode support
 
 https://5garashi.github.io/mdEditor/en.html
 
-Windows only. Word import does not preserve colors or layout. Internet images, videos and detailed maps load only with permission. Recorded from source build 1.0.15.
+Windows only, free. PDF import is best effort: multi-column layouts and scanned PDFs do not come back. AI chat answers are reproduced as closely as possible. Recorded from source build 1.0.20.
 
-Clipboard shortcut: optional; created only after confirmation in Settings. Startup performance depends on your PC.
+Developed and produced with AI assistance (Claude, Codex). The music was composed and generated with Codex.
 
-Music: Light Steps — 5garashi.com Design Office / Codex, CC BY 4.0 (excerpt repeated, ending fade).
-Sample film: Big Buck Bunny © 2008 Blender Foundation, CC BY 3.0. https://bigbuckbunny.org/
-Maps: © OpenStreetMap contributors.
+Music: "Light Steps" by 5garashi.com Design Office (composed and generated with Codex), CC BY 4.0. Changes: excerpt, looped, faded out at the end.
+https://5garashi.github.io/5garashi-identity/ / https://creativecommons.org/licenses/by/4.0/
+Sample film: "Big Buck Bunny" © 2008 Blender Foundation, CC BY 3.0. Shown as it plays inside a sample document; not edited.
+https://peach.blender.org/ / https://creativecommons.org/licenses/by/3.0/
+Map data: © OpenStreetMap contributors (ODbL) https://www.openstreetmap.org/copyright

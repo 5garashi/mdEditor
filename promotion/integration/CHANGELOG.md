@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.0 — 2026-11-01
+
+- 日英中の紹介ページの動画・機能一覧と、YouTube revision 6.0.0 を 1.0.20 に更新。 / Pages and YouTube revision 6.0.0 for 1.0.20.
+
 ## 1.4.0 — 2026-10-23
 
 - 日英中の紹介・資料・YouTube導線を追加更新。 / Update trilingual presentation and publication links.

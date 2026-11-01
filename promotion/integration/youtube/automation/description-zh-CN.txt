@@ -1,36 +1,45 @@
-新增简体中文界面、从剪贴板新建文档，并改善启动速度。
+把 PDF 和 Word 作为 Markdown 打开。AI 聊天回答的格式问题也会自动修正。可以一键保存与预览一致的 PDF。
 
-一边编写，一边实时预览。离线显示 Mermaid、Graphviz 和公式；旋转 3D、调整图片，导出 PDF、Word 或分享 ZIP。
+一边编写，一边实时预览。离线显示 Mermaid、Graphviz、公式、3D 模型和地图。波浪线标出 Markdown 语法问题，Ctrl+Shift+W 对齐表格列。
 
-从旋转的 3D 模型开始，从上到下浏览 diagram-test，再演示主要功能，包括拖放图片、设为正文宽度的 50% 并居中。
+从旋转的 3D 模型开始，演示修正 AI 聊天回答、导入和导出 PDF、检查 Markdown 写法，然后从上到下浏览主要功能和图表示例。
 
-- 一边编写一边预览，两侧同步滚动
-- 独立预览窗口，可移到第二台显示器
-- 预览铺满窗口，作为阅读器使用
+00:00 开场与 3D 模型
+00:12 修正 AI 聊天回答
+00:25 PDF 导入与导出
+00:53 检查写法与对齐表格
+01:03 主要功能
+01:56 图表与更多功能
+
+- 把 PDF 和 Word 作为 Markdown 打开，在电脑中转换
+- 从 PDF 提取标题、列表、表格、代码和图片
+- 一键保存为 PDF，外观与预览一致
+- 也可保存为 Word、HTML、PNG、CSV、JSON、文本或 ZIP
+- 边写边在旁边查看效果，滚动同步
+- 尽量还原 AI 聊天的 Markdown
+- 预览可放到第二个显示器上，跟随正在编辑的行
+- 输入时着色显示，写法错误加上波浪线
+- 一个键设置粗体、斜体、列表、表格和标题编号
 - 离线显示 Mermaid、Graphviz 图表和公式
-- 用鼠标旋转 STL 3D 模型
-- GeoJSON 地图；允许后加载 OpenStreetMap
-- 约 40 种代码语言高亮，PDF、Word 保留颜色
-- 从标题生成目录，再按一次即可更新
-- GitHub 风格提示、前置元数据和折叠内容
-- 在预览中直接播放文档视频
-- 导出与预览效果一致的 PDF
-- 打开 Word、HTML、邮件、CSV、JSON、Notebook 和图片
-- 保存为 HTML、PNG、Word、CSV、JSON、Notebook、文本或分享 ZIP
-- 拖放或粘贴图片，调整大小和居中位置
-- 安全保存，意外退出后恢复自动备份
-- 从复制的文字、图片或文件新建文档
-- 网络图片、视频和地图仅在允许后加载
-- 无广告、无跟踪、无需账号
-- 支持键盘操作，自定义快捷键
-- 屏幕阅读器、文档朗读和深色模式
+- 离线显示 3D 模型（STL）和地图（GeoJSON）
+- 约 40 种语言的代码着色，并可根据标题生成目录
+- 与 GitHub 相同的提示框、前置元数据和折叠
+- 也可打开 HTML、电子邮件、CSV、JSON、Jupyter Notebook 和图像
+- 图片拖放或粘贴即可放入文档
+- 复制后按一个键，即可作为新文档打开
+- 安全保存，异常退出后自动恢复
+- 正确打开 UTF-8、GBK、Shift_JIS 和 EUC-JP 文件
+- 没有广告、没有跟踪、不需要账户；网络内容只在允许时加载
+- 支持键盘操作、屏幕阅读器、朗读和深色模式
 
 https://5garashi.github.io/mdEditor/zh-CN.html
 
-仅支持 Windows。导入 Word 时不保留颜色和排版。网络图片、视频和详细地图仅在允许后加载。使用源代码构建版 1.0.15 录制。
+仅支持 Windows，免费。PDF 导入会尽量转换，分栏排版和扫描 PDF 无法还原。AI 聊天回答会尽量还原。使用源代码构建版 1.0.20 录制。
 
-Clipboard shortcut: optional; created only after confirmation in Settings. Startup performance depends on your PC.
+开发和视频制作使用了 AI 辅助（Claude、Codex）。背景音乐由 Codex 作曲并生成音源。
 
-Music: Light Steps — 5garashi.com Design Office / Codex, CC BY 4.0 (excerpt repeated, ending fade).
-Sample film: Big Buck Bunny © 2008 Blender Foundation, CC BY 3.0. https://bigbuckbunny.org/
-Maps: © OpenStreetMap contributors.
+背景音乐：“Light Steps”，5garashi.com Design Office（作曲与音源生成：Codex），CC BY 4.0。节选、循环播放，结尾淡出。
+https://5garashi.github.io/5garashi-identity/ / https://creativecommons.org/licenses/by/4.0/
+示例影片：“Big Buck Bunny” © 2008 Blender Foundation，CC BY 3.0。在示例文档中播放，未经编辑。
+https://peach.blender.org/ / https://creativecommons.org/licenses/by/3.0/
+地图数据：© OpenStreetMap contributors（ODbL）https://www.openstreetmap.org/copyright

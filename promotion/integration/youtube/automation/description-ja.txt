@@ -1,36 +1,45 @@
-簡体字中国語に対応。クリップボードから新規作成。起動処理も改善。
+PDFとWordをMarkdownとして開けます。AIチャットの回答も、書き方の癖を直して表示。プレビューどおりのPDFに、ワンクリックで保存できます。
 
-書きながら横で確認。Mermaid・Graphviz・数式をオフラインで表示。3Dを回し、画像を調整し、PDF・Word・ZIPで共有。
+書きながら横で仕上がりを確認。Mermaid・Graphviz・数式・3Dモデル・地図をオフラインで表示。書き間違いには波線、表は Ctrl+Shift+W で整えます。
 
-回転する3Dから始まり、diagram-testを上から下へ閲覧し、主要機能を実演。画像のドロップ・50％幅・中央揃えも紹介します。
+回転する3Dモデルから始まり、AIチャットの回答の修正、PDFの取り込みと書き出し、書き方の確認を実演。そのあと、主な機能と図のサンプルを上から下へ紹介します。
 
+00:00 はじめに・3Dモデル
+00:11 AIチャットの回答を直す
+00:25 PDFの取り込みと書き出し
+00:52 書き方の確認と表の整形
+01:03 主な機能
+01:57 図と詳細機能
+
+- PDF や Word を Markdown として開ける。PC の中だけで変換
+- PDF から見出し・箇条書き・表・コード・画像を取り出す
+- ワンクリックで PDF に保存。プレビューと同じ見た目のまま
+- Word・HTML・PNG・CSV・JSON・テキスト・ZIP にも保存
 - 書きながら横で仕上がりを確認。スクロールも連動
+- AI のチャットの Markdown も、できる範囲で再現
 - プレビューを 2 台目のディスプレイに。編集中の行を表示
-- ビューアーとしても。プレビューをウィンドウいっぱいに
+- 書くそばから色分けし、書き間違いに波線を引く
+- 太字・斜体・リスト・表・見出しの番号をキー 1 つで
 - Mermaid・Graphviz の図と数式をオフラインで表示
-- 3D モデル（STL）をマウスで回して確認
-- 地図（GeoJSON）。許可すると OpenStreetMap の地図も
-- 約 40 の言語のコードを色分け。PDF・Word にも色が残る
-- 見出しから目次を作り、ボタン 1 つで新しくする
+- 3D モデル（STL）と地図（GeoJSON）をオフラインで表示
+- 約 40 の言語のコードを色分け。見出しから目次も作る
 - GitHub と同じ注意書き・フロントマター・折りたたみ
-- 文書の中の動画をプレビューで再生
-- プレビューと同じ見た目の PDF をワンクリックで
-- Word・HTML・メール・CSV・JSON・Jupyter Notebook・画像を開ける
-- HTML・PNG・Word・CSV・JSON・Jupyter Notebook・テキストに保存・配布用ZIP
-- 画像をドロップ・貼り付け。サイズと中央揃えを調整
+- HTML・メール・CSV・JSON・Jupyter Notebook・画像も開ける
+- 画像はドロップや貼り付けで、そのまま文書に
+- コピーしてキーを押すと、新しい文書として開く
 - 安全な保存と、異常終了からの自動復元
-- コピーしたテキスト・画像・ファイルから、新しい文書を作成
-- ネット上の画像・動画・地図は、許可したときだけ読み込む
-- 広告なし、計測なし、アカウント不要
-- キーボードで全操作。ショートカットも変更できる
-- 画面読み上げ・文書の読み上げ・ダークモードに対応
+- Shift_JIS・EUC-JP・UTF-8 のファイルを正しく開ける
+- 広告なし、計測なし、アカウント不要。ネット上の内容は許可したときだけ
+- キーボード操作・画面読み上げ・文書の読み上げ・ダークモード
 
 https://5garashi.github.io/mdEditor/
 
-Windows用。Wordの取り込みでは色・配置を保持しません。ネット画像・動画・詳細地図は許可後に読み込みます。収録はソースビルド1.0.15です。
+Windows用・無料。PDFの取り込みはできる範囲での変換で、段組みやスキャンしたPDFは元に戻りません。AIチャットの回答は、できる範囲で再現します。収録はソースビルド1.0.20です。
 
-Clipboard shortcut: optional; created only after confirmation in Settings. Startup performance depends on your PC.
+開発と動画の制作に、AI（Claude・Codex）の支援を受けています。BGMはCodexで作曲・音源生成したものです。
 
-Music: Light Steps — 5garashi.com Design Office / Codex, CC BY 4.0 (excerpt repeated, ending fade).
-Sample film: Big Buck Bunny © 2008 Blender Foundation, CC BY 3.0. https://bigbuckbunny.org/
-Maps: © OpenStreetMap contributors.
+BGM：「Light Steps」5garashi.com設計事務所（作曲・音源生成：Codex）、CC BY 4.0。抜粋してくり返し、最後をフェードアウト。
+https://5garashi.github.io/5garashi-identity/ / https://creativecommons.org/licenses/by/4.0/
+サンプルの映画：「Big Buck Bunny」© 2008 Blender Foundation、CC BY 3.0。サンプル文書の中で再生（編集なし）。
+https://peach.blender.org/ / https://creativecommons.org/licenses/by/3.0/
+地図データ：© OpenStreetMap contributors（ODbL）https://www.openstreetmap.org/copyright

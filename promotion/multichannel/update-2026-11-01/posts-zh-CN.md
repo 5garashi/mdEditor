@@ -1,0 +1,48 @@
+<!--
+ファイル名 / File: posts-zh-CN.md
+概要 / Description: mdEditor 1.0.20 trilingual release material
+作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
+作成日 / Created: 2026-11-01
+版 / Version: 1.14.0
+ライセンス / License: MIT
+SPDX-License-Identifier: MIT
+-->
+# mdEditor 1.0.20 — zh-CN
+
+## 長い投稿（LinkedIn・TikTok・YouTube の説明）
+
+```text
+mdEditor 1.0.20 — 把 PDF 和 AI 聊天回答作为 Markdown 打开
+
+把 PDF 和 Word 作为 Markdown 打开。AI 聊天回答的格式问题也会自动修正。可以一键保存与预览一致的 PDF。
+
+从旋转的 3D 模型开始，演示修正 AI 聊天回答、导入和导出 PDF、检查 Markdown 写法，然后从上到下浏览主要功能和图表示例。
+
+https://5garashi.github.io/mdEditor/zh-CN.html
+
+仅支持 Windows，免费。PDF 导入会尽量转换，分栏排版和扫描 PDF 无法还原。AI 聊天回答会尽量还原。使用源代码构建版 1.0.20 录制。
+
+开发和视频制作使用了 AI 辅助（Claude、Codex）。背景音乐由 Codex 作曲并生成音源。
+
+背景音乐：“Light Steps”，5garashi.com Design Office（作曲与音源生成：Codex），CC BY 4.0。节选、循环播放，结尾淡出。
+https://5garashi.github.io/5garashi-identity/ / https://creativecommons.org/licenses/by/4.0/
+示例影片：“Big Buck Bunny” © 2008 Blender Foundation，CC BY 3.0。在示例文档中播放，未经编辑。
+https://peach.blender.org/ / https://creativecommons.org/licenses/by/3.0/
+地图数据：© OpenStreetMap contributors（ODbL）https://www.openstreetmap.org/copyright
+
+#mdEditor #Markdown #Windows #PDF
+```
+
+## 短い投稿（X）
+
+```text
+mdEditor 1.0.20 — 把 PDF 和 AI 聊天回答作为 Markdown 打开
+
+把 PDF 和 Word 作为 Markdown 打开。AI 聊天回答的格式问题也会自动修正。可以一键保存与预览一致的 PDF。
+
+https://5garashi.github.io/mdEditor/zh-CN.html
+
+开发和视频制作使用了 AI 辅助（Claude、Codex）。背景音乐由 Codex 作曲并生成音源。
+
+#mdEditor #Markdown #Windows #PDF
+```
