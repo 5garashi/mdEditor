@@ -2,4 +2,4 @@ PDFとWordをMarkdownとして開けます。AIチャットの回答も書き方
 https://5garashi.github.io/mdEditor/
 AI（Claude・Codex）の支援で開発。
 BGM：Light Steps — 5garashi.com設計事務所（Codex）CC BY 4.0
-#mdEditor #Markdown
+#Markdown
