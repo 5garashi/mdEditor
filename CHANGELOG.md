@@ -12,6 +12,20 @@
 
 The version number lives in [VERSION](./VERSION). Add each new version at the top, with a `## version — date` heading (used as the GitHub Release notes).
 
+## 1.0.21 — 2026-11-01
+
+- `\\( … \\)` と `\\[ … \\]` で囲んだ数式（Markdown を HTML にしてから数式を探すページ向けの書き方で、中の `_` も `\_` と書く）を、プレビューと PDF・HTML・Word への保存で数式として表示するようにした。ファイルは書き換えない。`\( … \)` と同じく、「ほかの表示の設定も GitHub に合わせる」のときは文字のまま。
+- `$$` で囲まない `\begin{align}` … `\end{align}`（`equation`・`alignat`・`gather` も。Jupyter など MathJax で数式を描くページの書き方）を、数式として表示するようにした。これまでは文字のままで、`{align}` が属性として読まれて消えていた。閉じていないものは空行までとし、文書の残りを巻き込まない。
+- 数式の中の `\label{…}`（KaTeX にない）を、文字として表示しないようにした。
+- 組み込みの自動修正のルール「数式の $ が抜けた書き方を数式に直す」が、`\\[ t \\to \\infty \\]` のように命令の `\` まで重ねた数式の中を書き換えて、`\\[ $t \to \infty$ \\]` のように壊していたのを直した（編集欄でもこの書き方を数式として扱う）。
+- 自動修正のルール「文の中の \[ … \] を $$ … $$ にする」と「\( … \) を $ … $ にする」が、この書き方の `\\[` の 2 つ目の `\` から当たり、`\$$ … \$$` のように壊していたのを直した（前の版が保存したルールも、読み込むときに直す）。
+
+- Math between `\\( … \\)` or `\\[ … \\]` (as written for pages that find math after Markdown has made the HTML, with `_` written as `\_` inside) now shows as math in the preview and when saving as PDF, HTML, or Word. The file is not changed. As with `\( … \)`, it stays text when the other display settings follow GitHub.
+- `\begin{align}` … `\end{align}` without `$$` around it (`equation`, `alignat`, and `gather` too, as Jupyter and other pages drawing math with MathJax write it) now shows as math. It used to stay text, and its `{align}` was even taken for an attribute and lost. One never closed ends at a blank line, not taking the rest of the document.
+- `\label{…}` in math (which KaTeX does not have) no longer shows as text.
+- The built-in fix rule "Make math that lost its $ into math" rewrote the inside of math whose commands were escaped too, such as `\\[ t \\to \\infty \\]`, breaking it into `\\[ $t \to \infty$ \\]`; it no longer does (the editor also treats this form as math).
+- The fix rules "Make \[ … \] in a sentence into $$ … $$" and "Make \( … \) into $ … $" matched such math from the second `\` of `\\[` and broke it into `\$$ … \$$`; they no longer do (rules saved by an earlier version are corrected when read).
+
 ## 1.0.20 — 2026-11-01
 
 - プレビューと HTML の表で、長い文章の列があると、隣の列が 1 文字の幅まで細くなっていたのを直した。セルの中は GitHub と同じく語の途中で折り返さず（表は横にスクロールする）、印刷と PDF・PNG・Word への保存では、これまでどおり語の途中でも折り返す。

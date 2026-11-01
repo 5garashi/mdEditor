@@ -101,8 +101,11 @@ internal sealed class LineBreaksExtension(bool show) : IMarkdownExtension
 // \( as an escaped "("). The math is the same MathInline, so preview, PDF, HTML, and Word
 // draw it as they draw $x$; \[x\] is marked math-display. Both pipelines read it, though
 // GitHub itself shows \( as an escaped parenthesis: the math is wanted more than the
-// difference, unless the other settings follow GitHub too (latex is then false). The rest
-// here ($$x$$ on a line of its own, a letter after the closing $) is always read.
+// difference, unless the other settings follow GitHub too (latex is then false). \\(x\\) and
+// \\[x\\], with Markdown's escapes inside (\_), are read too: they are written for pages that
+// find math after Markdown has made the HTML (MathJax in Jupyter and some sites), and the
+// math is what that page would draw. The rest here ($$x$$ on a line of its own, a letter
+// after the closing $) is always read.
 internal sealed class LatexMathDelimitersExtension(bool latex) : IMarkdownExtension
 {
     public void Setup(MarkdownPipelineBuilder pipeline)
@@ -110,6 +113,11 @@ internal sealed class LatexMathDelimitersExtension(bool latex) : IMarkdownExtens
         if (latex && !pipeline.InlineParsers.Contains<LatexMathInlineParser>())
         {
             pipeline.InlineParsers.InsertBefore<EscapeInlineParser>(new LatexMathInlineParser());
+        }
+
+        if (latex && !pipeline.BlockParsers.Contains<LatexEnvironmentBlockParser>())
+        {
+            pipeline.BlockParsers.InsertBefore<ParagraphBlockParser>(new LatexEnvironmentBlockParser());
         }
 
         // $$x$$ inside a paragraph is shown on a line of its own too, as GitHub does
@@ -203,6 +211,9 @@ internal sealed class LetterAfterMathInlineParser : InlineParser
 
 internal sealed class LatexMathInlineParser : InlineParser
 {
+    // A backslash before ASCII punctuation, which Markdown reads as that character (\_ is _).
+    private static readonly Regex MarkdownEscape = new(@"\\([!-/:-@\[-`{-~])", RegexOptions.CultureInvariant);
+
     public LatexMathInlineParser()
     {
         OpeningCharacters = ['\\'];
@@ -210,20 +221,23 @@ internal sealed class LatexMathInlineParser : InlineParser
 
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
     {
-        var open = slice.PeekChar();
+        // \\( and \\[: the backslash escaped, as Markdown writes one to be kept.
+        var escaped = slice.PeekChar() == '\\';
+        var open = slice.PeekChar(escaped ? 2 : 1);
         if (open is not ('(' or '['))
         {
             return false;
         }
 
-        var close = open == '(' ? @"\)" : @"\]";
+        var mark = escaped ? @"\\" : @"\";
+        var close = mark + (open == '(' ? ")" : "]");
         var text = slice.Text;
-        var start = slice.Start + 2;
+        var start = slice.Start + mark.Length + 1;
         var end = text.IndexOf(close, start, slice.End - start + 1, StringComparison.Ordinal);
         // An empty \(\), one never closed, and one with another opening before its close (a
         // lone escaped "(") are left to the escape parser.
         if (end < 0 || end == start || string.IsNullOrWhiteSpace(text[start..end])
-            || text.IndexOf(close == @"\)" ? @"\(" : @"\[", start, end - start, StringComparison.Ordinal) >= 0)
+            || text.IndexOf(mark + open, start, end - start, StringComparison.Ordinal) >= 0)
         {
             return false;
         }
@@ -232,8 +246,8 @@ internal sealed class LatexMathInlineParser : InlineParser
         {
             Delimiter = '$',
             DelimiterCount = open == '(' ? 1 : 2,
-            Content = new StringSlice(text, start, end - 1),
-            Span = new SourceSpan(processor.GetSourcePosition(slice.Start, out var line, out var column), processor.GetSourcePosition(end + 1)),
+            Content = escaped ? new StringSlice(MarkdownEscape.Replace(text[start..end], "$1")) : new StringSlice(text, start, end - 1),
+            Span = new SourceSpan(processor.GetSourcePosition(slice.Start, out var line, out var column), processor.GetSourcePosition(end + close.Length - 1)),
             Line = line,
             Column = column
         };
@@ -245,8 +259,67 @@ internal sealed class LatexMathInlineParser : InlineParser
         }
 
         processor.Inline = math;
-        slice.Start = end + 2;
+        slice.Start = end + close.Length;
         return true;
+    }
+}
+
+// A LaTeX environment standing on its own, with no $$ around it (\begin{align} … \end{align}),
+// as Jupyter and other pages drawing math with MathJax read it: a math block like $$ … $$.
+// Only the environments KaTeX draws at the top. As a paragraph it was text, and its {align}
+// was even taken for an attribute.
+internal sealed class LatexEnvironmentBlockParser : BlockParser
+{
+    private static readonly Regex Begin = new(@"^\\begin\{(equation|align|alignat|gather)(\*?)\}", RegexOptions.CultureInvariant);
+
+    public LatexEnvironmentBlockParser()
+    {
+        OpeningCharacters = ['\\'];
+    }
+
+    public override BlockState TryOpen(BlockProcessor processor)
+    {
+        if (processor.IsCodeIndent || Begin.Match(processor.Line.ToString()) is not { Success: true } begin)
+        {
+            return BlockState.None;
+        }
+
+        var block = new MathBlock(this)
+        {
+            Column = processor.Column,
+            Line = processor.LineIndex,
+            Span = new SourceSpan(processor.Start, processor.Line.End)
+        };
+        // The class the preview draws math by, as Markdig's $$ parser adds it.
+        block.GetAttributes().AddClass("math");
+        var end = $@"\end{{{begin.Groups[1].Value}{begin.Groups[2].Value}}}";
+        block.SetData(typeof(LatexEnvironmentBlockParser), end);
+        processor.NewBlocks.Push(block);
+        return Take(processor, block, end);
+    }
+
+    public override BlockState TryContinue(BlockProcessor processor, Block block) =>
+        Take(processor, (MathBlock)block, (string)block.GetData(typeof(LatexEnvironmentBlockParser))!);
+
+    // The \begin and \end lines belong to the math (KaTeX reads them), so the line is kept
+    // even when it ends the block. A blank line ends one never closed, as it ends a paragraph
+    // (where MathJax could not read it either), so it does not take the rest of the document.
+    private static BlockState Take(BlockProcessor processor, MathBlock block, string end)
+    {
+        if (processor.IsBlankLine)
+        {
+            return BlockState.Break;
+        }
+
+        var line = processor.Line;
+        if (!line.ToString().Contains(end, StringComparison.Ordinal))
+        {
+            return BlockState.Continue;
+        }
+
+        block.AppendLine(ref line, processor.Column, processor.LineIndex, processor.CurrentLineStartPosition, processor.TrackTrivia);
+        block.UpdateSpanEnd(line.End);
+        return BlockState.BreakDiscard;
     }
 }
 

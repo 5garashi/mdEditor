@@ -21,7 +21,7 @@ Windows で Markdown ファイルを開き、テキストと整形済み表示�
 
 [English](./README.md) | 日本語 | [简体中文](./README.zh-CN.md)
 
-バージョン / Version: 1.0.20（変更の記録 / Changes: [CHANGELOG.md](./CHANGELOG.md)）
+バージョン / Version: 1.0.21（変更の記録 / Changes: [CHANGELOG.md](./CHANGELOG.md)）
 
 ## 特長
 
@@ -267,7 +267,7 @@ mdEditor.exe --lang ja "C:\docs\memo.md"
 
 文書の文字コードは、UTF-8（BOMの有無）、UTF-16、Windowsの既定の文字コード（日本語環境ではShift_JIS、簡体字中国語環境では GBK）を自動で判別し、保存するときも元の文字コードのまま書き込みます。元の文字コードで保存できない文字がある場合は、UTF-8で保存するか確認します。UTF-8 ではないファイルを推定した文字コードで開いたときや、読めない文字（�）があるときは、ツールバーの下にお知らせを表示します。読めない文字があるまま上書き保存しようとすると、元のファイルのその部分が失われることを確認します。EUC-JP や ISO-2022-JP のファイルは、文字コードを選んで開き直してください。保存は一時ファイルに書いてから置き換えるので、途中で失敗しても元の文書は壊れません。
 
-` ```mermaid ` のコードブロックは [Mermaid](https://mermaid.js.org/) で図として表示します（フローチャート、シーケンス図、クラス図、状態遷移図、ER図、ガントチャート、円グラフなど）。`$...$` と `$$...$$` の数式は [KaTeX](https://katex.org/) で表示します。どちらもアプリに同梱しているため、オフラインでも表示でき、PDFにも出力されます。` ```python ` のように言語名を書いたコードブロックは、[highlight.js](https://highlightjs.org/) で色分けして表示します（Python、JavaScript、TypeScript、C#、C/C++、Java、PowerShell、シェル、SQL、HTML、CSS、JSON、YAML、diff など約 40 の言語）。色はプレビューの昼と夜の配色に合わせ、PDF・PNG・HTML・Word に保存したときも付きます。言語名のないコードブロックは色を付けません。図の構文に誤りがある場合は、エラーメッセージと元のコードを表示します。表示の確認には [samples/diagram-test.md](./samples/diagram-test.md)（英語版: [samples/diagram-test.en.md](./samples/diagram-test.en.md)、中国語版: [samples/diagram-test.zh-CN.md](./samples/diagram-test.zh-CN.md)）を使えます。
+` ```mermaid ` のコードブロックは [Mermaid](https://mermaid.js.org/) で図として表示します（フローチャート、シーケンス図、クラス図、状態遷移図、ER図、ガントチャート、円グラフなど）。`$...$` と `$$...$$` の数式は [KaTeX](https://katex.org/) で表示します。`\(...\)` と `\[...\]`（AI のチャットや論文の書き方）、`\\(...\\)` と `\\[...\\]`（Markdown を HTML にしてから数式を探すページ向けの書き方。中の `\_` は `_` として読みます）、`$$` で囲まない `\begin{align}` … `\end{align}`（`equation`・`alignat`・`gather` も。Jupyter などの書き方）も数式として表示します。KaTeX にない `\label{…}` は表示しません。どちらもアプリに同梱しているため、オフラインでも表示でき、PDFにも出力されます。` ```python ` のように言語名を書いたコードブロックは、[highlight.js](https://highlightjs.org/) で色分けして表示します（Python、JavaScript、TypeScript、C#、C/C++、Java、PowerShell、シェル、SQL、HTML、CSS、JSON、YAML、diff など約 40 の言語）。色はプレビューの昼と夜の配色に合わせ、PDF・PNG・HTML・Word に保存したときも付きます。言語名のないコードブロックは色を付けません。図の構文に誤りがある場合は、エラーメッセージと元のコードを表示します。表示の確認には [samples/diagram-test.md](./samples/diagram-test.md)（英語版: [samples/diagram-test.en.md](./samples/diagram-test.en.md)、中国語版: [samples/diagram-test.zh-CN.md](./samples/diagram-test.zh-CN.md)）を使えます。
 
 ### GitHub と同じ書き方
 
