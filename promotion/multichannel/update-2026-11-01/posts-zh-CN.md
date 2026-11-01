@@ -33,16 +33,12 @@ https://peach.blender.org/ / https://creativecommons.org/licenses/by/3.0/
 #mdEditor #Markdown #Windows #PDF
 ```
 
-## 短い投稿（X）
+## 短い投稿（X、194/280）
 
 ```text
-mdEditor 1.0.20 — 把 PDF 和 AI 聊天回答作为 Markdown 打开
-
-把 PDF 和 Word 作为 Markdown 打开。AI 聊天回答的格式问题也会自动修正。可以一键保存与预览一致的 PDF。
-
+mdEditor 1.0.20（Windows，免费）
+把 PDF 和 Word 作为 Markdown 打开，自动修正 AI 聊天回答的格式问题，保存与预览一致的 PDF。
 https://5garashi.github.io/mdEditor/zh-CN.html
-
-开发和视频制作使用了 AI 辅助（Claude、Codex）。背景音乐由 Codex 作曲并生成音源。
-
-#mdEditor #Markdown #Windows #PDF
+开发使用了 AI 辅助（Claude、Codex）。
+#Markdown
 ```

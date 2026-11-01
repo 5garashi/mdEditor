@@ -33,16 +33,12 @@ https://peach.blender.org/ / https://creativecommons.org/licenses/by/3.0/
 #mdEditor #Markdown #Windows #PDF
 ```
 
-## 短い投稿（X）
+## 短い投稿（X、231/280）
 
 ```text
-mdEditor 1.0.20 — PDFもAIチャットの回答も、Markdownで開いて直す
-
-PDFとWordをMarkdownとして開けます。AIチャットの回答も、書き方の癖を直して表示。プレビューどおりのPDFに、ワンクリックで保存できます。
-
+mdEditor 1.0.20（Windows・無料）
+PDFとWordをMarkdownとして開き、AIチャットの回答も書き方の癖を直して表示。プレビューどおりのPDFに保存できます。
 https://5garashi.github.io/mdEditor/
-
-開発と動画の制作に、AI（Claude・Codex）の支援を受けています。BGMはCodexで作曲・音源生成したものです。
-
-#mdEditor #Markdown #Windows #PDF
+AI（Claude・Codex）の支援で開発しています。
+#mdEditor #Markdown
 ```

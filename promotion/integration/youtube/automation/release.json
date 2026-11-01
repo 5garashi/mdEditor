@@ -1,7 +1,7 @@
 {
   "enabled": true,
-  "operation": "sync",
-  "request_id": "2026-11-01-source-1.0.20-6.0.0-sync",
+  "operation": "publish",
+  "request_id": "2026-11-01-source-1.0.20-6.0.0-publish",
   "channel_id": "UCI_NiKGav2fQZu0IRMxQUeg",
   "videos": [
     {

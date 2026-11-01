@@ -33,16 +33,11 @@ Map data: © OpenStreetMap contributors (ODbL) https://www.openstreetmap.org/cop
 #mdEditor #Markdown #Windows #PDF
 ```
 
-## 短い投稿（X）
+## 短い投稿（X、247/280）
 
 ```text
-mdEditor 1.0.20 — Open PDFs and AI Chat Answers as Markdown
-
-Open PDF and Word files as Markdown. AI chat answers open with their formatting quirks fixed. Save a PDF that looks like the preview, in one click.
-
+mdEditor 1.0.20 for Windows (free): open PDF and Word files as Markdown, fix the formatting quirks of AI chat answers, and save a PDF that looks like the preview.
 https://5garashi.github.io/mdEditor/en.html
-
-Developed and produced with AI assistance (Claude, Codex). The music was composed and generated with Codex.
-
-#mdEditor #Markdown #Windows #PDF
+Built with AI assistance (Claude, Codex).
+#Markdown #Windows
 ```
