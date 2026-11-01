@@ -1,0 +1,44 @@
+<!--
+ファイル名 / File: posts-ja.md
+概要 / Description: mdEditor 1.0.20 trilingual release material
+作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
+作成日 / Created: 2026-11-01
+版 / Version: 1.14.0
+ライセンス / License: MIT
+SPDX-License-Identifier: MIT
+-->
+# mdEditor 1.0.20 — ja
+
+## 長い投稿（LinkedIn・TikTok・YouTube の説明）
+
+```text
+mdEditor 1.0.20 — PDFもAIチャットの回答も、Markdownで開いて直す
+
+PDFとWordをMarkdownとして開けます。AIチャットの回答も、書き方の癖を直して表示。プレビューどおりのPDFに、ワンクリックで保存できます。
+
+回転する3Dモデルから始まり、AIチャットの回答の修正、PDFの取り込みと書き出し、書き方の確認を実演。そのあと、主な機能と図のサンプルを上から下へ紹介します。
+
+https://5garashi.github.io/mdEditor/
+
+Windows用・無料。PDFの取り込みはできる範囲での変換で、段組みやスキャンしたPDFは元に戻りません。AIチャットの回答は、できる範囲で再現します。収録はソースビルド1.0.20です。
+
+開発と動画の制作に、AI（Claude・Codex）の支援を受けています。BGMはCodexで作曲・音源生成したものです。
+
+BGM：「Light Steps」5garashi.com設計事務所（作曲・音源生成：Codex）、CC BY 4.0。抜粋してくり返し、最後をフェードアウト。
+https://5garashi.github.io/5garashi-identity/ / https://creativecommons.org/licenses/by/4.0/
+サンプルの映画：「Big Buck Bunny」© 2008 Blender Foundation、CC BY 3.0。サンプル文書の中で再生（編集なし）。
+https://peach.blender.org/ / https://creativecommons.org/licenses/by/3.0/
+地図データ：© OpenStreetMap contributors（ODbL）https://www.openstreetmap.org/copyright
+
+#mdEditor #Markdown #Windows #PDF
+```
+
+## 短い投稿（X、231/280）
+
+```text
+mdEditor 1.0.20（Windows・無料）
+PDFとWordをMarkdownとして開き、AIチャットの回答も書き方の癖を直して表示。プレビューどおりのPDFに保存できます。
+https://5garashi.github.io/mdEditor/
+AI（Claude・Codex）の支援で開発しています。
+#mdEditor #Markdown
+```
