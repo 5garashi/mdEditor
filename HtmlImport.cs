@@ -71,8 +71,37 @@ internal static class HtmlImport
     // their code when the HTML keeps it (data-mdeditor-code); other drawn pictures
     // (SVG, and images written into the page as data:) are handed to keepPicture,
     // which stores them and gives the address to use, or are left out without it.
-    public static (string Markdown, bool Exact) ToMarkdown(string html, Uri? pageUrl = null, Func<string, bool>? existsLocally = null,
+    // Plain: the conversion failed (a page made in a way not met before), so the page's
+    // text came in as plain paragraphs instead of nothing.
+    public static (string Markdown, bool Exact, bool Plain) ToMarkdown(string html, Uri? pageUrl = null, Func<string, bool>? existsLocally = null,
         Func<byte[], string, string?>? keepPicture = null, Func<IReadOnlyList<MapTile>, byte[]?>? drawMap = null)
+    {
+        try
+        {
+            var (markdown, exact) = ConvertHtml(html, pageUrl, existsLocally, keepPicture, drawMap);
+            return (markdown, exact, false);
+        }
+        catch (Exception ex) when (ex is not OutOfMemoryException)
+        {
+            return (PlainText(html), false, true);
+        }
+    }
+
+    // The text of a page, one paragraph a block, escaped so it shows as written.
+    private static string PlainText(string html)
+    {
+        var text = System.Text.RegularExpressions.Regex.Replace(html, @"<(script|style|template)\b[\s\S]*?</\1\s*>|<!--[\s\S]*?-->", string.Empty,
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        text = System.Text.RegularExpressions.Regex.Replace(text, @"<br\b[^>]*>|</?(p|div|h[1-6]|li|tr|td|th|pre|blockquote|section|article|table|ul|ol|dt|dd)\b[^>]*>", "\n",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        text = System.Net.WebUtility.HtmlDecode(System.Text.RegularExpressions.Regex.Replace(text, @"<[^>]*>", string.Empty));
+        var lines = text.Split('\n').Select(line => line.Trim()).Where(line => line.Length > 0)
+            .Select(line => System.Text.RegularExpressions.Regex.Replace(line, @"([\\`*_\[\]<>#|~])", @"\$1"));
+        return string.Join("\n\n", lines) + "\n";
+    }
+
+    private static (string Markdown, bool Exact) ConvertHtml(string html, Uri? pageUrl, Func<string, bool>? existsLocally,
+        Func<byte[], string, string?>? keepPicture, Func<IReadOnlyList<MapTile>, byte[]?>? drawMap)
     {
         var document = new HtmlParser().ParseDocument(html);
         if (document.GetElementById(SourceId) is { } source && TryReadSource(source.TextContent, out var original))

@@ -16,11 +16,13 @@ The version number lives in [VERSION](./VERSION). Add each new version at the to
 
 - 書式付きの内容（HTML）を Markdown にするとき（「クリップボードから新規作成」、HTML・Word・メールを開くときなど）、ページに文字で書かれた数式（`\[ … \]`・`\( … \)`・`$$ … $$`・`$ … $`）の中の `_` と `*` が `\_` と `\*` になり、`\rho_{1,+}` の添え字が `_` のまま表示されていたのを直した。数式の外の `_` と `*`、コードの中、`$5` と `$10` のような金額は、これまでどおり書いたとおりに残す。
 - PDF に「4) …」のように `)` で番号を付けた項目があり、その文が「.」で終わると、「PDF を読み込めません」と出て開けなかったのを直した（1.0.16 から）。このような項目は、「4. …」の番号付きのリストになる。
+- PDF・Word・HTML・Jupyter Notebook を開くとき、一部を変換できないと全体が開けなかったのを、変換できた部分は残して開くようにした。PDF は、変換できなかった項目やページを書式のない文字（文字を取り出せないページはページ全体の画像）で入れ、それでも変換できないときは全ページを書式のない文字で入れる。Word と HTML は、変換できないとき文字だけを書式なしで入れる。Jupyter Notebook は、読み取れない実行結果や画像だけを入れない。どの場合も、お知らせ欄で伝える。PDF そのものを開けないとき（壊れている、パスワードで保護されているなど）は、これまでどおり開けないと伝える。
 - テストの選び方と動かし方を TESTING.md にまとめた。
 - README に「対応する書き方の方針」を書いた。ほかの環境では正しい書き方と、主流の AI チャットが出す Markdown に合わせ、どこでも正しくない書き方や、前の版の不具合で崩れて保存された文書には合わせない。
 
 - When formatted content (HTML) was converted to Markdown (for example, with New from clipboard or when opening HTML, Word, or email), `_` and `*` in math written as text on the page (`\[ … \]`, `\( … \)`, `$$ … $$`, `$ … $`) became `\_` and `\*`, so the `_` in `\rho_{1,+}` was shown as text instead of making a subscript; this is fixed. `_` and `*` outside math, in code, and prices such as `$5` and `$10` stay as written.
 - A PDF with an item numbered with `)`, such as "4) …", whose text ends with "." could not be opened ("The PDF cannot be read"); this is fixed (since 1.0.16). Such items now become a numbered list, "4. …".
+- When part of a PDF, Word document, HTML file, or Jupyter Notebook could not be converted, the whole file failed to open; now what could be converted is kept. In a PDF, items or pages that cannot be converted come in as plain text (a page whose text cannot be taken, as a picture of the whole page), and if the conversion still fails, every page comes in as plain text. A Word document or HTML file that cannot be converted comes in as its text alone, without formatting. In a Jupyter Notebook, only the outputs and pictures that cannot be read are left out. Each case is told in the notice bar. A PDF that cannot be opened at all (damaged, protected with a password, and so on) is still reported as such.
 - TESTING.md sets out which tests to run and how.
 - The README now has "Which ways of writing are supported": mdEditor follows writing that is correct elsewhere and the Markdown that mainstream AI chats output, but not writing that is correct nowhere, nor documents saved broken by a bug in an earlier version.
 

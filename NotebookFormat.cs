@@ -33,7 +33,8 @@ internal static class NotebookFormat
 
     private static string Marked(string shown) => $"{OutputStart}\n\n{shown}\n\n{OutputEnd}";
 
-    public sealed record Result(string Markdown, int Images);
+    // Skipped: outputs and pictures left out because they could not be read.
+    public sealed record Result(string Markdown, int Images, int Skipped = 0);
 
     public static Result ToMarkdown(string text, string assets, string imagesName)
     {
@@ -55,6 +56,8 @@ internal static class NotebookFormat
         }
 
         var parts = new List<string>();
+        // Outputs and pictures left out because they could not be read.
+        var skipped = 0;
         foreach (var cell in cells.OfType<JsonObject>())
         {
             var source = Join(cell["source"]).TrimEnd();
@@ -73,7 +76,17 @@ internal static class NotebookFormat
                                 continue;
                             }
 
-                            var path = SaveImage(Join(content), Extension(mime));
+                            string path;
+                            try
+                            {
+                                path = SaveImage(Join(content), Extension(mime));
+                            }
+                            catch (Exception ex) when (ex is not OutOfMemoryException)
+                            {
+                                skipped++;
+                                continue;
+                            }
+
                             source = source.Replace($"attachment:{name}", path).Replace($"attachment:{Uri.EscapeDataString(name)}", path);
                         }
                     }
@@ -88,7 +101,20 @@ internal static class NotebookFormat
                     parts.Add(Fence(source, language));
                     foreach (var output in (cell["outputs"] as JsonArray ?? []).OfType<JsonObject>())
                     {
-                        if (Output(output, SaveImage) is { Length: > 0 } shown)
+                        // An output that cannot be read (a broken picture, say) is left out;
+                        // the cell and the other outputs still come in.
+                        string? shown;
+                        try
+                        {
+                            shown = Output(output, SaveImage);
+                        }
+                        catch (Exception ex) when (ex is not OutOfMemoryException)
+                        {
+                            skipped++;
+                            continue;
+                        }
+
+                        if (shown is { Length: > 0 })
                         {
                             parts.Add(shown);
                         }
@@ -105,7 +131,7 @@ internal static class NotebookFormat
             }
         }
 
-        return new Result(string.Join("\n\n", parts) + "\n", images);
+        return new Result(string.Join("\n\n", parts) + "\n", images, skipped);
     }
 
     private static string? Output(JsonObject output, Func<string, string, string> saveImage)
