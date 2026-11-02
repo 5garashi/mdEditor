@@ -220,8 +220,9 @@ internal static partial class PdfImport
             // mark as not the text (running titles, page numbers) is left out.
             // A line that runs on out of a figure (a paragraph beside an illustration whose area
             // reaches into it) stays text as a whole.
-            var crossing = CrossingLetters(page.Letters, shapes.Figures);
-            var letters = page.Letters.Where(letter => !letter.Value.All(char.IsControl) && !shapes.Tables.Any(table => Contains(table.Box, letter))
+            var pageLetters = DropOverprints(page.Letters);
+            var crossing = CrossingLetters(pageLetters, shapes.Figures);
+            var letters = pageLetters.Where(letter => !letter.Value.All(char.IsControl) && !shapes.Tables.Any(table => Contains(table.Box, letter))
                 && (crossing.Contains(letter) || !shapes.Figures.Any(figure => Contains(figure, letter)))
                 && !shapes.Formulas.Any(formula => Contains(formula.Box, letter)) && tags?.IsFurniture(letter) != true).ToList();
             if (Tune.PagePictures && PicturePage(letters))
@@ -848,8 +849,9 @@ internal static partial class PdfImport
                 continue;
             }
 
-            // Raised or lowered: smaller than the letter before (or after) it on the line, and
-            // close to it; letters of one run follow the first.
+            // Raised or lowered: smaller than the letter before (or after) it on the line, but
+            // more than half its size (text beside a large step number is not raised from it),
+            // and close to it; letters of one run follow the first.
             var size = letter.PointSize;
             Letter? Beside(int at) => at >= 0 && at < letters.Count && !IsBlank(letters[at])
                 && Math.Min(Math.Abs(letters[at].EndBaseLine.X - letter.StartBaseLine.X), Math.Abs(letter.EndBaseLine.X - letters[at].StartBaseLine.X)) < size ? letters[at] : null;
@@ -860,7 +862,7 @@ internal static partial class PdfImport
                 continue;
             }
 
-            if ((Beside(i - 1) ?? Beside(i + 1)) is { } line && line.PointSize > size * 1.1
+            if ((Beside(i - 1) ?? Beside(i + 1)) is { } line && line.PointSize > size * 1.1 && line.PointSize < size * 2
                 && (letter.StartBaseLine.Y - line.StartBaseLine.Y) / line.PointSize is var raised && Math.Abs(raised) is > 0.15 and < 0.7)
             {
                 (tags[i], shift[i]) = (raised > 0 ? "sup" : "sub", line.StartBaseLine.Y - letter.StartBaseLine.Y);
@@ -962,7 +964,7 @@ internal static partial class PdfImport
                 InsertByPlace(ordered, block, all);
             }
 
-            return ordered;
+            return SideLabels(ordered);
         }
 
         var tagged = letters.Where(letter => tags.Of(letter) is not null && !IsBlank(letter)).ToList();
@@ -1024,7 +1026,12 @@ internal static partial class PdfImport
     private static IEnumerable<TextBlock> TextBlocks(IReadOnlyList<Letter> letters, HashSet<Word> rejoined, IReadOnlyList<PdfRectangle> frames)
     {
         var words = NearestNeighbourWordExtractor.Instance.GetWords(letters).ToList();
+        // A step's number set large beside its text is a block of its own (see SideLabels):
+        // in the text's block it would take the line above for a raised (superscript) part.
+        var labels = words.Where(word => IsSideLabel(word, words)).ToList();
+        words.RemoveAll(labels.Contains);
         var blocks = KeyValueRows(JoinTermLines(JoinSplitLines(DocstrumBoundingBoxes.Instance.GetBlocks(words).ToList(), rejoined), rejoined), rejoined, frames);
+        blocks.AddRange(labels.Select(label => new TextBlock([new TextLine([label])])));
         var ordered = new List<TextBlock>();
         foreach (var block in UnsupervisedReadingOrderDetector.Instance.Get(blocks))
         {
@@ -1032,6 +1039,89 @@ internal static partial class PdfImport
         }
 
         return ordered;
+    }
+
+    // A letter drawn again a little off its place, to look bold or to give it a shadow (the
+    // same letter less than a sixth of its size away), is read once.
+    private static IReadOnlyList<Letter> DropOverprints(IReadOnlyList<Letter> letters)
+    {
+        var kept = new List<Letter>();
+        var near = new Dictionary<(string, int, int), List<Letter>>();
+        foreach (var letter in letters)
+        {
+            var reach = Math.Max(letter.PointSize, 1) * 0.15;
+            var cell = (letter.Value, (int)Math.Floor(letter.StartBaseLine.X / reach), (int)Math.Floor(letter.StartBaseLine.Y / reach));
+            var drawnAgain = false;
+            for (var dx = -1; dx <= 1 && !drawnAgain; dx++)
+            {
+                for (var dy = -1; dy <= 1 && !drawnAgain; dy++)
+                {
+                    drawnAgain = near.TryGetValue((cell.Value, cell.Item2 + dx, cell.Item3 + dy), out var others)
+                        && others.Any(other => Math.Abs(other.PointSize - letter.PointSize) < reach
+                            && Math.Abs(other.StartBaseLine.X - letter.StartBaseLine.X) < reach
+                            && Math.Abs(other.StartBaseLine.Y - letter.StartBaseLine.Y) < reach);
+                }
+            }
+
+            if (drawnAgain)
+            {
+                continue;
+            }
+
+            kept.Add(letter);
+            if (!near.TryGetValue(cell, out var list))
+            {
+                near[cell] = list = [];
+            }
+
+            list.Add(letter);
+        }
+
+        return kept.Count == letters.Count ? letters : kept;
+    }
+
+    // A short label set large to the left of a paragraph and level with it (a step's number
+    // beside its text) is read right before that paragraph, not with the other labels down
+    // its narrow column.
+    private static List<TextBlock> SideLabels(List<TextBlock> ordered)
+    {
+        static double Size(TextBlock block) => block.TextLines.SelectMany(line => line.Words).SelectMany(word => word.Letters).Max(letter => letter.PointSize);
+        foreach (var label in ordered.Where(block => block.TextLines.Count == 1 && SideLabelPattern().IsMatch(block.Text.Trim())).ToList())
+        {
+            var box = label.BoundingBox;
+            var owner = ordered.Where(block => !ReferenceEquals(block, label) && block.BoundingBox.Left >= box.Right
+                    && block.BoundingBox.Left - box.Right < box.Height * 3
+                    && box.Top > block.BoundingBox.Bottom && box.Bottom < block.BoundingBox.Top
+                    && Size(label) >= Size(block) * 1.5)
+                .OrderBy(block => block.BoundingBox.Left - box.Right).FirstOrDefault();
+            if (owner is null)
+            {
+                continue;
+            }
+
+            ordered.Remove(label);
+            ordered.Insert(ordered.IndexOf(owner), label);
+        }
+
+        return ordered;
+    }
+
+    // A number (up to three digits, with a period or parenthesis) set at least half again as
+    // large as text that starts just to its right, level with it. Only numbers: a large first
+    // letter of a paragraph (a drop cap) belongs to its word.
+    private static bool IsSideLabel(Word word, IReadOnlyList<Word> words)
+    {
+        if (!SideLabelPattern().IsMatch(word.Text))
+        {
+            return false;
+        }
+
+        var box = word.BoundingBox;
+        var size = word.Letters.Max(letter => letter.PointSize);
+        return words.Any(other => !ReferenceEquals(other, word) && other.BoundingBox.Left >= box.Right
+            && other.BoundingBox.Left - box.Right < box.Height * 3
+            && other.BoundingBox.Bottom < box.Top && other.BoundingBox.Top > box.Bottom
+            && other.Letters.Max(letter => letter.PointSize) * 1.5 <= size);
     }
 
     // A block wholly above one read before it, and over most of its width or wholly to its
@@ -2031,6 +2121,9 @@ internal static partial class PdfImport
 
     [GeneratedRegex(@"^\s*(\d{1,3})[.)．）]\s+")]
     private static partial Regex NumberedPattern();
+
+    [GeneratedRegex(@"^\d{1,3}[.)．）]?$")]
+    private static partial Regex SideLabelPattern();
 
     [GeneratedRegex(@"^[\s\-–—]*\d{1,4}(\s*/\s*\d{1,4})?[\s\-–—]*$")]
     private static partial Regex PageNumberPattern();
