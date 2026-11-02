@@ -1911,7 +1911,20 @@ public partial class MainWindow : Window
         if (result.Tables > 0)
         {
             notices.Add(string.Format(Strings.Tr(result.TablesAsPictures ? "表 {0} 個を、線と文字から画像（SVG）に描き直しました（見た目優先）。表の中の文字は編集できません。" : "表 {0} 個を Markdown の表にしました。"), result.Tables));
-            reopenTables = Strings.Tr(result.TablesAsPictures ? "表を Markdown の表にする（編集優先・既定）" : "表を画像にする（見た目優先）");
+        }
+
+        // Pictures with lines or words drawn over them go with the tables: both are pictures
+        // when looks come first.
+        if (result.MarkedPictures > 0)
+        {
+            notices.Add(string.Format(Strings.Tr(result.TablesAsPictures
+                ? "書き込みのある図 {0} 個を、重ねて描かれた線と文字ごと画像（SVG）に描き直しました（見た目優先）。図の中の文字は編集できません。"
+                : "書き込みのある図 {0} 個は、図の画像だけを入れました。重ねて描かれた線と文字は入りません（見た目優先にすると入ります）。"), result.MarkedPictures));
+        }
+
+        if (result.Tables > 0 || result.MarkedPictures > 0)
+        {
+            reopenTables = Strings.Tr(result.TablesAsPictures ? "表を Markdown の表にする（編集優先・既定）" : "表・図を画像にする（見た目優先）");
         }
 
         string? reopen = null;

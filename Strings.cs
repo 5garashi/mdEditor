@@ -169,8 +169,12 @@ internal static partial class Strings
             "Restore the default settings? Everything in Settings, and the advanced settings file for opening PDFs (pdf-import.json), goes back to its default. The key for New from clipboard and the keyboard shortcuts stay as they are.",
         ["表 {0} 個を、線と文字から画像（SVG）に描き直しました（見た目優先）。表の中の文字は編集できません。"] =
             "{0} tables were redrawn as pictures (SVG) from their lines and text (looks like the page). The text in them cannot be edited.",
-        ["表を画像にする（見た目優先）"] =
-            "Make tables pictures (looks like the page)",
+        ["表・図を画像にする（見た目優先）"] =
+            "Make tables and figures pictures (looks like the page)",
+        ["書き込みのある図 {0} 個を、重ねて描かれた線と文字ごと画像（SVG）に描き直しました（見た目優先）。図の中の文字は編集できません。"] =
+            "{0} figures with lines or words drawn over them were redrawn as pictures (SVG) with those lines and words (looks like the page). The text in them cannot be edited.",
+        ["書き込みのある図 {0} 個は、図の画像だけを入れました。重ねて描かれた線と文字は入りません（見た目優先にすると入ります）。"] =
+            "For {0} figures with lines or words drawn over them, only the picture was inserted; the lines and words drawn over it were not (they are with looks like the page).",
         ["表を Markdown の表にする（編集優先・既定）"] =
             "Make tables Markdown tables (can be edited, default)",
         ["差出人"] =

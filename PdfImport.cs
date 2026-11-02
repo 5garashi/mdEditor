@@ -48,11 +48,13 @@ internal static partial class PdfImport
     // figure, put in its picture (InPicture) or kept as text; TablesAsPictures, whether the
     // tables were drawn as pictures. PageSizes and Anchors (see ToMarkdown) let the original
     // PDF be shown beside the Markdown, scrolling with the preview. PlainPages: the pages with
-    // parts that could not be converted, put in as plain text instead.
+    // parts that could not be converted, put in as plain text instead. MarkedPictures: the
+    // pictures with lines or words drawn over them (see MarkedPictures), drawn again as a
+    // whole when TablesAsPictures is set, and only the picture itself otherwise.
     public sealed record Result(string Markdown, int Images, int Pages, int ReadPages, bool HasText, int Headings, IReadOnlyList<int> PicturePages, IReadOnlyList<int> ImagePages,
         IReadOnlyList<int> OutlinePages, int Figures = 0, int Formulas = 0, int Tables = 0, int Aligned = 0, bool Tagged = false, int FigureText = 0, bool InPicture = true, bool TablesAsPictures = false,
         IReadOnlyList<(double Width, double Height)>? PageSizes = null, IReadOnlyList<(int Line, int Page, double Y)>? Anchors = null,
-        IReadOnlyList<int>? PlainPages = null);
+        IReadOnlyList<int>? PlainPages = null, int MarkedPictures = 0);
 
     private sealed record Line(string Text, double Size, bool Bold, double Top, double Right, bool MathFont, string Family, double Left = 0, bool Rejoined = false);
 
@@ -175,7 +177,7 @@ internal static partial class PdfImport
         // Each page's size, for showing the PDF beside its Markdown.
         var pageSizes = new List<(double Width, double Height)>();
         var images = 0;
-        int figures = 0, formulas = 0, tables = 0, aligned = 0, figureText = 0;
+        int figures = 0, formulas = 0, tables = 0, aligned = 0, figureText = 0, markedPictures = 0;
         var tagged = false;
         // Formulas in a line of text: each stands in the text as one private-use character,
         // replaced with its picture at the end.
@@ -211,6 +213,11 @@ internal static partial class PdfImport
             var pageItems = new List<Item>();
             var rejoined = new HashSet<Word>(ReferenceEqualityComparer.Instance);
             var shapes = FindShapes(page);
+            // Pictures with lines or words drawn over them (see MarkedPictures): drawn again
+            // as pictures of their whole area when the options put looks first.
+            var marked = MarkedPictures(page, shapes);
+            markedPictures += marked.Count;
+            var markedAreas = Tune.TablesAsPictures ? marked : [];
             // How each shape was drawn (see-through, scaling), read only for a page with figures or formulas.
             var states = new Lazy<IReadOnlyList<PaintState>?>(() => PathStates(document, page));
             var tags = structure is null ? null : ReadPageTags(structure, page);
@@ -224,7 +231,8 @@ internal static partial class PdfImport
             var crossing = CrossingLetters(pageLetters, shapes.Figures);
             var letters = pageLetters.Where(letter => !letter.Value.All(char.IsControl) && !shapes.Tables.Any(table => Contains(table.Box, letter))
                 && (crossing.Contains(letter) || !shapes.Figures.Any(figure => Contains(figure, letter)))
-                && !shapes.Formulas.Any(formula => Contains(formula.Box, letter)) && tags?.IsFurniture(letter) != true).ToList();
+                && !shapes.Formulas.Any(formula => Contains(formula.Box, letter)) && !markedAreas.Any(area => Contains(area, letter))
+                && tags?.IsFurniture(letter) != true).ToList();
             if (Tune.PagePictures && PicturePage(letters))
             {
                 var whole = new PdfRectangle(0, 0, page.Width, page.Height);
@@ -364,6 +372,12 @@ internal static partial class PdfImport
                 }
             }
 
+            foreach (var area in markedAreas)
+            {
+                Place(new Item(SaveSvg(FigureSvg(page, area, states.Value)), 0, false, ItemKind.Image, area.Top, number,
+                    Left: area.Left, Right: area.Right, Bottom: area.Bottom, Natural: area.Width * 4 / 3));
+            }
+
             figures += shapes.Figures.Count;
             formulas += shapes.Formulas.Count;
             tables += shapes.Tables.Count + taggedTables.Count;
@@ -412,7 +426,8 @@ internal static partial class PdfImport
             }
 
             // A picture inside a figure is part of its SVG.
-            foreach (var image in page.GetImages().Where(image => !shapes.Figures.Any(figure => Contains(figure, image.BoundingBox))))
+            foreach (var image in page.GetImages().Where(image => !shapes.Figures.Any(figure => Contains(figure, image.BoundingBox))
+                         && !markedAreas.Any(area => Contains(area, image.BoundingBox))))
             {
                 if (SaveImage(image, assets, imagesName, images + 1) is { } file)
                 {
@@ -712,7 +727,7 @@ internal static partial class PdfImport
         var headings = levels.Count(level => level > 0);
         return new Result(markdown.Length > 0 ? markdown.Append('\n').ToString() : string.Empty,
             images, document.NumberOfPages, readPages, text.Count > 0 || imagePages.Count > 0, headings, picturePages, imagePages, outlinePages,
-            figures, formulas, tables, aligned, tagged, figureText, Tune.FigureTextInPicture, Tune.TablesAsPictures, pageSizes, anchors, [.. plainPages]);
+            figures, formulas, tables, aligned, tagged, figureText, Tune.FigureTextInPicture, Tune.TablesAsPictures, pageSizes, anchors, [.. plainPages], markedPictures);
     }
 
     // Whether a page's running text (figures, tables, and formulas apart) cannot be read in
@@ -1039,6 +1054,45 @@ internal static partial class PdfImport
         }
 
         return ordered;
+    }
+
+    // Pictures with lines or words drawn over them (a photograph with the buttons to press
+    // ringed and named, in a box): the area of each, its frame's when it has one, or the
+    // picture's with what is drawn over it. Only the picture itself comes out of the PDF as
+    // an image, so the rings and names would be lost. A frame is a box around the picture
+    // at most three times its size (a page or card background is larger); a picture in a
+    // figure is part of the figure already.
+    private static List<PdfRectangle> MarkedPictures(Page page, PageShapes shapes)
+    {
+        var areas = new List<PdfRectangle>();
+        var paths = page.Paths.Where(path => !path.IsClipping && (path.IsStroked || path.IsFilled))
+            .Select(path => path.GetBoundingRectangle()).OfType<PdfRectangle>().ToList();
+        foreach (var image in page.GetImages())
+        {
+            var picture = image.BoundingBox;
+            if (picture.Width * picture.Height < 100 || shapes.Figures.Any(figure => Contains(figure, picture))
+                || areas.Any(area => Contains(area, picture)))
+            {
+                continue;
+            }
+
+            var frame = paths.Where(box => Contains(box, picture) && box.Width * box.Height <= picture.Width * picture.Height * 3)
+                .OrderBy(box => box.Width * box.Height).Cast<PdfRectangle?>().FirstOrDefault();
+            var outer = frame ?? picture;
+            var over = paths.Where(box => !box.Equals(frame) && Contains(outer, box) && Overlaps(box, picture)
+                && box.Width * box.Height < picture.Width * picture.Height * 0.9).ToList();
+            var words = page.Letters.Where(letter => !IsBlank(letter) && Contains(outer, letter)).ToList();
+            // A frame alone (a border round a photograph) loses nothing: the picture is enough.
+            if (over.Count == 0 && words.Count == 0)
+            {
+                continue;
+            }
+
+            var area = frame ?? Union(over.Append(picture).Concat(words.Select(letter => letter.BoundingBox)));
+            areas.Add(new PdfRectangle(area.Left - 1, area.Bottom - 1, area.Right + 1, area.Top + 1));
+        }
+
+        return areas;
     }
 
     // A letter drawn again a little off its place, to look bold or to give it a shadow (the
