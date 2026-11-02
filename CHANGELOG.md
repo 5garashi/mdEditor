@@ -15,10 +15,12 @@ The version number lives in [VERSION](./VERSION). Add each new version at the to
 ## 1.0.22 — 2026-11-02
 
 - 書式付きの内容（HTML）を Markdown にするとき（「クリップボードから新規作成」、HTML・Word・メールを開くときなど）、ページに文字で書かれた数式（`\[ … \]`・`\( … \)`・`$$ … $$`・`$ … $`）の中の `_` と `*` が `\_` と `\*` になり、`\rho_{1,+}` の添え字が `_` のまま表示されていたのを直した。数式の外の `_` と `*`、コードの中、`$5` と `$10` のような金額は、これまでどおり書いたとおりに残す。
+- PDF に「4) …」のように `)` で番号を付けた項目があり、その文が「.」で終わると、「PDF を読み込めません」と出て開けなかったのを直した（1.0.16 から）。このような項目は、「4. …」の番号付きのリストになる。
 - テストの選び方と動かし方を TESTING.md にまとめた。
 - README に「対応する書き方の方針」を書いた。ほかの環境では正しい書き方と、主流の AI チャットが出す Markdown に合わせ、どこでも正しくない書き方や、前の版の不具合で崩れて保存された文書には合わせない。
 
 - When formatted content (HTML) was converted to Markdown (for example, with New from clipboard or when opening HTML, Word, or email), `_` and `*` in math written as text on the page (`\[ … \]`, `\( … \)`, `$$ … $$`, `$ … $`) became `\_` and `\*`, so the `_` in `\rho_{1,+}` was shown as text instead of making a subscript; this is fixed. `_` and `*` outside math, in code, and prices such as `$5` and `$10` stay as written.
+- A PDF with an item numbered with `)`, such as "4) …", whose text ends with "." could not be opened ("The PDF cannot be read"); this is fixed (since 1.0.16). Such items now become a numbered list, "4. …".
 - TESTING.md sets out which tests to run and how.
 - The README now has "Which ways of writing are supported": mdEditor follows writing that is correct elsewhere and the Markdown that mainstream AI chats output, but not writing that is correct nowhere, nor documents saved broken by a bug in an earlier version.
 

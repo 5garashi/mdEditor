@@ -1470,7 +1470,9 @@ internal static partial class PdfImport
                 firstHeading = tags is null ? -1 : lineTag?.Heading ?? -1;
             }
 
-            current.Add(line with { Text = lineKind == ItemKind.Bullet ? rest : line.Text });
+            // A numbered line keeps the number ListMarker wrote as "4. " (from 4) or 4．), which
+            // the list marker is read from.
+            current.Add(line with { Text = lineKind is ItemKind.Bullet or ItemKind.Numbered ? rest : line.Text });
         }
 
         foreach (var item in Flush()) yield return item;
