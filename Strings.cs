@@ -68,7 +68,7 @@ internal static partial class Strings
         ["Word の文書を Markdown に変換して開きました。見出し・リスト・表・リンク・画像は戻り、色や配置は戻りません。保存すると Markdown ファイルになります（Word の文書は変わりません）。"] =
             "Converted the Word document to Markdown. Headings, lists, tables, links, and images come back; colors and layout do not. Saving makes a Markdown file (the Word document stays as it is).",
         ["Word の文書を Markdown に変換できなかったため、段落の文字だけを書式なしで入れました。保存すると Markdown ファイルになります（Word の文書は変わりません）。"] =
-            "The Word document could not be converted to Markdown, so only the text of its paragraphs was put in, without formatting. Saving makes a Markdown file (the Word document is not changed).",
+            "The Word document could not be converted to Markdown, so only the paragraph text was inserted, without formatting. Saving creates a Markdown file (the Word document is not changed).",
         ["Word の文書を読み込めません。Word で開けるか確かめて、.docx 形式で保存し直してから、もう一度開いてください"] =
             "The Word document cannot be read. Check that it opens in Word, save it again as .docx, then try again",
         ["https:// で始まるアドレスだけ開けます。アドレスを確かめて、もう一度入力してください。"] =
@@ -114,7 +114,7 @@ internal static partial class Strings
         ["Jupyter Notebook を Markdown に変換して開きました。コードは言語付きのコードの枠、実行結果は「output」の枠・画像・表になります。保存すると Markdown ファイルになります（ノートブックは変わりません）。"] =
             "The Jupyter Notebook was converted to Markdown. Code is in code blocks with its language, and outputs are \"output\" blocks, pictures, or tables. Saving creates a Markdown file (the notebook is unchanged).",
         ["読み取れなかった実行結果・画像 {0} 個は入れませんでした。"] =
-            "{0} outputs or pictures that could not be read were left out.",
+            "{0} outputs or pictures that could not be read were not inserted.",
         ["Jupyter Notebook を保存しました。コードの枠はコードのセル、それ以外は Markdown のセルになります（実行結果は入りません）。"] =
             "The Jupyter Notebook was saved. Code blocks became code cells and everything else Markdown cells (outputs are not included).",
         ["Jupyter Notebook の書き出し"] =
@@ -199,7 +199,7 @@ internal static partial class Strings
         ["HTML を Markdown に変換して開きました。色や配置は元に戻りません。図は画像にしました。保存すると Markdown ファイルになります（HTML ファイルは変わりません）。"] =
             "Converted the HTML to Markdown. Colors and layout do not come back; diagrams became pictures. Saving makes a Markdown file (the HTML file stays as it is).",
         ["HTML を Markdown に変換できなかったため、文字だけを書式なしで入れました。保存すると Markdown ファイルになります（HTML ファイルは変わりません）。"] =
-            "The HTML could not be converted to Markdown, so only its text was put in, without formatting. Saving makes a Markdown file (the HTML file is not changed).",
+            "The HTML could not be converted to Markdown, so only its text was inserted, without formatting. Saving creates a Markdown file (the HTML file is not changed).",
         ["HTML ファイル (*.html)|*.html"] = "HTML files (*.html)|*.html",
         ["新しい文書.html"] = "Untitled.html",
         ["HTMLの保存先を選択してください"] = "Choose where to save the HTML file",
@@ -276,7 +276,7 @@ internal static partial class Strings
         ["{0} ページ目は、文字の並び（縦書き・重なった文字など）を読み取れないため、ページ全体を画像（SVG）にしました。"] =
             "The text of page {0} could not be read in order (vertical writing, text set over text, and so on), so the whole page became a picture (SVG).",
         ["{0} ページ目は、変換できなかった部分を、書式のない文字で入れました（文字を取り出せないページは、ページ全体の画像にしました）。"] =
-            "On page {0}, what could not be converted was put in as plain text (a page whose text could not be taken became a picture of the whole page).",
+            "On page {0}, the parts that could not be converted were inserted as plain text (a page whose text could not be extracted became a picture of the whole page).",
         ["パスワードで保護された PDF は開けません。保護を外した PDF を開いてください"] =
             "A password-protected PDF cannot be opened. Open a copy without the protection",
         ["PDF を読み込めません。PDF を表示するアプリで開けるか確かめてから、もう一度開いてください"] =
