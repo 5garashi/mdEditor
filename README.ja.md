@@ -21,7 +21,7 @@ Windows で Markdown ファイルを開き、テキストと整形済み表示�
 
 [English](./README.md) | 日本語 | [简体中文](./README.zh-CN.md)
 
-バージョン / Version: 1.0.21（変更の記録 / Changes: [CHANGELOG.md](./CHANGELOG.md)）
+バージョン / Version: 1.0.22（変更の記録 / Changes: [CHANGELOG.md](./CHANGELOG.md)）
 
 ## 特長
 

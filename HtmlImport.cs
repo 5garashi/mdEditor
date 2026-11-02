@@ -383,6 +383,7 @@ internal static class HtmlImport
             Tags = { Unknown = ReverseMarkdown.Config.UnknownTagsOption.Bypass }
         });
         var markdown = converter.Convert(document.Body?.InnerHtml ?? html);
+        markdown = UnescapeTextMath(markdown);
         for (var index = 0; index < math.Count; index++)
         {
             markdown = markdown.Replace($"MDEDITORMATH{index}X", math[index]);
@@ -400,6 +401,23 @@ internal static class HtmlImport
 
         return (markdown.Trim() + "\n", false);
     }
+
+    // Math written as text (\[ ... \], \( ... \), $$ ... $$, $ ... $) must not keep the
+    // converter's escapes: \rho\_{1,+} would show the _ instead of making a subscript.
+    // The converter writes a \_ already on the page as \\_, so this gives it back as \_
+    // (MathJax pages' \\( \_ \\) too). Code spans are left as written, math never runs
+    // past a blank line (the converter writes \r\n), and a $ is math only as the preview
+    // reads it ($5 and $10 are prices).
+    private static string UnescapeTextMath(string markdown) =>
+        System.Text.RegularExpressions.Regex.Replace(markdown,
+            @"(?<code>(`+)[\s\S]*?(?<!`)\1(?!`))"
+            + @"|\\\[(?:(?!\n[ \t]*\r?\n)[\s\S])+?\\\]"
+            + @"|\\\([^\r\n]+?\\\)"
+            + @"|(?<![\\$])\$\$(?:(?!\n[ \t]*\r?\n)[\s\S])+?\$\$"
+            + @"|(?<![\\$])\$(?=[^\s$])[^\n$]+?(?<=\S)\$(?![\d$])",
+            match => match.Groups["code"].Success
+                ? match.Value
+                : System.Text.RegularExpressions.Regex.Replace(match.Value, @"\\([_*])", "$1"));
 
     // An image's width in pixels as the page set it (width="300" or style="width: 300px"),
     // or null.

@@ -12,6 +12,14 @@
 
 The version number lives in [VERSION](./VERSION). Add each new version at the top, with a `## version — date` heading (used as the GitHub Release notes).
 
+## 1.0.22 — 2026-11-02
+
+- 書式付きの内容（HTML）を Markdown にするとき（クリップボードからの新規作成、HTML・Word・メールを開くときなど）、ページに文字で書かれた数式（`\[ … \]`・`\( … \)`・`$$ … $$`・`$ … $`）の中の `_` と `*` が `\_` と `\*` になり、`\rho_{1,+}` の添え字が `_` のまま表示されていたのを直した。数式の外の `_` と `*`、コードの中、`$5` と `$10` のような金額は、これまでどおり書いたとおりに残す。
+- テストの選び方と動かし方を TESTING.md にまとめた。
+
+- When formatted content (HTML) becomes Markdown (new from the clipboard, opening HTML, Word, or email, and so on), `_` and `*` in math written as text on the page (`\[ … \]`, `\( … \)`, `$$ … $$`, `$ … $`) became `\_` and `\*`, so the subscript in `\rho_{1,+}` showed as `_`; this is fixed. `_` and `*` outside math, in code, and prices such as `$5` and `$10` stay as written.
+- TESTING.md sets out which tests to run and how.
+
 ## 1.0.21 — 2026-11-01
 
 - `\\( … \\)` と `\\[ … \\]` で囲んだ数式（Markdown を HTML にしてから数式を探すページ向けの書き方で、中の `_` も `\_` と書く）を、プレビューと PDF・HTML・Word への保存で数式として表示するようにした。ファイルは書き換えない。`\( … \)` と同じく、「ほかの表示の設定も GitHub に合わせる」のときは文字のまま。

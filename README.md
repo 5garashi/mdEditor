@@ -21,7 +21,7 @@ A Windows app that opens Markdown files and lets you edit the text side by side 
 
 English | [日本語](./README.ja.md) | [简体中文](./README.zh-CN.md)
 
-Version: 1.0.21 (Changes: [CHANGELOG.md](./CHANGELOG.md))
+Version: 1.0.22 (Changes: [CHANGELOG.md](./CHANGELOG.md))
 
 ## Highlights
 
