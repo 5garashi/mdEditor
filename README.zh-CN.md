@@ -269,6 +269,15 @@ mdEditor.exe --lang ja "C:\docs\memo.md"
 
 ` ```mermaid ` 代码块用 [Mermaid](https://mermaid.js.org/) 绘制为图表（流程图、时序图、类图、状态图、ER 图、甘特图、饼图等）。`$...$` 和 `$$...$$` 中的公式用 [KaTeX](https://katex.org/) 显示。`\(...\)` 和 `\[...\]`（AI 聊天和论文的写法），以及 `\\(...\\)` 和 `\\[...\\]`（为先把 Markdown 转为 HTML 再查找公式的页面而写的写法，其中的 `\_` 按 `_` 读取），以及没有用 `$$` 括起来的 `\begin{align}` … `\end{align}`（`equation`、`alignat`、`gather` 也一样，Jupyter 等的写法）也显示为公式。KaTeX 不支持的 `\label{…}` 不显示。两者都随应用一起提供，因此离线也能使用，并会包含在 PDF 中。写了语言名的代码块（如 ` ```python `）用 [highlight.js](https://highlightjs.org/) 着色（约 40 种语言，包括 Python、JavaScript、TypeScript、C#、C/C++、Java、PowerShell、shell、SQL、HTML、CSS、JSON、YAML 和 diff）。颜色跟随预览的白天和夜间配色，保存为 PDF、PNG、HTML 或 Word 时也会保留。没有语言名的代码块不着色。语法有误的图表会显示错误信息和原始代码。可以用 [samples/diagram-test.zh-CN.md](./samples/diagram-test.zh-CN.md)（日语：[samples/diagram-test.md](./samples/diagram-test.md)，英语：[samples/diagram-test.en.md](./samples/diagram-test.en.md)）检查显示效果。
 
+### 支持的写法
+
+mdEditor 按书写者的意图显示以下两类写法：
+
+1. 正确的 Markdown，以及在其他环境（GitHub、用 MathJax 显示公式的页面、Jupyter 等）中正确的写法。
+2. 主流 AI 聊天工具输出的 Markdown。即使不是标准的 Markdown，也作为例外按意图显示（如 `\(…\)` 和 `\[…\]` 中的公式）。
+
+在任何环境中都不正确的写法，不做兼容。因旧版 mdEditor 的缺陷而以错误形式保存的文档，打开时也不会修复：请用修复后的版本重新粘贴，或手动修改。
+
 ### 支持的图表
 
 显示方式取决于代码块的语言名。

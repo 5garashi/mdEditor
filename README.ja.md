@@ -269,6 +269,15 @@ mdEditor.exe --lang ja "C:\docs\memo.md"
 
 ` ```mermaid ` のコードブロックは [Mermaid](https://mermaid.js.org/) で図として表示します（フローチャート、シーケンス図、クラス図、状態遷移図、ER図、ガントチャート、円グラフなど）。`$...$` と `$$...$$` の数式は [KaTeX](https://katex.org/) で表示します。`\(...\)` と `\[...\]`（AI のチャットや論文の書き方）、`\\(...\\)` と `\\[...\\]`（Markdown を HTML にしてから数式を探すページ向けの書き方。中の `\_` は `_` として読みます）、`$$` で囲まない `\begin{align}` … `\end{align}`（`equation`・`alignat`・`gather` も。Jupyter などの書き方）も数式として表示します。KaTeX にない `\label{…}` は表示しません。どちらもアプリに同梱しているため、オフラインでも表示でき、PDFにも出力されます。` ```python ` のように言語名を書いたコードブロックは、[highlight.js](https://highlightjs.org/) で色分けして表示します（Python、JavaScript、TypeScript、C#、C/C++、Java、PowerShell、シェル、SQL、HTML、CSS、JSON、YAML、diff など約 40 の言語）。色はプレビューの昼と夜の配色に合わせ、PDF・PNG・HTML・Word に保存したときも付きます。言語名のないコードブロックは色を付けません。図の構文に誤りがある場合は、エラーメッセージと元のコードを表示します。表示の確認には [samples/diagram-test.md](./samples/diagram-test.md)（英語版: [samples/diagram-test.en.md](./samples/diagram-test.en.md)、中国語版: [samples/diagram-test.zh-CN.md](./samples/diagram-test.zh-CN.md)）を使えます。
 
+### 対応する書き方の方針
+
+mdEditor は、次の 2 つの書き方を、書いた人の意図どおりに表示します。
+
+1. 正しい Markdown と、ほかの環境（GitHub、MathJax で数式を描くページ、Jupyter など）では正しい書き方。
+2. 主流の AI チャットが出す Markdown。標準の Markdown でなくても、例外として意図どおりに表示します（`\(…\)` と `\[…\]` の数式など）。
+
+どの環境でも正しくない書き方には、表示を合わせません。前の版の mdEditor の不具合で崩れたまま保存された文書も、開いたときには直しません。直った版で貼り直すか、手で直してください。
+
 ### GitHub と同じ書き方
 
 GitHub の README などで使われる次の書き方も、GitHub と同じように表示します。確認には [samples/github-test.md](./samples/github-test.md)（英語版: [samples/github-test.en.md](./samples/github-test.en.md)、中国語版: [samples/github-test.zh-CN.md](./samples/github-test.zh-CN.md)）を使えます。

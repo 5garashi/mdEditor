@@ -269,6 +269,15 @@ The text encoding is detected automatically: UTF-8 (with or without BOM), UTF-16
 
 ` ```mermaid ` code blocks are drawn as diagrams with [Mermaid](https://mermaid.js.org/) (flowcharts, sequence, class, state, ER, Gantt, pie charts, and more). Math in `$...$` and `$$...$$` is rendered with [KaTeX](https://katex.org/), and so is math in `\(...\)` and `\[...\]` (as AI chats and papers write it) and in `\\(...\\)` and `\\[...\\]` (as written for pages that find math after Markdown has made the HTML; `\_` inside is read as `_`), and `\begin{align}` … `\end{align}` without `$$` around it (`equation`, `alignat`, and `gather` too, as Jupyter and others write it). `\label{…}`, which KaTeX does not have, is not shown. Both are bundled with the app, so they work offline and are included in PDFs. Code blocks with a language name, such as ` ```python `, are colored with [highlight.js](https://highlightjs.org/) (about 40 languages, including Python, JavaScript, TypeScript, C#, C/C++, Java, PowerShell, shell, SQL, HTML, CSS, JSON, YAML, and diff). The colors follow the preview's day and night palettes and are kept when you save as PDF, PNG, HTML, or Word. Code blocks without a language stay plain. A diagram with a syntax error shows the error message and its source. Use [samples/diagram-test.en.md](./samples/diagram-test.en.md) (Japanese: [samples/diagram-test.md](./samples/diagram-test.md), Chinese: [samples/diagram-test.zh-CN.md](./samples/diagram-test.zh-CN.md)) to check the rendering.
 
+### Which ways of writing are supported
+
+mdEditor shows two kinds of writing as their writers meant:
+
+1. Correct Markdown, and writing that is correct elsewhere (GitHub, pages that draw math with MathJax, Jupyter, and so on).
+2. Markdown that mainstream AI chats output. As an exception, it is shown as meant even where it is not standard Markdown (such as math in `\(…\)` and `\[…\]`).
+
+Writing that is not correct anywhere is not accommodated. Documents saved broken by a bug in an earlier version of mdEditor are not repaired when opened either: paste the content again with the fixed version, or fix it by hand.
+
 ### Supported diagrams and charts
 
 How a block is rendered depends on the language name of the code block.
