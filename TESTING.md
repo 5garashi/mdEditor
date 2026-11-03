@@ -33,7 +33,7 @@ mdEditor のファイルを変えたら、この文書に従ってテストを�
 
 ## 訳を変えたとき
 
-英語・中国語の文を変えたら、`test_translations.py` を動かし、[docs/translation-review.md](docs/translation-review.md) の見直しの依頼文をユーザーに示す。
+英語・中国語の文を変えたら、`test_translations.py` を動かし、[docs/translation-review.md](docs/translation-review.md) の手順 4・5 のとおり、見直しをほかの AI に共通の道具で頼み、指摘を判断して直し、報告する。
 
 ---
 
