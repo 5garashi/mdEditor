@@ -30,6 +30,7 @@ mdEditor のファイルを変えたら、この文書に従ってテストを�
 
 - 共通のルール「不具合を直したら、水平展開する」の例集めの自動テストは、`targets\mdeditor\test_written_elsewhere.py` である。ほかの環境では正しい書き方を、mdEditor が書き換えず、意図どおりに表示することを確かめる。
 - 表示の読み取り・自動修正のルール・HTML などからの変換を変えたときは、見つけた例をこのファイルに足し、`run.cmd mdeditor -k test_written_elsewhere`（約 2 分）で動かす。
+- 複数行の `$$ … $$` は、区切りと式が同じ行にあるもの、引用・リスト内、従来の区切りだけの行をコーパスで確認する。コード内・金額・閉じていない式・空行をまたぐ式は、数式と取り違えず本文を保つことも確認する。`test_multiline_dollar_math_exports` では HTML・Word・PDF に数式として保存されることを確認する。
 
 ## 訳を変えたとき
 
@@ -38,4 +39,4 @@ mdEditor のファイルを変えたら、この文書に従ってテストを�
 ---
 
 **作成者 / Author**: 5garashi.com設計事務所 / 5garashi.com Design Office
-**最終更新 / Last updated**: 2026-11-02 JST
+**最終更新 / Last updated**: 2026-11-03 JST

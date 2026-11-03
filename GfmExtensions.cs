@@ -136,12 +136,62 @@ internal sealed class LatexMathDelimitersExtension(bool latex) : IMarkdownExtens
 
         if (pipeline.InlineParsers.Contains<MathInlineParser>() && !pipeline.InlineParsers.Contains<LetterAfterMathInlineParser>())
         {
+            pipeline.InlineParsers.InsertBefore<MathInlineParser>(new MultilineDollarMathInlineParser());
             pipeline.InlineParsers.InsertBefore<MathInlineParser>(new LetterAfterMathInlineParser());
         }
     }
 
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
+    }
+}
+
+// $$ content spread over several lines, with content beside the opening delimiter.
+// Markdig's block parser requires an opening line containing only $$, while its inline
+// parser rejects line breaks. Keep the existing paragraph boundaries as a safety limit.
+internal sealed class MultilineDollarMathInlineParser : InlineParser
+{
+    public MultilineDollarMathInlineParser() => OpeningCharacters = ['$'];
+
+    public override bool Match(InlineProcessor processor, ref StringSlice slice)
+    {
+        // Only supplement multiline $$ math in an existing paragraph. Fenced/inline code,
+        // block boundaries and ordinary one-line math stay with their existing parsers.
+        var text = slice.Text;
+        var start = slice.Start;
+        if (slice.PeekChar(1) != '$' || slice.PeekChar(2) == '$'
+            || start > 0 && text[start - 1] == '$') return false;
+
+        var content = start + 2;
+        var end = content;
+        while (end <= slice.End)
+        {
+            end = text.IndexOf("$$", end, slice.End - end + 1, StringComparison.Ordinal);
+            if (end < 0) return false;
+            var slashes = 0;
+            for (var i = end - 1; i >= content && text[i] == '\\'; i--) slashes++;
+            if (slashes % 2 == 0) break;
+            end += 2;
+        }
+
+        if (end > slice.End || end == content || end + 2 <= slice.End && text[end + 2] == '$') return false;
+        var body = text[content..end];
+        if (!body.Contains('\n') || string.IsNullOrWhiteSpace(body)
+            || Regex.IsMatch(body, @"\n[ \t\r]*\n", RegexOptions.CultureInvariant)) return false;
+
+        var math = new MathInline
+        {
+            Delimiter = '$',
+            DelimiterCount = 2,
+            Content = new StringSlice(text, content, end - 1),
+            Span = new SourceSpan(processor.GetSourcePosition(start, out var line, out var column), processor.GetSourcePosition(end + 1)),
+            Line = line,
+            Column = column
+        };
+        math.GetAttributes().AddClass("math");
+        processor.Inline = math;
+        slice.Start = end + 2;
+        return true;
     }
 }
 
