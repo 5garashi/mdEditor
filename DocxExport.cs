@@ -56,11 +56,16 @@ internal sealed class DocxExport
     private uint _drawingId;
     private int _numberingId;
 
+    // Math in the text of HTML blocks, by HtmlTextMath.Key.
+    private readonly IReadOnlyDictionary<string, ExportFigure> _keyedFigures;
+
     public DocxExport(MarkdownPipeline pipeline, IReadOnlyList<ExportFigure> figures, Func<string, string?> resolveImage,
-        IReadOnlyList<IReadOnlyList<IReadOnlyList<CodeRun>>>? codeColors = null)
+        IReadOnlyList<IReadOnlyList<IReadOnlyList<CodeRun>>>? codeColors = null,
+        IReadOnlyDictionary<string, ExportFigure>? keyedFigures = null)
     {
         _pipeline = pipeline;
         _figures = figures;
+        _keyedFigures = keyedFigures ?? new Dictionary<string, ExportFigure>();
         _resolveImage = resolveImage;
         _codeColors = codeColors ?? [];
     }
@@ -143,7 +148,7 @@ internal sealed class DocxExport
             case HtmlBlock html when InlineSvg.Drawings(BlockHtml(html)).Any():
                 // An SVG drawing is its picture from the preview, in its place among the
                 // text around it (a <figcaption>, for example).
-                var drawingSource = BlockHtml(html);
+                var drawingSource = HtmlWithMath(html);
                 var drawingEnd = 0;
                 foreach (var (drawingStart, drawingStop) in InlineSvg.Drawings(drawingSource).ToList())
                 {
@@ -169,7 +174,7 @@ internal sealed class DocxExport
             case HtmlBlock html when ImageTag.IsMatch(html.Lines.ToString()):
                 // Pictures written as HTML (<p align="center"><img width="50%"></p>, as GitHub
                 // READMEs size and place them) in one paragraph, aligned as the HTML says.
-                var htmlSource = html.Lines.ToString();
+                var htmlSource = HtmlWithMath(html);
                 var tags = ImageTag.Matches(htmlSource).Select(match => match.Value).ToList();
                 var placed = Paragraph(style, tags.Select(tag => (OpenXmlElement?)HtmlImage(tag) ?? Run($"［{HtmlAttribute(tag, "alt")}］")));
                 var wrapper = System.Text.RegularExpressions.Regex.Match(htmlSource,
@@ -189,18 +194,18 @@ internal sealed class DocxExport
                 {
                     foreach (var line in besideText.Split('\n').Where(line => line.Trim().Length > 0))
                     {
-                        yield return Paragraph(style, [Run(line.Trim())]);
+                        yield return Paragraph(style, TextRuns(line.Trim()));
                     }
                 }
                 break;
-            case HtmlBlock html when AlignedText.Match(html.Lines.ToString()) is { Success: true } aligned
+            case HtmlBlock html when AlignedText.Match(HtmlWithMath(html)) is { Success: true } aligned
                                      && PlainTextExport.StripHtml(aligned.Groups["text"].Value) is { } alignedText:
                 // A paragraph or heading placed with HTML (<p align="right">, <h1 align="center">,
                 // as a PDF's letterhead or title opens) keeps its place, and a heading its level.
                 var tag = aligned.Groups["tag"].Value.ToLowerInvariant();
                 foreach (var line in alignedText.Split('\n').Where(line => line.Trim().Length > 0))
                 {
-                    var placedText = Paragraph(tag[0] == 'h' ? $"Heading{tag[1]}" : style, [Run(line.Trim())]);
+                    var placedText = Paragraph(tag[0] == 'h' ? $"Heading{tag[1]}" : style, TextRuns(line.Trim()));
                     placedText.ParagraphProperties ??= new ParagraphProperties();
                     placedText.ParagraphProperties.Justification = new Justification
                     {
@@ -212,7 +217,7 @@ internal sealed class DocxExport
                 break;
             case HtmlBlock html:
                 // HTML written in Markdown keeps its text (Word cannot show the HTML itself).
-                foreach (var paragraph in HtmlTextParagraphs(BlockHtml(html), style))
+                foreach (var paragraph in HtmlTextParagraphs(HtmlWithMath(html), style))
                 {
                     yield return paragraph;
                 }
@@ -469,7 +474,7 @@ internal sealed class DocxExport
 
     private IEnumerable<Paragraph> HtmlTextParagraphs(string html, string? style) =>
         PlainTextExport.StripHtml(html) is { } text
-            ? text.Split('\n').Where(line => line.Trim().Length > 0).Select(line => Paragraph(style, [Run(line.Trim())]))
+            ? text.Split('\n').Where(line => line.Trim().Length > 0).Select(line => Paragraph(style, TextRuns(line.Trim())))
             : [];
 
     private Paragraph FigureParagraph(string? style)
@@ -657,11 +662,58 @@ internal sealed class DocxExport
             return null;
         }
 
-        var figure = _figures[_figureIndex++];
-        return Picture(figure.Png, ImagePartType.Png,
+        return FigurePicture(_figures[_figureIndex++], display);
+    }
+
+    private Run FigurePicture(ExportFigure figure, bool display) =>
+        Picture(figure.Png, ImagePartType.Png,
             (long)(figure.PixelWidth / figure.Scale * EmuPerPixel), (long)(figure.PixelHeight / figure.Scale * EmuPerPixel),
             display ? "Figure" : "Formula");
+
+    // --- Math written as text in an HTML block (see HtmlTextMath) ------------------
+
+    private int _htmlMathLine;
+    private List<HtmlTextMath.Piece> _htmlMathPieces = [];
+
+    // The block's HTML with each piece of math as a marker for TextRuns.
+    private string HtmlWithMath(HtmlBlock html)
+    {
+        var source = BlockHtml(html);
+        _htmlMathLine = html.Line;
+        _htmlMathPieces = HtmlTextMath.Find(source);
+        return HtmlTextMath.MarkForWord(source);
     }
+
+    // Text with math markers: each piece of math is its picture from the preview, or its
+    // TeX when the preview has no picture of it.
+    private List<OpenXmlElement> TextRuns(string text)
+    {
+        var result = new List<OpenXmlElement>();
+        var at = 0;
+        foreach (System.Text.RegularExpressions.Match marker in MathMarker.Matches(text))
+        {
+            if (marker.Index > at)
+            {
+                result.Add(Run(text[at..marker.Index]));
+            }
+
+            var index = int.Parse(marker.Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture);
+            var piece = index < _htmlMathPieces.Count ? _htmlMathPieces[index] : null;
+            result.Add(_keyedFigures.TryGetValue(HtmlTextMath.Key(_htmlMathLine, index), out var figure)
+                ? FigurePicture(figure, piece?.Display ?? false)
+                : Run(piece?.Tex ?? string.Empty));
+            at = marker.Index + marker.Length;
+        }
+
+        if (at < text.Length)
+        {
+            result.Add(Run(text[at..]));
+        }
+
+        return result;
+    }
+
+    private static readonly System.Text.RegularExpressions.Regex MathMarker = new("(\\d+)");
 
     private static readonly System.Text.RegularExpressions.Regex ImageTag =
         new(@"<img\b[^>]*>", System.Text.RegularExpressions.RegexOptions.IgnoreCase);

@@ -1728,7 +1728,9 @@
       x: Math.max(0, rect.left + window.scrollX - pad),
       y: Math.max(0, rect.top + window.scrollY - pad),
       width: Math.max(1, rect.width + pad * 2),
-      height: Math.max(1, rect.height + pad * 2)
+      height: Math.max(1, rect.height + pad * 2),
+      // Math in the text of an HTML block carries its own key (block line and place).
+      key: element.dataset.htmlMath ?? null
     };
     });
 

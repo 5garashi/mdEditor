@@ -261,7 +261,7 @@ mdEditor.exe --lang ja "C:\docs\memo.md"
 
 ## Markdown 和预览
 
-会显示标题、列表、任务列表、引用、表格（左对齐、居中、右对齐）、代码、链接和图像。Markdown 中写的 HTML 只显示 GitHub 允许的部分（`<details>`、`<summary>`、`<kbd>`、`<sup>`、`<sub>`、`<br>`、`<picture>`、图像宽度、用 `align` 居中等），其他部分会被移除。用 SVG 画的图（`<svg>`）与在 VS Code 和浏览器中一样显示（GitHub 不显示）。只保留图形、文字、箭头等绘图部分，脚本、`<foreignObject>`、动画以及加载图像或其他文件的部分都会被移除。保存为 PDF、PNG 和 HTML 时与预览一致（HTML 中保留 SVG 原样），保存为 Word 时作为图片插入。与 GitHub 相同，脚本、`<style>`、`<iframe>`、嵌入内容、表单、`onclick` 等事件属性和 `javascript:` 链接都会被移除，不会运行。用 HTML 写的网络图像与 Markdown 的图像一样，未经你同意不会加载。HTML 注释（`<!-- -->`）不显示。网页链接用默认浏览器打开，邮件链接用默认邮件应用打开。PDF 中只输出排版后的预览，不包含编辑中的文本区域和按钮。
+会显示标题、列表、任务列表、引用、表格（左对齐、居中、右对齐）、代码、链接和图像。Markdown 中写的 HTML 只显示 GitHub 允许的部分（`<details>`、`<summary>`、`<kbd>`、`<sup>`、`<sub>`、`<br>`、`<picture>`、图像宽度、用 `align` 居中等），其他部分会被移除。用 SVG 画的图（`<svg>`）与在 VS Code 和浏览器中一样显示（GitHub 不显示）。只保留图形、文字、箭头等绘图部分，脚本、`<foreignObject>`、动画以及加载图像或其他文件的部分都会被移除。保存为 PDF、PNG 和 HTML 时与预览一致（HTML 中保留 SVG 原样），保存为 Word 时作为图片插入。HTML 中以纯文本书写的公式（如 `<figcaption>` 中的 `$x$`）也会像使用 MathJax 的网页一样渲染为公式（代码中的文字以及 `$5` 这样的金额仍按文字显示）。与 GitHub 相同，脚本、`<style>`、`<iframe>`、嵌入内容、表单、`onclick` 等事件属性和 `javascript:` 链接都会被移除，不会运行。用 HTML 写的网络图像与 Markdown 的图像一样，未经你同意不会加载。HTML 注释（`<!-- -->`）不显示。网页链接用默认浏览器打开，邮件链接用默认邮件应用打开。PDF 中只输出排版后的预览，不包含编辑中的文本区域和按钮。
 
 `images/a.png` 这样的相对路径图像从文档所在的文件夹及其子文件夹加载。只读取图像文件（PNG、JPEG、GIF、WebP、AVIF、BMP、ICO、SVG），不会读取文档所在文件夹以上的位置。
 

@@ -362,7 +362,7 @@ public partial class MainWindow : Window
         _htmlSanitizer.AllowedAttributes.Clear();
         _htmlSanitizer.AllowedAttributes.UnionWith(
         [
-            "align", "alt", "checked", "cite", "class", "colspan", "controls", "data-external-src", "data-line", "data-source", "datetime", "dir",
+            "align", "alt", "checked", "cite", "class", "colspan", "controls", "data-external-src", "data-html-math", "data-line", "data-source", "datetime", "dir",
             "disabled", "height", "href", "id", "lang", "loop", "media", "muted", "name", "open", "playsinline", "poster", "reversed",
             "rowspan", "src", "srcset", "start", "style", "title", "type", "valign", "width",
             // Older presentational attributes GitHub keeps too, such as <br clear="all">
@@ -4050,6 +4050,7 @@ public partial class MainWindow : Window
             }
 
             var figures = new List<ExportFigure>();
+            var keyedFigures = new Dictionary<string, ExportFigure>(StringComparer.Ordinal);
             IReadOnlyList<IReadOnlyList<IReadOnlyList<CodeRun>>> codeColors = [];
             try
             {
@@ -4065,7 +4066,16 @@ public partial class MainWindow : Window
                     var frame = System.Windows.Media.Imaging.BitmapDecoder.Create(
                         new MemoryStream(png), System.Windows.Media.Imaging.BitmapCreateOptions.None,
                         System.Windows.Media.Imaging.BitmapCacheOption.OnLoad).Frames[0];
-                    figures.Add(new ExportFigure(png, frame.PixelWidth, frame.PixelHeight, CaptureScale));
+                    var figure = new ExportFigure(png, frame.PixelWidth, frame.PixelHeight, CaptureScale);
+                    // Math in the text of an HTML block is found by its key, not by its place.
+                    if (rect.TryGetProperty("key", out var key) && key.ValueKind == JsonValueKind.String)
+                    {
+                        keyedFigures[key.GetString()!] = figure;
+                    }
+                    else
+                    {
+                        figures.Add(figure);
+                    }
                 }
 
                 codeColors = ReadCodeColors(await PageValueAsync("window.mdeditorCodeColors()"));
@@ -4079,7 +4089,7 @@ public partial class MainWindow : Window
             try
             {
                 var titleText = _filePath is null ? Path.GetFileNameWithoutExtension(path) : Path.GetFileNameWithoutExtension(_filePath);
-                new DocxExport(_markdownPipeline, figures, ResolveImageForExport, codeColors).Write(_text, tempPath, titleText);
+                new DocxExport(_markdownPipeline, figures, ResolveImageForExport, codeColors, keyedFigures).Write(_text, tempPath, titleText);
                 File.Move(tempPath, path, overwrite: true);
             }
             finally
@@ -5509,11 +5519,11 @@ public partial class MainWindow : Window
                 return;
             }
 
-            foreach (var line in obj.Lines.Lines.Take(obj.Lines.Count))
-            {
-                renderer.Write(MarkImageSources(line.Slice.ToString(), line.Slice.Start, editorOffset));
-                renderer.WriteLine();
-            }
+            // Math written as text in the block shows as math, as on a MathJax page.
+            var lines = obj.Lines.Lines.Take(obj.Lines.Count)
+                .Select(line => MarkImageSources(line.Slice.ToString(), line.Slice.Start, editorOffset));
+            renderer.Write(HtmlTextMath.Mark(string.Join("\n", lines), obj.Line));
+            renderer.WriteLine();
         }
     }
 
