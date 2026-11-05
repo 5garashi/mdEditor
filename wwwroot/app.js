@@ -231,7 +231,7 @@
       shortcuts: "キー操作", shortcutHeading: "キーボードショートカット",
       brandLogo: "assets/5garashi_logotype_outlined.svg", brandLogoDark: "assets/5garashi_logotype_reversed_outlined.svg",
       brandLogoAlt: "5garashi.com 設計事務所 / 5garashi.com Design Office",
-      settings: "設定", settingsHeading: "設定",
+      appMenu: "メニュー", settings: "設定", settingsHeading: "設定",
       settingsIntro: "読みやすさや操作のしやすさを、使う人に合わせて調整できます。設定は次回の起動でも使います。",
       settingsText: "文字（編集欄とプレビュー）", settingsFont: "書体", settingsFontStandard: "標準",
       settingsFontUd: "BIZ UD ゴシック（読みやすさ重視）", settingsSize: "文字の大きさ", settingsSize100: "標準",
@@ -514,7 +514,7 @@
       shortcuts: "按键操作", shortcutHeading: "键盘快捷键",
       brandLogo: "assets/5garashi_logotype_en_outlined.svg", brandLogoDark: "assets/5garashi_logotype_en_reversed_outlined.svg",
       brandLogoAlt: "5garashi.com Design Office",
-      settings: "设置", settingsHeading: "设置",
+      appMenu: "菜单", settings: "设置", settingsHeading: "设置",
       settingsIntro: "可以根据使用者调整易读性和易用性。下次启动时会保留这些设置。",
       settingsText: "文字（编辑区和预览）", settingsFont: "字体", settingsFontStandard: "标准",
       settingsFontUd: "BIZ UD Gothic（注重易读性）", settingsSize: "文字大小", settingsSize100: "标准",
@@ -797,7 +797,7 @@
       shortcuts: "Keys", shortcutHeading: "Keyboard shortcuts",
       brandLogo: "assets/5garashi_logotype_en_outlined.svg", brandLogoDark: "assets/5garashi_logotype_en_reversed_outlined.svg",
       brandLogoAlt: "5garashi.com Design Office",
-      settings: "Settings", settingsHeading: "Settings",
+      appMenu: "Menu", settings: "Settings", settingsHeading: "Settings",
       settingsIntro: "Adjust readability and ease of use to suit you. Settings are remembered.",
       settingsText: "Text (editor and preview)", settingsFont: "Typeface", settingsFontStandard: "Standard",
       settingsFontUd: "BIZ UD Gothic (designed for legibility)", settingsSize: "Text size", settingsSize100: "Standard",
@@ -4071,6 +4071,55 @@
     if (event.target === sampleDialog) sampleDialog.close();
   });
 
+  // The menu at the right of the header: Settings, Keys, and About. It opens with a
+  // click, Enter, Space, or the down arrow; the arrows, Home, and End move through it;
+  // Esc, Tab, or a click elsewhere closes it. Choosing an item gives the focus back to
+  // the menu button first, so the dialog the item opens returns it there.
+  const appMenuButton = document.getElementById("app-menu-button");
+  const appMenu = document.getElementById("app-menu");
+  const appMenuItems = () => Array.from(appMenu.querySelectorAll("[role='menuitem']"));
+  const closeAppMenu = (focusButton) => {
+    if (appMenu.hidden) return;
+    appMenu.hidden = true;
+    appMenuButton.setAttribute("aria-expanded", "false");
+    if (focusButton) appMenuButton.focus();
+  };
+  const openAppMenu = (focusLast = false) => {
+    appMenu.hidden = false;
+    appMenuButton.setAttribute("aria-expanded", "true");
+    const items = appMenuItems();
+    items[focusLast ? items.length - 1 : 0]?.focus();
+  };
+  appMenuButton.addEventListener("click", () => (appMenu.hidden ? openAppMenu() : closeAppMenu(true)));
+  appMenuButton.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      openAppMenu(event.key === "ArrowUp");
+    }
+  });
+  appMenu.addEventListener("keydown", (event) => {
+    const items = appMenuItems();
+    const index = items.indexOf(document.activeElement);
+    const move = { ArrowDown: index + 1, ArrowUp: index - 1, Home: 0, End: items.length - 1 }[event.key];
+    if (move !== undefined) {
+      event.preventDefault();
+      items[(move + items.length) % items.length].focus();
+    } else if (event.key === "Escape") {
+      event.preventDefault();
+      event.stopPropagation();
+      closeAppMenu(true);
+    } else if (event.key === "Tab") {
+      closeAppMenu(false);
+    }
+  });
+  // Runs before the item's own action (capture), so the dialog opens with the menu closed.
+  appMenu.addEventListener("click", (event) => {
+    if (event.target.closest("[role='menuitem']")) closeAppMenu(true);
+  }, true);
+  document.addEventListener("pointerdown", (event) => {
+    if (!appMenu.hidden && !event.target.closest?.(".app-menu")) closeAppMenu(false);
+  });
+
   const aboutDialog = document.getElementById("about-dialog");
   document.getElementById("about-button").addEventListener("click", () => aboutDialog.showModal());
   document.getElementById("about-close").addEventListener("click", () => aboutDialog.close());
@@ -5508,6 +5557,9 @@
     } else if (message.type === "documentInfo") {
       documentName.textContent = message.name;
       documentName.title = message.name;
+      const previewName = document.getElementById("preview-document-name");
+      previewName.textContent = message.name;
+      previewName.title = message.name;
       documentDirty = message.isDirty;
       documentEncoding = message.encoding ?? "utf-8";
       encodingSource = message.encodingSource ?? "detected";

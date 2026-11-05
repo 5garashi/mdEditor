@@ -5206,22 +5206,28 @@ public partial class MainWindow : Window
         }
     }
 
+    private string DocumentDisplayName =>
+        _filePath is null ? _importName ?? Strings.Tr("新しい文書.md") : Path.GetFileName(_filePath);
+
+    // The preview's own window shows the document's name too, in its title and heading.
     private void SendDocumentInfo()
     {
-        if (!_pageReady)
-        {
-            return;
-        }
-
-        SendToPage(new
+        UpdatePreviewWindowTitle();
+        var info = new
         {
             type = "documentInfo",
-            name = _filePath is null ? _importName ?? Strings.Tr("新しい文書.md") : Path.GetFileName(_filePath),
+            name = DocumentDisplayName,
             isDirty = _isDirty,
             encoding = EncodingId(_encoding),
             encodingSource = _encodingSource,
             canReopen = _filePath is not null
-        });
+        };
+        if (_pageReady)
+        {
+            SendToPage(info);
+        }
+
+        SendToPreviewWindow(info);
     }
 
     private void SendPreview(bool notifyRendered = false, bool forPrint = false, bool previewWindowOnly = false)
@@ -5690,6 +5696,7 @@ public partial class MainWindow : Window
                     SendToPreviewWindow(new { type = "language", lang = Strings.ForcedLanguage });
                 }
                 SendToPreviewWindow(new { type = "theme", theme = _theme });
+                SendDocumentInfo();
                 SendPreview(previewWindowOnly: true);
                 SendToPreviewWindow(new { type = "syncLine", line = _lastSyncLine, edge = _lastSyncEdge });
                 break;
@@ -5738,7 +5745,7 @@ public partial class MainWindow : Window
     {
         if (_previewWindow is { } window)
         {
-            window.Title = $"{Strings.Tr("プレビュー")} - mdEditor by 5garashi.com";
+            window.Title = $"{DocumentDisplayName} - {Strings.Tr("プレビュー")} - mdEditor by 5garashi.com";
         }
     }
 

@@ -403,6 +403,68 @@ body.drop-insert .editor-pane {
   min-width: 0;
 }
 
+/* The menu (Settings, Keys, About) at the right of the header; its right margin keeps
+   it clear of the mark (Identity 3-5). The list opens below, aligned to its right. */
+.app-menu {
+  position: relative;
+  flex: 0 0 auto;
+  margin-inline-end: 24px;
+}
+
+#app-menu-button[aria-expanded="true"] {
+  color: var(--head);
+  background: var(--ink);
+}
+
+.app-menu-list {
+  position: absolute;
+  z-index: 50;
+  top: calc(100% + 6px);
+  right: 0;
+  display: flex;
+  min-width: 220px;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  background: var(--card);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.2);
+}
+
+.app-menu-list[hidden] {
+  display: none;
+}
+
+.app-menu-list button {
+  width: 100%;
+  border-color: transparent;
+  text-align: start;
+  white-space: nowrap;
+}
+
+.app-menu-list button:hover,
+.app-menu-list button:focus-visible {
+  border-color: var(--ink);
+  background: var(--paper);
+}
+
+/* The document name beside the heading, in the preview's own window only. */
+.preview-document-name {
+  display: none;
+}
+
+:root.preview-window .preview-document-name {
+  display: inline;
+  overflow: hidden;
+  min-width: 0;
+  flex: 0 1 auto;
+  color: var(--steel);
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* Settings > Theme and PDF paper: the two switches side by side. */
 .theme-paper-row {
   display: flex;

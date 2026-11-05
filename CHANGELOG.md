@@ -14,6 +14,8 @@ The version number lives in [VERSION](./VERSION). Add each new version at the to
 
 ## 1.0.22 — 2026-11-02
 
+- 「設定」「キー操作」「このアプリについて」を、ヘッダーの右端（マークの手前）の「メニュー」にまとめた。ツールバーと編集欄の見出しのボタンが減り、狭い画面でも並びやすくなった。メニューは矢印キー・Home・End で選び、Esc で閉じる。ショートカット（Ctrl+Shift+O、Shift+F1）はこれまでどおり使える。
+- 別ウィンドウのプレビューの、ウィンドウのタイトルと見出しに、表示している文書のファイル名を出すようにした。
 - Markdown の中に HTML で書いた部分（`<figure>` の `<figcaption>` など）に文字で書いた数式（`$N\kappa_i$`・`\( … \)`・`$$ … $$`・`\[ … \]`）が、文字のまま表示されていたのを、MathJax で数式を描くページと同じように数式として表示するようにした。`$` の決まりは Markdown の数式と同じで、`$5` と `$10` のような金額と、コード・SVG の中は文字のまま。PDF・PNG・HTML・Word にも数式として入る。元の文書は書き換えない。
 - Markdown の中に HTML で書いた SVG の図（`<svg>`）が表示されず、図の説明（`<figcaption>`）だけが出ていたのを、VS Code やブラウザーと同じように図を表示するようにした（GitHub は表示しない）。図形・文字・矢印の印・グラデーションなどの描画だけを残し、スクリプト・`<foreignObject>`・画像やほかのファイルの読み込み・アニメーション・`onload` などのイベント属性は取り除く。図の大きさと色を決める `style`（`max-width` など）も効き、文字の色（`currentColor`）で描いた図はダークでも見える。PDF・PNG・HTML にはプレビューのとおりに入り（HTML には SVG のまま）、Word には図の画像として入る（図の中の文字は本文に繰り返さない）。元の文書は書き換えない。
 - `$$` と式を同じ行に書き始めた複数行の数式（`$$\begin{aligned}` など）が文字のまま表示されていたのを直した。同じ段落の中で閉じる式を数式として表示し、元の文書は書き換えない。コードの中と、空行をまたいで閉じる式は対象にしない。
@@ -26,6 +28,8 @@ The version number lives in [VERSION](./VERSION). Add each new version at the to
 - テストの選び方と動かし方を TESTING.md にまとめた。
 - README に「対応する書き方の方針」を書いた。ほかの環境では正しい書き方と、主流の AI チャットが出す Markdown に合わせ、どこでも正しくない書き方や、前の版の不具合で崩れて保存された文書には合わせない。
 
+- Settings, Keys, and About are now in a single Menu at the right end of the header, before the mark. The toolbar and the editor heading have fewer buttons, so the buttons fit more easily on narrow screens. In the menu, use the arrow keys, Home, and End to choose an item, and Esc to close it. The shortcuts (Ctrl+Shift+O, Shift+F1) work as before.
+- The preview in its own window now shows the file name of the document in its title and heading.
 - Math written as text in the HTML parts of Markdown (such as a `<figcaption>` in a `<figure>`), written as `$N\kappa_i$`, `\( … \)`, `$$ … $$`, or `\[ … \]`, stayed as plain text. It now shows as math, as on pages that draw math with MathJax. The rules for `$` are the same as for math in Markdown, so amounts such as `$5` and `$10`, and text in code and SVG, stay as text. PDF, PNG, HTML, and Word exports include it as math too. The original document is not changed.
 - SVG drawings written as HTML in Markdown (`<svg>`) did not show; only their caption (`<figcaption>`) did. They now show as they do in VS Code and browsers (GitHub does not show them). Only the drawing is kept, such as shapes, text, arrowheads, and gradients; scripts, `<foreignObject>`, loading images or other files, animation, and event attributes such as `onload` are removed. A `style` that sets the size and colors of the drawing (such as `max-width`) also takes effect, and a drawing in the text color (`currentColor`) stays visible in the dark theme. PDF, PNG, and HTML get the drawing as the preview shows it (HTML keeps it as SVG), and Word gets it as a picture (the words in it are not repeated as text). The original document is not changed.
 - Multiline math with content on the opening `$$` line (such as `$$\begin{aligned}`) now renders as math instead of plain text. Expressions that close within the same paragraph are rendered as math, and the original document is left unchanged. Math inside code and expressions whose closing delimiter is beyond a blank line are excluded.

@@ -46,6 +46,16 @@
       <span id="save-state">保存済み</span>
       <button id="encoding-button" class="status-button" type="button" aria-haspopup="dialog">UTF-8</button>
     </div>
+    <!-- Settings, the key list, and About are in one menu at the right of the header,
+         clear of the mark (Identity 3-5). The items keep their ids and shortcuts. -->
+    <div class="app-menu">
+      <button id="app-menu-button" type="button" data-i18n="appMenu" aria-haspopup="menu" aria-expanded="false" aria-controls="app-menu">メニュー</button>
+      <div id="app-menu" class="app-menu-list" role="menu" aria-labelledby="app-menu-button" hidden>
+        <button id="settings-button" type="button" role="menuitem" tabindex="-1" data-i18n="settings" aria-haspopup="dialog">設定</button>
+        <button id="shortcuts-button" type="button" role="menuitem" tabindex="-1" data-i18n="shortcuts" aria-haspopup="dialog">キー操作</button>
+        <button id="about-button" type="button" role="menuitem" tabindex="-1" data-i18n="about" aria-haspopup="dialog">このアプリについて</button>
+      </div>
+    </div>
     <!-- The symbol mark stays red (volt) in dark mode too, by the owner's choice. -->
     <picture>
       <img class="brand-mark" src="assets/5garashi_mark_simple.svg" alt="" aria-hidden="true">
@@ -58,10 +68,7 @@
       <button id="url-button" type="button" data-i18n="openUrl" aria-haspopup="dialog">URLを開く</button>
       <button id="save-button" class="primary" type="button" data-i18n="save">保存</button>
       <button id="save-as-button" type="button" data-i18n="saveAs">名前を付けて保存</button>
-      <!-- Theme and paper are in Settings (Ctrl+Shift+T / Ctrl+Shift+A switch them anywhere). -->
-      <button id="settings-button" type="button" data-i18n="settings" aria-haspopup="dialog">設定</button>
       <button id="sample-button" type="button" data-i18n="sample" aria-haspopup="dialog">サンプル</button>
-      <button id="about-button" type="button" data-i18n="about" aria-haspopup="dialog">このアプリについて</button>
       <label class="language-picker"><span lang="en">Language</span>
         <select id="language-select">
           <option value="ja" lang="ja">日本語</option>
@@ -94,7 +101,6 @@
         <button id="toc-button" type="button" data-i18n="toc">目次</button>
         <button id="image-button" type="button" data-i18n="imageButton" aria-haspopup="dialog">画像の調整</button>
         <button id="help-button" type="button" data-i18n="help" aria-haspopup="dialog">書き方</button>
-        <button id="shortcuts-button" type="button" data-i18n="shortcuts" aria-haspopup="dialog">キー操作</button>
         <button class="pane-fullscreen-button" type="button" data-fullscreen-mode="editor" aria-pressed="false" aria-label="編集画面をウィンドウ全体に表示">ウィンドウ全体に表示</button>
         <button type="button" data-detach="editor" hidden>プレビューを本体に戻す</button>
       </div>
@@ -137,6 +143,8 @@
     <section class="pane preview-pane" aria-labelledby="preview-heading">
       <div class="pane-heading">
         <h2 id="preview-heading" data-i18n="previewHeading">プレビュー</h2>
+        <!-- In the preview's own window, the document it shows. -->
+        <span id="preview-document-name" class="preview-document-name"></span>
         <!-- Read-aloud controls appear only when read-aloud is turned on in Settings. -->
         <div id="reader-controls" class="reader-controls" hidden>
           <button id="reader-play" type="button" data-i18n="readerPlay">読み上げ</button>
