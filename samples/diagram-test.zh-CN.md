@@ -7,11 +7,11 @@ author:
 license: MIT
 ---
 <!--
-  ファイル名 / File: samples/diagram-test.zh-CN.md
-  概要 / Description: Test document for diagram, chart, and math rendering (Simplified Chinese)
-  作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
-  作成日 / Created: 2026-10-21
-  ライセンス / License: MIT
+  File: samples/diagram-test.zh-CN.md
+  Description: Test document for diagram, chart, and math rendering (Simplified Chinese)
+  Author: 5garashi.com Design Office
+  Created: 2026-10-21
+  License: MIT
   SPDX-License-Identifier: MIT
 -->
 # 图表显示测试

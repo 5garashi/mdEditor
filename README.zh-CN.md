@@ -8,11 +8,11 @@ license: MIT
 tags: [markdown, windows, wpf, webview2]
 ---
 <!--
-  ファイル名 / File: README.zh-CN.md
-  概要 / Description: Setup and usage guide for mdEditor (Simplified Chinese)
-  作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
-  作成日 / Created: 2026-10-21
-  ライセンス / License: MIT
+  File: README.zh-CN.md
+  Description: Setup and usage guide for mdEditor (Simplified Chinese)
+  Author: 5garashi.com Design Office
+  Created: 2026-10-21
+  License: MIT
   SPDX-License-Identifier: MIT
 -->
 # mdEditor
