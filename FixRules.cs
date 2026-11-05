@@ -1,9 +1,9 @@
 /*
-  ファイル名 / File: FixRules.cs
-  概要 / Description: The fix rules file fix-rules.json (rules that fix a document when it opens), read and written for the page
-  作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
-  作成日 / Created: 2026-10-30
-  ライセンス / License: MIT
+  File: FixRules.cs
+  Description: The fix rules file fix-rules.json (rules that fix a document when it opens), read and written for the page
+  Author: 5garashi.com Design Office
+  Created: 2026-10-30
+  License: MIT
   SPDX-License-Identifier: MIT
 */
 using System.IO;

@@ -1,9 +1,9 @@
 /*
-  ファイル名 / File: wwwroot/fix-worker.js
-  概要 / Description: 自動修正のルールの正規表現を、画面を止めずに当てる / Runs a fix rule's regular expression off the main thread
-  作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
-  作成日 / Created: 2026-10-30
-  ライセンス / License: MIT
+  File: wwwroot/fix-worker.js
+  Description: Runs a fix rule's regular expression off the main thread
+  Author: 5garashi.com Design Office
+  Created: 2026-10-30
+  License: MIT
   SPDX-License-Identifier: MIT
 */
 // One rule over one text. The page sends the parts it must not touch (code, math, HTML, link

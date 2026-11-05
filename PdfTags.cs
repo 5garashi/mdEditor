@@ -1,9 +1,9 @@
 /*
-  ファイル名 / File: PdfTags.cs
-  概要 / Description: Reads the tags of a tagged PDF: reading order, headings, list items, tables, and what is not the text
-  作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
-  作成日 / Created: 2026-10-26
-  ライセンス / License: MIT
+  File: PdfTags.cs
+  Description: Reads the tags of a tagged PDF: reading order, headings, list items, tables, and what is not the text
+  Author: 5garashi.com Design Office
+  Created: 2026-10-26
+  License: MIT
   SPDX-License-Identifier: MIT
 */
 using UglyToad.PdfPig;
