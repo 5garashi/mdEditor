@@ -1719,8 +1719,9 @@
   // Diagrams and formulas in document order, the order the Word output meets them.
   // Only the outer boxes count: shapes inside a drawing can carry the class
   // "mermaid" too (git graph commits do), and they are not figures of their own.
-  window.mdeditorFigureRects = () => Array.from(preview.querySelectorAll("div.mermaid, div.graphviz, div.stl, div.geo-map, span.math, div.math"))
-    .filter((element) => !element.parentElement?.closest(".mermaid, .graphviz, .stl, .geo-map, .math")).map((element) => {
+  // SVG drawings written in Markdown (marked by the host) are figures too.
+  window.mdeditorFigureRects = () => Array.from(preview.querySelectorAll("div.mermaid, div.graphviz, div.stl, div.geo-map, span.math, div.math, svg[data-inline-svg]"))
+    .filter((element) => !element.parentElement?.closest(".mermaid, .graphviz, .stl, .geo-map, .math, svg")).map((element) => {
     const rect = element.getBoundingClientRect();
     const pad = element.classList.contains("math") ? 1 : 4;
     return {
@@ -4644,8 +4645,34 @@
   // shadow the app's own elements (such as "help-dialog"), so keep them as data-anchor.
   const moveAnchorsOffIds = () => {
     for (const element of preview.querySelectorAll("[id]")) {
+      if (element.closest("svg[data-inline-svg]")) continue;
       element.dataset.anchor = element.id;
       element.removeAttribute("id");
+    }
+    prefixDrawingIds();
+  };
+
+  // The parts of an SVG drawing point at one another by id (marker-end="url(#arrow)",
+  // href="#shape", aria-labelledby), so a drawing's ids stay ids, under a prefix of
+  // their own that the app's elements never use, and what points at them follows.
+  const drawingIdPrefix = "svg-drawing-";
+  const prefixDrawingIds = () => {
+    for (const drawing of preview.querySelectorAll("svg[data-inline-svg]")) {
+      const parts = [drawing, ...drawing.querySelectorAll("*")];
+      const ids = new Set(parts.filter((element) => element.id).map((element) => element.id));
+      if (ids.size === 0) continue;
+      const rename = (id) => (ids.has(id) ? drawingIdPrefix + id : id);
+      for (const element of parts) {
+        for (const attribute of Array.from(element.attributes)) {
+          const value = attribute.value;
+          let renamed = value;
+          if (attribute.name === "id") renamed = rename(value);
+          else if (attribute.name === "aria-labelledby" || attribute.name === "aria-describedby") renamed = value.split(/\s+/).map(rename).join(" ");
+          else if (attribute.localName === "href" && value.trim().startsWith("#")) renamed = "#" + rename(value.trim().slice(1));
+          else if (value.includes("url(")) renamed = value.replace(/url\(\s*(["']?)#([^)"'\s]+)\1\s*\)/g, (all, quote, id) => `url(${quote}#${rename(id)}${quote})`);
+          if (renamed !== value) element.setAttributeNS(attribute.namespaceURI, attribute.name, renamed);
+        }
+      }
     }
   };
 

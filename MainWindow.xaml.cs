@@ -370,14 +370,22 @@ public partial class MainWindow : Window
             "abbr", "axis", "border", "cellpadding", "cellspacing", "clear", "color", "compact", "frame", "headers",
             "hreflang", "hspace", "itemprop", "noshade", "nowrap", "rules", "scope", "size", "span", "summary", "vspace"
         ]);
-        // Markdig writes table alignment as style="text-align: ..."; nothing else is kept.
+        // Markdig writes table alignment as style="text-align: ..."; nothing else is kept
+        // (except the size and colors of an SVG drawing, see InlineSvg).
         _htmlSanitizer.AllowedCssProperties.Clear();
         _htmlSanitizer.AllowedCssProperties.Add("text-align");
         _htmlSanitizer.AllowedSchemes.Clear();
         _htmlSanitizer.AllowedSchemes.UnionWith(["http", "https", "mailto"]);
+        // SVG drawings show as in VS Code and browsers, with only their drawing kept.
+        InlineSvg.Configure(_htmlSanitizer);
         // Task-list items are the only inputs Markdig emits; keep them read-only checkboxes.
         _htmlSanitizer.PostProcessNode += (_, e) =>
         {
+            if (e.Node is AngleSharp.Dom.IElement element)
+            {
+                InlineSvg.PostProcess(element);
+            }
+
             if (e.Node is AngleSharp.Dom.IElement { TagName: "IMG" or "SOURCE" or "VIDEO" } picture)
             {
                 ResolveHtmlImage(picture);

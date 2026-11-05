@@ -140,6 +140,27 @@ internal sealed class DocxExport
                     }
                 }
                 break;
+            case HtmlBlock html when InlineSvg.Drawings(BlockHtml(html)).Any():
+                // An SVG drawing is its picture from the preview, in its place among the
+                // text around it (a <figcaption>, for example).
+                var drawingSource = BlockHtml(html);
+                var drawingEnd = 0;
+                foreach (var (drawingStart, drawingStop) in InlineSvg.Drawings(drawingSource).ToList())
+                {
+                    foreach (var paragraph in HtmlTextParagraphs(drawingSource[drawingEnd..drawingStart], style))
+                    {
+                        yield return paragraph;
+                    }
+
+                    yield return FigureParagraph(style);
+                    drawingEnd = drawingStop;
+                }
+
+                foreach (var paragraph in HtmlTextParagraphs(drawingSource[drawingEnd..], style))
+                {
+                    yield return paragraph;
+                }
+                break;
             case HtmlBlock html when html.Lines.ToString().Contains("<video", StringComparison.OrdinalIgnoreCase):
                 // A video cannot play in Word: its name stands in its place.
                 var videoSource = System.Text.RegularExpressions.Regex.Match(html.Lines.ToString(), @"srcs*=s*[""']([^""']+)").Groups[1].Value;
@@ -191,12 +212,9 @@ internal sealed class DocxExport
                 break;
             case HtmlBlock html:
                 // HTML written in Markdown keeps its text (Word cannot show the HTML itself).
-                if (PlainTextExport.StripHtml(string.Join("\n", html.Lines.Lines.Take(html.Lines.Count).Select(line => line.Slice.ToString()))) is { } htmlText)
+                foreach (var paragraph in HtmlTextParagraphs(BlockHtml(html), style))
                 {
-                    foreach (var line in htmlText.Split('\n').Where(line => line.Trim().Length > 0))
-                    {
-                        yield return Paragraph(style, [Run(line.Trim())]);
-                    }
+                    yield return paragraph;
                 }
                 break;
             case CodeBlock code:
@@ -446,6 +464,14 @@ internal sealed class DocxExport
         return result;
     }
 
+    private static string BlockHtml(HtmlBlock html) =>
+        string.Join("\n", html.Lines.Lines.Take(html.Lines.Count).Select(line => line.Slice.ToString()));
+
+    private IEnumerable<Paragraph> HtmlTextParagraphs(string html, string? style) =>
+        PlainTextExport.StripHtml(html) is { } text
+            ? text.Split('\n').Where(line => line.Trim().Length > 0).Select(line => Paragraph(style, [Run(line.Trim())]))
+            : [];
+
     private Paragraph FigureParagraph(string? style)
     {
         var paragraph = Paragraph(style, Figure(display: true) is { } run ? [run] : [Run("［図 / Figure］")]);
@@ -482,8 +508,24 @@ internal sealed class DocxExport
         var htmlItalic = 0;
         var outerBold = bold;
         var outerItalic = italic;
+        // An SVG drawing written in a line is its picture from the preview; its tags and
+        // the text inside them are not repeated.
+        var svgDepth = 0;
         foreach (var inline in container)
         {
+            if (svgDepth > 0)
+            {
+                svgDepth += inline is HtmlInline inDrawing ? InlineSvg.Step(inDrawing.Tag) : 0;
+                continue;
+            }
+
+            if (inline is HtmlInline drawing && InlineSvg.StartsDrawing(drawing.Tag))
+            {
+                result.Add(Figure(display: true) ?? Run("［図 / Figure］"));
+                svgDepth = InlineSvg.Step(drawing.Tag);
+                continue;
+            }
+
             bold = outerBold || htmlBold > 0;
             italic = outerItalic || htmlItalic > 0;
             switch (inline)
