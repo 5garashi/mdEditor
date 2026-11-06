@@ -97,6 +97,8 @@
       <div class="pane-heading">
         <!-- Kept for screen readers (it names the pane); hidden so the buttons fit on one line. -->
         <h2 id="editor-heading" class="visually-hidden" data-i18n="editorHeading">Markdown を編集</h2>
+        <!-- When the editor fills the window, the document it edits. -->
+        <span class="pane-document-name" aria-hidden="true"></span>
         <button id="replace-button" type="button" data-i18n="findReplace">検索・置換</button>
         <button id="toc-button" type="button" data-i18n="toc">目次</button>
         <button id="image-button" type="button" data-i18n="imageButton" aria-haspopup="dialog">画像の調整</button>
@@ -143,8 +145,8 @@
     <section class="pane preview-pane" aria-labelledby="preview-heading">
       <div class="pane-heading">
         <h2 id="preview-heading" data-i18n="previewHeading">プレビュー</h2>
-        <!-- In the preview's own window, the document it shows. -->
-        <span id="preview-document-name" class="preview-document-name"></span>
+        <!-- In the preview's own window, or when the preview fills the window, the document it shows. -->
+        <span id="preview-document-name" class="pane-document-name"></span>
         <!-- Read-aloud controls appear only when read-aloud is turned on in Settings. -->
         <div id="reader-controls" class="reader-controls" hidden>
           <button id="reader-play" type="button" data-i18n="readerPlay">読み上げ</button>

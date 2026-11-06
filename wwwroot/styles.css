@@ -449,12 +449,15 @@ body.drop-insert .editor-pane {
   background: var(--paper);
 }
 
-/* The document name beside the heading, in the preview's own window only. */
-.preview-document-name {
+/* The document name beside the heading: in the preview's own window, and when a pane
+   fills the window (the pane then covers the header that shows the name). */
+.pane-document-name {
   display: none;
 }
 
-:root.preview-window .preview-document-name {
+:root.preview-window .preview-pane .pane-document-name,
+body.editor-focused .editor-pane .pane-document-name,
+body.preview-focused .preview-pane .pane-document-name {
   display: inline;
   overflow: hidden;
   min-width: 0;
@@ -463,6 +466,11 @@ body.drop-insert .editor-pane {
   font-weight: 700;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* In the preview the heading and the name stay together; the buttons go to the right. */
+.preview-pane .pane-document-name {
+  margin-inline-end: auto;
 }
 
 /* Settings > Theme and PDF paper: the two switches side by side. */

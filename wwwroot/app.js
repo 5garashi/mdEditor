@@ -5557,9 +5557,10 @@
     } else if (message.type === "documentInfo") {
       documentName.textContent = message.name;
       documentName.title = message.name;
-      const previewName = document.getElementById("preview-document-name");
-      previewName.textContent = message.name;
-      previewName.title = message.name;
+      for (const paneName of document.querySelectorAll(".pane-document-name")) {
+        paneName.textContent = message.name;
+        paneName.title = message.name;
+      }
       documentDirty = message.isDirty;
       documentEncoding = message.encoding ?? "utf-8";
       encodingSource = message.encodingSource ?? "detected";
