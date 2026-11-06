@@ -266,7 +266,8 @@ internal sealed class LetterAfterMathInlineParser : InlineParser
 
 // $x $, with a space before the closing $, as VS Code's preview and MathJax pages read it
 // (GitHub and Markdig keep it text, so this is off when the settings follow GitHub). Only the
-// space at the end is allowed: $ x$ and $ x $ stay text, so "$ 100 and $ 200" is not math.
+// space at the end is read here, so $ x$ stays text. $ x $, with a space at both ends, is
+// Markdig's own math (as in VS Code), so "$ 100 and $ 200" is math, as it was before.
 // As in VS Code, a letter or digit (A-Z, 0-9) just outside either $ keeps it text, so prices
 // ($5 and $10) and words such as US$5 do not open or close it; it stays on one line.
 internal sealed class SpaceBeforeCloseMathInlineParser : InlineParser
