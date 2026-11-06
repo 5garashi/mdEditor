@@ -57,13 +57,13 @@ tags: [markdown, windows, wpf, webview2]
 
 ![一键保存与预览外观相同的 PDF，图表、表格、公式和着色的代码都会原样放入。](docs/images/9-pdf.zh-CN.png)
 
-**深色模式** — 跟随 Windows 的设置，也可以用“设置”中的“显示”按钮（或 Ctrl+Shift+T）选择浅色或深色。打印和 PDF 始终使用白色页面。
+**深色模式** — 跟随 Windows 的设置，也可以用“菜单”中“设置”里的“显示”按钮（或 Ctrl+Shift+T）选择浅色或深色。打印和 PDF 始终使用白色页面。
 
-![跟随 Windows 的设置，也可以用“设置”中的“显示”按钮（或 Ctrl+Shift+T）选择浅色或深色。打印和 PDF 始终使用白色页面。](docs/images/2-dark.zh-CN.png)
+![跟随 Windows 的设置，也可以用“菜单”中“设置”里的“显示”按钮（或 Ctrl+Shift+T）选择浅色或深色。打印和 PDF 始终使用白色页面。](docs/images/2-dark.zh-CN.png)
 
-**在单独窗口中显示预览** — 把预览放到第二个显示器上，写作和阅读分开进行。预览会跟随编辑滚动。
+**在单独窗口中显示预览** — 把预览放到第二个显示器上，写作和阅读分开进行。预览会跟随编辑滚动，标题栏中会显示文件名。
 
-![把预览放到第二个显示器上，写作和阅读分开进行。预览会跟随编辑滚动。](docs/images/3-preview-window.zh-CN.png)
+![把预览放到第二个显示器上，写作和阅读分开进行。预览会跟随编辑滚动，标题栏中会显示文件名。](docs/images/3-preview-window.zh-CN.png)
 
 **Markdown 写法一目了然** — Markdown 简明写法（F1）。按“插入”会把示例放到光标位置。
 

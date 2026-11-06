@@ -113,8 +113,8 @@ Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Des
 2. `docs/images/9-pdf.en.png` — One click saves a PDF that looks like the preview: diagrams, tables, math, and colored code included, on A4 or Letter.
 3. `docs/images/11-ai-chat.en.png` — Open an answer from an AI chat and it is reproduced as closely as possible: `\(…\)` and `\[…\]` math, bold, and line breaks. The notice tells what was fixed, with a button to put it back.
 4. `docs/images/1-main.en.png` — Type Markdown on the left and the preview on the right updates at once. A 3D model written in STL turns when you drag it.
-5. `docs/images/2-dark.en.png` — Day and night palettes follow Windows, or choose one with the Theme button in Settings. Printing and PDF always use a white page.
-6. `docs/images/3-preview-window.en.png` — Put the preview on a second display to keep writing and reading apart. It scrolls with your editing.
+5. `docs/images/2-dark.en.png` — Day and night palettes follow your Windows setting, or choose one with the Theme button in Settings, opened from the Menu. Printing and PDF always use a white page.
+6. `docs/images/3-preview-window.en.png` — Put the preview on a second display to keep writing and reading apart. It scrolls with your editing, and its heading shows the file name.
 7. `docs/images/4-syntax.en.png` — Press F1 for the Markdown quick reference. Insert puts the example at the cursor.
 8. `docs/images/5-save-as.en.png` — Save As writes PDF, HTML, PNG, Word, CSV, TSV, JSON, Jupyter Notebook, text, and a ZIP for sharing.
 9. `docs/images/6-code-toc.en.png` — Code with a language name is colored. Contents builds a table of contents from your headings.
@@ -230,8 +230,8 @@ PDF や Word で保存する
 2. `docs/images/9-pdf.ja.png` — ワンクリックで、プレビューと同じ見た目の PDF に保存します。図・表・数式・色分けしたコードもそのまま入り、用紙は A4 か Letter です。
 3. `docs/images/11-ai-chat.ja.png` — AI のチャットの回答を開くと、できる範囲で再現します。`\(…\)`・`\[…\]` の数式、かっこの隣の太字、行ごとの改行。直したことはお知らせ欄に出て、元に戻すこともできます。
 4. `docs/images/1-main.ja.png` — 左に Markdown を書くと、右のプレビューにすぐ反映されます。STL で書いた 3D モデルも、ドラッグで回せます。
-5. `docs/images/2-dark.ja.png` — 昼と夜の配色は Windows の設定に合わせて切り替わり、「設定」の「表示」ボタンでも選べます。印刷と PDF は常に白地です。
-6. `docs/images/3-preview-window.ja.png` — プレビューを別のウィンドウにして 2 台目のディスプレイへ。書く画面と見る画面を分けられ、スクロールは編集と連動します。
+5. `docs/images/2-dark.ja.png` — 昼と夜の配色は Windows の設定に合わせて切り替わり、「メニュー」の「設定」にある「表示」ボタンでも選べます。印刷と PDF は常に白地です。
+6. `docs/images/3-preview-window.ja.png` — プレビューを別のウィンドウにして 2 台目のディスプレイへ。書く画面と見る画面を分けられ、スクロールは編集と連動します。見出しには文書のファイル名が出ます。
 7. `docs/images/4-syntax.ja.png` — F1 で Markdown の書き方の一覧を表示します。「挿入」を押すと、カーソルの位置に例が入ります。
 8. `docs/images/5-save-as.ja.png` — 「名前を付けて保存」で、PDF・HTML・PNG・Word・CSV・TSV・JSON・Jupyter Notebook・テキスト・配布用 ZIP を選べます。
 9. `docs/images/6-code-toc.ja.png` — 言語名を書いたコードを色分けして表示します。「目次」ボタンで、見出しから目次を作れます。
@@ -333,8 +333,8 @@ PDF や Word で保存する
 2. `docs/images/9-pdf.zh-CN.png` — 一键保存与预览外观相同的 PDF。图表、表格、公式和着色的代码都会原样放入，纸张为 A4 或 Letter。
 3. `docs/images/11-ai-chat.zh-CN.png` — 打开 AI 聊天的回答，会尽量还原显示：`\(…\)`、`\[…\]` 公式、括号旁的粗体和每行的换行。修正的内容会显示在通知栏中，也可以撤销。
 4. `docs/images/1-main.zh-CN.png` — 在左边写 Markdown，右边的预览立即更新。用 STL 写的 3D 模型也可以拖动旋转。
-5. `docs/images/2-dark.zh-CN.png` — 白天和夜间的配色跟随 Windows 的设置，也可以在“设置”中用“显示”按钮选择。打印和 PDF 始终使用白色页面。
-6. `docs/images/3-preview-window.zh-CN.png` — 把预览放到第二个显示器上，写作和阅读分开进行。预览会跟随编辑滚动。
+5. `docs/images/2-dark.zh-CN.png` — 白天和夜间的配色跟随 Windows 的设置，也可以在“菜单”的“设置”中用“显示”按钮选择。打印和 PDF 始终使用白色页面。
+6. `docs/images/3-preview-window.zh-CN.png` — 把预览放到第二个显示器上，写作和阅读分开进行。预览会跟随编辑滚动，标题栏中会显示文件名。
 7. `docs/images/4-syntax.zh-CN.png` — 按 F1 显示 Markdown 简明写法。按“插入”会把示例放到光标位置。
 8. `docs/images/5-save-as.zh-CN.png` — “另存为”可以保存为 PDF、HTML、PNG、Word、CSV、TSV、JSON、Jupyter Notebook、文本和用于分发的 ZIP。
 9. `docs/images/6-code-toc.zh-CN.png` — 写了语言名的代码会着色显示。“目录”会根据标题生成目录。
@@ -345,7 +345,7 @@ PDF や Word で保存する
 - Reserve the name in Partner Center and confirm it is available. Use the same spelling ("5garashi.com Design Office") in the Store, the app, and the website.
 - Replace the privacy or support links if the final URLs differ. The company URL in the app is `https://www.5garashi.com/`.
 - "Worldwide" distribution and "all languages" are different settings. The app supports Japanese, English, and Simplified Chinese (1.0.15) only. Since 1.0.15 the package declares ja-JP, en-US, and zh-CN, so Partner Center expects a listing in each of the three languages; the zh-CN text and its screenshots are above. The Chinese text has not been reviewed by a native speaker.
-- The screenshots are in `docs/images/` (1366 x 768 window, 90% zoom), in Japanese (`.ja`), English (`.en`), and Simplified Chinese (`.zh-CN`). All were retaken with 1.0.18 on 2026-10-31 (the editor colors Markdown, F1 shows the keys) with the scratch kit take-shots.ps1, make_pdfs.py, take-import18.ps1, compose_pdf.py, and compose_import.py; 1-main shows the 3D model of samples/diagram-test (21-1). `10-pdf-open` (listed first to lead with PDF import) puts page 1 of a short report PDF beside the window that opened it as Markdown; the report was written for the screenshot and saved as PDF by mdEditor, with numbered lists. `9-pdf` (listed second) puts the window beside the first page of the PDF it saved, with its page number. `11-ai-chat` (listed third) opens an AI-chat-style answer written for the screenshot (extra\7-ai-chat.* in the kit); the default fix rules fix its bold and offer to rewrite its `\(…\)` math, so the notice shows both. `7-ai-chat` is saved as `11-ai-chat`, and `7-3d-model` is no longer listed (1-main shows the same model) but stays in the READMEs. The window shots are 1352 x 761 (the visible frame of a 1366 x 768 window) and `5-save-as` is a crop, so upload the copies in `artifacts/store-shots/` instead: each sits on the 1366 x 768 ground of 3, 9, and 10 (5-save-as at 1.5 times). Upload the screenshots in the listed order; ten is the Store maximum. Retake them when the screen changes.
+- The screenshots are in `docs/images/` (1366 x 768 window, 90% zoom), in Japanese (`.ja`), English (`.en`), and Simplified Chinese (`.zh-CN`). All were retaken with 1.0.22 on 2026-11-07 (Settings, Keys, Samples, and About in the header Menu; the preview window shows the file name) with the scratch kit take-shots.ps1, make_pdfs.py, take-import18.ps1, compose_pdf.py, and compose_import.py; 1-main shows the 3D model of samples/diagram-test (21-1). `10-pdf-open` (listed first to lead with PDF import) puts page 1 of a short report PDF beside the window that opened it as Markdown; the report was written for the screenshot and saved as PDF by mdEditor, with numbered lists. `9-pdf` (listed second) puts the window beside the first page of the PDF it saved, with its page number. `11-ai-chat` (listed third) opens an AI-chat-style answer written for the screenshot (extra\7-ai-chat.* in the kit); the default fix rules fix its bold and offer to rewrite its `\(…\)` math, so the notice shows both. `7-ai-chat` is saved as `11-ai-chat`, and `7-3d-model` is no longer listed (1-main shows the same model) but stays in the READMEs. The window shots are 1352 x 761 (the visible frame of a 1366 x 768 window) and `5-save-as` is a crop, so upload the copies in `artifacts/store-shots/` instead: each sits on the 1366 x 768 ground of 3, 9, and 10 (5-save-as at 1.5 times). Upload the screenshots in the listed order; ten is the Store maximum. Retake them when the screen changes.
 - The map screenshot (`8-map`, listed tenth) shows OpenStreetMap map tiles. Keep the credit "© OpenStreetMap contributors" visible; do not crop it out.
   地図のスクリーンショット（`8-map`、一覧の 10 番目）には OpenStreetMap の地図が写っています。右下の「© OpenStreetMap contributors」を切り取らないでください。
 - Partner Center limits: What's new 1,500 characters, each feature 200 characters (up to 20), each screenshot caption 200 characters (up to 10 screenshots).

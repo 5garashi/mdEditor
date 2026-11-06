@@ -1065,8 +1065,11 @@ internal static partial class PdfImport
     private static List<PdfRectangle> MarkedPictures(Page page, PageShapes shapes)
     {
         var areas = new List<PdfRectangle>();
-        var paths = page.Paths.Where(path => !path.IsClipping && (path.IsStroked || path.IsFilled))
-            .Select(path => path.GetBoundingRectangle()).OfType<PdfRectangle>().ToList();
+        var drawn = page.Paths.Where(path => !path.IsClipping && (path.IsStroked || path.IsFilled)).ToList();
+        var paths = drawn.Select(path => path.GetBoundingRectangle()).OfType<PdfRectangle>().ToList();
+        // A frame is a drawn border. A box only filled is a background: the white behind the
+        // text of a page saved from a browser holds the paragraphs around the picture too.
+        var borders = drawn.Where(path => path.IsStroked).Select(path => path.GetBoundingRectangle()).OfType<PdfRectangle>().ToList();
         foreach (var image in page.GetImages())
         {
             var picture = image.BoundingBox;
@@ -1076,7 +1079,7 @@ internal static partial class PdfImport
                 continue;
             }
 
-            var frame = paths.Where(box => Contains(box, picture) && box.Width * box.Height <= picture.Width * picture.Height * 3)
+            var frame = borders.Where(box => Contains(box, picture) && box.Width * box.Height <= picture.Width * picture.Height * 3)
                 .OrderBy(box => box.Width * box.Height).Cast<PdfRectangle?>().FirstOrDefault();
             var outer = frame ?? picture;
             var over = paths.Where(box => !box.Equals(frame) && Contains(outer, box) && Overlaps(box, picture)

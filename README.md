@@ -57,13 +57,13 @@ An editor that shows the formatted result right beside the Markdown you are writ
 
 ![One click saves a PDF that looks exactly like the preview, with diagrams, tables, math, and colored code.](docs/images/9-pdf.en.png)
 
-**Dark mode** — Follows the Windows setting, or choose day or night with the Theme button in Settings (or Ctrl+Shift+T). Printing and PDF always use a white page.
+**Dark mode** — Follows the Windows setting, or choose day or night with the Theme button in Settings, opened from the Menu (or Ctrl+Shift+T). Printing and PDF always use a white page.
 
-![Follows the Windows setting, or choose day or night with the Theme button in Settings (or Ctrl+Shift+T). Printing and PDF always use a white page.](docs/images/2-dark.en.png)
+![Follows the Windows setting, or choose day or night with the Theme button in Settings, opened from the Menu (or Ctrl+Shift+T). Printing and PDF always use a white page.](docs/images/2-dark.en.png)
 
-**The preview in its own window** — Put the preview on a second display to keep writing and reading apart. It scrolls along with your editing.
+**The preview in its own window** — Put the preview on a second display to keep writing and reading apart. It scrolls along with your editing, and its heading shows the file name.
 
-![Put the preview on a second display to keep writing and reading apart. It scrolls along with your editing.](docs/images/3-preview-window.en.png)
+![Put the preview on a second display to keep writing and reading apart. It scrolls along with your editing, and its heading shows the file name.](docs/images/3-preview-window.en.png)
 
 **Markdown at a glance** — The Markdown quick reference (F1). Insert puts the example at the cursor.
 
