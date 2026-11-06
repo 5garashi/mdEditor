@@ -28,6 +28,7 @@ Open as Markdown
 - PDF: the text comes back in reading order, wrapped lines join into paragraphs, and headings (from text size and numbering), lists, the table of contents, and pictures come back. Ruled tables and code come back too. Diagrams, charts, and math are redrawn as pictures from their lines and labels; column layout and tables without cell borders do not come back (their text remains), and no text can be taken from a PDF that is only scanned images.
 - Word: headings, lists, tables, links, and pictures come back (colors and layout do not). When a document has no heading styles, headings are guessed from text size.
 - Also HTML, web pages, e-mail (.eml), CSV, TSV, JSON, XML, Jupyter Notebooks, and images. The original file is never changed, and it can be shown beside the preview to compare.
+- If part of a file cannot be converted, that part comes in as plain text and the rest still opens; the notice says which.
 - Check and fix the result before you share it or paste it into an AI chat.
 
 Markdown from AI chats, reproduced as closely as possible
@@ -45,13 +46,13 @@ Write and see
 - Type on the left and the preview on the right updates at once. Both sides scroll together.
 - Markdown is colored as you type, and a check underlines mistakes such as a skipped heading level or a link to nowhere.
 - Writing help: Ctrl+B and Ctrl+I for bold and italic, lists that go on when you press Enter, tables lined up in one key, numbered headings, a URL pasted on selected text becomes a link, and suggestions for links and math.
-- Draw flowcharts and Gantt charts (Mermaid), Graphviz diagrams, and formulas (KaTeX) with a few lines of text. Math written the way AI chats write it, `\(…\)` and `\[…\]`, shows too.
+- Draw flowcharts and Gantt charts (Mermaid), Graphviz diagrams, and formulas (KaTeX) with a few lines of text. Math written the way AI chats write it, `\(…\)` and `\[…\]`, shows too, and so do SVG drawings written in Markdown.
 - Turn 3D models (text STL) with the mouse, and draw maps (GeoJSON, TopoJSON) on a simple world map, all offline.
 - Code is colored for about 40 languages, and Contents builds a table of contents from your headings.
 - Reads Markdown the way GitHub does: alerts, front matter, math blocks, emoji short names, collapsible sections, and more. Videos in a document play too.
 - Put the preview in its own window on a second display, or expand it to fill the window and read without the editor.
 - Drop or paste pictures into the editor; they are saved beside your document. Copy text, a picture, or a file in any app, press your key, and it opens as a new document.
-- New to Markdown? Open a built-in sample, or press F1 and insert examples with one click.
+- New to Markdown? Open a built-in sample from the Menu, or press F1 and insert examples with one click.
 
 Your work stays safe
 - Saving never damages your original file, even if something goes wrong mid-write.
@@ -66,19 +67,17 @@ Made for everyone
 - Everything works from the keyboard, and shortcuts can be changed.
 - Works with screen readers and reads your document, or just the text you select, aloud with the voices on your PC. BIZ UD typeface, adjustable text size and line spacing, contrast themes, and dark mode.
 
-Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Design Office. Open About in the app for the company, support, and privacy policy links.
+Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Design Office. Open About from the Menu in the app for the company, support, and privacy policy links.
 
 **What's new in this version:**
-- Open PDFs as Markdown, on your PC: text, headings, lists, the table of contents, tables, code, and pictures come back, and diagrams and math are redrawn as pictures. Tagged PDFs are read by their tags, and the original can be shown beside the preview. Column layout does not come back.
-- Saved PDFs have page numbers and are tagged for screen readers. Word files without heading styles get headings from text size.
-- Writing help: Markdown is colored as you type. Ctrl+B / Ctrl+I add bold and italic, lists go on with Enter and Tab, Ctrl+Shift+W lines up a table, Ctrl+Shift+N numbers the headings, a URL pasted on selected text makes a link, and links and math commands are suggested.
-- A Markdown check underlines mistakes such as a skipped heading level or a link to nowhere.
-- Markdown from AI chats is reproduced as closely as possible: `\(…\)` and `\[…\]` math shows as math, and bold whose `**` shows beside Japanese brackets and math that lost its `$` are fixed on opening, with a button to undo.
-- Line breaks in a paragraph show as written (can be turned off).
-- Simplified Chinese, New from clipboard, and about twice as fast to start.
-- 3D models (STL), maps, Graphviz, GitHub-style Markdown (alerts, front matter, collapsible sections, videos), and code colored for about 40 languages.
-- Save As lists every format, including a ZIP for sharing. Adjust image sets a picture's size and position. Drop or paste pictures into the editor.
-- Internet images and videos load only when you allow them.
+- One Menu at the right end of the header now holds Settings, Keys, Samples, and About, so the toolbar is shorter.
+- The preview in its own window shows the file name in its title and heading, and so does a pane that fills the window.
+- SVG drawings written in Markdown are shown, and go into PDF, PNG, HTML, and Word. Scripts and the loading of outside files are removed.
+- Math written as text inside HTML (such as a figure caption) shows as math, as on pages that use MathJax.
+- Math spread over several lines that starts on the `$$` line, and `$x $` with a space before the closing `$`, show as math, as in VS Code.
+- When part of a PDF, Word file, HTML file, or Jupyter Notebook cannot be converted, the rest still opens, and the notice says what came in as plain text.
+- Opening PDFs: items numbered like "4)", text drawn several times to look bold, and large step numbers are read correctly. With "Make tables and figures pictures (looks like the page)", a photo with circles and labels drawn over it becomes one picture.
+- Pasting a web page keeps `_` and `*` inside its math.
 
 **Features (bullets):**
 - Open PDF and Word files as Markdown, offline
@@ -149,6 +148,7 @@ Markdown として開く
 - PDF: 文字を読む順に取り出し、折り返した行を段落にまとめます。見出し（文字の大きさと番号から推測）・箇条書き・目次・画像も戻ります。罫線のある表とコードも戻ります。図と数式は線と文字から画像に描き直し、段組みの配置・罫線のない表は戻りません（文字は残ります）。スキャンした画像だけの PDF からは、文字を取り出せません。
 - Word: 見出し・箇条書き・表・リンク・画像が戻ります（色や配置は戻りません）。見出しのスタイルがない文書は、文字の大きさから見出しを推測します。
 - HTML・Web ページ・メール（.eml）・CSV・TSV・JSON・XML・Jupyter Notebook・画像も開けます。元のファイルは書き換えず、プレビューの横に元のファイルを並べて見比べられます。
+- 一部を変換できないときは、その部分を書式のない文字で入れて残りを開き、お知らせ欄で伝えます。
 - 取り込んだ結果は、人に渡す前や AI のチャットに貼る前に、確かめて直せます。
 
 AI のチャットの Markdown を、できる範囲で再現
@@ -166,13 +166,13 @@ PDF や Word で保存する
 - 左に書くと、右のプレビューにすぐ反映されます。両側のスクロールは連動します。
 - 書くそばから Markdown を色分けし、見出しの段階の飛びや行き先のないリンクなどの書き間違いに波線を引きます。
 - 書く手助け: Ctrl+B・Ctrl+I で太字・斜体、Enter でリストの続き、キー 1 つで表を整える・見出しに番号を付ける、選んだ文字に URL を貼るとリンク、リンク先と数式の入力の候補。
-- フローチャートやガントチャート（Mermaid）、Graphviz の図、数式（KaTeX）を、数行のテキストで描けます。AI のチャットが書く `\(…\)`・`\[…\]` の数式も表示します。
+- フローチャートやガントチャート（Mermaid）、Graphviz の図、数式（KaTeX）を、数行のテキストで描けます。AI のチャットが書く `\(…\)`・`\[…\]` の数式と、Markdown の中に書いた SVG の図も表示します。
 - 3D モデル（テキスト形式の STL）はマウスで回して確かめられ、地図（GeoJSON・TopoJSON）は簡単な世界地図の上に描きます。どちらもオフラインで表示します。
 - 約 40 の言語のコードを色分けし、「目次」ボタンで見出しから目次を作れます。
 - GitHub と同じ書き方に対応します（注意書き、フロントマター、数式のコードブロック、絵文字の短縮名、折りたたみなど）。文書の中の動画も再生できます。
 - プレビューだけを別のウィンドウにして 2 台目のディスプレイに表示したり、ウィンドウいっぱいに広げて編集欄なしで読んだりできます。
 - 画像は、編集欄にドロップするか貼り付けるだけで、文書の横に保存して入れます。ほかのアプリでテキスト・画像・ファイルをコピーしてから設定したキーを押すと、新しい文書として開きます。
-- Markdown が初めてでも、内蔵のサンプルや F1 の書き方一覧から、ワンクリックで例を入れられます。
+- Markdown が初めてでも、「メニュー」の内蔵のサンプルや F1 の書き方一覧から、ワンクリックで例を入れられます。
 
 書いたものを守る
 - 保存の途中で失敗しても、元のファイルを壊しません。
@@ -187,19 +187,17 @@ PDF や Word で保存する
 - すべての操作をキーボードで行え、ショートカットも変えられます。
 - 画面読み上げに対応し、PC の音声で文書を読み上げます（選んだ部分だけも読めます）。BIZ UD ゴシック、文字の大きさと行間の調整、コントラスト テーマ、ダークモードにも対応します。
 
-日本語・英語・簡体字中国語に対応します。5garashi.com Design Office が作りました。会社紹介・サポート・プライバシーポリシーは、アプリの「このアプリについて」から開けます。
+日本語・英語・簡体字中国語に対応します。5garashi.com Design Office が作りました。会社紹介・サポート・プライバシーポリシーは、アプリの「メニュー」の「このアプリについて」から開けます。
 
 **このバージョンの新機能:**
-- PDF を Markdown として開けるようになりました（PC の中で変換します）。文字・見出し・箇条書き・目次・表・コード・画像が戻り、図と数式は画像に描き直します。タグ付きの PDF はタグのとおりに読み、元の PDF をプレビューの横に並べて見比べられます。段組みの配置は戻りません。
-- 保存した PDF にページ番号が入り、画面読み上げ用のタグも付きます。見出しのスタイルがない Word 文書は、文字の大きさから見出しを推測します。
-- 書く手助け: 書くそばから Markdown を色分けします。Ctrl+B / Ctrl+I で太字・斜体、Enter と Tab でリストの続きと段、Ctrl+Shift+W で表を整え、Ctrl+Shift+N で見出しに番号を付けます。選んだ文字に URL を貼るとリンクになり、リンク先と数式の命令を候補に出します。
-- 書き方の確認: 見出しの段階の飛びや行き先のないリンクなどの書き間違いに、波線を引きます。
-- AI のチャットの Markdown を、できる範囲で再現します。`\(…\)`・`\[…\]` の数式を表示し、かっこの隣で `**` が出てしまう太字や `$` が抜けた数式は、開いたときに直します（元に戻すボタン付き）。コピーした文に残る引用の印なども取り除きます。
-- 段落の中の改行を、書いたとおりに改行して表示します（オフにすると GitHub と同じ）。
-- 簡体字中国語、「クリップボードから新規作成」に対応し、起動がおよそ 2 倍速くなりました。
-- 3D モデル（STL）・地図・Graphviz の図、GitHub と同じ書き方（注意書き、フロントマター、折りたたみ、動画）、約 40 の言語のコードの色分け（PDF・Word にも残る）に対応しました。
-- 「名前を付けて保存」で、配布用 ZIP を含むすべての形式を選べます。「画像の調整」で画像の大きさと位置を変えられ、画像はドロップや貼り付けで文書に入ります。
-- インターネット上の画像と動画は、許可したときだけ読み込みます。読み上げで、選んだ部分だけを読めます。
+- 「設定」「キー操作」「サンプル」「このアプリについて」を、ヘッダーの右端の「メニュー」にまとめ、ツールバーが短くなりました。
+- 別ウィンドウのプレビューのタイトルと見出し、ウィンドウ全体に表示した欄の見出しに、文書のファイル名が出ます。
+- Markdown の中に書いた SVG の図を表示し、PDF・PNG・HTML・Word にも入れます。スクリプトや外部のファイルの読み込みは取り除きます。
+- HTML の中に文字で書いた数式（図の説明など）を、MathJax を使うページと同じように数式として表示します。
+- `$$` の行から書き始めた複数行の数式と、閉じる `$` の前に空白がある `$x $` を、VS Code と同じように数式として表示します。
+- PDF・Word・HTML・Jupyter Notebook の一部を変換できないときも、残りは開き、書式のない文字で入れた部分をお知らせ欄で伝えます。
+- PDF を開くとき、「4)」のような番号の項目、太く見せるために重ねて描いた文字、大きな手順の番号を正しく読みます。「表・図を画像にする（見た目優先）」では、丸や名前を書き込んだ写真を 1 枚の画像にします。
+- Web ページを貼り付けたとき、数式の中の `_` と `*` を保ちます。
 
 **製品の機能（箇条書き）:**
 - PDF や Word を Markdown として開ける。PC の中だけで変換
@@ -252,6 +250,7 @@ PDF や Word で保存する
 - PDF：按阅读顺序提取文字，把折行合并为段落，标题（根据文字大小和编号推测）、列表、目录和图片也会提取。有边框的表格和代码也会提取。图表和公式会根据线条和文字重新绘制为图片，分栏排版和没有边框的表格不会恢复（文字会保留）。扫描得到的纯图像 PDF 无法提取文字。
 - Word：标题、列表、表格、链接和图片会提取（颜色和排版不会保留）。没有使用标题样式的文档，会根据文字大小推测标题。
 - 也可以打开 HTML、网页、电子邮件（.eml）、CSV、TSV、JSON、XML、Jupyter Notebook 和图像。原文件不会被改写，还可以把原文件显示在预览旁边进行对照。
+- 文件的一部分无法转换时，该部分会以纯文本放入，其余部分仍会打开，并在通知栏中说明。
 - 在分享给别人或粘贴到 AI 聊天之前，可以先检查并修改提取的结果。
 
 尽量还原 AI 聊天的 Markdown
@@ -269,13 +268,13 @@ PDF や Word で保存する
 - 在左边输入，右边的预览立即更新。两边同步滚动。
 - 输入时 Markdown 会着色显示，标题层级跳跃、没有目标的链接等写法错误会加上波浪线。
 - 写作辅助：Ctrl+B、Ctrl+I 设置粗体和斜体，按 Enter 继续列表，一个键整理表格、给标题编号，在选中的文字上粘贴 URL 即成为链接，链接目标和公式命令会给出输入候选。
-- 用几行文字就能画出流程图和甘特图（Mermaid）、Graphviz 图表和公式（KaTeX）。AI 聊天中 `\(…\)`、`\[…\]` 写法的公式也能显示。
+- 用几行文字就能画出流程图和甘特图（Mermaid）、Graphviz 图表和公式（KaTeX）。AI 聊天中 `\(…\)`、`\[…\]` 写法的公式，以及 Markdown 中写的 SVG 图，也能显示。
 - 用鼠标旋转 3D 模型（文本格式的 STL），在简单的世界地图上绘制地图（GeoJSON、TopoJSON），全部离线完成。
 - 约 40 种语言的代码会着色显示，“目录”可以根据标题生成目录。
 - 支持与 GitHub 相同的写法：提示框、前置元数据、公式代码块、表情符号短名称、折叠等。文档中的视频也可以播放。
 - 可以把预览放到单独的窗口中显示在第二个显示器上，也可以把预览扩展到填满窗口，不显示编辑区即可阅读。
 - 把图片拖放或粘贴到编辑区，图片会保存在文档旁边。在任意应用中复制文本、图片或文件后，按你设置的按键，即可作为新文档打开。
-- 刚接触 Markdown？打开内置的示例，或按 F1 一键插入示例。
+- 刚接触 Markdown？从“菜单”打开内置的示例，或按 F1 一键插入示例。
 
 保护你的工作
 - 即使写入中途出错，保存也不会损坏原文件。
@@ -290,19 +289,17 @@ PDF や Word で保存する
 - 所有操作都可以用键盘完成，快捷键可以更改。
 - 支持屏幕阅读器，并用电脑中的语音朗读文档（也可以只朗读选中的部分）。支持 BIZ UD Gothic 字体、文字大小和行距的调整、对比度主题和深色模式。
 
-支持日语、英语和简体中文。由 5garashi.com Design Office 制作。公司介绍、支持和隐私政策的链接，可以在应用的“关于此应用”中打开。
+支持日语、英语和简体中文。由 5garashi.com Design Office 制作。可以从应用“菜单”中的“关于此应用”打开公司介绍、支持和隐私政策的链接。
 
 **此版本的新功能：**
-- 可以把 PDF 作为 Markdown 打开（在你的电脑中转换）。文字、标题、列表、目录、表格、代码和图片会提取，图表和公式重新绘制为图片。带标签的 PDF 按标签读取，原 PDF 可以显示在预览旁边对照。分栏排版不会恢复。
-- 保存的 PDF 带有页码和供屏幕阅读器使用的标签。没有标题样式的 Word 文档，会根据文字大小推测标题。
-- 写作辅助：输入时 Markdown 会着色显示。Ctrl+B / Ctrl+I 设置粗体和斜体，Enter 和 Tab 继续列表并调整层级，Ctrl+Shift+W 整理表格，Ctrl+Shift+N 给标题编号。在选中的文字上粘贴 URL 即成为链接，链接目标和公式命令会给出候选。
-- 写法检查：标题层级跳跃、没有目标的链接等错误会加上波浪线。
-- 尽量还原 AI 聊天的 Markdown：`\(…\)`、`\[…\]` 写法的公式会显示为公式，括号旁 `**` 原样显示的粗体和丢失了 `$` 的公式会在打开时修正（带撤销按钮），复制文字中残留的引用标记等也会去除。
-- 段落中的换行按原样换行显示（关闭后与 GitHub 相同）。
-- 支持简体中文和“从剪贴板新建”，启动速度提高约一倍。
-- 支持 3D 模型（STL）、地图、Graphviz 图表、与 GitHub 相同的写法（提示框、前置元数据、折叠、视频），约 40 种语言的代码着色（PDF 和 Word 中也保留）。
-- “另存为”可以选择包括用于分发的 ZIP 在内的所有格式。“调整图像”可以更改图像的大小和位置，图片可以通过拖放或粘贴放入文档。
-- 网络上的图像和视频只有在你允许时才会加载。朗读可以只朗读选中的部分。
+- “设置”“按键操作”“示例”“关于此应用”集中到顶部栏右端的“菜单”中，工具栏变短了。
+- 单独窗口中的预览会在窗口标题和标题栏中显示文件名，填满窗口的区域也是如此。
+- 显示在 Markdown 中写的 SVG 图，并会放入 PDF、PNG、HTML 和 Word。脚本和外部文件的加载会被移除。
+- HTML 中以纯文本书写的公式（例如图的说明）会像使用 MathJax 的网页一样显示为公式。
+- 从 `$$` 所在行开始书写的多行公式，以及闭合的 `$` 前有空格的 `$x $`，会与 VS Code 一样显示为公式。
+- PDF、Word、HTML 或 Jupyter Notebook 的一部分无法转换时，其余部分仍会打开，并在通知栏中说明哪些部分以纯文本放入。
+- 打开 PDF 时，能正确读取“4)”这样编号的项目、为显示粗体而重叠绘制的文字，以及较大的步骤编号。选择“将表格和图转为图片（外观优先）”时，画有圆圈和名称的照片会成为一张图片。
+- 粘贴网页时，公式中的 `_` 和 `*` 会保持不变。
 
 **产品功能（要点）:**
 - 把 PDF 和 Word 作为 Markdown 打开，在电脑中转换
