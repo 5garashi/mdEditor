@@ -4926,7 +4926,7 @@ public partial class MainWindow : Window
     }
 
     // "Closer to GitHub" with the other settings following it too leaves out what GitHub does
-    // not show: line breaks in paragraphs and \(x\) math.
+    // not show: line breaks in paragraphs, \(x\) math, and $x $ (a space before the closing $).
     private static MarkdownPipeline BuildPipeline(bool nearGitHub, bool all, bool lineBreaks)
     {
         var github = nearGitHub && all;

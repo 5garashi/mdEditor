@@ -17,8 +17,9 @@ import { Tag, styleTags, tags } from "@lezer/highlight";
 import { GFM, parser } from "@lezer/markdown";
 
 // Math as mdEditor writes it: $…$, $$…$$, \(…\) and \[…\], and \\(…\\) and \\[…\\] as written
-// for pages that find math after Markdown has made the HTML. A single $ needs no space inside
-// its ends and no digit after it, so prices ($5 and $10) stay text; \$ never closes one.
+// for pages that find math after Markdown has made the HTML. A single $ needs no space after
+// the opening $ and no digit after the closing one, so prices ($5 and $10) stay text; \$ never
+// closes one. A space before the closing $ ($x $) is allowed, as in VS Code.
 const mathDelimiters = [["$$", "$$"], ["\\\\[", "\\\\]"], ["\\\\(", "\\\\)"], ["\\[", "\\]"], ["\\(", "\\)"], ["$", "$"]];
 const latexOpen = new Set(["\\[", "\\(", "\\\\[", "\\\\("]);
 const MathSyntax = {
@@ -38,7 +39,12 @@ const MathSyntax = {
         if (single && /^\$\s/.test(rest)) return -1;
         let end = rest.indexOf(close, open.length);
         while (end > 0 && rest[end - 1] === "\\" && !latexOpen.has(open)) end = rest.indexOf(close, end + 1);
-        if (single && end > 0 && (/\s/.test(rest[end - 1]) || /\d/.test(rest[end + 1] ?? ""))) return -1;
+        if (single && end > 0 && /\d/.test(rest[end + 1] ?? "")) return -1;
+        // $x $ (a space before the closing $) is math, as in VS Code and the preview, unless a
+        // letter or digit (A-Z, 0-9) is just outside either $ or the next character is $.
+        if (single && end > 0 && /\s/.test(rest[end - 1])
+          && (!/[ \t]/.test(rest[end - 1]) || /[\w$]/.test(rest[end + 1] ?? "")
+            || (pos > cx.offset && /\w/.test(String.fromCharCode(cx.char(pos - 1)))))) return -1;
         if (end <= open.length || (open !== "$$" && !open.endsWith("[") && rest.slice(0, end).includes("\n"))) return -1;
         return cx.addElement(cx.elt("Math", pos, pos + end + close.length, [
           cx.elt("MathMark", pos, pos + open.length),

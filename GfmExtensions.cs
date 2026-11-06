@@ -139,6 +139,11 @@ internal sealed class LatexMathDelimitersExtension(bool latex) : IMarkdownExtens
             pipeline.InlineParsers.InsertBefore<MathInlineParser>(new MultilineDollarMathInlineParser());
             pipeline.InlineParsers.InsertBefore<MathInlineParser>(new LetterAfterMathInlineParser());
         }
+
+        if (latex && pipeline.InlineParsers.Contains<MathInlineParser>() && !pipeline.InlineParsers.Contains<SpaceBeforeCloseMathInlineParser>())
+        {
+            pipeline.InlineParsers.InsertBefore<MathInlineParser>(new SpaceBeforeCloseMathInlineParser());
+        }
     }
 
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
@@ -255,6 +260,62 @@ internal sealed class LetterAfterMathInlineParser : InlineParser
         math.GetAttributes().AddClass("math");
         processor.Inline = math;
         slice.Start = end + count;
+        return true;
+    }
+}
+
+// $x $, with a space before the closing $, as VS Code's preview and MathJax pages read it
+// (GitHub and Markdig keep it text, so this is off when the settings follow GitHub). Only the
+// space at the end is allowed: $ x$ and $ x $ stay text, so "$ 100 and $ 200" is not math.
+// As in VS Code, a letter or digit (A-Z, 0-9) just outside either $ keeps it text, so prices
+// ($5 and $10) and words such as US$5 do not open or close it; it stays on one line.
+internal sealed class SpaceBeforeCloseMathInlineParser : InlineParser
+{
+    public SpaceBeforeCloseMathInlineParser() => OpeningCharacters = ['$'];
+
+    private static bool IsAsciiWord(char c) => char.IsAsciiLetterOrDigit(c) || c == '_';
+
+    public override bool Match(InlineProcessor processor, ref StringSlice slice)
+    {
+        var text = slice.Text;
+        var start = slice.Start + 1;
+        if (start > slice.End || text[start] == '$' || char.IsWhiteSpace(text[start])
+            || slice.Start > 0 && (text[slice.Start - 1] is '$' or '\\' || IsAsciiWord(text[slice.Start - 1])))
+        {
+            return false;
+        }
+
+        var end = start;
+        while (true)
+        {
+            end = text.IndexOf('$', end, slice.End - end + 1);
+            if (end < 0) return false;
+            var slashes = 0;
+            for (var i = end - 1; i >= start && text[i] == '\\'; i--) slashes++;
+            if (slashes % 2 == 0) break;
+            end++;
+        }
+
+        var after = end + 1 <= slice.End ? text[end + 1] : '\0';
+        // Only the case Markdig leaves as text: the closing $ after a space.
+        if (text[end - 1] is not (' ' or '\t') || after == '$' || IsAsciiWord(after)
+            || text.AsSpan(start, end - start).IndexOfAny('\n', '\r') >= 0)
+        {
+            return false;
+        }
+
+        var math = new MathInline
+        {
+            Delimiter = '$',
+            DelimiterCount = 1,
+            Content = new StringSlice(text, start, end - 1),
+            Span = new SourceSpan(processor.GetSourcePosition(slice.Start, out var line, out var column), processor.GetSourcePosition(end)),
+            Line = line,
+            Column = column
+        };
+        math.GetAttributes().AddClass("math");
+        processor.Inline = math;
+        slice.Start = end + 1;
         return true;
     }
 }

@@ -14,7 +14,7 @@ namespace MdEditor;
 // Markdown is not read inside an HTML block (<figure>, <div>, <table> written as HTML), but
 // a page that draws math with MathJax finds math in all of its text, a <figcaption> too. The
 // preview does the same: math in the text of an HTML block is marked as math, with the same
-// rules as math in Markdown ($ followed by a space or a closing $ before a digit is not math,
+// rules as math in Markdown ($ followed by a space, or a closing $ before a digit, is not math,
 // so prices stay text). Code, preformatted text, scripts, styles, form fields, SVG, and
 // MathML are left as they are, as MathJax leaves them.
 internal static partial class HtmlTextMath
@@ -140,9 +140,10 @@ internal static partial class HtmlTextMath
     [GeneratedRegex(@"<!--[\s\S]*?-->|<(?<close>/)?(?<name>[A-Za-z][\w:-]*)(?:[^>""']|""[^""]*""|'[^']*')*?(?<empty>/)?>")]
     private static partial Regex Token();
 
-    // $$…$$, \[…\], \(…\), and $…$ (not after a backslash, not starting or ending with a space,
-    // not followed by a digit), in the order they come.
-    [GeneratedRegex(@"(?<!\\)\$\$(?<dd>[\s\S]+?)\$\$|\\\[(?<bd>[\s\S]+?)\\\]|\\\((?<bi>[\s\S]+?)\\\)|(?<!\\)\$(?![\s$])(?<di>(?:\\[\s\S]|[^$\\])+?)(?<![\s\\])\$(?!\d)")]
+    // $$…$$, \[…\], \(…\), and $…$ (not after a backslash, not starting with a space, not
+    // followed by a digit; ending with a space only when no letter, digit, or $ follows, as in
+    // Markdown), in the order they come.
+    [GeneratedRegex(@"(?<!\\)\$\$(?<dd>[\s\S]+?)\$\$|\\\[(?<bd>[\s\S]+?)\\\]|\\\((?<bi>[\s\S]+?)\\\)|(?<!\\)\$(?![\s$])(?<di>(?:\\[\s\S]|[^$\\])+?)(?:(?<![\s\\])\$(?!\d)|(?<=[^\s\\][ \t]+)\$(?![A-Za-z0-9_$]))")]
     private static partial Regex Delimited();
 
     [GeneratedRegex(@"\n[ \t]*\r?\n")]
