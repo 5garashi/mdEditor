@@ -1,0 +1,52 @@
+mdEditor 1.0.22 — AI 写的公式、图表和 3D，都用 Markdown 显示
+
+https://www.youtube.com/watch?v=OfB-gwSVhyI
+
+从放大和旋转 3D 模型开始，然后并排显示英文论文的 TeX 原文和预览，同步滚动浏览公式，接着从上到下浏览主要功能（key-features.zh-CN.md）和图表示例（diagram-test.zh-CN.md）。
+
+本次更新
+
+加强了 AI 聊天所写公式的显示。从 $$ 行开始的多行公式、结束 $ 前有空格的 $x $，以及 HTML 中以文字写成的公式，都会显示为公式。Markdown 中写的 SVG 图形也会显示，并可放入 PDF 和 Word。
+
+把 PDF 和 Word 作为 Markdown 打开，修改后导出为 PDF 或 Word。离线显示 Mermaid、Graphviz、公式、3D 模型和地图。无广告、无跟踪、无需账户。
+
+主要功能
+
+• 把 PDF 和 Word 作为 Markdown 打开，在电脑中转换
+• 从 PDF 提取标题、列表、表格、代码和图片
+• 一键保存为 PDF，外观与预览完全相同
+• 也可保存为 Word、HTML、PNG、CSV、JSON、文本或 ZIP
+• 边写边在旁边查看效果，滚动同步
+• 尽量还原 AI 聊天的 Markdown
+• 预览可放到第二个显示器上，跟随正在编辑的行
+• 输入时着色显示，写法错误加上波浪线
+• 一个键设置粗体、斜体、列表、表格和标题编号
+• 离线显示 Mermaid、Graphviz 图表和公式
+• 离线显示 3D 模型（STL）和地图（GeoJSON）
+• 约 40 种语言的代码着色，并可根据标题生成目录
+• 与 GitHub 相同的提示框、前置元数据和折叠
+• 也可打开 HTML、电子邮件、CSV、JSON、Jupyter Notebook 和图像
+• 图片拖放或粘贴即可放入文档
+• 复制后按一个键，即可作为新文档打开
+• 安全保存，异常退出后自动恢复
+• 正确打开 UTF-8、GBK、Shift_JIS 和 EUC-JP 文件
+• 没有广告、没有跟踪、不需要账户；网络内容只在允许时加载
+• 支持键盘操作、屏幕阅读器、朗读和深色模式
+
+录制与限制
+
+仅支持 Windows，免费。AI 聊天中的 Markdown 会尽量还原，并非所有写法都能修正。PDF 导入也会尽量转换，分栏排版和扫描 PDF 无法还原。录制所用的版本，由与 Microsoft Store 上发布的 1.0.22 相同的提交构建。
+
+开发和视频制作使用了 AI 辅助（Claude、Codex）。背景音乐由 Codex 作曲并生成音频。
+
+https://5garashi.github.io/mdEditor/zh-CN.html
+
+致谢
+
+背景音乐：“Light Steps”，5garashi.com Design Office（作曲与音频生成：Codex），CC BY 4.0。节选、循环播放，开头和结尾淡入淡出。
+https://5garashi.github.io/5garashi-identity/ / https://creativecommons.org/licenses/by/4.0/
+公式文档：zeroPhase“Observation Limits and the Undifferentiated Origin”，5garashi.com Design Office
+https://5garashi.github.io/zeroPhase/
+示例影片：“Big Buck Bunny” © 2008 Blender Foundation，CC BY 3.0。在示例文档中播放，未经编辑。
+https://peach.blender.org/ / https://creativecommons.org/licenses/by/3.0/
+地图数据：© OpenStreetMap contributors（ODbL）https://www.openstreetmap.org/copyright

@@ -1,0 +1,52 @@
+mdEditor 1.0.22 — AIが書く数式も、図も3Dも、Markdownで
+
+https://www.youtube.com/watch?v=S3PKCQcHOWs
+
+3Dモデルの拡大・回転から始まり、英語の論文の数式を、TeXの原文とプレビューを並べてスクロール。そのあと、主な機能（key-features.md）と図のサンプル（diagram-test.md）を上から下へ紹介します。
+
+今回の更新
+
+AIのチャットが書く数式の表示を強化しました。$$ の行から書き始めた複数行の数式、閉じる $ の前に空白がある $x $、HTMLの中に文字で書いた数式も、数式として表示します。Markdownの中に書いたSVGの図も表示し、PDF・Wordにも入れます。
+
+PDFとWordをMarkdownとして開き、直したらPDFやWordで渡せます。Mermaid・Graphviz・数式・3Dモデル・地図をオフラインで表示。広告なし・計測なし・アカウント不要です。
+
+主な機能
+
+• PDF や Word を Markdown として開ける。PC の中だけで変換
+• PDF から見出し・箇条書き・表・コード・画像を取り出す
+• ワンクリックで PDF に保存。プレビューと同じ見た目のまま
+• Word・HTML・PNG・CSV・JSON・テキスト・ZIP にも保存
+• 書きながら横で仕上がりを確認。スクロールも連動
+• AI のチャットの Markdown も、できる範囲で再現
+• プレビューを 2 台目のディスプレイに。編集中の行を表示
+• 書くそばから色分けし、書き間違いに波線を引く
+• 太字・斜体・リスト・表・見出しの番号をキー 1 つで
+• Mermaid・Graphviz の図と数式をオフラインで表示
+• 3D モデル（STL）と地図（GeoJSON）をオフラインで表示
+• 約 40 の言語のコードを色分け。見出しから目次も作る
+• GitHub と同じ注意書き・フロントマター・折りたたみ
+• HTML・メール・CSV・JSON・Jupyter Notebook・画像も開ける
+• 画像はドロップや貼り付けで、そのまま文書に
+• コピーしてキーを押すと、新しい文書として開く
+• 安全な保存と、異常終了からの自動復元
+• Shift_JIS・EUC-JP・UTF-8 のファイルを正しく開ける
+• 広告なし、計測なし、アカウント不要。ネット上の内容は許可したときだけ
+• キーボード操作・画面読み上げ・文書の読み上げ・ダークモード
+
+収録と制限
+
+Windows用・無料。AIのチャットの回答は、できる範囲で再現します（すべての書き方を直せるわけではありません）。PDFの取り込みもできる範囲での変換で、段組みやスキャンしたPDFは元に戻りません。収録は、Microsoft Storeに出した1.0.22と同じコミットからのビルドです。
+
+開発と動画の制作に、AI（Claude・Codex）の支援を受けています。BGMはCodexで作曲・音源生成したものです。
+
+https://5garashi.github.io/mdEditor/
+
+クレジット
+
+BGM：「Light Steps」5garashi.com設計事務所（作曲・音源生成：Codex）、CC BY 4.0。抜粋してくり返し、最初と最後をフェード。
+https://5garashi.github.io/5garashi-identity/ / https://creativecommons.org/licenses/by/4.0/
+数式の文書：zeroPhase「Observation Limits and the Undifferentiated Origin」5garashi.com設計事務所
+https://5garashi.github.io/zeroPhase/
+サンプルの映画：「Big Buck Bunny」© 2008 Blender Foundation、CC BY 3.0。サンプル文書の中で再生（編集なし）。
+https://peach.blender.org/ / https://creativecommons.org/licenses/by/3.0/
+地図データ：© OpenStreetMap contributors（ODbL）https://www.openstreetmap.org/copyright
