@@ -1,0 +1,5 @@
+Better display of the math AI chats write. Opens PDF and Word as Markdown; diagrams, math and 3D offline. Windows, free.
+https://5garashi.github.io/mdEditor/en.html
+Built with AI assistance (Claude, Codex).
+Music: Light Steps — 5garashi.com Design Office (Codex), CC BY 4.0
+#mdEditor #Markdown

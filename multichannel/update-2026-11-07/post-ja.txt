@@ -1,0 +1,21 @@
+mdEditor 1.0.22 — AIが書く数式も、図も3Dも、Markdownで
+
+AIのチャットが書く数式の表示を強化しました。$$ の行から書き始めた複数行の数式、閉じる $ の前に空白がある $x $、HTMLの中に文字で書いた数式も、数式として表示します。Markdownの中に書いたSVGの図も表示し、PDF・Wordにも入れます。
+
+3Dモデルの拡大・回転から始まり、英語の論文の数式を、TeXの原文とプレビューを並べてスクロール。そのあと、主な機能（key-features.md）と図のサンプル（diagram-test.md）を上から下へ紹介します。
+
+https://5garashi.github.io/mdEditor/
+
+Windows用・無料。AIのチャットの回答は、できる範囲で再現します（すべての書き方を直せるわけではありません）。PDFの取り込みもできる範囲での変換で、段組みやスキャンしたPDFは元に戻りません。収録は、Microsoft Storeに出した1.0.22と同じコミットからのビルドです。
+
+開発と動画の制作に、AI（Claude・Codex）の支援を受けています。BGMはCodexで作曲・音源生成したものです。
+
+BGM：「Light Steps」5garashi.com設計事務所（作曲・音源生成：Codex）、CC BY 4.0。抜粋してくり返し、最初と最後をフェード。
+https://5garashi.github.io/5garashi-identity/ / https://creativecommons.org/licenses/by/4.0/
+数式の文書：zeroPhase「Observation Limits and the Undifferentiated Origin」5garashi.com設計事務所
+https://5garashi.github.io/zeroPhase/
+サンプルの映画：「Big Buck Bunny」© 2008 Blender Foundation、CC BY 3.0。サンプル文書の中で再生（編集なし）。
+https://peach.blender.org/ / https://creativecommons.org/licenses/by/3.0/
+地図データ：© OpenStreetMap contributors（ODbL）https://www.openstreetmap.org/copyright
+
+#mdEditor #Markdown #Windows #KaTeX

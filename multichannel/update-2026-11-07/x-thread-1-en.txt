@@ -1,0 +1,1 @@
+mdEditor 1.0.22 — Math from AI Chats, Diagrams and 3D in Markdown
