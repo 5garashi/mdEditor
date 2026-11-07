@@ -20,14 +20,14 @@ SPDX-License-Identifier: MIT
 | YouTube 旧動画（1.0.20） | 残した | — |
 | YouTube の案内ページ | 日英中とも 1.0.22 の動画を指すことを確認 | [youtube.html](https://5garashi.github.io/mdEditor/youtube.html) |
 | Zenn | 連携リポジトリの記事 1 件を更新（版 1.10.0）。公開ページで新しい動画と「2026-11-07更新」を確認。数式の書き方（`$$` など）はコードとして書いた | [記事](https://zenn.dev/5garashi_com/articles/mdeditor-diagrams-math-pdf) |
-| X（@5garashi_com） | スレッドを投稿の直前まで準備：1件目はタイトルと短縮版の動画（1:58、日本語）、2件目は本文・リンク・AI 支援の開示・BGM のクレジット。「Post all」は所有者が押す | 投稿待ち |
-| LinkedIn | 記事を下書きまで準備：タイトル → ツールバーの埋め込みで YouTube 英語版 → 本文（見出し・20 機能・制限・開示・クレジット）。「Next」→「Publish」は所有者が押す | 投稿待ち |
-| TikTok 日英中 | 縦型動画 3 本を投稿の直前まで準備：説明文、公開範囲「誰でも」、「投稿コンテンツを開示 → あなたのブランド」と「AI 生成コンテンツ」をオン。「投稿」は所有者が押す | 投稿待ち |
+| X（@5garashi_com） | 2026-11-08 0:41 頃、所有者が「Post all」でスレッドを投稿。1件目はタイトルと短縮版の動画（1:58、日本語）、2件目は本文・リンク・AI 支援の開示・BGM のクレジット。プロフィールで両方の投稿と動画を確認 | [1件目](https://x.com/5garashi_com/status/2119092919227531321) / [返信](https://x.com/5garashi_com/status/2119092921312162096) |
+| LinkedIn | 所有者が「Publish」で記事を公開（2026-11-08）。タイトル → YouTube 英語版の埋め込み → 本文。ログインしない状態で記事ページの HTTP 200 とタイトルを確認 | [記事](https://www.linkedin.com/pulse/mdeditor-1022-math-from-ai-chats-diagrams-3d-markdown-igarashi-j2bmc/) |
+| TikTok 日英中 | 2026-11-08 0:42〜0:43、所有者が「投稿」で 3 本を投稿。TikTok Studio の一覧で公開範囲「誰でも」を、ログインしない状態の oEmbed で 3 本の取得を確認 | [日本語](https://www.tiktok.com/@5garashi_com/video/7705455431275007239) / [English](https://www.tiktok.com/@5garashi_com/video/7705455557116824850) / [简体中文](https://www.tiktok.com/@5garashi_com/video/7705455625576189202) |
 | Reddit | 対象外。アカウント BAN の異議申し立ての結果待ち | — |
 
 ## 自動操作について
 
-X・LinkedIn・TikTok は、規約で画面の自動操作による投稿を禁止しています（2026-11-01 確認）。所有者にこのことを伝えたうえで、所有者が「全部」の公開を選びました。本文の入力・ファイルの添付・設定の切り替えを画面の自動操作で行い、最後の投稿ボタンは所有者が押します。
+X・LinkedIn・TikTok は、規約で画面の自動操作による投稿を禁止しています（2026-11-01 確認）。所有者にこのことを伝えたうえで、所有者が「全部」の公開を選びました。本文の入力・ファイルの添付・設定の切り替えを画面の自動操作で行い、最後の投稿ボタンは所有者が押しました。
 
 ## 訳の見直し
 
@@ -40,4 +40,4 @@ BGM「Light Steps」5garashi.com Design Office（Codex）CC BY 4.0、抜粋・�
 ---
 
 **作成者 / Author**: 5garashi.com設計事務所 / 5garashi.com Design Office  
-**最終更新 / Last updated**: 2026-11-07 JST
+**最終更新 / Last updated**: 2026-11-08 JST
