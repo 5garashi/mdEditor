@@ -1,0 +1,21 @@
+mdEditor 1.0.22 — Math from AI Chats, Diagrams and 3D in Markdown
+
+Better display of the math that AI chats write. Math spread over several lines that starts on the $$ line, $x $ with a space before the closing $, and math written as text inside HTML now show as math. SVG drawings written in Markdown are shown too, and go into PDF and Word.
+
+Starts by zooming and turning a 3D model, then scrolls through the math of an English paper with the TeX beside the preview, followed by a top-to-bottom tour of the key features (key-features.en.md) and the diagram samples (diagram-test.en.md).
+
+https://5garashi.github.io/mdEditor/en.html
+
+Windows only, free. Markdown from AI chats is reproduced as closely as possible; not every way of writing can be fixed. PDF import is best effort too: multi-column layouts and scanned PDFs do not come back. Recorded from a build of the same commit as the 1.0.22 release on Microsoft Store.
+
+Developed and produced with AI assistance (Claude, Codex). The music was composed and generated with Codex.
+
+Music: "Light Steps" by 5garashi.com Design Office (composed and generated with Codex), CC BY 4.0. Changes: excerpt, looped, faded in and out.
+https://5garashi.github.io/5garashi-identity/ / https://creativecommons.org/licenses/by/4.0/
+Math document: zeroPhase, "Observation Limits and the Undifferentiated Origin", 5garashi.com Design Office
+https://5garashi.github.io/zeroPhase/
+Sample film: "Big Buck Bunny" © 2008 Blender Foundation, CC BY 3.0. Shown as it plays inside a sample document; not edited.
+https://peach.blender.org/ / https://creativecommons.org/licenses/by/3.0/
+Map data: © OpenStreetMap contributors (ODbL) https://www.openstreetmap.org/copyright
+
+#mdEditor #Markdown #Windows #KaTeX

@@ -1,15 +1,13 @@
-Open PDF and Word files as Markdown. AI chat answers open with their formatting quirks fixed. Save a PDF that looks like the preview, in one click.
+Better display of the math that AI chats write. Math spread over several lines that starts on the $$ line, $x $ with a space before the closing $, and math written as text inside HTML now show as math. SVG drawings written in Markdown are shown too, and go into PDF and Word.
 
-Write beside a live preview. Mermaid, Graphviz, math, 3D models and maps, offline. Markdown mistakes are underlined, and Ctrl+Shift+W aligns table columns.
+Open PDF and Word files as Markdown, fix them, and share them as PDF or Word. Mermaid, Graphviz, math, 3D models and maps, offline. No ads, no tracking, no account.
 
-Starts with a rotating 3D model, then shows an AI chat answer being fixed, PDF import and export, and the Markdown check, followed by a top-to-bottom tour of the key features and diagram samples.
+Starts by zooming and turning a 3D model, then scrolls through the math of an English paper with the TeX beside the preview, followed by a top-to-bottom tour of the key features (key-features.en.md) and the diagram samples (diagram-test.en.md).
 
-00:00 Intro and 3D model
-00:12 Fixing an AI chat answer
-00:25 PDF import and export
-00:52 Markdown check and tables
-01:02 Key features
-01:57 Diagrams and more features
+00:00 3D model: zoom and turn
+00:17 Better math from AI answers
+00:56 Key features — key-features.en.md
+01:51 More features — diagram-test.en.md
 
 - Open PDF and Word files as Markdown, offline
 - Headings, lists, tables, code, and pictures come back from PDFs
@@ -34,12 +32,14 @@ Starts with a rotating 3D model, then shows an AI chat answer being fixed, PDF i
 
 https://5garashi.github.io/mdEditor/en.html
 
-Windows only, free. PDF import is best effort: multi-column layouts and scanned PDFs do not come back. AI chat answers are reproduced as closely as possible. Recorded from source build 1.0.20.
+Windows only, free. Markdown from AI chats is reproduced as closely as possible; not every way of writing can be fixed. PDF import is best effort too: multi-column layouts and scanned PDFs do not come back. Recorded from a build of the same commit as the 1.0.22 release on Microsoft Store.
 
 Developed and produced with AI assistance (Claude, Codex). The music was composed and generated with Codex.
 
-Music: "Light Steps" by 5garashi.com Design Office (composed and generated with Codex), CC BY 4.0. Changes: excerpt, looped, faded out at the end.
+Music: "Light Steps" by 5garashi.com Design Office (composed and generated with Codex), CC BY 4.0. Changes: excerpt, looped, faded in and out.
 https://5garashi.github.io/5garashi-identity/ / https://creativecommons.org/licenses/by/4.0/
+Math document: zeroPhase, "Observation Limits and the Undifferentiated Origin", 5garashi.com Design Office
+https://5garashi.github.io/zeroPhase/
 Sample film: "Big Buck Bunny" © 2008 Blender Foundation, CC BY 3.0. Shown as it plays inside a sample document; not edited.
 https://peach.blender.org/ / https://creativecommons.org/licenses/by/3.0/
 Map data: © OpenStreetMap contributors (ODbL) https://www.openstreetmap.org/copyright

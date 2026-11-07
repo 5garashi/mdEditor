@@ -1,0 +1,6 @@
+mdEditor 1.0.22 — AIが書く数式も、図も3Dも、Markdownで
+AIのチャットが書く数式の表示を強化。PDFとWordをMarkdownとして開き、図・数式・3Dをオフラインで表示します。Windows用・無料。
+https://5garashi.github.io/mdEditor/
+AI（Claude・Codex）の支援で開発。
+BGM：Light Steps — 5garashi.com設計事務所（Codex）CC BY 4.0
+#mdEditor #Markdown #Windows #KaTeX

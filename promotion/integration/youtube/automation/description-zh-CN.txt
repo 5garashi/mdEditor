@@ -1,19 +1,17 @@
-把 PDF 和 Word 作为 Markdown 打开。AI 聊天回答的格式问题也会自动修正。可以一键保存与预览一致的 PDF。
+加强了 AI 聊天所写公式的显示。从 $$ 行开始的多行公式、结束 $ 前有空格的 $x $，以及 HTML 中以文字写成的公式，都会显示为公式。Markdown 中写的 SVG 图形也会显示，并可放入 PDF 和 Word。
 
-一边编写，一边实时预览。离线显示 Mermaid、Graphviz、公式、3D 模型和地图。波浪线标出 Markdown 语法问题，Ctrl+Shift+W 对齐表格列。
+把 PDF 和 Word 作为 Markdown 打开，修改后导出为 PDF 或 Word。离线显示 Mermaid、Graphviz、公式、3D 模型和地图。无广告、无跟踪、无需账户。
 
-从旋转的 3D 模型开始，演示修正 AI 聊天回答、导入和导出 PDF、检查 Markdown 写法，然后从上到下浏览主要功能和图表示例。
+从放大和旋转 3D 模型开始，然后并排显示英文论文的 TeX 原文和预览，同步滚动浏览公式，接着从上到下浏览主要功能（key-features.zh-CN.md）和图表示例（diagram-test.zh-CN.md）。
 
-00:00 开场与 3D 模型
-00:12 修正 AI 聊天回答
-00:25 PDF 导入与导出
-00:53 检查写法与对齐表格
-01:03 主要功能
-01:56 图表与更多功能
+00:00 3D 模型：放大与旋转
+00:16 加强 AI 所写公式的显示
+00:55 主要功能 — key-features.zh-CN.md
+01:50 更多功能 — diagram-test.zh-CN.md
 
 - 把 PDF 和 Word 作为 Markdown 打开，在电脑中转换
 - 从 PDF 提取标题、列表、表格、代码和图片
-- 一键保存为 PDF，外观与预览一致
+- 一键保存为 PDF，外观与预览完全相同
 - 也可保存为 Word、HTML、PNG、CSV、JSON、文本或 ZIP
 - 边写边在旁边查看效果，滚动同步
 - 尽量还原 AI 聊天的 Markdown
@@ -34,12 +32,14 @@
 
 https://5garashi.github.io/mdEditor/zh-CN.html
 
-仅支持 Windows，免费。PDF 导入会尽量转换，分栏排版和扫描 PDF 无法还原。AI 聊天回答会尽量还原。使用源代码构建版 1.0.20 录制。
+仅支持 Windows，免费。AI 聊天中的 Markdown 会尽量还原，并非所有写法都能修正。PDF 导入也会尽量转换，分栏排版和扫描 PDF 无法还原。录制所用的版本，由与 Microsoft Store 上发布的 1.0.22 相同的提交构建。
 
-开发和视频制作使用了 AI 辅助（Claude、Codex）。背景音乐由 Codex 作曲并生成音源。
+开发和视频制作使用了 AI 辅助（Claude、Codex）。背景音乐由 Codex 作曲并生成音频。
 
-背景音乐：“Light Steps”，5garashi.com Design Office（作曲与音源生成：Codex），CC BY 4.0。节选、循环播放，结尾淡出。
+背景音乐：“Light Steps”，5garashi.com Design Office（作曲与音频生成：Codex），CC BY 4.0。节选、循环播放，开头和结尾淡入淡出。
 https://5garashi.github.io/5garashi-identity/ / https://creativecommons.org/licenses/by/4.0/
+公式文档：zeroPhase“Observation Limits and the Undifferentiated Origin”，5garashi.com Design Office
+https://5garashi.github.io/zeroPhase/
 示例影片：“Big Buck Bunny” © 2008 Blender Foundation，CC BY 3.0。在示例文档中播放，未经编辑。
 https://peach.blender.org/ / https://creativecommons.org/licenses/by/3.0/
 地图数据：© OpenStreetMap contributors（ODbL）https://www.openstreetmap.org/copyright

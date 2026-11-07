@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.0 — 2026-11-07
+
+- 日英中の紹介ページの動画・機能一覧と、YouTube revision 7.0.0 を 1.0.22 に更新。 / Pages and YouTube revision 7.0.0 for 1.0.22.
+
 ## 1.5.0 — 2026-11-01
 
 - 日英中の紹介ページの動画・機能一覧と、YouTube revision 6.0.0 を 1.0.20 に更新。 / Pages and YouTube revision 6.0.0 for 1.0.20.

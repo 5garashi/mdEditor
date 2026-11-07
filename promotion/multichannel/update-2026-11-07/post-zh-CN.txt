@@ -1,0 +1,21 @@
+mdEditor 1.0.22 — AI 写的公式、图表和 3D，都用 Markdown 显示
+
+加强了 AI 聊天所写公式的显示。从 $$ 行开始的多行公式、结束 $ 前有空格的 $x $，以及 HTML 中以文字写成的公式，都会显示为公式。Markdown 中写的 SVG 图形也会显示，并可放入 PDF 和 Word。
+
+从放大和旋转 3D 模型开始，然后并排显示英文论文的 TeX 原文和预览，同步滚动浏览公式，接着从上到下浏览主要功能（key-features.zh-CN.md）和图表示例（diagram-test.zh-CN.md）。
+
+https://5garashi.github.io/mdEditor/zh-CN.html
+
+仅支持 Windows，免费。AI 聊天中的 Markdown 会尽量还原，并非所有写法都能修正。PDF 导入也会尽量转换，分栏排版和扫描 PDF 无法还原。录制所用的版本，由与 Microsoft Store 上发布的 1.0.22 相同的提交构建。
+
+开发和视频制作使用了 AI 辅助（Claude、Codex）。背景音乐由 Codex 作曲并生成音频。
+
+背景音乐：“Light Steps”，5garashi.com Design Office（作曲与音频生成：Codex），CC BY 4.0。节选、循环播放，开头和结尾淡入淡出。
+https://5garashi.github.io/5garashi-identity/ / https://creativecommons.org/licenses/by/4.0/
+公式文档：zeroPhase“Observation Limits and the Undifferentiated Origin”，5garashi.com Design Office
+https://5garashi.github.io/zeroPhase/
+示例影片：“Big Buck Bunny” © 2008 Blender Foundation，CC BY 3.0。在示例文档中播放，未经编辑。
+https://peach.blender.org/ / https://creativecommons.org/licenses/by/3.0/
+地图数据：© OpenStreetMap contributors（ODbL）https://www.openstreetmap.org/copyright
+
+#mdEditor #Markdown #Windows #KaTeX
