@@ -23,7 +23,7 @@ SPDX-License-Identifier: MIT
 | X（@5garashi_com） | 2026-11-08 0:41 頃、所有者が「Post all」でスレッドを投稿。1件目はタイトルと短縮版の動画（1:58、日本語）、2件目は本文・リンク・AI 支援の開示・BGM のクレジット。プロフィールで両方の投稿と動画を確認 | [1件目](https://x.com/5garashi_com/status/2119092919227531321) / [返信](https://x.com/5garashi_com/status/2119092921312162096) |
 | LinkedIn | 所有者が「Publish」で記事を公開（2026-11-08）。タイトル → YouTube 英語版の埋め込み → 本文。ログインしない状態で記事ページの HTTP 200 とタイトルを確認 | [記事](https://www.linkedin.com/pulse/mdeditor-1022-math-from-ai-chats-diagrams-3d-markdown-igarashi-j2bmc/) |
 | TikTok 日英中 | 2026-11-08 0:42〜0:43、所有者が「投稿」で 3 本を投稿。TikTok Studio の一覧で公開範囲「誰でも」を、ログインしない状態の oEmbed で 3 本の取得を確認 | [日本語](https://www.tiktok.com/@5garashi_com/video/7705455431275007239) / [English](https://www.tiktok.com/@5garashi_com/video/7705455557116824850) / [简体中文](https://www.tiktok.com/@5garashi_com/video/7705455625576189202) |
-| Reddit | 対象外。アカウント BAN の異議申し立ての結果待ち | — |
+| Reddit | 対象外。2026-11-08、ログインしない状態のプロフィールに「このアカウントは BAN されています」と表示されることを所有者が確認（u/5garashi）。異議申し立て（2026-10）への返事は、moto@5garashi.com には届いていない（迷惑メール・ごみ箱を含めて確認）。異議申し立ては 1 回だけの決まりのため、出し直さずに結果を待つ | — |
 
 ## 自動操作について
 
