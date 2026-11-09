@@ -70,6 +70,7 @@ Made for everyone
 Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Design Office. Open About from the Menu in the app for the company, support, and privacy policy links.
 
 **What's new in this version:**
+- Convert for GitHub applies the fix rules first, then rewrites the result for GitHub. You choose the rules to apply with check boxes.
 - An Auto fix button above the editor: Convert for GitHub rewrites math and other writing that GitHub shows differently, listing each kind with its count before anything changes; Apply the fix rules runs the fix rules on the whole document.
 - GitHub view in the preview shows the document as GitHub reads it. It asks every time before sending the text to GitHub.
 - `\[ … \]` that AI chats write on lines of their own becomes `$$` math when the document opens; a button puts it back.
@@ -190,6 +191,7 @@ PDF や Word で保存する
 日本語・英語・簡体字中国語に対応します。5garashi.com Design Office が作りました。会社紹介・サポート・プライバシーポリシーは、アプリの「メニュー」の「このアプリについて」から開けます。
 
 **このバージョンの新機能:**
+- 「GitHub 変換」が、先に自動修正のルールを当ててから GitHub 向けに書き換えます。当てるルールは、チェックで選べます。
 - 編集欄に「自動修正」ボタン: 「GitHub 変換」は、GitHub では違って表示される数式などの書き方を、書き方ごとの数を示してから書き換えます。「自動修正のルールを当てる」は、文書全体に自動修正のルールを当てます。
 - プレビューの「GitHub 表示」で、GitHub が読んだとおりの表示を確かめられます。GitHub に送る前に毎回確かめます。
 - AI のチャットが別の行に書く `\[ … \]` を、開いたときに `$$` の数式にします。ボタンで元に戻せます。
@@ -292,6 +294,7 @@ PDF や Word で保存する
 支持日语、英语和简体中文。由 5garashi.com Design Office 制作。可以从应用“菜单”中的“关于此应用”打开公司介绍、支持和隐私政策的链接。
 
 **此版本的新功能：**
+- “GitHub 转换”会先应用自动修正规则，再改写为 GitHub 的写法。要应用的规则可以通过勾选来选择。
 - 编辑区上方新增“自动修正”按钮：“GitHub 转换”会先按写法分类列出数量，再把在 GitHub 上显示效果不同的公式等写法改写为 GitHub 的写法；“应用自动修正规则”会对整个文档应用自动修正规则。
 - 在预览中点击“GitHub 显示”，可以查看 GitHub 实际读取后的显示效果。每次发送到 GitHub 之前都会确认。
 - AI 聊天中单独成行的 `\[ … \]` 会在打开时转换为 `$$` 公式，可用按钮恢复原样。

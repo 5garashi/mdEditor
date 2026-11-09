@@ -149,6 +149,13 @@
       githubConvertApply: "書き換える", githubCancel: "やめる",
       githubConvertNone: "GitHub 向けに書き換える書き方はありません。",
       githubConvertDone: (count) => `${count} か所を GitHub 向けに書き換えました。Ctrl+Z で元に戻せます。`,
+      githubConvertDoneFixes: (fixes, count) => (count
+        ? `自動修正のルールで ${fixes} か所を直し、${count} か所を GitHub 向けに書き換えました。Ctrl+Z で両方を元に戻せます。`
+        : `自動修正のルールで ${fixes} か所を直しました。Ctrl+Z で元に戻せます。`),
+      githubFixHeading: "先に当てる自動修正のルール",
+      githubFixIntro: "GitHub 向けに書き換える前に、自動修正のルールを当てます（直したところは、mdEditor での表示も変わります）。「開いたときに直す」のルールに、初めからチェックが付いています。チェックを変えると、下の書き換えを数え直します。数式の書き方を $ に直す 4 つのルールは、ここには出ません（同じ書き方を、下で GitHub の書き方に書き換えます）。",
+      githubColFix: "当てる", githubColRule: "ルール",
+      githubRewriteHeading: "GitHub 向けの書き換え",
       githubConvertChanged: "! 確認している間に文書が変わったため、書き換えませんでした。もう一度「自動修正」→「GitHub 変換」を選んでください。",
       githubConvertFailed: "! GitHub 向けの書き換えを準備できませんでした。文書はそのままです。",
       githubKinds: {
@@ -511,6 +518,13 @@
       githubConvertApply: "改写", githubCancel: "取消",
       githubConvertNone: "没有需要改写为 GitHub 写法的内容。",
       githubConvertDone: (count) => `已将 ${count} 处改写为 GitHub 的写法。可以用 Ctrl+Z 撤销。`,
+      githubConvertDoneFixes: (fixes, count) => (count
+        ? `已用自动修正规则修正 ${fixes} 处，并将 ${count} 处改写为 GitHub 的写法。可以用 Ctrl+Z 一并撤销。`
+        : `已用自动修正规则修正 ${fixes} 处。可以用 Ctrl+Z 撤销。`),
+      githubFixHeading: "先应用的自动修正规则",
+      githubFixIntro: "改写为 GitHub 的写法之前，先应用自动修正规则（修正的地方在 mdEditor 中的显示也会改变）。设为“打开时修正”的规则默认已勾选。更改勾选状态后，会重新统计下方的改写。将公式写法改为 $ 形式的 4 条规则不在此列出（同样的写法会在下方改写为 GitHub 的写法）。",
+      githubColFix: "应用", githubColRule: "规则",
+      githubRewriteHeading: "改写为 GitHub 的写法",
       githubConvertChanged: "! 确认期间文档发生了变化，因此没有改写。请再次选择“自动修正”→“GitHub 转换”。",
       githubConvertFailed: "! 无法准备改写为 GitHub 的写法。文档保持不变。",
       githubKinds: {
@@ -873,6 +887,13 @@
       githubConvertApply: "Rewrite", githubCancel: "Cancel",
       githubConvertNone: "Nothing needs rewriting for GitHub.",
       githubConvertDone: (count) => `Rewrote ${count} ${count === 1 ? "place" : "places"} for GitHub. Ctrl+Z undoes the rewrite.`,
+      githubConvertDoneFixes: (fixes, count) => (count
+        ? `The fix rules fixed ${fixes} ${fixes === 1 ? "place" : "places"}, and ${count} ${count === 1 ? "place was" : "places were"} rewritten for GitHub. Ctrl+Z undoes both.`
+        : `The fix rules fixed ${fixes} ${fixes === 1 ? "place" : "places"}. Ctrl+Z undoes it.`),
+      githubFixHeading: "Fix rules applied first",
+      githubFixIntro: "Before rewriting for GitHub, the fix rules are applied (what they fix may also look different in mdEditor). Rules set to \"Fix on opening\" start checked. Changing a check recounts the rewrites below. The four rules that rewrite math as $ are not listed (the same math is rewritten below into the form GitHub reads).",
+      githubColFix: "Apply", githubColRule: "Rule",
+      githubRewriteHeading: "Rewrites for GitHub",
       githubConvertChanged: "! The document changed while this dialog was open, so nothing was rewritten. Choose \"Auto fix\" > \"Convert for GitHub\" again.",
       githubConvertFailed: "! The rewrite for GitHub could not be prepared. The document is unchanged.",
       githubKinds: {
@@ -5836,10 +5857,82 @@
 
   const effectiveLineBreaks = () => lineBreaksCheckbox.checked && !lineBreaksCheckbox.disabled;
 
+  // Convert for GitHub applies the fix rules first, in their order, then rewrites the result
+  // for GitHub, as one edit. The rules for \( \), \[ \], and the spaces inside $ are left out:
+  // the conversion rewrites the same writing itself, choosing the form GitHub reads.
+  const githubFixOverlap = new Set(["latex-display-block", "latex-display-inline", "latex-inline", "dollar-spaces"]);
+  // Rules set to fix on opening start checked; the rules that ask, or run only by hand, start
+  // unchecked, as in their settings.
+  let githubFixChecks = new Map();
+  let githubFixGeneration = 0;
+  const prepareGithubFixes = async (text, from, to) => {
+    let state = EditorState.create({ doc: text });
+    let changes = null;
+    let count = 0;
+    const rows = [];
+    for (const rule of fixRules.rules) {
+      if (!rule.enabled || githubFixOverlap.has(rule.id)) continue;
+      const result = await findFixes(rule, state.doc.toString());
+      // Only the pieces inside the selection, when there is one.
+      const pieces = (result.pieces ?? []).filter((piece) => from === to || (piece.from >= from && piece.to <= to));
+      if (!pieces.length) continue;
+      const checked = githubFixChecks.get(rule.id) ?? rule.when === "open";
+      const example = pieces.find((piece) => piece.to - piece.from >= 8 && piece.to - piece.from <= 40) ?? pieces[0];
+      rows.push({ rule, count: pieces.length, example: state.sliceDoc(example.from, example.to), checked });
+      if (!checked) continue;
+      const transaction = state.update({ changes: pieces.map(({ from: start, to: end, insert }) => ({ from: start, to: end, insert })) });
+      changes = changes ? changes.compose(transaction.changes) : transaction.changes;
+      if (from !== to) {
+        from = transaction.changes.mapPos(from, -1);
+        to = transaction.changes.mapPos(to, 1);
+      }
+      state = transaction.state;
+      count += pieces.length;
+    }
+    return { rows, changes, count, text: state.doc.toString(), from, to };
+  };
+  // Asks the window what GitHub would need, for the text as the checked rules leave it.
+  const requestGithubPlan = async (original, from, to) => {
+    const generation = ++githubFixGeneration;
+    const fixes = await prepareGithubFixes(original, from, to);
+    if (generation !== githubFixGeneration) return;
+    githubRequest = { original, scopeFrom: from, scopeTo: to, fixes, lineBreaks: effectiveLineBreaks() };
+    post({ type: "githubConvertPlan", text: fixes.text, from: fixes.from, to: fixes.to, lineBreaks: githubRequest.lineBreaks });
+  };
+
   const updateGithubApply = () => {
     const kinds = githubPlan?.kinds ?? [];
-    githubConvertApply.hidden = kinds.length === 0;
-    githubConvertApply.disabled = !kinds.some((item) => item.checked);
+    const fixRows = githubRequest?.fixes.rows ?? [];
+    githubConvertApply.hidden = kinds.length === 0 && fixRows.length === 0;
+    githubConvertApply.disabled = !kinds.some((item) => item.checked) && !fixRows.some((item) => item.checked);
+  };
+
+  const renderGithubFixRows = () => {
+    const rows = githubRequest?.fixes.rows ?? [];
+    document.getElementById("github-fix-section").hidden = rows.length === 0;
+    document.getElementById("github-fix-rows").replaceChildren(...rows.map((item) => {
+      const row = document.createElement("tr");
+      const check = document.createElement("input");
+      check.type = "checkbox";
+      check.checked = item.checked;
+      check.dataset.rule = item.rule.id;
+      check.setAttribute("aria-label", ruleName(item.rule));
+      check.addEventListener("change", () => {
+        // The GitHub rewrites are counted again on the text the checked rules leave.
+        githubFixChecks.set(item.rule.id, check.checked);
+        githubConvertApply.disabled = true;
+        requestGithubPlan(githubRequest.original, githubRequest.scopeFrom, githubRequest.scopeTo);
+      });
+      const example = document.createElement("code");
+      example.textContent = visibleExample(item.example);
+      for (const [index, value] of [check, ruleName(item.rule), String(item.count), example].entries()) {
+        const cell = document.createElement("td");
+        if (index === 2) cell.className = "help-right";
+        cell.append(value);
+        row.append(cell);
+      }
+      return row;
+    }));
   };
 
   const renderGithubPlan = () => {
@@ -5886,13 +5979,15 @@
       }
       return entry;
     }));
+    renderGithubFixRows();
     updateGithubApply();
   };
 
   githubConvertButton.addEventListener("click", () => {
     const { from, to } = view.state.selection.main;
-    githubRequest = { text: view.state.doc.toString(), from, to, lineBreaks: effectiveLineBreaks() };
-    post({ type: "githubConvertPlan", ...githubRequest });
+    githubPlan = null;
+    githubFixChecks = new Map();
+    requestGithubPlan(view.state.doc.toString(), from, to);
   });
   // Auto fix > Apply the fix rules: every rule over the whole document now, as on opening
   // (the rules that run only by hand are offered too); what was fixed before stays to be put back.
@@ -5901,15 +5996,22 @@
   });
   githubConvertApply.addEventListener("click", () => {
     if (!githubRequest || !githubPlan) return;
-    post({ type: "githubConvertApply", ...githubRequest, kinds: githubPlan.kinds.filter((item) => item.checked).map((item) => item.kind) });
+    const { fixes, lineBreaks } = githubRequest;
+    post({ type: "githubConvertApply", text: fixes.text, from: fixes.from, to: fixes.to, lineBreaks, kinds: githubPlan.kinds.filter((item) => item.checked).map((item) => item.kind) });
     githubConvertDialog.close();
   });
   for (const id of ["github-convert-close", "github-convert-cancel"]) {
     document.getElementById(id).addEventListener("click", () => {
       githubRequest = null;
+      githubFixGeneration += 1;
       githubConvertDialog.close();
     });
   }
+  // Esc closes the question too: an answer still on its way is dropped.
+  githubConvertDialog.addEventListener("cancel", () => {
+    githubRequest = null;
+    githubFixGeneration += 1;
+  });
 
   const updateGithubBanner = () => {
     let text = "";
@@ -6027,28 +6129,40 @@
       if (message.text) placeToc(message.text);
       else showNoticeMessage(t("tocNoHeadings"));
     } else if (message.type === "githubConvertPlan") {
+      // Asked again while the question is open (a fix rule's check changed): the kinds keep
+      // the checks the user gave them.
+      // An answer to a question that was closed meanwhile is dropped.
+      if (!githubRequest) return;
+      const reasked = githubConvertDialog.open && githubPlan;
+      const checks = new Map((githubPlan?.kinds ?? []).map((item) => [item.kind, item.checked]));
       if (message.failed) {
+        if (reasked) githubConvertDialog.close();
         showNoticeMessage(t("githubConvertFailed"));
-      } else if (!message.kinds.length && !message.skipped.length) {
+      } else if (!reasked && !message.kinds.length && !message.skipped.length && !githubRequest?.fixes.rows.length) {
         githubRequest = null;
         showNoticeMessage(t("githubConvertNone"));
       } else {
-        githubPlan = { scope: message.scope, kinds: message.kinds.map((item) => ({ ...item, checked: true })), skipped: message.skipped };
+        githubPlan = { scope: message.scope, kinds: message.kinds.map((item) => ({ ...item, checked: checks.get(item.kind) ?? true })), skipped: message.skipped };
         renderGithubPlan();
-        githubConvertDialog.showModal();
+        if (!reasked) githubConvertDialog.showModal();
       }
     } else if (message.type === "githubConvertEdits") {
       const request = githubRequest;
       githubRequest = null;
       if (message.failed) {
         showNoticeMessage(t("githubConvertFailed"));
-      } else if (!request || view.state.doc.toString() !== request.text) {
+      } else if (!request || view.state.doc.toString() !== request.original) {
         showNoticeMessage(t("githubConvertChanged"));
-      } else if (!message.edits.length) {
+      } else if (!message.edits.length && !request.fixes.changes) {
         showNoticeMessage(t("githubConvertNone"));
       } else {
-        view.dispatch({ changes: message.edits.map(({ from, to, insert }) => ({ from, to, insert })), userEvent: "input", scrollIntoView: true });
-        showNoticeMessage(t("githubConvertDone")(message.count));
+        // The fix rules' changes and GitHub's rewrites of their result, as one edit: a single
+        // Ctrl+Z puts both back.
+        const rewrites = EditorState.create({ doc: request.fixes.text })
+          .update({ changes: message.edits.map(({ from, to, insert }) => ({ from, to, insert })) }).changes;
+        const changes = request.fixes.changes ? request.fixes.changes.compose(rewrites) : rewrites;
+        view.dispatch({ changes, userEvent: "input", scrollIntoView: true });
+        showNoticeMessage(request.fixes.count ? t("githubConvertDoneFixes")(request.fixes.count, message.count) : t("githubConvertDone")(message.count));
         view.focus();
       }
     } else if (message.type === "githubViewConfirm") {

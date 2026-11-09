@@ -21,7 +21,7 @@ tags: [markdown, windows, wpf, webview2]
 
 [English](./README.md) | [日本語](./README.ja.md) | 简体中文
 
-版本 / Version: 1.0.23（更改记录 / Changes: [CHANGELOG.md](./CHANGELOG.md)）
+版本 / Version: 1.0.24（更改记录 / Changes: [CHANGELOG.md](./CHANGELOG.md)）
 
 ## 特点
 
@@ -347,7 +347,7 @@ GitHub 的 README 等中常用的以下写法，也会与 GitHub 显示得一样
 
 使用编辑区上方的“自动修正”→“GitHub 转换”和预览上方的“GitHub 显示”，可以在把文档放到 GitHub 之前，查看并修改它在 GitHub 上的显示效果。两个按钮都可以在“设置”→“显示的按钮”中隐藏。
 
-- **GitHub 转换**：将 GitHub 不能按原样显示的写法改写为 GitHub 的写法。选中文字时只改写选中的部分，未选中时改写整个文档。改写前会列出每种写法的数量和示例，取消勾选的项目不会改写。改写后 mdEditor 中的显示不变，可以用 Ctrl+Z 一次撤销。只在本机进行，不发送到任何地方。
+- **GitHub 转换**：将 GitHub 不能按原样显示的写法改写为 GitHub 的写法。选中文字时只改写选中的部分，未选中时改写整个文档。改写前会列出每种写法的数量和示例，取消勾选的项目不会改写。改写之前会先应用自动修正规则，这些规则也会带复选框列在改写项目的上方（设为“打开时修正”的规则默认勾选，其他规则不勾选）。将公式写法改为 $ 形式的 4 条规则不列出，同样的写法会改写为 GitHub 的写法。改写后 mdEditor 中的显示不变（自动修正规则修正的地方可能会改变），可以用 Ctrl+Z 一次撤销规则的修正和改写。只在本机进行，不发送到任何地方。
 - **GitHub 显示**：点击后，每次都会先显示发送内容、发送目标（api.github.com）和可发送次数，确认是否发送（默认选中“不发送”）。只有选择“发送”时，才会将编辑区的文字发送到 GitHub 的 Markdown API，并在预览中显示 GitHub 生成的结果。哪些内容成为公式、删除线等（Markdown 的解读）由 GitHub 决定；字体、颜色、间距等外观以及绘制公式（KaTeX）和图表（Mermaid 等）的组件则由 mdEditor 负责，因此外观与 github.com 并不完全相同（GitHub 不绘制的 Graphviz 等保持为代码）。不使用 GitHub 登录，每小时最多可发送 60 次。点击预览上方横条中的“返回原来的显示”，即可回到通常的预览。
 
 GitHub 转换会改写以下写法（依据 2026-11-08 使用 GitHub 的 Markdown API 确认的结果）。

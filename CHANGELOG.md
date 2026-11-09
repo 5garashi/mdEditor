@@ -12,6 +12,12 @@
 
 The version number lives in [VERSION](./VERSION). Add each new version at the top, with a `## version — date` heading (used as the GitHub Release notes).
 
+## 1.0.24 — 2026-11-10
+
+- 「GitHub 変換」で、GitHub 向けに書き換える前に、自動修正のルールを当てるようにした。確認の画面の「先に当てる自動修正のルール」に、文書（選んでいるときは選んだ範囲）で見つかったルールを、数と例とチェックとともに並べる。「開いたときに直す」のルールは初めからチェックが付き、「開いたときに聞く」と「「当てる」を押したときだけ」のルールは付かない。チェックを変えると、ルールを当てた後の文字で GitHub 向けの書き換えを数え直す。ルールで直したところと書き換えは、Ctrl+Z 1 回で一緒に戻る。数式の書き方を $ に直す 4 つのルール（別行の `\[ … \]`、文の中の `\[ … \]`、`\( … \)`、`$` の内側の空白）は並べない。同じ書き方を、GitHub 変換が GitHub の読み方に合わせて（`$x$`・`` $`x`$ ``・` ```math ` から）書き換えるため。これまでは、先に「自動修正のルールを当てる」を選ばないと、お知らせ欄で元に戻したところや、聞くだけのルールのところが、GitHub 向けにならないまま残った。
+
+- Convert for GitHub now applies the fix rules before rewriting for GitHub. Under "Fix rules applied first", the confirmation dialog lists the rules that find something in the document (or the selection), each with a count, an example, and a check box. Rules set to "Fix on opening" start checked; rules set to "Ask on opening" or "Only when Apply is pressed" start unchecked. Changing a check recounts the rewrites for GitHub on the text left after the checked rules are applied. A single Ctrl+Z undoes the rules' fixes and the rewrites together. The four rules that rewrite math as $ (`\[ … \]` on lines of their own, `\[ … \]` in a sentence, `\( … \)`, and the spaces inside `$`) are not listed: the conversion rewrites the same writing itself, in the form GitHub reads (`$x$`, `` $`x`$ ``, or ` ```math `). Until now, places put back from the notice and places a rule only asked about were not rewritten for GitHub unless "Apply the fix rules" was chosen first.
+
 ## 1.0.23 — 2026-11-10
 
 - 編集欄に「自動修正」のボタンを足し、その中で「GitHub 変換」と「自動修正のルールを当てる」を選べるようにした。「GitHub 変換」は、GitHub では書いたとおりに表示されない書き方を、GitHub の書き方に書き換える（`\(x\)` → `$x$`、`\[x\]` → ` ```math `、`$x $` → `$x$`、`\{` や `*` を含む数式と、日本語や中国語の文字のすぐ後の数式（`、$x$`）→ `` $`x`$ ``、`$$` のない `\begin{align}` → ` ```math `、`x^2^`・`H~2~O`・`++…++`・`==…==` → `<sup>`・`<sub>`・`<ins>`・`<mark>`、段落の中の改行 → 行末の `\`、`::: note` など → `> [!NOTE]` など、定義リスト → `<dl>`、`a.` の番号 → `<ol type="a">`、見出しの `{#id}` → `<a id>`）。文字を選んでいるときは選んだ範囲だけ、選んでいないときは文書全体を書き換える。書き換える前に書き方ごとの数と例を示し、チェックを外したものは書き換えない。略語・罫線の表・HTML の中に文字で書いた数式など GitHub に同じものがない書き方は、書き換えずに数だけ示す。Ctrl+Z で一度に戻せる。書き換え方は、GitHub の Markdown API で 2026-11-08 に確かめた結果による（`$…$` の中でも `\{` の `\` が消える、`$a*b*c$` が強調になる、`$x$` は直前が空白か ASCII の記号でないと数式にならない、など）。

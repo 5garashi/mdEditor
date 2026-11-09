@@ -3,7 +3,7 @@
   概要 / Description: mdEditor を変えたときに、どのテストを動かし、どう報告するか / Which tests to run when mdEditor changes, and how to report them
   作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
   作成日 / Created: 2026-11-02
-  版 / Version: 1.0.23
+  版 / Version: 1.0.24
   ライセンス / License: MIT
   SPDX-License-Identifier: MIT
 -->
@@ -34,7 +34,7 @@ mdEditor のファイルを変えたら、この文書に従ってテストを�
 
 ## GitHub 変換と GitHub 表示を変えたとき
 
-- `targets\mdeditor\test_release_1023.py` を動かす（`run.cmd mdeditor -k test_release_1023`、約 1 分）。
+- `targets\mdeditor\test_release_1023.py` と `test_release_1024.py`（GitHub 変換が先に当てる自動修正のルール）を動かす（`run.cmd mdeditor -k "test_release_1023 or test_release_1024"`、約 2 分）。
 - GitHub 表示のテストは、GitHub に送らない。環境変数 `MDEDITOR_GITHUB_RESPONSE_FILE` に、GitHub の答えを保存したファイルを指定すると、アプリはそれを GitHub の答えとして使う（テストのためだけの仕組み）。
 - 本物の GitHub に送って確かめるテストは、ふだんは動かない。GitHub の答えの形が変わっていないかを確かめるときだけ、環境変数 `MDEDITOR_LIVE_GITHUB=1` を付けて動かす（短い見本の文字を api.github.com に送る）。
 - 書き換え方の根拠は、GitHub の Markdown API で確かめた結果である。書き換え方を足す・変えるときは、変換の前と後を API で確かめ、結果をテストの見本に足す。

@@ -417,6 +417,10 @@ button.primary:hover {
   overflow-wrap: anywhere;
 }
 
+.github-table th {
+  white-space: nowrap;
+}
+
 .github-table input[type="checkbox"] {
   width: 20px;
   height: 20px;

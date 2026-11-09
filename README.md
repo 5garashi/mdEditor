@@ -21,7 +21,7 @@ A Windows app that opens Markdown files and lets you edit the text side by side 
 
 English | [日本語](./README.ja.md) | [简体中文](./README.zh-CN.md)
 
-Version: 1.0.23 (Changes: [CHANGELOG.md](./CHANGELOG.md))
+Version: 1.0.24 (Changes: [CHANGELOG.md](./CHANGELOG.md))
 
 ## Highlights
 
@@ -348,7 +348,7 @@ These ways of writing, common in GitHub READMEs, show the same way as on GitHub.
 
 Auto fix > Convert for GitHub (above the editor) and GitHub view (above the preview) let you check and fix how GitHub will show a document before you put it there. Settings > Buttons to show can hide both buttons.
 
-- **Convert for GitHub** rewrites what GitHub does not show as written into the way GitHub writes it. With text selected, only the selection is rewritten; otherwise the whole document. Before rewriting, it lists each way of writing with a count and an example, and anything whose check box you clear is left as it is. mdEditor shows the rewritten text the same way, and Ctrl+Z undoes the whole rewrite at once. It runs on this PC and sends nothing anywhere.
+- **Convert for GitHub** rewrites what GitHub does not show as written into the way GitHub writes it. With text selected, only the selection is rewritten; otherwise the whole document. Before rewriting, it lists each way of writing with a count and an example, and anything whose check box you clear is left as it is. The fix rules are applied first, listed above the rewrites with their own check boxes: rules set to "Fix on opening" start checked, and the others unchecked. The four rules that rewrite math as $ are not listed, because the conversion already rewrites the same math into the form GitHub reads. mdEditor shows the rewritten text the same way (what the fix rules fix may look different), and Ctrl+Z undoes the fix rules and the rewrite at once. It runs on this PC and sends nothing anywhere.
 - **GitHub view** asks every time before sending, showing what is sent, where it goes (api.github.com), and how many sends are allowed ("Don't send" is selected by default). Only when you choose Send does it send the text in the editor to GitHub's Markdown API and show what GitHub made of it in the preview. What becomes math, struck-through text, and so on (how the Markdown is read) is GitHub's. The typeface, colors, spacing, and the parts that draw math (KaTeX) and diagrams (Mermaid and others) are mdEditor's, so it does not look exactly like github.com (what GitHub does not draw, such as Graphviz, stays code). No GitHub sign-in is used, which allows 60 sends an hour. The "Back to the preview" button in the banner above the preview returns to the usual preview.
 
 Convert for GitHub rewrites the following (as checked with GitHub's Markdown API on 2026-11-08).
