@@ -3,7 +3,7 @@
   概要 / Description: mdEditor を変えたときに、どのテストを動かし、どう報告するか / Which tests to run when mdEditor changes, and how to report them
   作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
   作成日 / Created: 2026-11-02
-  版 / Version: 1.0.22
+  版 / Version: 1.0.23
   ライセンス / License: MIT
   SPDX-License-Identifier: MIT
 -->
@@ -32,6 +32,14 @@ mdEditor のファイルを変えたら、この文書に従ってテストを�
 - 表示の読み取り・自動修正のルール・HTML などからの変換を変えたときは、見つけた例をこのファイルに足し、`run.cmd mdeditor -k test_written_elsewhere`（約 2 分）で動かす。
 - 複数行の `$$ … $$` は、区切りと式が同じ行にあるもの、引用・リスト内、従来の区切りだけの行をコーパスで確認する。コード内・金額・閉じていない式・空行をまたぐ式は、数式と取り違えず本文を保つことも確認する。`test_multiline_dollar_math_exports` では HTML・Word・PDF に数式として保存されることを確認する。
 
+## GitHub 変換と GitHub 表示を変えたとき
+
+- `targets\mdeditor\test_release_1023.py` を動かす（`run.cmd mdeditor -k test_release_1023`、約 1 分）。
+- GitHub 表示のテストは、GitHub に送らない。環境変数 `MDEDITOR_GITHUB_RESPONSE_FILE` に、GitHub の答えを保存したファイルを指定すると、アプリはそれを GitHub の答えとして使う（テストのためだけの仕組み）。
+- 本物の GitHub に送って確かめるテストは、ふだんは動かない。GitHub の答えの形が変わっていないかを確かめるときだけ、環境変数 `MDEDITOR_LIVE_GITHUB=1` を付けて動かす（短い見本の文字を api.github.com に送る）。
+- 書き換え方の根拠は、GitHub の Markdown API で確かめた結果である。書き換え方を足す・変えるときは、変換の前と後を API で確かめ、結果をテストの見本に足す。
+- 別ウィンドウのプレビューでの GitHub 表示は、テストの道具が別ウィンドウを操作できないため、自動では確かめていない。
+
 ## 訳を変えたとき
 
 英語・中国語の文を変えたら、`test_translations.py` を動かし、[docs/translation-review.md](docs/translation-review.md) の手順 4・5 のとおり、見直しをほかの AI に共通の道具で頼み、指摘を判断して直し、報告する。
@@ -39,4 +47,4 @@ mdEditor のファイルを変えたら、この文書に従ってテストを�
 ---
 
 **作成者 / Author**: 5garashi.com設計事務所 / 5garashi.com Design Office
-**最終更新 / Last updated**: 2026-11-03 JST
+**最終更新 / Last updated**: 2026-11-08 JST

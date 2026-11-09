@@ -349,6 +349,79 @@ button.primary:hover {
   font-size: 13px;
 }
 
+/* GitHub view: over the preview while it shows what GitHub made of the document. */
+.github-banner {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--line);
+  border-left: 6px solid var(--steel);
+  background: var(--card);
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.github-banner[hidden] {
+  display: none;
+}
+
+/* Volt is for accent text on the card only when bold (Identity 7-1: 6.15:1 by day, 5.34:1 at night). */
+.github-banner-lead {
+  color: var(--volt);
+  font-weight: 700;
+}
+
+.github-banner-error {
+  border-left-color: var(--volt);
+}
+
+.github-banner-text {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
+.github-banner button {
+  min-height: 44px;
+  padding: 4px 10px;
+  font-size: 13px;
+}
+
+/* GitHub conversion and GitHub view questions. */
+.github-dialog .github-skipped-heading,
+.github-dialog .github-skipped-list,
+.github-dialog .settings-note,
+.github-dialog .github-view-facts,
+.github-dialog .github-error {
+  margin: 0 16px 12px;
+}
+
+.github-dialog .github-skipped-heading {
+  font-size: 15px;
+}
+
+.github-dialog .github-error {
+  font-weight: 700;
+}
+
+.github-dialog [hidden] {
+  display: none;
+}
+
+/* Markdown shown as written, in the editor's font: a Japanese UI font draws \ as a yen sign. */
+.github-table code,
+.github-skipped-list code {
+  font-family: Consolas, "Cascadia Mono", monospace;
+  overflow-wrap: anywhere;
+}
+
+.github-table input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+}
+
 body.dragging {
   outline: 4px dashed var(--ink);
   outline-offset: -8px;
@@ -447,6 +520,26 @@ body.drop-insert .editor-pane {
 .app-menu-list button:focus-visible {
   border-color: var(--ink);
   background: var(--paper);
+}
+
+/* The editor's Auto fix menu opens below its button, aligned to its left. */
+.autofix-menu {
+  position: relative;
+  display: inline-flex;
+}
+
+.autofix-menu[hidden] {
+  display: none;
+}
+
+#autofix-button[aria-expanded="true"] {
+  color: var(--head);
+  background: var(--ink);
+}
+
+.autofix-menu .app-menu-list {
+  right: auto;
+  left: 0;
 }
 
 /* The document name beside the heading: in the preview's own window, and when a pane
@@ -2303,6 +2396,7 @@ body.capture-export .preview-content :is(th, td) {
 
   .pane,
   .notice,
+  .github-banner,
   .help-dialog,
   .settings-group,
   .encoding-options {

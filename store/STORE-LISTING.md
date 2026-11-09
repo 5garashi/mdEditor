@@ -60,7 +60,7 @@ Your work stays safe
 - Shift_JIS, EUC-JP, and UTF-8 are detected, so older Japanese files open correctly.
 
 Private and quiet
-- The content of your documents is never sent anywhere. PDF and Word files are converted on your PC. No tracking, no accounts, no ads.
+- The content of your documents is never sent anywhere, except to GitHub, and only when you press GitHub view and choose Send (it asks every time). PDF and Word files are converted on your PC. No tracking, no accounts, no ads.
 - Internet images, videos, and detailed maps load only when you allow them.
 
 Made for everyone
@@ -70,14 +70,14 @@ Made for everyone
 Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Design Office. Open About from the Menu in the app for the company, support, and privacy policy links.
 
 **What's new in this version:**
-- One Menu at the right end of the header now holds Settings, Keys, Samples, and About, so the toolbar is shorter.
-- The preview in its own window shows the file name in its title and heading, and so does a pane that fills the window.
-- SVG drawings written in Markdown are shown, and go into PDF, PNG, HTML, and Word. Scripts and the loading of outside files are removed.
-- Math written as text inside HTML (such as a figure caption) shows as math, as on pages that use MathJax.
-- Math spread over several lines that starts on the `$$` line, and `$x $` with a space before the closing `$`, show as math, as in VS Code.
-- When part of a PDF, Word file, HTML file, or Jupyter Notebook cannot be converted, the rest still opens, and the notice says what came in as plain text.
-- Opening PDFs: items numbered like "4)", text drawn several times to look bold, and large step numbers are read correctly. With "Make tables and figures pictures (looks like the page)", a photo with circles and labels drawn over it becomes one picture.
-- Pasting a web page keeps `_` and `*` inside its math.
+- An Auto fix button above the editor: Convert for GitHub rewrites math and other writing that GitHub shows differently, listing each kind with its count before anything changes; Apply the fix rules runs the fix rules on the whole document.
+- GitHub view in the preview shows the document as GitHub reads it. It asks every time before sending the text to GitHub.
+- `\[ … \]` that AI chats write on lines of their own becomes `$$` math when the document opens; a button puts it back.
+- Fix rules also run on a document made from the clipboard with the New from clipboard key and on a file dropped on the editor. Running them at every paste can be turned on in Settings.
+- In Settings, you can hide the Adjust image, Syntax, Auto fix, and GitHub view buttons. Initials such as "V. B." in a reference list are no longer read as a list.
+- A single Menu at the right end of the header now holds Settings, Keys, Samples, and About.
+- SVG drawings written in Markdown are shown and included in PDF, PNG, HTML, and Word exports. Math written as text inside HTML shows as math.
+- When part of a PDF, Word file, HTML file, or Jupyter Notebook cannot be converted, the rest still opens. PDF items numbered like "4)" and text drawn twice to look bold are now read correctly.
 
 **Features (bullets):**
 - Open PDF and Word files as Markdown, offline
@@ -92,7 +92,7 @@ Available in Japanese, English, and Simplified Chinese. Made by 5garashi.com Des
 - Mermaid and Graphviz diagrams and math, offline
 - 3D models (STL) and maps (GeoJSON), offline
 - Colored code for about 40 languages, and a table of contents
-- GitHub-style alerts, front matter, and collapsible sections
+- GitHub-style alerts and sections, and Convert for GitHub
 - Also opens HTML, e-mail, CSV, JSON, Jupyter Notebooks, and images
 - Drop or paste pictures straight into your document
 - Copy anything, press a key, and it opens as a new document
@@ -180,7 +180,7 @@ PDF や Word で保存する
 - Shift_JIS・EUC-JP・UTF-8 を自動で判定するので、古い日本語のファイルも正しく開けます。
 
 静かで、安心
-- 文書の内容は、どこにも送りません。PDF や Word の変換も PC の中で行います。計測も、アカウントも、広告もありません。
+- 文書の内容は、どこにも送りません（「GitHub 表示」を押し、毎回の確認で「送る」を選んだときだけ GitHub に送ります）。PDF や Word の変換も PC の中で行います。計測も、アカウントも、広告もありません。
 - インターネット上の画像・動画と詳しい地図は、許可したときだけ読み込みます。
 
 だれにでも使いやすく
@@ -190,14 +190,14 @@ PDF や Word で保存する
 日本語・英語・簡体字中国語に対応します。5garashi.com Design Office が作りました。会社紹介・サポート・プライバシーポリシーは、アプリの「メニュー」の「このアプリについて」から開けます。
 
 **このバージョンの新機能:**
-- 「設定」「キー操作」「サンプル」「このアプリについて」を、ヘッダーの右端の「メニュー」にまとめ、ツールバーが短くなりました。
-- 別ウィンドウのプレビューのタイトルと見出し、ウィンドウ全体に表示した欄の見出しに、文書のファイル名が出ます。
-- Markdown の中に書いた SVG の図を表示し、PDF・PNG・HTML・Word にも入れます。スクリプトや外部のファイルの読み込みは取り除きます。
-- HTML の中に文字で書いた数式（図の説明など）を、MathJax を使うページと同じように数式として表示します。
-- `$$` の行から書き始めた複数行の数式と、閉じる `$` の前に空白がある `$x $` を、VS Code と同じように数式として表示します。
-- PDF・Word・HTML・Jupyter Notebook の一部を変換できないときも、残りは開き、書式のない文字で入れた部分をお知らせ欄で伝えます。
-- PDF を開くとき、「4)」のような番号の項目、太く見せるために重ねて描いた文字、大きな手順の番号を正しく読みます。「表・図を画像にする（見た目優先）」では、丸や名前を書き込んだ写真を 1 枚の画像にします。
-- Web ページを貼り付けたとき、数式の中の `_` と `*` を保ちます。
+- 編集欄に「自動修正」ボタン: 「GitHub 変換」は、GitHub では違って表示される数式などの書き方を、書き方ごとの数を示してから書き換えます。「自動修正のルールを当てる」は、文書全体に自動修正のルールを当てます。
+- プレビューの「GitHub 表示」で、GitHub が読んだとおりの表示を確かめられます。GitHub に送る前に毎回確かめます。
+- AI のチャットが別の行に書く `\[ … \]` を、開いたときに `$$` の数式にします。ボタンで元に戻せます。
+- キーでクリップボードから作った文書と、編集欄に落としたファイルにも、自動修正のルールを当てます。貼り付けるたびに当てることも、「設定」で選べます。
+- 「設定」で「画像の調整」「書き方」「自動修正」「GitHub 表示」のボタンを隠せます。参考文献の「V. B.」のような頭文字を、リストとして読まなくなりました。
+- 「設定」「キー操作」「サンプル」「このアプリについて」を、ヘッダーの右端の「メニュー」にまとめました。
+- Markdown の中に書いた SVG の図を表示し、PDF・PNG・HTML・Word にも入れます。HTML の中に文字で書いた数式も、数式として表示します。
+- PDF・Word・HTML・Jupyter Notebook の一部を変換できないときも、残りは開きます。PDF の「4)」のような番号の項目と、太く見せるために重ねて描いた文字を正しく読みます。
 
 **製品の機能（箇条書き）:**
 - PDF や Word を Markdown として開ける。PC の中だけで変換
@@ -212,7 +212,7 @@ PDF や Word で保存する
 - Mermaid・Graphviz の図と数式をオフラインで表示
 - 3D モデル（STL）と地図（GeoJSON）をオフラインで表示
 - 約 40 の言語のコードを色分け。見出しから目次も作る
-- GitHub と同じ注意書き・フロントマター・折りたたみ
+- GitHub と同じ注意書き・折りたたみ。GitHub 用に書き換え
 - HTML・メール・CSV・JSON・Jupyter Notebook・画像も開ける
 - 画像はドロップや貼り付けで、そのまま文書に
 - コピーしてキーを押すと、新しい文書として開く
@@ -282,7 +282,7 @@ PDF や Word で保存する
 - 能识别 UTF-8、GBK（简体中文 Windows）、Shift_JIS 和 EUC-JP，旧文件也能正确打开。
 
 安静、安心
-- 文档内容不会发送到任何地方。PDF 和 Word 的转换也在你的电脑中完成。没有跟踪，没有账户，没有广告。
+- 文档内容不会发送到任何地方（只有在点击“GitHub 显示”并在每次弹出的确认中选择“发送”时，才会发送到 GitHub）。PDF 和 Word 的转换也在你的电脑中完成。没有跟踪，没有账户，没有广告。
 - 网络上的图像、视频和详细地图，只有在你允许时才会加载。
 
 人人都好用
@@ -292,14 +292,14 @@ PDF や Word で保存する
 支持日语、英语和简体中文。由 5garashi.com Design Office 制作。可以从应用“菜单”中的“关于此应用”打开公司介绍、支持和隐私政策的链接。
 
 **此版本的新功能：**
-- “设置”“按键操作”“示例”“关于此应用”集中到顶部栏右端的“菜单”中，工具栏变短了。
-- 单独窗口中的预览会在窗口标题和标题栏中显示文件名，填满窗口的区域也是如此。
-- 显示在 Markdown 中写的 SVG 图，并会放入 PDF、PNG、HTML 和 Word。脚本和外部文件的加载会被移除。
-- HTML 中以纯文本书写的公式（例如图的说明）会像使用 MathJax 的网页一样显示为公式。
-- 从 `$$` 所在行开始书写的多行公式，以及闭合的 `$` 前有空格的 `$x $`，会与 VS Code 一样显示为公式。
-- PDF、Word、HTML 或 Jupyter Notebook 的一部分无法转换时，其余部分仍会打开，并在通知栏中说明哪些部分以纯文本放入。
-- 打开 PDF 时，能正确读取“4)”这样编号的项目、为显示粗体而重叠绘制的文字，以及较大的步骤编号。选择“将表格和图转为图片（外观优先）”时，画有圆圈和名称的照片会成为一张图片。
-- 粘贴网页时，公式中的 `_` 和 `*` 会保持不变。
+- 编辑区上方新增“自动修正”按钮：“GitHub 转换”会先按写法分类列出数量，再把在 GitHub 上显示效果不同的公式等写法改写为 GitHub 的写法；“应用自动修正规则”会对整个文档应用自动修正规则。
+- 在预览中点击“GitHub 显示”，可以查看 GitHub 实际读取后的显示效果。每次发送到 GitHub 之前都会确认。
+- AI 聊天中单独成行的 `\[ … \]` 会在打开时转换为 `$$` 公式，可用按钮恢复原样。
+- 用快捷键从剪贴板新建的文档，以及拖放到编辑区的文件，也会应用自动修正规则。也可以在“设置”中选择每次粘贴时都应用。
+- 可以在“设置”中隐藏“调整图像”“写法”“自动修正”和“GitHub 显示”按钮。参考文献中“V. B.”这样的姓名首字母不再被识别为列表。
+- “设置”“按键操作”“示例”“关于此应用”集中到顶部栏右端的“菜单”中。
+- 支持显示 Markdown 中编写的 SVG 图，并会包含在导出的 PDF、PNG、HTML 和 Word 中。HTML 中以文本形式写的公式也会显示为公式。
+- PDF、Word、HTML 或 Jupyter Notebook 的一部分无法转换时，其余部分仍会打开。能正确读取 PDF 中“4)”这样编号的项目，以及为显示粗体而重叠绘制的文字。
 
 **产品功能（要点）:**
 - 把 PDF 和 Word 作为 Markdown 打开，在电脑中转换
@@ -314,7 +314,7 @@ PDF や Word で保存する
 - 离线显示 Mermaid、Graphviz 图表和公式
 - 离线显示 3D 模型（STL）和地图（GeoJSON）
 - 约 40 种语言的代码着色，并可根据标题生成目录
-- 与 GitHub 相同的提示框、前置元数据和折叠
+- 与 GitHub 相同的提示框和折叠，并可用“GitHub 转换”改写
 - 也可打开 HTML、电子邮件、CSV、JSON、Jupyter Notebook 和图像
 - 图片拖放或粘贴即可放入文档
 - 复制后按一个键，即可作为新文档打开
@@ -342,7 +342,7 @@ PDF や Word で保存する
 - Reserve the name in Partner Center and confirm it is available. Use the same spelling ("5garashi.com Design Office") in the Store, the app, and the website.
 - Replace the privacy or support links if the final URLs differ. The company URL in the app is `https://www.5garashi.com/`.
 - "Worldwide" distribution and "all languages" are different settings. The app supports Japanese, English, and Simplified Chinese (1.0.15) only. Since 1.0.15 the package declares ja-JP, en-US, and zh-CN, so Partner Center expects a listing in each of the three languages; the zh-CN text and its screenshots are above. The Chinese text has not been reviewed by a native speaker.
-- The screenshots are in `docs/images/` (1366 x 768 window, 90% zoom), in Japanese (`.ja`), English (`.en`), and Simplified Chinese (`.zh-CN`). All were retaken with 1.0.22 on 2026-11-07 (Settings, Keys, Samples, and About in the header Menu; the preview window shows the file name) with the scratch kit take-shots.ps1, make_pdfs.py, take-import18.ps1, compose_pdf.py, and compose_import.py; 1-main shows the 3D model of samples/diagram-test (21-1). `10-pdf-open` (listed first to lead with PDF import) puts page 1 of a short report PDF beside the window that opened it as Markdown; the report was written for the screenshot and saved as PDF by mdEditor, with numbered lists. `9-pdf` (listed second) puts the window beside the first page of the PDF it saved, with its page number. `11-ai-chat` (listed third) opens an AI-chat-style answer written for the screenshot (extra\7-ai-chat.* in the kit); the default fix rules fix its bold and offer to rewrite its `\(…\)` math, so the notice shows both. `7-ai-chat` is saved as `11-ai-chat`, and `7-3d-model` is no longer listed (1-main shows the same model) but stays in the READMEs. The window shots are 1352 x 761 (the visible frame of a 1366 x 768 window) and `5-save-as` is a crop, so upload the copies in `artifacts/store-shots/` instead: each sits on the 1366 x 768 ground of 3, 9, and 10 (5-save-as at 1.5 times). Upload the screenshots in the listed order; ten is the Store maximum. Retake them when the screen changes.
+- The screenshots are in `docs/images/` (1366 x 768 window, 90% zoom), in Japanese (`.ja`), English (`.en`), and Simplified Chinese (`.zh-CN`). All were retaken with 1.0.23 on 2026-11-10 (the Auto fix button above the editor and GitHub view above the preview; since 1.0.22 Settings, Keys, Samples, and About are in the header Menu and the preview window shows the file name) with the scratch kit take-shots.ps1, make_pdfs.py, take-import18.ps1, compose_pdf.py, and compose_import.py; 1-main shows the 3D model of samples/diagram-test (21-1). `10-pdf-open` (listed first to lead with PDF import) puts page 1 of a short report PDF beside the window that opened it as Markdown; the report was written for the screenshot and saved as PDF by mdEditor, with numbered lists. `9-pdf` (listed second) puts the window beside the first page of the PDF it saved, with its page number. `11-ai-chat` (listed third) opens an AI-chat-style answer written for the screenshot (extra\7-ai-chat.* in the kit); the default fix rules fix its bold and offer to rewrite its `\(…\)` math, so the notice shows both. `7-ai-chat` is saved as `11-ai-chat`, and `7-3d-model` is no longer listed (1-main shows the same model) but stays in the READMEs. The window shots are 1352 x 761 (the visible frame of a 1366 x 768 window) and `5-save-as` is a crop, so upload the copies in `artifacts/store-shots/` instead: each sits on the 1366 x 768 ground of 3, 9, and 10 (5-save-as at 1.5 times). Upload the screenshots in the listed order; ten is the Store maximum. Retake them when the screen changes.
 - The map screenshot (`8-map`, listed tenth) shows OpenStreetMap map tiles. Keep the credit "© OpenStreetMap contributors" visible; do not crop it out.
   地図のスクリーンショット（`8-map`、一覧の 10 番目）には OpenStreetMap の地図が写っています。右下の「© OpenStreetMap contributors」を切り取らないでください。
 - Partner Center limits: What's new 1,500 characters, each feature 200 characters (up to 20), each screenshot caption 200 characters (up to 10 screenshots).

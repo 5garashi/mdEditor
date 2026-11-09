@@ -21,7 +21,7 @@ A Windows app that opens Markdown files and lets you edit the text side by side 
 
 English | [日本語](./README.ja.md) | [简体中文](./README.zh-CN.md)
 
-Version: 1.0.22 (Changes: [CHANGELOG.md](./CHANGELOG.md))
+Version: 1.0.23 (Changes: [CHANGELOG.md](./CHANGELOG.md))
 
 ## Highlights
 
@@ -204,7 +204,7 @@ On pull requests, GitHub Actions checks that the three match (it reads the line 
 - **Markdown check**: mistakes in how Markdown is written (a skipped heading level, no space after a heading's #, spaces inside emphasis, an empty link, a link on the page to a heading that is not there, a table row with the wrong number of columns, a code block never closed, a linked file that cannot be found, and so on) are underlined and their lines are marked at the left (a triangle for a mistake, a dot for a hint); press "N Markdown problems" under the editor to list them. Matters of style (line length, HTML) are not flagged. It uses markdownlint (MIT) and runs on your PC only. Turn it off in Settings > Editor.
 - **Make into math**: when a document has math that lost its \$ (Markdown exported from Google Docs and the like, where `$t \to +\infty$` became `t \\to \+\\infty`), those places become math when it opens and show as formulas in the preview. The notice says so, and its button goes back and forth between "Put back" and "Make into math". In Fix rules, it can be set to only ask in the notice. Only common LaTeX commands (`\to`, `\infty`, `\frac`, Greek letters, and so on) written with two backslashes are looked for, and code, math, link addresses, and paths are left alone.
 - **Fix emphasis**: when a document has bold whose `**` shows as written (as in `**標準量子限界（SQL）**と`, where a mark such as a bracket sits inside the `**` and a letter outside: CommonMark does not make it bold, and neither does GitHub), those places become `<strong>` tags when it opens and show in bold in the preview. The notice says so, and its button goes back and forth between "Undo emphasis fix" and "Fix emphasis". In Fix rules, it can be set to only ask in the notice.
-- **Fix rules**: fix certain ways of writing when a document opens (Settings > Editor > Fix rules…). Besides the two built-in rules for math and bold, rules come with mdEditor for Gemini's `[cite_start]` and `[cite: 1, 2]`, ChatGPT's `:contentReference[oaicite:…]`, `【4:0†source】`, `\( … \)`, and `\[ … \]`, Claude's `<cite index=…>`, Copilot's `[^1^]`, Grok's `<grok:render>`, invisible characters, no-break spaces, and bullets that became • when copied. Each rule can be set to "Fix on opening", "Ask on opening", or "Only when Apply is pressed". You can add your own rules as regular expressions and try them on the document before saving. What was fixed can be put back with the notice's button. The rules are kept in `%LOCALAPPDATA%\mdEditor\fix-rules.json` and can be exported and imported to move them to another PC.
+- **Fix rules**: fix certain ways of writing when a document is opened, when the desktop shortcut makes a new document from the clipboard, and when you drop a file on the editor to insert its content (Settings > Editor > Fix rules…). Auto fix > Apply the fix rules in the editor applies them at any time, and turning the option on in Settings > Editor applies them each time text is pasted too (off by default). In every case they apply to the whole document, not only to what was inserted. Besides the two built-in rules for math and bold, rules come with mdEditor for Gemini's `[cite_start]` and `[cite: 1, 2]`, ChatGPT's `:contentReference[oaicite:…]`, `【4:0†source】`, `\( … \)`, and `\[ … \]`, Claude's `<cite index=…>`, Copilot's `[^1^]`, Grok's `<grok:render>`, invisible characters, no-break spaces, and bullets that became • when copied. Each rule can be set to "Fix on opening", "Ask on opening", or "Only when Apply is pressed". You can add your own rules as regular expressions and try them on the document before saving. What was fixed can be put back with the notice's button. The rules are kept in `%LOCALAPPDATA%\mdEditor\fix-rules.json` and can be exported and imported to move them to another PC.
 - **Settings / Ctrl+Shift+O**: opens from the Menu at the right end of the header and lets you adjust readability and ease of use to suit you. Most options start off (standard), so only those who need an option turn it on; automatic backup, the Markdown check and colors, and keeping the original Markdown in saved HTML start on. Settings are kept the next time you start the app.
   - **Typeface**: switch to BIZ UD Gothic, a Universal Design typeface included with Windows.
   - **Text size and line spacing**: make the editor and preview text 125%, 150%, or 200%, and the line spacing Wide or Wider.
@@ -213,6 +213,7 @@ On pull requests, GitHub Actions checks that the three match (it reads the line 
     With "Show each line break in a paragraph as a line break" on (on by default), lines that follow one another with no blank line between them show as written, each on its own line. When a document with such breaks opens, the notice bar says how many there are, and its "Join the lines" and "Show line breaks" button turns the setting off and on. By Markdown's rules such lines are one paragraph and the breaks between them are spaces (GitHub does the same). Exports such as PDF, HTML, and Word follow it too; the file itself does not change.
 
     With "Show documents closer to GitHub" on, you choose "Make the other display settings follow GitHub too" or "Keep using the other display settings" (the default). Following GitHub also shows line breaks in paragraphs and `\(…\)`, `\[…\]`, and `$x $` math as GitHub does (the lines joined by spaces, `\(…\)` and `$x $` as text), and the line-break setting keeps its value but cannot be changed meanwhile.
+  - **Buttons to show**: hides the Adjust image, Syntax, Auto fix, and GitHub view buttons (all shown by default). Hidden buttons can still be used with their shortcut keys (see Keys).
   - **Export**: with "Keep the original Markdown in saved HTML" on (on by default), HTML you save opens back in mdEditor exactly as written, diagram and math source included. The original text goes into the HTML file as it is, including comments (`<!-- -->`) that are never shown, so check it before you share the file.
   - **Preview text width**: on wide screens the preview text keeps a comfortable width (about 44 full-width characters), centered; tables, diagrams, code, and display math may be wider. "Don't limit the preview text width" uses the full width.
   - **Zoom**: the whole window starts at 90%. Zoom in, Zoom out, and Reset to default (90%) change it. Ctrl + mouse wheel, Ctrl + plus/minus, and Ctrl + 0 (back to 90%) also work; the zoom level is remembered.
@@ -342,6 +343,32 @@ These ways of writing, common in GitHub READMEs, show the same way as on GitHub.
 | Bars in code inside a table | A `\` before the bar, in code inside a table cell | A single bar in the code (the `\` is not shown) |
 | Older attributes GitHub keeps | `<br clear="all">`, `<table border="1">`, `nowrap`, `cellpadding`, `hspace`, and so on | Work as written; `<br clear="all">` ends text flowing around a picture |
 | Day and night pictures | `<picture>` with `<source media="(prefers-color-scheme: dark)">`, or `#gh-dark-mode-only` / `#gh-light-mode-only` at the end of an image URL | Only the picture for the current palette |
+
+## Convert for GitHub and GitHub view
+
+Auto fix > Convert for GitHub (above the editor) and GitHub view (above the preview) let you check and fix how GitHub will show a document before you put it there. Settings > Buttons to show can hide both buttons.
+
+- **Convert for GitHub** rewrites what GitHub does not show as written into the way GitHub writes it. With text selected, only the selection is rewritten; otherwise the whole document. Before rewriting, it lists each way of writing with a count and an example, and anything whose check box you clear is left as it is. mdEditor shows the rewritten text the same way, and Ctrl+Z undoes the whole rewrite at once. It runs on this PC and sends nothing anywhere.
+- **GitHub view** asks every time before sending, showing what is sent, where it goes (api.github.com), and how many sends are allowed ("Don't send" is selected by default). Only when you choose Send does it send the text in the editor to GitHub's Markdown API and show what GitHub made of it in the preview. What becomes math, struck-through text, and so on (how the Markdown is read) is GitHub's. The typeface, colors, spacing, and the parts that draw math (KaTeX) and diagrams (Mermaid and others) are mdEditor's, so it does not look exactly like github.com (what GitHub does not draw, such as Graphviz, stays code). No GitHub sign-in is used, which allows 60 sends an hour. The "Back to the preview" button in the banner above the preview returns to the usual preview.
+
+Convert for GitHub rewrites the following (as checked with GitHub's Markdown API on 2026-11-08).
+
+| Written as | Rewritten as |
+| :--- | :--- |
+| Math in `\(x\)` | `$x$` |
+| Math in `\[x\]` | A ` ```math ` block (`$$x$$` within a line) |
+| Math with a space just inside the `$` (`$x $`) | `$x$` |
+| Math right after a Japanese or Chinese character (`、$x$`; GitHub treats `$…$` as math only when the `$` is preceded by a space or ASCII punctuation) | `` $`x`$ `` |
+| Math with signs GitHub reads as Markdown (`\{`, `*`, `_` not inside a word, and so on) | `` $`x`$ `` or a ` ```math ` block |
+| `$$…$$` over two lines in a paragraph, `\begin{align}` and the like without `$$` | A ` ```math ` block |
+| Math between lines of only `$$` that has a line GitHub reads as a heading, a list, and the like (a line of only `=` or `-`, a line starting with `- x`, `1. x`, `# x`, or `> x`, a blank line, and so on; checked on 2026-11-09) | A ` ```math ` block |
+| `x^2^`, `H~2~O`, `++inserted++`, `==highlight==` | `<sup>`, `<sub>`, `<ins>`, `<mark>` |
+| Line breaks in a paragraph (when "Show each line break in a paragraph as a line break" is on) | `\` at the end of the line |
+| `::: note` and similar boxes (note, tip, important, warning, caution) | `> [!NOTE]` and the other alerts |
+| Definition lists, items numbered `a.` or `i.` | `<dl>`, `<ol type="a">` |
+| `{#id}` on a heading | `<a id="…"></a>` before the heading |
+
+Anything GitHub has no equivalent for, such as abbreviations, grid tables, other `:::` boxes, and math written as text inside HTML (such as `$x$` in a `<figcaption>`), is left unchanged and only counted. Boxes, definition lists, and numbered lists inside a quote, list, or box are also listed and left as written.
 
 ## Examples: 3D model, map, and video
 

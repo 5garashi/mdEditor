@@ -641,6 +641,16 @@ public partial class MainWindow : Window
             case "toc":
                 SendToPage(new { type = "tocText", text = TableOfContents.Build(_text, _markdownPipeline) });
                 break;
+            case "githubConvertPlan":
+            case "githubConvertApply":
+                SendGitHubConversion(root, type == "githubConvertApply");
+                break;
+            case "githubViewAsk":
+                SendGitHubViewConfirm(SendToPage);
+                break;
+            case "githubView":
+                await ShowGitHubViewAsync(SendToPage);
+                break;
             case "openSample":
                 await OpenSampleAsync(root.GetProperty("text").GetString(),
                     root.TryGetProperty("name", out var sampleName) ? sampleName.GetString() : null);
@@ -2439,7 +2449,8 @@ public partial class MainWindow : Window
             if (inserted.Count > 0)
             {
                 // Content goes in as blocks of its own (blank lines around it), so its headings and tables stay intact.
-                SendToPage(new { type = "insertText", text = string.Join("\n\n", inserted.Select(text => text.Trim('\n'))) + "\n", block = contents.Count > 0 });
+                // A file's content is checked as an opened file is: the page runs the fix rules on the document.
+                SendToPage(new { type = "insertText", text = string.Join("\n\n", inserted.Select(text => text.Trim('\n'))) + "\n", block = contents.Count > 0, fix = contents.Count > 0 });
             }
 
             var notices = new List<string>();
@@ -2774,7 +2785,7 @@ public partial class MainWindow : Window
                     var markdown = HtmlImport.ToMarkdown(fragment, source, null).Markdown.Trim('\n');
                     if (markdown.Length > 0)
                     {
-                        SendToPage(new { type = "insertText", text = markdown + "\n", block = true });
+                        SendToPage(new { type = "insertText", text = markdown + "\n", block = true, fix = true });
                         SendToPage(new { type = "notice", text = Strings.Tr("クリップボードの書式付きの内容（HTML）を Markdown にして、新しい文書に入れました。見出し・表・リンクなどは残り、色や配置は残りません。") });
                         return;
                     }
@@ -2790,7 +2801,8 @@ public partial class MainWindow : Window
             if (Clipboard.ContainsText())
             {
                 var text = Clipboard.GetText().Replace("\r\n", "\n");
-                SendToPage(new { type = "insertText", text = text.EndsWith('\n') ? text : text + "\n", block = false });
+                // The page runs the fix rules on it, as on opening a file.
+                SendToPage(new { type = "insertText", text = text.EndsWith('\n') ? text : text + "\n", block = false, fix = true });
                 SendToPage(new { type = "notice", text = Strings.Tr("クリップボードのテキストを新しい文書に入れました。") });
                 return;
             }
@@ -5717,6 +5729,12 @@ public partial class MainWindow : Window
                 break;
             case "attachPreview":
                 window.Close();
+                break;
+            case "githubViewAsk":
+                SendGitHubViewConfirm(SendToPreviewWindow);
+                break;
+            case "githubView":
+                await ShowGitHubViewAsync(SendToPreviewWindow);
                 break;
             case "zoom":
                 // Ctrl + 0 in the preview window goes back to the default zoom, as in this window.

@@ -30,10 +30,16 @@ internal static class MarkdownPipelines
     // to GitHub" keeps only what GitHub shows, and ~text~ is struck through as there.
     // lineBreaks shows each line break in a paragraph as a line break, not a space;
     // latexMath reads \(x\) and \[x\] as math (GitHub does neither).
-    public static MarkdownPipeline Build(bool nearGitHub, bool lineBreaks = false, bool latexMath = true)
+    // preciseSource keeps where every inline starts and ends in the text (GitHub conversion
+    // rewrites the text at those places).
+    public static MarkdownPipeline Build(bool nearGitHub, bool lineBreaks = false, bool latexMath = true, bool preciseSource = false)
     {
         // GitHub-style heading ids keep Japanese text, so links like [x](#セットアップ) work.
         var builder = new MarkdownPipelineBuilder().UseAutoIdentifiers(AutoIdentifierOptions.GitHub);
+        if (preciseSource)
+        {
+            builder.UsePreciseSourceLocation();
+        }
         if (nearGitHub)
         {
             builder.UseAlertBlocks()
@@ -50,6 +56,7 @@ internal static class MarkdownPipelines
         else
         {
             builder.UseAdvancedExtensions();
+            builder.Extensions.AddIfNotAlready<InitialsAreNotListsExtension>();
         }
 
         builder.Extensions.Add(new LatexMathDelimitersExtension(latexMath));
@@ -432,6 +439,56 @@ internal sealed class LatexEnvironmentBlockParser : BlockParser
         block.AppendLine(ref line, processor.Column, processor.LineIndex, processor.CurrentLineStartPosition, processor.TrackTrivia);
         block.UpdateSpanEnd(line.End);
         return BlockState.BreakDiscard;
+    }
+}
+
+// Markdig's lettered lists (A. and I. as well as a. and i.) took a name's initials for list
+// markers: "2. V. B. Braginsky and …" became lists nested in the item, and "B. Russell wrote"
+// a list. As Pandoc decides it, a capital letter (or capital Roman numeral) with a period starts
+// a list only when two spaces or a tab follow it ("A.  item"); a. and i. are as before.
+internal sealed class InitialsAreNotListsExtension : IMarkdownExtension
+{
+    public void Setup(MarkdownPipelineBuilder pipeline)
+    {
+        if (pipeline.BlockParsers.Find<ListBlockParser>() is not { } lists)
+        {
+            return;
+        }
+
+        for (var index = 0; index < lists.ItemParsers.Count; index++)
+        {
+            if (lists.ItemParsers[index].GetType() == typeof(Markdig.Extensions.ListExtras.ListExtraItemParser))
+            {
+                lists.ItemParsers[index] = new CapitalListItemParser();
+            }
+        }
+    }
+
+    public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+    {
+    }
+
+    private sealed class CapitalListItemParser : Markdig.Extensions.ListExtras.ListExtraItemParser
+    {
+        public override bool TryParse(BlockProcessor state, char pendingBulletType, out ListInfo result)
+        {
+            var line = state.Line;
+            var position = line.Start;
+            while (position <= line.End && char.IsAsciiLetterUpper(line.Text[position]))
+            {
+                position++;
+            }
+
+            // A capital marker with a period and then one space before the text: initials.
+            if (position > line.Start && position <= line.End && line.Text[position] == '.'
+                && position + 2 <= line.End && line.Text[position + 1] == ' ' && line.Text[position + 2] is not (' ' or '\t'))
+            {
+                result = default;
+                return false;
+            }
+
+            return base.TryParse(state, pendingBulletType, out result);
+        }
     }
 }
 
