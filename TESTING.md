@@ -40,10 +40,11 @@ mdEditor のファイルを変えたら、この文書に従ってテストを�
 - 書き換え方の根拠は、GitHub の Markdown API で確かめた結果である。書き換え方を足す・変えるときは、変換の前と後を API で確かめ、結果をテストの見本に足す。
 - 別ウィンドウのプレビューでの GitHub 表示は、テストの道具が別ウィンドウを操作できないため、自動では確かめていない。
 
-## 目次を変えたとき
+## 目次と見出しの id を変えたとき
 
 - 目次の文は `TextFormats.cs` の `TableOfContents` が作る（呼び出し元は `MainWindow.xaml.cs` の「目次」の 1 か所）。`test_release_1011.py` の目次のテスト（`-k toc`）、`test_release_1018.py::test_section_numbers_key`、`test_release_1024.py` の `test_contents_` で始まる 2 件（見出しの数式・コード・文字参照・括弧・アドレス）と、`test_startup.py` 全体を動かす。
-- 見出しに新しい種類の書き方を足して確かめたときは、`test_release_1024.py` の 2 件に例を足す。
+- 数式のある見出しの id と、見出しの `{ }` を属性として読むかは、`GfmExtensions.cs` の `HeadingMathExtension` が決める。プレビュー・書き出し・目次・GitHub 変換が共通に使うため、変えたときは上のテストに加えて、`test_release_1024.py` 全体（`test_heading_ids_keep_the_math_as_github_does` と `test_braces_in_heading_math_do_not_cut_the_heading` を含む）、`test_release_1023.py`、`test_written_elsewhere.py` を動かす。id は「書き方の問題」の確認（markdownlint の MD051）と、`wwwroot/app.js` の `headingSlugs`（`](#` の入力の候補）の作り方と同じにする。
+- 見出しに新しい種類の書き方を足して確かめたときは、`test_release_1024.py` の目次と見出しの id のテストに例を足す。
 
 ## 訳を変えたとき
 

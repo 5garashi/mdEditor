@@ -66,6 +66,7 @@ internal static class MarkdownPipelines
         builder.UseYamlFrontMatter().UseEmojiAndSmiley(enableSmileys: false);
         builder.Extensions.AddIfNotAlready<GfmDetailsExtension>();
         builder.Extensions.Add(new LineBreaksExtension(lineBreaks));
+        builder.Extensions.Add(new HeadingMathExtension());
         return builder.Build();
     }
 }
@@ -101,6 +102,95 @@ internal sealed class LineBreaksExtension(bool show) : IMarkdownExtension
 
         document.SetData(typeof(LineBreaksExtension), count);
     }
+}
+
+// Headings with math. Markdig leaves math out of a heading's id, so the preview and the
+// contents used #31-past for "3.1 Past ($t \to 0$)", while GitHub (whose heading text holds
+// the math as written) and the Markdown check use #31-past-t-to-0; the id now has the math
+// too. And Markdig takes the first { in a heading for attributes ({#id .class}) and cuts the
+// heading there, so "## $\frac{a}{b}$" lost everything from {a}: now only a { } block that
+// ends the heading is attributes.
+internal sealed class HeadingMathExtension : IMarkdownExtension
+{
+    public void Setup(MarkdownPipelineBuilder pipeline)
+    {
+        if (pipeline.BlockParsers.Find<HeadingBlockParser>() is { TryParseAttributes: { } attributes } headings)
+        {
+            headings.TryParseAttributes = (BlockProcessor processor, ref StringSlice line, IBlock block) =>
+            {
+                if (line.Length <= 0 || Regex.Match(line.ToString(), @"\{[^{}\r\n]*\}[ \t]*$") is not { Success: true } match)
+                {
+                    return false;
+                }
+
+                var ending = line;
+                ending.Start = line.Start + match.Index;
+                if (!attributes(processor, ref ending, block))
+                {
+                    return false;
+                }
+
+                line.End = ending.End;
+                return true;
+            };
+        }
+
+        pipeline.DocumentProcessed += document =>
+        {
+            var all = document.Descendants<HeadingBlock>().ToList();
+            if (!all.Any(HasMath))
+            {
+                return;
+            }
+
+            var used = new HashSet<string>(all.Select(heading => heading.GetAttributes().Id).OfType<string>(), StringComparer.Ordinal);
+            foreach (var heading in all.Where(HasMath))
+            {
+                var htmlAttributes = heading.GetAttributes();
+                var id = htmlAttributes.Id;
+                var made = LinkHelper.UrilizeAsGfm(Text(heading.Inline!, math: false));
+                // An id written as {#id} is kept; only the one Markdig made is replaced.
+                if (id is null || !Regex.IsMatch(id, "^" + Regex.Escape(made.Length > 0 ? made : "section") + @"(-\d+)?$", RegexOptions.CultureInvariant))
+                {
+                    continue;
+                }
+
+                var wanted = LinkHelper.UrilizeAsGfm(Text(heading.Inline!, math: true));
+                if (wanted.Length == 0 || wanted == made)
+                {
+                    continue;
+                }
+
+                used.Remove(id);
+                var unique = wanted;
+                for (var number = 1; used.Contains(unique); number++)
+                {
+                    unique = $"{wanted}-{number}";
+                }
+
+                used.Add(unique);
+                htmlAttributes.Id = unique;
+            }
+        };
+    }
+
+    public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+    {
+    }
+
+    private static bool HasMath(HeadingBlock heading) => heading.Inline?.Descendants<MathInline>().Any() == true;
+
+    // The heading's text as Markdig reads it for an id, with or without the math.
+    private static string Text(ContainerInline container, bool math) => string.Concat(container.Descendants<Inline>().Select(inline => inline switch
+    {
+        LiteralInline literal => literal.Content.ToString(),
+        CodeInline code => code.Content,
+        MathInline formula when math => formula.Content.ToString(),
+        HtmlEntityInline entity => entity.Transcoded.ToString(),
+        AutolinkInline autolink => autolink.Url,
+        LineBreakInline => " ",
+        _ => string.Empty
+    }));
 }
 
 // Math written with LaTeX's own delimiters, as many AI chats and papers write it: \(x\) in a
