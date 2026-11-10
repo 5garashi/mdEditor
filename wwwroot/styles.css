@@ -1580,6 +1580,14 @@ body.capture-export .preview-content {
   text-underline-offset: 3px;
 }
 
+/* A link's underline does not reach inside inline blocks, which KaTeX draws math
+   with, so math in a link (a contents entry, for example) gets its own. */
+.preview-content a .katex .base {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
 .preview-content img {
   max-width: 100%;
   height: auto;
