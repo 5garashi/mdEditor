@@ -12,11 +12,13 @@
 
 The version number lives in [VERSION](./VERSION). Add each new version at the top, with a `## version — date` heading (used as the GitHub Release notes).
 
-## 1.0.24 — 2026-11-10
+## 1.0.24 — 2026-11-11
 
 - 「GitHub 変換」で、GitHub 向けに書き換える前に、自動修正のルールを当てるようにした。確認の画面の「先に当てる自動修正のルール」に、文書（選んでいるときは選んだ範囲）で見つかったルールを、数と例とチェックとともに並べる。「開いたときに直す」のルールは初めからチェックが付き、「開いたときに聞く」と「「当てる」を押したときだけ」のルールは付かない。チェックを変えると、ルールを当てた後の文字で GitHub 向けの書き換えを数え直す。ルールで直したところと書き換えは、Ctrl+Z 1 回で一緒に戻る。数式の書き方を $ に直す 4 つのルール（別行の `\[ … \]`、文の中の `\[ … \]`、`\( … \)`、`$` の内側の空白）は並べない。同じ書き方を、GitHub 変換が GitHub の読み方に合わせて（`$x$`・`` $`x`$ ``・` ```math ` から）書き換えるため。これまでは、先に「自動修正のルールを当てる」を選ばないと、お知らせ欄で元に戻したところや、聞くだけのルールのところが、GitHub 向けにならないまま残った。
+- 「目次」で、見出しの数式（`$t \to 0$` など）、`&amp;` などの文字参照、`<https://…>` の形のアドレスが、目次から消えていたのを直した。数式とコードと文字参照は書いたとおりに入り、目次でも見出しと同じに表示される。見出しの `[ ]` も、これまでは目次が `\[ \]` と書いたため、数式として表示されていた。これからは、対になる `[ ]` はそのまま書き、対にならないものは `&#91;` `&#93;` と書く。
 
 - Convert for GitHub now applies the fix rules before rewriting for GitHub. Under "Fix rules applied first", the confirmation dialog lists the rules that find something in the document (or the selection), each with a count, an example, and a check box. Rules set to "Fix on opening" start checked; rules set to "Ask on opening" or "Only when Apply is pressed" start unchecked. Changing a check recounts the rewrites for GitHub on the text left after the checked rules are applied. A single Ctrl+Z undoes the rules' fixes and the rewrites together. The four rules that rewrite math as $ (`\[ … \]` on lines of their own, `\[ … \]` in a sentence, `\( … \)`, and the spaces inside `$`) are not listed: the conversion rewrites the same writing itself, in the form GitHub reads (`$x$`, `` $`x`$ ``, or ` ```math `). Until now, places put back from the notice and places a rule only asked about were not rewritten for GitHub unless "Apply the fix rules" was chosen first.
+- Fixed Contents leaving math (such as `$t \to 0$`), character references such as `&amp;`, and addresses written as `<https://…>` in headings out of the table of contents. Math, code, and character references now go into the table of contents as written and show there as they do in the heading. Contents also wrote brackets in a heading as `\[ \]`, which showed as math; it now writes brackets that pair up as they are, and unpaired ones as `&#91;` and `&#93;`.
 
 ## 1.0.23 — 2026-11-10
 
