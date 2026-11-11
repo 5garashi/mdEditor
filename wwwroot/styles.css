@@ -1581,11 +1581,13 @@ body.capture-export .preview-content {
 }
 
 /* A link's underline does not reach inside inline blocks, which KaTeX draws math
-   with, so math in a link (a contents entry, for example) gets its own. */
-.preview-content a .katex .base {
-  text-decoration: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 3px;
+   with, so a link with math (a contents entry, for example) is underlined by one line
+   under the whole link instead. 2.4px: a 2px line is rounded down to one screen pixel
+   at a 90% display scale, where the 2px underline of other links stays two. */
+.preview-content a:has(.katex) {
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) left bottom / 100% 2.4px no-repeat;
+  print-color-adjust: exact;
 }
 
 .preview-content img {
