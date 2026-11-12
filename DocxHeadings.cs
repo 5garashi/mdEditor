@@ -1,9 +1,9 @@
 /*
-  ファイル名 / File: DocxHeadings.cs
-  概要 / Description: Turns size-only headings in a Word document into heading styles before it is converted
-  作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
-  作成日 / Created: 2026-10-24
-  ライセンス / License: MIT
+  File: DocxHeadings.cs
+  Description: Turns size-only headings in a Word document into heading styles before it is converted
+  Author: 5garashi.com Design Office
+  Created: 2026-10-24
+  License: MIT
   SPDX-License-Identifier: MIT
 */
 using System.IO;

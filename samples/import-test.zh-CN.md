@@ -1,9 +1,9 @@
 <!--
-  ファイル名 / File: import-test.zh-CN.md
-  概要 / Description: Steps and expected results for each Open and Save As format (Simplified Chinese)
-  作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
-  作成日 / Created: 2026-10-21
-  ライセンス / License: MIT
+  File: import-test.zh-CN.md
+  Description: Steps and expected results for each Open and Save As format (Simplified Chinese)
+  Author: 5garashi.com Design Office
+  Created: 2026-10-21
+  License: MIT
   SPDX-License-Identifier: MIT
 -->
 # 打开和导出测试

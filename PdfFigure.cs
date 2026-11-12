@@ -1,9 +1,9 @@
 /*
-  ファイル名 / File: PdfFigure.cs
-  概要 / Description: Draws a figure found in a PDF again as an SVG picture from its lines, shapes, labels, and pictures
-  作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
-  作成日 / Created: 2026-10-25
-  ライセンス / License: MIT
+  File: PdfFigure.cs
+  Description: Draws a figure found in a PDF again as an SVG picture from its lines, shapes, labels, and pictures
+  Author: 5garashi.com Design Office
+  Created: 2026-10-25
+  License: MIT
   SPDX-License-Identifier: MIT
 */
 using System.Globalization;

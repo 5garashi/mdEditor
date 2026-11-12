@@ -42,7 +42,7 @@
       sampleIntro: "図と数式を含む文書を、編集欄に入れて試せます。短い例のほかに、使えるすべての図・チャート・数式を確かめる長い文書（日本語・英語・中国語）もあります。選んだときだけ入ります。",
       settingsPdf: "PDF の取り込み",
       settingsPdfFigureText: "図のまわりの文字",
-      settingsPdfTables: "表",
+      settingsPdfTables: "表と、書き込みのある図",
       pdfTablesText: "Markdown の表にする（編集優先・初期設定）",
       pdfTablesPicture: "画像にする（見た目優先）",
       pdfFigureTextPicture: "図に入れる（見た目優先・初期設定）",
@@ -94,8 +94,8 @@
       previewHeading: "プレビュー", previewLabel: "Markdown の表示結果",
       dividerLabel: "編集画面とプレビューの幅",
       dividerTitle: "ドラッグまたは矢印キーで左右の幅を調整します",
-      fullscreenEditor: "編集画面をウィンドウ全体に表示", fullscreenPreview: "プレビューをウィンドウ全体に表示",
-      fullscreenShort: "ウィンドウ全体に表示",
+      fullscreenEditor: "全ウィンドウ表示（編集画面）", fullscreenPreview: "全ウィンドウ表示（プレビュー）",
+      fullscreenShort: "全ウィンドウ表示",
       fullscreenExit: "元の表示に戻す", saved: "保存済み", unsaved: "未保存の変更",
       settingsReaderLang: "言語", readerLangAuto: "自動（段落ごとに判定）", readerLangJa: "日本語", readerLangEn: "英語", readerLangZh: "中国語（簡体字）",
       settingsReaderVoice: "音声", readerVoiceAuto: "自動（最初に見つかった音声）",
@@ -111,7 +111,7 @@
       settingsInternet: "インターネット", settingsExternal: "ネット上の画像",
       externalAsk: "確認してから読み込む（初期設定）", externalAlways: "いつも読み込む", externalNever: "読み込まない",
       settingsExternalNote: "文書の中のネット上の画像（https のものだけ）を読み込むかどうかです。読み込むと、その画像のサーバーに IP アドレスや時刻が伝わります。スクリプトは実行せず、文書の内容を送ることもありません。",
-      detachPreview: "別ウィンドウで表示", attachPreview: "本体に戻す", attachPreviewMain: "プレビューを本体に戻す",
+      detachPreview: "別ウィンドウ表示", attachPreview: "本体に戻す", attachPreviewMain: "プレビューを本体に戻す",
       pdfStarting: "PDF出力を開始しています",
       findReplace: "検索・置換", findReplaceTitle: "検索・置換 (Ctrl+H)",
       settingsVideo: "動画", settingsVideoAutoplay: "自動再生",
@@ -132,6 +132,90 @@
       unfixRule: "元に戻す",
       fixAll: "すべて直す",
       unfixAll: "すべて元に戻す",
+      autofix: "自動修正",
+      autofixTitle: "「GitHub 変換」か「自動修正のルールを当てる」を選んで、文書を直します。",
+      githubConvertItem: "GitHub 変換…",
+      fixRulesRun: "自動修正のルールを当てる",
+      fixRulesRunNone: "自動修正のルールで直すところはありません。",
+      githubView: "GitHub 表示",
+      githubViewTitle: "文書を GitHub に送り、GitHub での表示を確かめます。送る前に確認します。",
+      githubConvertHeadingDocument: "文書全体を GitHub 向けに書き換えますか？",
+      githubConvertHeadingSelection: "選んだ範囲を GitHub 向けに書き換えますか？",
+      githubConvertIntro: (count) => `GitHub では書いたとおりに表示されない書き方が、${count} か所あります。書き換えないものは、チェックを外してください。`,
+      githubConvertNothingIntro: "GitHub 向けに書き換える書き方はありません。",
+      githubColApply: "書き換える", githubColKind: "書き方", githubColCount: "数", githubColExample: "例",
+      githubSkippedHeading: "書き換えない書き方",
+      githubConvertNote: "書き換えた後も、mdEditor では同じように表示されます。Ctrl+Z で元に戻せます。",
+      githubConvertApply: "書き換える", githubCancel: "やめる",
+      githubConvertNone: "GitHub 向けに書き換える書き方はありません。",
+      githubConvertDone: (count) => `${count} か所を GitHub 向けに書き換えました。Ctrl+Z で元に戻せます。`,
+      githubConvertDoneFixes: (fixes, count) => (count
+        ? `自動修正のルールで ${fixes} か所を直し、${count} か所を GitHub 向けに書き換えました。Ctrl+Z で両方を元に戻せます。`
+        : `自動修正のルールで ${fixes} か所を直しました。Ctrl+Z で元に戻せます。`),
+      githubFixHeading: "先に当てる自動修正のルール",
+      githubFixIntro: "GitHub 向けに書き換える前に、自動修正のルールを当てます（直したところは、mdEditor での表示も変わります）。「開いたときに直す」のルールに、初めからチェックが付いています。チェックを変えると、下の書き換えを数え直します。数式の書き方を $ に直す 4 つのルールは、ここには出ません（同じ書き方を、下で GitHub の書き方に書き換えます）。",
+      githubColFix: "当てる", githubColRule: "ルール",
+      githubRewriteHeading: "GitHub 向けの書き換え",
+      githubConvertChanged: "! 確認している間に文書が変わったため、書き換えませんでした。もう一度「自動修正」→「GitHub 変換」を選んでください。",
+      githubConvertFailed: "! GitHub 向けの書き換えを準備できませんでした。文書はそのままです。",
+      githubKinds: {
+        latexInline: "数式の \\(…\\) → $…$",
+        latexDisplay: "数式の \\[…\\] → ```math（行の中では $$…$$）",
+        spaceMath: "$ の内側に空白がある数式（$x $ など）→ $x$",
+        riskyMath: "GitHub が Markdown として読む記号（\\{…\\}、*、_ など）を含む数式 → $`…`$ または ```math",
+        mathAfterText: "日本語や中国語の文字のすぐ後の $…$（「、$x$」など）→ $`…`$",
+        multilineMath: "段落の中で 2 行にまたがる $$…$$ → ```math（行の中では 1 行に）",
+        bareEnvironment: "$$ のない \\begin{align} など → ```math",
+        riskyMathBlock: "\\\\ や \\{…\\} を含む $$…$$ の数式 → ```math",
+        markdownLineMath: "GitHub が見出しや一覧として読む行（= や - だけの行、空行など）を含む $$…$$ の数式 → ```math",
+        sup: "上付き x^2^ → <sup>",
+        sub: "下付き H~2~O → <sub>",
+        ins: "挿入 ++…++ → <ins>",
+        mark: "強調 ==…== → <mark>",
+        lineBreak: "段落の中の改行 → 行末の \\",
+        alert: "::: note などの囲み → > [!NOTE]",
+        definitionList: "定義リスト → <dl>",
+        letterList: "a. や i. の番号 → <ol type=\"a\">",
+        headingId: "見出しの {#id} → <a id>"
+      },
+      githubSkips: {
+        abbreviation: "略語（GitHub に同じものがありません）",
+        gridTable: "罫線の表（GitHub に同じものがありません）",
+        figure: "^^^ の図（GitHub に同じものがありません）",
+        footer: "^^ の脚注の行（GitHub に同じものがありません）",
+        citation: "\"\"…\"\" の引用元（GitHub に同じものがありません）",
+        container: "note・tip・important・warning・caution 以外の ::: の囲み（GitHub に同じものがありません）",
+        nested: "引用・リスト・囲みの中にある書き方（中に入れたままでは書き換えられません）",
+        boundary: "選んだ範囲の境目にかかる書き方",
+        mathBacktick: "` を含むため、GitHub の書き方にできない数式",
+        inlineDisplay: "行の中の $$…$$ で、\\\\ や \\{…\\} などを含む数式（行の中では、GitHub がその記号を消します）",
+        headingAttributes: "見出しの {.class} など、id 以外の属性",
+        mathInHtml: "HTML の中に文字で書いた数式（<figcaption> の中の $x$ など。GitHub は数式にしません）"
+      },
+      githubSkipCount: (count) => `${count} か所`,
+      githubViewHeading: "文書を GitHub に送りますか？",
+      githubViewIntro: "GitHub での表示を確かめるために、編集欄の文字を GitHub（api.github.com）に送ります。",
+      githubViewWhat: (kb) => `送るもの：編集欄の文字（${kb} KB）。画像やほかのファイル、GitHub のログイン情報は送りません。`,
+      githubViewWho: "GitHub に伝わること：文書の文字、この PC の IP アドレス、時刻。GitHub での扱いは、GitHub のプライバシーに関する声明によります。",
+      githubViewQuota: (remaining, limit, reset) => `送れる回数：1 時間に ${limit} 回まで（あと ${remaining} 回。${reset} に戻ります）。`,
+      githubViewQuotaUnknown: "送れる回数：1 時間に 60 回まで（GitHub にログインせずに使える回数）。",
+      githubViewTooLarge: (kb) => `! 文書が大きすぎるため、送れません（${kb} KB まで）。`,
+      githubViewSend: "送る", githubViewDontSend: "送らない",
+      githubSending: "GitHub に送っています…",
+      githubBannerLead: (at) => `GitHub での表示です（${at} に GitHub で作成）。`,
+      githubBannerNote: "どこが数式や取り消し線などになるかは GitHub の読み方です。書体・色などの見た目と、数式・図を描く部品は mdEditor のものです。この表示の間に編集しても、表示は自動では新しくなりません（新しくするには「もう一度送る」を押します）。",
+      githubStale: "この表示の後で、文書が変わりました。",
+      githubResend: "もう一度送る", githubBack: "元の表示に戻す",
+      githubErrorNetwork: "! GitHub につながりませんでした。インターネットの接続を確かめて、もう一度「GitHub 表示」を押してください。",
+      githubErrorRateLimit: (reset) => `! 1 時間に送れる回数を使い切りました。${reset ? `${reset} から` : "しばらくすると"}また送れます。`,
+      githubErrorTooLarge: (kb) => `! 文書が大きすぎるため、送れませんでした（${kb} KB まで）。`,
+      githubErrorStatus: (status) => `! GitHub から表示を受け取れませんでした（応答 ${status}）。しばらくしてから、もう一度「GitHub 表示」を押してください。`,
+      settingsGitHubButtons: "「自動修正」と「GitHub 表示」のボタンを表示する",
+      settingsGitHubButtonsNote: "「自動修正」では、「GitHub 変換」（GitHub では書いたとおりに表示されない書き方を、GitHub の書き方に書き換えます。PC の中だけで行います）か、「自動修正のルールを当てる」を選べます。「GitHub 表示」は、押したときだけ、確認のうえで文書を GitHub に送り、GitHub での表示をプレビューに出します。",
+      settingsButtons: "表示するボタン",
+      settingsImageButton: "「画像の調整」のボタンを表示する",
+      settingsHelpButton: "「書き方」のボタンを表示する",
+      settingsButtonsNote: "ボタンを隠しても、「キー操作」のキーで使えます（「画像の調整」は Ctrl+Shift+F、「書き方」は F1 が初期設定）。",
       noticeLineBreaks: (count) => `段落の中の改行 ${count} か所を、書いたとおりに改行して表示しています。`,
       noticeLineBreaksJoined: (count) => `段落の中の改行 ${count} か所を、Markdown の決まりどおり空白でつないで表示しています（「設定」の「Markdown の書き方」でも切り替えられます）。`,
       lineBreaksJoin: "1行につなげる",
@@ -198,7 +282,9 @@
       saveAsRule: "ルールに保存",
       findBadPattern: "正規表現が正しくありません",
       settingsFixRules: "自動修正のルール…",
-      settingsFixRulesNote: "数式の $ が抜けた書き方、強調の ** がそのまま表示される書き方、Gemini・ChatGPT・Claude などが残す印を、文書を開いたときに直します。",
+      settingsFixRulesNote: "数式の $ が抜けた書き方、強調の ** がそのまま表示される書き方、Gemini・ChatGPT・Claude などが残す印を、文書を開いたときに直します。デスクトップのショートカットでクリップボードから作った文書と、編集欄に落としたファイルの中身にも当てます。編集欄の「自動修正」→「自動修正のルールを当てる」で、いつでも当てられます。",
+      settingsFixOnPaste: "貼り付けるたびに、文書全体に自動修正のルールを当てる",
+      settingsFixOnPasteNote: "初期設定はオフです。オンにすると、貼り付けたところだけでなく文書全体に当てるため、お知らせ欄で元に戻したところも、次に貼り付けたときにまた直します。",
       noticeEmphasis: (count, example) => `強調の ** がそのまま表示される書き方が ${count} か所あります（例: ${example}）。<strong> などのタグに直すと、プレビューで太字として表示されます。`,
       noticeEmphasisDone: (count, example) => `強調の ** がそのまま表示される書き方（例: ${example}）を、${count} か所、<strong> などのタグに直しました。`,
       fixEmphasis: "強調を直す",
@@ -231,7 +317,7 @@
       shortcuts: "キー操作", shortcutHeading: "キーボードショートカット",
       brandLogo: "assets/5garashi_logotype_outlined.svg", brandLogoDark: "assets/5garashi_logotype_reversed_outlined.svg",
       brandLogoAlt: "5garashi.com 設計事務所 / 5garashi.com Design Office",
-      settings: "設定", settingsHeading: "設定",
+      appMenu: "メニュー", settings: "設定", settingsHeading: "設定",
       settingsIntro: "読みやすさや操作のしやすさを、使う人に合わせて調整できます。設定は次回の起動でも使います。",
       settingsText: "文字（編集欄とプレビュー）", settingsFont: "書体", settingsFontStandard: "標準",
       settingsFontUd: "BIZ UD ゴシック（読みやすさ重視）", settingsSize: "文字の大きさ", settingsSize100: "標準",
@@ -325,7 +411,7 @@
       sampleIntro: "可以把包含图表和公式的文档放入编辑区试用。除了简短的示例，还有用来检查所有图表、图形和公式的长文档（日语、英语、中文）。只有选择时才会放入。",
       settingsPdf: "PDF 导入",
       settingsPdfFigureText: "图表周围的文字",
-      settingsPdfTables: "表格",
+      settingsPdfTables: "表格和带标注的图",
       pdfTablesText: "作为 Markdown 表格（编辑优先，默认）",
       pdfTablesPicture: "作为图片（外观优先）",
       pdfFigureTextPicture: "放入图片（外观优先，默认）",
@@ -415,6 +501,90 @@
       unfixRule: "恢复原样",
       fixAll: "全部修正",
       unfixAll: "全部恢复原样",
+      autofix: "自动修正",
+      autofixTitle: "选择“GitHub 转换”或“应用自动修正规则”来修正文档。",
+      githubConvertItem: "GitHub 转换…",
+      fixRulesRun: "应用自动修正规则",
+      fixRulesRunNone: "自动修正规则没有找到需要修正的地方。",
+      githubView: "GitHub 显示",
+      githubViewTitle: "将文档发送到 GitHub，查看在 GitHub 上的显示效果。发送前会先确认。",
+      githubConvertHeadingDocument: "要将整个文档改写为 GitHub 的写法吗？",
+      githubConvertHeadingSelection: "要将选中的部分改写为 GitHub 的写法吗？",
+      githubConvertIntro: (count) => `有 ${count} 处写法在 GitHub 上不能按原样显示。不想改写的项目，请取消勾选。`,
+      githubConvertNothingIntro: "没有需要改写为 GitHub 写法的内容。",
+      githubColApply: "改写", githubColKind: "写法", githubColCount: "数量", githubColExample: "示例",
+      githubSkippedHeading: "保持原样的写法",
+      githubConvertNote: "改写后，mdEditor 中的显示不变。可以用 Ctrl+Z 撤销。",
+      githubConvertApply: "改写", githubCancel: "取消",
+      githubConvertNone: "没有需要改写为 GitHub 写法的内容。",
+      githubConvertDone: (count) => `已将 ${count} 处改写为 GitHub 的写法。可以用 Ctrl+Z 撤销。`,
+      githubConvertDoneFixes: (fixes, count) => (count
+        ? `已用自动修正规则修正 ${fixes} 处，并将 ${count} 处改写为 GitHub 的写法。可以用 Ctrl+Z 一并撤销。`
+        : `已用自动修正规则修正 ${fixes} 处。可以用 Ctrl+Z 撤销。`),
+      githubFixHeading: "先应用的自动修正规则",
+      githubFixIntro: "改写为 GitHub 的写法之前，先应用自动修正规则（修正的地方在 mdEditor 中的显示也会改变）。设为“打开时修正”的规则默认已勾选。更改勾选状态后，会重新统计下方的改写。将公式写法改为 $ 形式的 4 条规则不在此列出（同样的写法会在下方改写为 GitHub 的写法）。",
+      githubColFix: "应用", githubColRule: "规则",
+      githubRewriteHeading: "改写为 GitHub 的写法",
+      githubConvertChanged: "! 确认期间文档发生了变化，因此没有改写。请再次选择“自动修正”→“GitHub 转换”。",
+      githubConvertFailed: "! 无法准备改写为 GitHub 的写法。文档保持不变。",
+      githubKinds: {
+        latexInline: "公式 \\(…\\) → $…$",
+        latexDisplay: "公式 \\[…\\] → ```math（行内为 $$…$$）",
+        spaceMath: "$ 内侧有空格的公式（如 $x $）→ $x$",
+        riskyMath: "含有 GitHub 会当作 Markdown 读取的符号（\\{…\\}、*、_ 等）的公式 → $`…`$ 或 ```math",
+        mathAfterText: "紧跟在中文或日文字符后的 $…$（如“、$x$”）→ $`…`$",
+        multilineMath: "段落中跨两行的 $$…$$ → ```math（行内合为一行）",
+        bareEnvironment: "没有 $$ 的 \\begin{align} 等 → ```math",
+        riskyMathBlock: "含有 \\\\ 或 \\{…\\} 的 $$…$$ 公式 → ```math",
+        markdownLineMath: "含有 GitHub 会识别为标题、列表等的行（只有 = 或 - 的行、空行等）的 $$…$$ 公式 → ```math",
+        sup: "上标 x^2^ → <sup>",
+        sub: "下标 H~2~O → <sub>",
+        ins: "插入 ++…++ → <ins>",
+        mark: "突出显示 ==…== → <mark>",
+        lineBreak: "段落中的换行 → 行末的 \\",
+        alert: "::: note 等容器 → > [!NOTE]",
+        definitionList: "定义列表 → <dl>",
+        letterList: "a. 或 i. 编号 → <ol type=\"a\">",
+        headingId: "标题的 {#id} → <a id>"
+      },
+      githubSkips: {
+        abbreviation: "缩写（GitHub 没有对应的写法）",
+        gridTable: "网格表格（GitHub 没有对应的写法）",
+        figure: "^^^ 图（GitHub 没有对应的写法）",
+        footer: "^^ 页脚行（GitHub 没有对应的写法）",
+        citation: "\"\"…\"\" 引用来源（GitHub 没有对应的写法）",
+        container: "note、tip、important、warning、caution 以外的 ::: 容器（GitHub 没有对应的写法）",
+        nested: "引用、列表或容器中的写法（无法在其中改写）",
+        boundary: "跨越选中范围边界的写法",
+        mathBacktick: "含有 ` 而无法改为 GitHub 写法的公式",
+        inlineDisplay: "行内含有 \\\\、\\{…\\} 等的 $$…$$ 公式（GitHub 会在行内删除这些符号）",
+        headingAttributes: "标题的 {.class} 等 id 以外的属性",
+        mathInHtml: "在 HTML 中以纯文本书写的公式（如 <figcaption> 中的 $x$。GitHub 不会将其显示为公式）"
+      },
+      githubSkipCount: (count) => `${count} 处`,
+      githubViewHeading: "要将文档发送到 GitHub 吗？",
+      githubViewIntro: "为了查看在 GitHub 上的显示效果，会将编辑区的文字发送到 GitHub（api.github.com）。",
+      githubViewWhat: (kb) => `发送内容：编辑区的文字（${kb} KB）。不发送图片、其他文件或 GitHub 登录信息。`,
+      githubViewWho: "GitHub 会收到：文档的文字、本机的 IP 地址和时间。GitHub 按照其隐私声明处理这些信息。",
+      githubViewQuota: (remaining, limit, reset) => `可发送次数：每小时最多 ${limit} 次（还剩 ${remaining} 次，将于 ${reset} 恢复）。`,
+      githubViewQuotaUnknown: "可发送次数：每小时最多 60 次（不登录 GitHub 时的次数）。",
+      githubViewTooLarge: (kb) => `! 文档太大，无法发送（最多 ${kb} KB）。`,
+      githubViewSend: "发送", githubViewDontSend: "不发送",
+      githubSending: "正在发送到 GitHub…",
+      githubBannerLead: (at) => `这是 GitHub 的显示效果（${at} 由 GitHub 生成）。`,
+      githubBannerNote: "哪些内容成为公式、删除线等由 GitHub 决定；字体、颜色等外观以及绘制公式和图表的组件则是 mdEditor 自己的。在此显示期间编辑内容，显示结果不会自动更新（如需更新，请点击“再次发送”）。",
+      githubStale: "此后文档已发生变化。",
+      githubResend: "再次发送", githubBack: "返回原来的显示",
+      githubErrorNetwork: "! 无法连接到 GitHub。请检查网络连接，然后再次点击“GitHub 显示”。",
+      githubErrorRateLimit: (reset) => `! 每小时可发送的次数已用完。${reset ? `从 ${reset} 起` : "稍后"}即可再次发送。`,
+      githubErrorTooLarge: (kb) => `! 文档太大，无法发送（最多 ${kb} KB）。`,
+      githubErrorStatus: (status) => `! 无法从 GitHub 获取显示结果（响应 ${status}）。请稍后再次点击“GitHub 显示”。`,
+      settingsGitHubButtons: "显示“自动修正”和“GitHub 显示”按钮",
+      settingsGitHubButtonsNote: "在“自动修正”中，可以选择“GitHub 转换”（将 GitHub 不能按原样显示的写法改写为 GitHub 的写法，只在本机进行）或“应用自动修正规则”。“GitHub 显示”仅在点击并确认后才将文档发送到 GitHub，并在预览中显示 GitHub 的结果。",
+      settingsButtons: "显示的按钮",
+      settingsImageButton: "显示“调整图像”按钮",
+      settingsHelpButton: "显示“写法”按钮",
+      settingsButtonsNote: "隐藏按钮后，仍可通过“按键操作”中设置的按键使用（“调整图像”默认为 Ctrl+Shift+F，“写法”默认为 F1）。",
       noticeLineBreaks: (count) => `段落中的 ${count} 处换行已按原样换行显示。`,
       noticeLineBreaksJoined: (count) => `段落中的 ${count} 处换行已按 Markdown 的规则用空格连接显示（也可以在“设置”的“Markdown 写法”中切换）。`,
       lineBreaksJoin: "连成一行",
@@ -481,7 +651,9 @@
       saveAsRule: "保存为规则",
       findBadPattern: "正则表达式不正确",
       settingsFixRules: "自动修正规则…",
-      settingsFixRulesNote: "打开文档时，修正丢失了 $ 的公式写法、强调的 ** 被原样显示的写法，以及 Gemini、ChatGPT、Claude 等留下的标记。",
+      settingsFixRulesNote: "打开文档时，会修正丢失了 $ 的公式写法、强调的 ** 被原样显示的写法，以及 Gemini、ChatGPT、Claude 等留下的标记。这些规则也会应用于用桌面快捷方式从剪贴板新建的文档，以及拖放到编辑区的文件内容。随时可以通过编辑区的“自动修正”→“应用自动修正规则”来应用这些规则。",
+      settingsFixOnPaste: "每次粘贴时，对整个文档应用自动修正规则",
+      settingsFixOnPasteNote: "默认关闭。开启后，规则会应用于整个文档而不仅是粘贴的部分，因此在通知栏中恢复原样的地方，下次粘贴时也会再次修正。",
       noticeEmphasis: (count, example) => `有 ${count} 处强调的 ** 被原样显示（例如：${example}）。改为 <strong> 等标签后，预览中会显示为粗体。`,
       noticeEmphasisDone: (count, example) => `已将 ${count} 处强调的 ** 被原样显示的写法（例如：${example}）改为 <strong> 等标签。`,
       fixEmphasis: "修正强调",
@@ -514,7 +686,7 @@
       shortcuts: "按键操作", shortcutHeading: "键盘快捷键",
       brandLogo: "assets/5garashi_logotype_en_outlined.svg", brandLogoDark: "assets/5garashi_logotype_en_reversed_outlined.svg",
       brandLogoAlt: "5garashi.com Design Office",
-      settings: "设置", settingsHeading: "设置",
+      appMenu: "菜单", settings: "设置", settingsHeading: "设置",
       settingsIntro: "可以根据使用者调整易读性和易用性。下次启动时会保留这些设置。",
       settingsText: "文字（编辑区和预览）", settingsFont: "字体", settingsFontStandard: "标准",
       settingsFontUd: "BIZ UD Gothic（注重易读性）", settingsSize: "文字大小", settingsSize100: "标准",
@@ -608,7 +780,7 @@
       sampleIntro: "Try a document with diagrams and math. Besides the short examples, there are long tests of every supported diagram, chart, and formula (Japanese, English, and Chinese). Nothing is inserted until you choose one.",
       settingsPdf: "Opening PDFs",
       settingsPdfFigureText: "Text around figures",
-      settingsPdfTables: "Tables",
+      settingsPdfTables: "Tables, and figures with markings",
       pdfTablesText: "Make Markdown tables (can be edited, default)",
       pdfTablesPicture: "Make pictures (looks like the page)",
       pdfFigureTextPicture: "Put in the picture (looks like the page, default)",
@@ -698,6 +870,90 @@
       unfixRule: "Put back",
       fixAll: "Fix all",
       unfixAll: "Put all back",
+      autofix: "Auto fix",
+      autofixTitle: "Fixes the document with Convert for GitHub or Apply the fix rules, whichever you choose.",
+      githubConvertItem: "Convert for GitHub…",
+      fixRulesRun: "Apply the fix rules",
+      fixRulesRunNone: "The fix rules found nothing to fix.",
+      githubView: "GitHub view",
+      githubViewTitle: "Sends the document to GitHub to check how GitHub shows it. Asks before sending.",
+      githubConvertHeadingDocument: "Rewrite the whole document for GitHub?",
+      githubConvertHeadingSelection: "Rewrite the selection for GitHub?",
+      githubConvertIntro: (count) => `${count} ${count === 1 ? "place is" : "places are"} written in a way GitHub does not show as written. Clear the check box of any item you want to keep as it is.`,
+      githubConvertNothingIntro: "Nothing needs rewriting for GitHub.",
+      githubColApply: "Rewrite", githubColKind: "Syntax", githubColCount: "Count", githubColExample: "Example",
+      githubSkippedHeading: "Left as written",
+      githubConvertNote: "mdEditor shows the rewritten text the same way. Ctrl+Z undoes the rewrite.",
+      githubConvertApply: "Rewrite", githubCancel: "Cancel",
+      githubConvertNone: "Nothing needs rewriting for GitHub.",
+      githubConvertDone: (count) => `Rewrote ${count} ${count === 1 ? "place" : "places"} for GitHub. Ctrl+Z undoes the rewrite.`,
+      githubConvertDoneFixes: (fixes, count) => (count
+        ? `The fix rules fixed ${fixes} ${fixes === 1 ? "place" : "places"}, and ${count} ${count === 1 ? "place was" : "places were"} rewritten for GitHub. Ctrl+Z undoes both.`
+        : `The fix rules fixed ${fixes} ${fixes === 1 ? "place" : "places"}. Ctrl+Z undoes it.`),
+      githubFixHeading: "Fix rules applied first",
+      githubFixIntro: "Before rewriting for GitHub, the fix rules are applied (what they fix may also look different in mdEditor). Rules set to \"Fix on opening\" start checked. Changing a check recounts the rewrites below. The four rules that rewrite math as $ are not listed (the same math is rewritten below into the form GitHub reads).",
+      githubColFix: "Apply", githubColRule: "Rule",
+      githubRewriteHeading: "Rewrites for GitHub",
+      githubConvertChanged: "! The document changed while this dialog was open, so nothing was rewritten. Choose \"Auto fix\" > \"Convert for GitHub\" again.",
+      githubConvertFailed: "! The rewrite for GitHub could not be prepared. The document is unchanged.",
+      githubKinds: {
+        latexInline: "Math in \\(…\\) → $…$",
+        latexDisplay: "Math in \\[…\\] → ```math ($$…$$ within a line)",
+        spaceMath: "Math with a space just inside the $, such as $x $ → $x$",
+        riskyMath: "Math with signs GitHub reads as Markdown (\\{…\\}, *, _, and so on) → $`…`$ or ```math",
+        mathAfterText: "$…$ right after a Japanese or Chinese character, such as 、$x$ → $`…`$",
+        multilineMath: "$$…$$ over two lines in a paragraph → ```math (one line within a line)",
+        bareEnvironment: "\\begin{align} and the like without $$ → ```math",
+        riskyMathBlock: "$$…$$ math with \\\\ or \\{…\\} → ```math",
+        markdownLineMath: "$$…$$ math with lines GitHub reads as headings, lists, and the like (a line of only = or -, a blank line, and so on) → ```math",
+        sup: "Superscript x^2^ → <sup>",
+        sub: "Subscript H~2~O → <sub>",
+        ins: "Inserted text ++…++ → <ins>",
+        mark: "Highlight ==…== → <mark>",
+        lineBreak: "Line breaks in a paragraph → \\ at the end of the line",
+        alert: "::: note and similar boxes → > [!NOTE]",
+        definitionList: "Definition lists → <dl>",
+        letterList: "Items numbered a. or i. → <ol type=\"a\">",
+        headingId: "{#id} on a heading → <a id>"
+      },
+      githubSkips: {
+        abbreviation: "Abbreviations (GitHub has nothing like them)",
+        gridTable: "Grid tables (GitHub has nothing like them)",
+        figure: "^^^ figures (GitHub has nothing like them)",
+        footer: "^^ footer lines (GitHub has nothing like them)",
+        citation: "\"\"…\"\" citations (GitHub has nothing like them)",
+        container: "::: boxes other than note, tip, important, warning, and caution (GitHub has nothing like them)",
+        nested: "Writing inside a quote, list, or box (it cannot be rewritten there)",
+        boundary: "Writing that crosses the edge of the selection",
+        mathBacktick: "Math containing `, which cannot be written the way GitHub needs",
+        inlineDisplay: "$$…$$ within a line containing \\\\, \\{…\\}, and the like (GitHub drops those signs within a line)",
+        headingAttributes: "Attributes other than an id on a heading, such as {.class}",
+        mathInHtml: "Math written as text inside HTML, such as $x$ in a <figcaption> (GitHub does not show it as math)"
+      },
+      githubSkipCount: (count) => `${count} ${count === 1 ? "place" : "places"}`,
+      githubViewHeading: "Send the document to GitHub?",
+      githubViewIntro: "To check how GitHub shows it, the text in the editor is sent to GitHub (api.github.com).",
+      githubViewWhat: (kb) => `What is sent: the text in the editor (${kb} KB). No pictures, other files, or GitHub sign-in details.`,
+      githubViewWho: "What GitHub receives: the text of the document, this PC's IP address, and the time. GitHub handles this information under GitHub's privacy statement.",
+      githubViewQuota: (remaining, limit, reset) => `How many times: up to ${limit} an hour (${remaining} left; resets at ${reset}).`,
+      githubViewQuotaUnknown: "How many times: up to 60 an hour (without signing in to GitHub).",
+      githubViewTooLarge: (kb) => `! The document is too large to send (up to ${kb} KB).`,
+      githubViewSend: "Send", githubViewDontSend: "Don't send",
+      githubSending: "Sending to GitHub…",
+      githubBannerLead: (at) => `GitHub view (made by GitHub at ${at}).`,
+      githubBannerNote: "What becomes math, struck-through text, and so on is how GitHub reads it; the typeface, colors, and the parts that draw math and diagrams are mdEditor's. Edits made while this view is shown are not reflected automatically (press \"Send again\" to refresh it).",
+      githubStale: "The document has changed since then.",
+      githubResend: "Send again", githubBack: "Back to the preview",
+      githubErrorNetwork: "! Could not reach GitHub. Check the internet connection and press \"GitHub view\" again.",
+      githubErrorRateLimit: (reset) => `! You have used all the sends allowed per hour. You can send again ${reset ? `from ${reset}` : "later"}.`,
+      githubErrorTooLarge: (kb) => `! The document is too large to send (up to ${kb} KB).`,
+      githubErrorStatus: (status) => `! Could not get the view from GitHub (response ${status}). Wait a while and press "GitHub view" again.`,
+      settingsGitHubButtons: "Show the Auto fix and GitHub view buttons",
+      settingsGitHubButtonsNote: "Auto fix offers Convert for GitHub (which rewrites what GitHub does not show as written into the way GitHub writes it, on this PC only) and Apply the fix rules. GitHub view sends the document to GitHub only when pressed and after asking, and shows GitHub's result in the preview.",
+      settingsButtons: "Buttons to show",
+      settingsImageButton: "Show the Adjust image button",
+      settingsHelpButton: "Show the Syntax button",
+      settingsButtonsNote: "Hidden buttons can still be used with their keys (see Keys in the Menu; Ctrl+Shift+F for Adjust image and F1 for Syntax by default).",
       noticeLineBreaks: (count) => `${count} line break(s) in paragraphs are shown as line breaks, as written.`,
       noticeLineBreaksJoined: (count) => `${count} line break(s) in paragraphs are shown joined by spaces, by Markdown's rules (also in Settings > Markdown syntax).`,
       lineBreaksJoin: "Join the lines",
@@ -764,7 +1020,9 @@
       saveAsRule: "Save as rule",
       findBadPattern: "The regular expression is not valid",
       settingsFixRules: "Fix rules…",
-      settingsFixRulesNote: "When a document opens, fixes math that lost its $, bold whose ** shows as written, and the marks that Gemini, ChatGPT, Claude, and others leave.",
+      settingsFixRulesNote: "When a document opens, the fix rules correct math that lost its $, bold whose ** shows as written, and marks left by Gemini, ChatGPT, Claude, and others. They also apply to a document the desktop shortcut makes from the clipboard and to the content of a file dropped on the editor. Auto fix > Apply the fix rules in the editor applies them at any time.",
+      settingsFixOnPaste: "Apply the fix rules to the whole document each time text is pasted",
+      settingsFixOnPasteNote: "Off by default. When on, the rules apply to the whole document, not only to what was pasted, so places put back from the notice are fixed again at the next paste.",
       noticeEmphasis: (count, example) => `${count} place(s) show their ** as written instead of in bold (for example, ${example}). Changed to tags such as <strong>, they show in bold in the preview.`,
       noticeEmphasisDone: (count, example) => `Changed ${count} place(s) whose ** showed as written instead of in bold (for example, ${example}) to tags such as <strong>.`,
       fixEmphasis: "Fix emphasis",
@@ -797,7 +1055,7 @@
       shortcuts: "Keys", shortcutHeading: "Keyboard shortcuts",
       brandLogo: "assets/5garashi_logotype_en_outlined.svg", brandLogoDark: "assets/5garashi_logotype_en_reversed_outlined.svg",
       brandLogoAlt: "5garashi.com Design Office",
-      settings: "Settings", settingsHeading: "Settings",
+      appMenu: "Menu", settings: "Settings", settingsHeading: "Settings",
       settingsIntro: "Adjust readability and ease of use to suit you. Settings are remembered.",
       settingsText: "Text (editor and preview)", settingsFont: "Typeface", settingsFontStandard: "Standard",
       settingsFontUd: "BIZ UD Gothic (designed for legibility)", settingsSize: "Text size", settingsSize100: "Standard",
@@ -938,6 +1196,8 @@
     setEditorRatio(editorRatio, false);
     setDisplayMode(displayMode);
     updateDetachButtons();
+    if (githubPlan && githubConvertDialog.open) renderGithubPlan();
+    updateGithubBanner();
     // The typeface follows the UI language, so redraw diagrams with it.
     if (lastPreviewHtml !== null) renderPreview(lastPreviewHtml);
   };
@@ -959,7 +1219,8 @@
   } = window.CodeMirror;
   const displayDefaults = {
     font: "standard", size: "1", spacing: "1.7", fullWidth: false, htmlSource: true, activeLine: false, thickCaret: false, colors: true, lint: true, completion: true,
-    reader: false, rate: "1", pause: "0.5", readerLang: "auto", readerVoice: "", mapBackground: "ask", videoAutoplay: "auto"
+    reader: false, rate: "1", pause: "0.5", readerLang: "auto", readerVoice: "", mapBackground: "ask", videoAutoplay: "auto",
+    githubButtons: true, imageButton: true, helpButton: true, fixOnPaste: false
   };
   const displayStorageKey = "mdeditor-display";
   let displaySettings = (() => {
@@ -1593,6 +1854,8 @@
       if (!update.docChanged) return;
       mapFixes(update.changes);
       post({ type: "change", text: update.state.doc.toString(), host: applyingHostEdits });
+      // Off by default (Settings > Editor): pasting several pieces would fix again what was put back.
+      if (displaySettings.fixOnPaste && update.transactions.some((transaction) => transaction.isUserEvent("input.paste"))) checkFixesAfterInsert();
     })
   ];
   const view = new EditorView({ parent: editorHost, state: EditorState.create({ doc: "", extensions: editorExtensions() }) });
@@ -1719,15 +1982,18 @@
   // Diagrams and formulas in document order, the order the Word output meets them.
   // Only the outer boxes count: shapes inside a drawing can carry the class
   // "mermaid" too (git graph commits do), and they are not figures of their own.
-  window.mdeditorFigureRects = () => Array.from(preview.querySelectorAll("div.mermaid, div.graphviz, div.stl, div.geo-map, span.math, div.math"))
-    .filter((element) => !element.parentElement?.closest(".mermaid, .graphviz, .stl, .geo-map, .math")).map((element) => {
+  // SVG drawings written in Markdown (marked by the host) are figures too.
+  window.mdeditorFigureRects = () => Array.from(preview.querySelectorAll("div.mermaid, div.graphviz, div.stl, div.geo-map, span.math, div.math, svg[data-inline-svg]"))
+    .filter((element) => !element.parentElement?.closest(".mermaid, .graphviz, .stl, .geo-map, .math, svg")).map((element) => {
     const rect = element.getBoundingClientRect();
     const pad = element.classList.contains("math") ? 1 : 4;
     return {
       x: Math.max(0, rect.left + window.scrollX - pad),
       y: Math.max(0, rect.top + window.scrollY - pad),
       width: Math.max(1, rect.width + pad * 2),
-      height: Math.max(1, rect.height + pad * 2)
+      height: Math.max(1, rect.height + pad * 2),
+      // Math in the text of an HTML block carries its own key (block line and place).
+      key: element.dataset.htmlMath ?? null
     };
     });
 
@@ -1912,7 +2178,11 @@
     }
   };
   // The rules that come with mdEditor. Marks that only point at a source the copy does not
-  // have are removed on opening; changes to how math or lists are written only ask.
+  // have are removed on opening; changes to how math or lists are written only ask, except
+  // \[ … \] on lines of their own, which is made into $$ on opening (1.0.23), as GitHub shows
+  // \[ as a bracket. whenWas: what an earlier mdEditor saved by default, taken as the new
+  // default once when its file is read (version 1), and kept from then on.
+  const fixRulesVersion = 2;
   const fixPresets = [
     { id: "gemini-cite-start", when: "open", pattern: String.raw`\[cite_start\]`, replacement: "",
       name: { ja: "Gemini の [cite_start] を消す", en: "Remove Gemini's [cite_start]", zh: "删除 Gemini 的 [cite_start]" } },
@@ -1926,9 +2196,9 @@
       name: { ja: "ChatGPT の citeturn0search0 のような引用の残りを消す", en: "Remove ChatGPT's leftovers such as citeturn0search0", zh: "删除 ChatGPT 的 citeturn0search0 等引用残留" } },
     { id: "chatgpt-source-marks", when: "open", pattern: String.raw`【\d+(?::\d+)?†[^】\n]*】`, replacement: "",
       name: { ja: "ChatGPT の【4:0†source】のような引用の印を消す", en: "Remove ChatGPT's marks such as 【4:0†source】", zh: "删除 ChatGPT 的【4:0†source】等引用标记" } },
-    { id: "latex-display-block", when: "ask", multiline: true, skipMath: false,
+    { id: "latex-display-block", when: "open", whenWas: { 1: "ask" }, multiline: true, skipMath: false,
       pattern: String.raw`^[ \t]*\\\[[ \t]*\n([\s\S]+?)\n[ \t]*\\\][ \t]*$`, replacement: "$$$$\n$1\n$$$$",
-      name: { ja: "ChatGPT などの別行の \\[ … \\] を $$ の数式にする（GitHub でも数式になる）", en: "Make \\[ … \\] on lines of their own (ChatGPT and others) into $$ math (math on GitHub too)", zh: "将 ChatGPT 等单独成行的 \\[ … \\] 改为 $$ 公式（在 GitHub 上也是公式）" } },
+      name: { ja: "ChatGPT などの別行の \\[ … \\] を $$ の数式にする", en: "Make \\[ … \\] on lines of their own (ChatGPT and others) into $$ math", zh: "将 ChatGPT 等单独成行的 \\[ … \\] 改为 $$ 公式" } },
     { id: "latex-display-inline", when: "ask", skipMath: false,
       pattern: String.raw`(?<!\\)\\\[\s*((?:(?!\\\])[^\n])*?[\\^_=<>{}](?:(?!\\\])[^\n])*?)\s*\\\]`, was: [String.raw`\\\[\s*((?:(?!\\\])[^\n])*?[\\^_=<>{}](?:(?!\\\])[^\n])*?)\s*\\\]`], replacement: "$$$$$1$$$$",
       name: { ja: "文の中の \\[ … \\] を $$ … $$ にする", en: "Make \\[ … \\] in a sentence into $$ … $$", zh: "将句中的 \\[ … \\] 改为 $$ … $$" } },
@@ -1957,7 +2227,7 @@
     when: preset.when, enabled: true
   });
   const defaultFixRules = () => ({
-    version: 1,
+    version: fixRulesVersion,
     removedPresets: [],
     rules: [
       // Settings before 1.0.18 could set math to only ask.
@@ -1967,14 +2237,16 @@
     ]
   });
   // A rule as read from a file: anything missing or of the wrong kind takes its default.
-  const cleanFixRule = (rule) => {
+  const cleanFixRule = (rule, version = fixRulesVersion) => {
     if (!rule || typeof rule.id !== "string" || !rule.id) return null;
-    const when = fixWhen.includes(rule.when) ? rule.when : "ask";
+    let when = fixWhen.includes(rule.when) ? rule.when : "ask";
     const enabled = rule.enabled !== false;
     if (builtinFixes[rule.id]) return { id: rule.id, builtin: true, when, enabled };
     if (typeof rule.pattern !== "string" || !rule.pattern) return null;
-    // A rule that came with mdEditor, as an older mdEditor wrote it, takes its pattern now.
+    // A rule that came with mdEditor, as an older mdEditor wrote it, takes its pattern now,
+    // and its new default when it still has the default that version saved.
     const preset = fixPresets.find(({ id }) => id === rule.id);
+    if (preset?.whenWas && Object.entries(preset.whenWas).some(([older, was]) => version <= Number(older) && when === was)) when = preset.when;
     return {
       id: rule.id,
       ...(preset ? { preset: true } : {}),
@@ -1996,12 +2268,13 @@
       return null;
     }
     if (!Array.isArray(data?.rules)) return null;
+    const version = Number.isInteger(data.version) ? data.version : 1;
     const rules = [];
-    for (const rule of data.rules.map(cleanFixRule)) {
+    for (const rule of data.rules.map((rule) => cleanFixRule(rule, version))) {
       if (rule && !rules.some(({ id }) => id === rule.id)) rules.push(rule);
     }
     const removedPresets = Array.isArray(data.removedPresets) ? data.removedPresets.filter((id) => typeof id === "string") : [];
-    return { version: 1, removedPresets, rules };
+    return { version: fixRulesVersion, removedPresets, rules };
   };
   // The built-in rules are always there (at the top when missing), and rules that came with a
   // newer mdEditor join at the end, unless they were deleted.
@@ -2106,13 +2379,16 @@
       (character) => `<U+${character.codePointAt(0).toString(16).toUpperCase().padStart(4, "0")}>`);
     return shown.length > 60 ? `${shown.slice(0, 59)}…` : shown;
   };
-  const takeFixResult = (rule, result, make) => {
+  // keep (after a paste): what the rule fixed before stays in the notice, to be put back with
+  // what it fixes now.
+  const takeFixResult = (rule, result, make, keep = false) => {
+    const kept = keep && fixStates.get(rule.id)?.pieces ? fixStates.get(rule.id) : null;
     if (!result.pieces) {
-      fixStates.set(rule.id, { problem: result.slow ? "slow" : result.many ? "many" : "error" });
+      if (!kept) fixStates.set(rule.id, { problem: result.slow ? "slow" : result.many ? "many" : "error" });
       return false;
     }
     if (!result.pieces.length) {
-      fixStates.delete(rule.id);
+      if (!kept) fixStates.delete(rule.id);
       return false;
     }
     const count = result.pieces.length;
@@ -2125,24 +2401,26 @@
     // One edit, so a single Ctrl+Z also puts every piece of the rule back.
     const transaction = view.state.update({ changes: result.pieces.map(({ from, to, insert }) => ({ from, to, insert })), userEvent: "input" });
     view.dispatch(transaction);
+    // The pieces kept from before were moved with this edit when it was dispatched.
+    const before = kept ? fixStates.get(rule.id) : null;
     fixStates.set(rule.id, {
-      count,
+      count: count + (before?.count ?? 0),
       example,
-      pieces: result.pieces.map(({ from, to, insert }, index) => ({
+      pieces: [...(before?.pieces ?? []), ...result.pieces.map(({ from, to, insert }, index) => ({
         from: transaction.changes.mapPos(from, -1), to: transaction.changes.mapPos(to, 1), original: originals[index], inserted: insert
-      }))
+      }))]
     });
     return true;
   };
   // Found in the text as it is now; found again if it was edited while a worker was reading.
   // False when there was nothing to fix (or a newer document came in).
-  const runFix = async (rule, make, generation = fixGeneration) => {
+  const runFix = async (rule, make, generation = fixGeneration, keep = false) => {
     for (let tries = 0; tries < 3; tries += 1) {
       const doc = view.state.doc;
       const result = await findFixes(rule, doc.toString());
       if (generation !== fixGeneration) return false;
       if (view.state.doc !== doc) continue;
-      return takeFixResult(rule, result, make);
+      return takeFixResult(rule, result, make, keep);
     }
     return false;
   };
@@ -2158,16 +2436,34 @@
       if (state.pieces) state.pieces = state.pieces.map((piece) => ({ ...piece, from: changes.mapPos(piece.from, 1), to: changes.mapPos(piece.to, -1) }));
     }
   };
-  // On opening, every rule in order; the notice grows as each one finishes.
-  const checkFixes = async () => {
+  // On opening, every rule in order; the notice grows as each one finishes. After a paste
+  // (keep), the same over the whole document, keeping what was fixed before.
+  // From the Auto fix menu (byHand), the rules that run only by hand are offered in the
+  // notice too, as the rules that ask are; only the rules set to fix on opening fix.
+  const checkFixes = async ({ keep = false, byHand = false } = {}) => {
     const generation = ++fixGeneration;
-    fixStates.clear();
+    if (!keep) fixStates.clear();
+    // Whether this run found anything (what was fixed before and kept does not count).
+    let found = false;
     for (const rule of fixRules.rules) {
-      if (!rule.enabled || rule.when === "manual") continue;
-      await runFix(rule, rule.when === "open", generation);
-      if (generation !== fixGeneration) return;
+      if (!rule.enabled || (rule.when === "manual" && !byHand)) continue;
+      if (await runFix(rule, rule.when === "open", generation, keep)) found = true;
+      if (generation !== fixGeneration) return found;
       updateNotice();
     }
+    return found;
+  };
+  // Text put in from outside (the clipboard in a new document from the desktop shortcut, a
+  // dropped file's content, and, when Settings says so, every Ctrl+V) is checked as an opened
+  // document is: the rules run over the whole document once it is in.
+  let insertCheckQueued = false;
+  const checkFixesAfterInsert = () => {
+    if (insertCheckQueued) return;
+    insertCheckQueued = true;
+    setTimeout(() => {
+      insertCheckQueued = false;
+      checkFixes({ keep: true });
+    }, 0);
   };
   const shownFixes = () => fixRules.rules.filter((rule) => fixStates.has(rule.id));
   // Line breaks in paragraphs: the first preview of a document opened says how many there are
@@ -3134,7 +3430,11 @@
     readerLang: document.getElementById("setting-reader-lang"),
     readerVoice: document.getElementById("setting-reader-voice"),
     mapBackground: document.getElementById("setting-map-tiles"),
-    videoAutoplay: document.getElementById("setting-video-autoplay")
+    videoAutoplay: document.getElementById("setting-video-autoplay"),
+    githubButtons: document.getElementById("setting-github-buttons"),
+    imageButton: document.getElementById("setting-image-button"),
+    helpButton: document.getElementById("setting-help-button"),
+    fixOnPaste: document.getElementById("setting-fix-on-paste")
   };
   const backupCheckbox = document.getElementById("setting-backup");
   const zoomValue = document.getElementById("zoom-value");
@@ -3161,6 +3461,10 @@
     view.dispatch({ effects: editorExtras.reconfigure(editorExtrasFor(displaySettings)) });
     showLintCount(displaySettings.lint ? lintCount : 0);
     readerControls.hidden = !displaySettings.reader;
+    for (const button of document.querySelectorAll(".github-button")) button.hidden = !displaySettings.githubButtons;
+    // Hidden buttons still work from their keys (Keyboard shortcuts).
+    document.getElementById("image-button").hidden = !displaySettings.imageButton;
+    document.getElementById("help-button").hidden = !displaySettings.helpButton;
     if (!displaySettings.reader) stopReading();
     updateVoiceNote();
     // Diagram labels use the UI font, so a font change redraws them; so does
@@ -4068,6 +4372,59 @@
     if (event.target === sampleDialog) sampleDialog.close();
   });
 
+  // The menu at the right of the header: Settings, Keys, and About. It opens with a
+  // click, Enter, Space, or the down arrow; the arrows, Home, and End move through it;
+  // Esc, Tab, or a click elsewhere closes it. Choosing an item gives the focus back to
+  // the menu button first, so the dialog the item opens returns it there.
+  // The same for the editor's Auto fix menu (Convert for GitHub, or the fix rules).
+  const makeMenu = (button, menu) => {
+    const wrapper = button.parentElement;
+    const items = () => Array.from(menu.querySelectorAll("[role='menuitem']"));
+    const close = (focusButton) => {
+      if (menu.hidden) return;
+      menu.hidden = true;
+      button.setAttribute("aria-expanded", "false");
+      if (focusButton) button.focus();
+    };
+    const open = (focusLast = false) => {
+      menu.hidden = false;
+      button.setAttribute("aria-expanded", "true");
+      const list = items();
+      list[focusLast ? list.length - 1 : 0]?.focus();
+    };
+    button.addEventListener("click", () => (menu.hidden ? open() : close(true)));
+    button.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+        event.preventDefault();
+        open(event.key === "ArrowUp");
+      }
+    });
+    menu.addEventListener("keydown", (event) => {
+      const list = items();
+      const index = list.indexOf(document.activeElement);
+      const move = { ArrowDown: index + 1, ArrowUp: index - 1, Home: 0, End: list.length - 1 }[event.key];
+      if (move !== undefined) {
+        event.preventDefault();
+        list[(move + list.length) % list.length].focus();
+      } else if (event.key === "Escape") {
+        event.preventDefault();
+        event.stopPropagation();
+        close(true);
+      } else if (event.key === "Tab") {
+        close(false);
+      }
+    });
+    // Runs before the item's own action (capture), so the dialog opens with the menu closed.
+    menu.addEventListener("click", (event) => {
+      if (event.target.closest("[role='menuitem']")) close(true);
+    }, true);
+    document.addEventListener("pointerdown", (event) => {
+      if (!menu.hidden && !wrapper.contains(event.target)) close(false);
+    });
+  };
+  makeMenu(document.getElementById("app-menu-button"), document.getElementById("app-menu"));
+  makeMenu(document.getElementById("autofix-button"), document.getElementById("autofix-menu"));
+
   const aboutDialog = document.getElementById("about-dialog");
   document.getElementById("about-button").addEventListener("click", () => aboutDialog.showModal());
   document.getElementById("about-close").addEventListener("click", () => aboutDialog.close());
@@ -4644,8 +5001,34 @@
   // shadow the app's own elements (such as "help-dialog"), so keep them as data-anchor.
   const moveAnchorsOffIds = () => {
     for (const element of preview.querySelectorAll("[id]")) {
+      if (element.closest("svg[data-inline-svg]")) continue;
       element.dataset.anchor = element.id;
       element.removeAttribute("id");
+    }
+    prefixDrawingIds();
+  };
+
+  // The parts of an SVG drawing point at one another by id (marker-end="url(#arrow)",
+  // href="#shape", aria-labelledby), so a drawing's ids stay ids, under a prefix of
+  // their own that the app's elements never use, and what points at them follows.
+  const drawingIdPrefix = "svg-drawing-";
+  const prefixDrawingIds = () => {
+    for (const drawing of preview.querySelectorAll("svg[data-inline-svg]")) {
+      const parts = [drawing, ...drawing.querySelectorAll("*")];
+      const ids = new Set(parts.filter((element) => element.id).map((element) => element.id));
+      if (ids.size === 0) continue;
+      const rename = (id) => (ids.has(id) ? drawingIdPrefix + id : id);
+      for (const element of parts) {
+        for (const attribute of Array.from(element.attributes)) {
+          const value = attribute.value;
+          let renamed = value;
+          if (attribute.name === "id") renamed = rename(value);
+          else if (attribute.name === "aria-labelledby" || attribute.name === "aria-describedby") renamed = value.split(/\s+/).map(rename).join(" ");
+          else if (attribute.localName === "href" && value.trim().startsWith("#")) renamed = "#" + rename(value.trim().slice(1));
+          else if (value.includes("url(")) renamed = value.replace(/url\(\s*(["']?)#([^)"'\s]+)\1\s*\)/g, (all, quote, id) => `url(${quote}#${rename(id)}${quote})`);
+          if (renamed !== value) element.setAttributeNS(attribute.namespaceURI, attribute.name, renamed);
+        }
+      }
     }
   };
 
@@ -5443,6 +5826,300 @@
     view.focus();
   };
 
+  // GitHub conversion and the GitHub view. The host works out what to rewrite (it reads the
+  // Markdown as mdEditor does) and the edits are applied here in one step, so Ctrl+Z undoes
+  // them at once. The GitHub view sends the document to GitHub only after the question has
+  // been answered Send, every time (Identity 13-1 (2) (a)); the banner over the preview says
+  // what is shown, and Back returns to the preview.
+  const githubConvertButton = document.getElementById("github-convert-button");
+  const githubViewButton = document.getElementById("github-view-button");
+  const githubConvertDialog = document.getElementById("github-convert-dialog");
+  const githubConvertRows = document.getElementById("github-convert-rows");
+  const githubSkippedList = document.getElementById("github-skipped-list");
+  const githubConvertApply = document.getElementById("github-convert-apply");
+  const githubViewDialog = document.getElementById("github-view-dialog");
+  const githubViewSend = document.getElementById("github-view-send");
+  const githubBanner = document.getElementById("github-banner");
+  const githubBannerText = document.getElementById("github-banner-text");
+  const githubResend = document.getElementById("github-resend");
+  const githubBack = document.getElementById("github-back");
+  const githubBannerClose = document.getElementById("github-banner-close");
+  // The text and selection the open question is about.
+  let githubRequest = null;
+  let githubPlan = null;
+  // While the preview shows GitHub's view: when GitHub made it, the preview it replaced, and
+  // whether the document has changed since. The previews that arrive meanwhile are held.
+  let githubMode = null;
+  let githubHeldPreview = null;
+  let lastNormalPreview = null;
+  let githubSending = false;
+  let githubError = null;
+
+  const effectiveLineBreaks = () => lineBreaksCheckbox.checked && !lineBreaksCheckbox.disabled;
+
+  // Convert for GitHub applies the fix rules first, in their order, then rewrites the result
+  // for GitHub, as one edit. The rules for \( \), \[ \], and the spaces inside $ are left out:
+  // the conversion rewrites the same writing itself, choosing the form GitHub reads.
+  const githubFixOverlap = new Set(["latex-display-block", "latex-display-inline", "latex-inline", "dollar-spaces"]);
+  // Rules set to fix on opening start checked; the rules that ask, or run only by hand, start
+  // unchecked, as in their settings.
+  let githubFixChecks = new Map();
+  let githubFixGeneration = 0;
+  const prepareGithubFixes = async (text, from, to) => {
+    let state = EditorState.create({ doc: text });
+    let changes = null;
+    let count = 0;
+    const rows = [];
+    for (const rule of fixRules.rules) {
+      if (!rule.enabled || githubFixOverlap.has(rule.id)) continue;
+      const result = await findFixes(rule, state.doc.toString());
+      // Only the pieces inside the selection, when there is one.
+      const pieces = (result.pieces ?? []).filter((piece) => from === to || (piece.from >= from && piece.to <= to));
+      if (!pieces.length) continue;
+      const checked = githubFixChecks.get(rule.id) ?? rule.when === "open";
+      const example = pieces.find((piece) => piece.to - piece.from >= 8 && piece.to - piece.from <= 40) ?? pieces[0];
+      rows.push({ rule, count: pieces.length, example: state.sliceDoc(example.from, example.to), checked });
+      if (!checked) continue;
+      const transaction = state.update({ changes: pieces.map(({ from: start, to: end, insert }) => ({ from: start, to: end, insert })) });
+      changes = changes ? changes.compose(transaction.changes) : transaction.changes;
+      if (from !== to) {
+        from = transaction.changes.mapPos(from, -1);
+        to = transaction.changes.mapPos(to, 1);
+      }
+      state = transaction.state;
+      count += pieces.length;
+    }
+    return { rows, changes, count, text: state.doc.toString(), from, to };
+  };
+  // Asks the window what GitHub would need, for the text as the checked rules leave it.
+  const requestGithubPlan = async (original, from, to) => {
+    const generation = ++githubFixGeneration;
+    const fixes = await prepareGithubFixes(original, from, to);
+    if (generation !== githubFixGeneration) return;
+    githubRequest = { original, scopeFrom: from, scopeTo: to, fixes, lineBreaks: effectiveLineBreaks() };
+    post({ type: "githubConvertPlan", text: fixes.text, from: fixes.from, to: fixes.to, lineBreaks: githubRequest.lineBreaks });
+  };
+
+  const updateGithubApply = () => {
+    const kinds = githubPlan?.kinds ?? [];
+    const fixRows = githubRequest?.fixes.rows ?? [];
+    githubConvertApply.hidden = kinds.length === 0 && fixRows.length === 0;
+    githubConvertApply.disabled = !kinds.some((item) => item.checked) && !fixRows.some((item) => item.checked);
+  };
+
+  const renderGithubFixRows = () => {
+    const rows = githubRequest?.fixes.rows ?? [];
+    document.getElementById("github-fix-section").hidden = rows.length === 0;
+    document.getElementById("github-fix-rows").replaceChildren(...rows.map((item) => {
+      const row = document.createElement("tr");
+      const check = document.createElement("input");
+      check.type = "checkbox";
+      check.checked = item.checked;
+      check.dataset.rule = item.rule.id;
+      check.setAttribute("aria-label", ruleName(item.rule));
+      check.addEventListener("change", () => {
+        // The GitHub rewrites are counted again on the text the checked rules leave.
+        githubFixChecks.set(item.rule.id, check.checked);
+        githubConvertApply.disabled = true;
+        requestGithubPlan(githubRequest.original, githubRequest.scopeFrom, githubRequest.scopeTo);
+      });
+      const example = document.createElement("code");
+      example.textContent = visibleExample(item.example);
+      for (const [index, value] of [check, ruleName(item.rule), String(item.count), example].entries()) {
+        const cell = document.createElement("td");
+        if (index === 2) cell.className = "help-right";
+        cell.append(value);
+        row.append(cell);
+      }
+      return row;
+    }));
+  };
+
+  const renderGithubPlan = () => {
+    if (!githubPlan) return;
+    const kindNames = t("githubKinds");
+    const skipNames = t("githubSkips");
+    document.getElementById("github-convert-heading").textContent =
+      t(githubPlan.scope === "selection" ? "githubConvertHeadingSelection" : "githubConvertHeadingDocument");
+    const total = githubPlan.kinds.reduce((sum, item) => sum + item.count, 0);
+    document.getElementById("github-convert-intro").textContent = total ? t("githubConvertIntro")(total) : t("githubConvertNothingIntro");
+    document.getElementById("github-convert-table").hidden = total === 0;
+    githubConvertRows.replaceChildren(...githubPlan.kinds.map((item) => {
+      const row = document.createElement("tr");
+      const check = document.createElement("input");
+      check.type = "checkbox";
+      check.checked = item.checked;
+      check.dataset.kind = item.kind;
+      check.setAttribute("aria-label", kindNames[item.kind] ?? item.kind);
+      check.addEventListener("change", () => {
+        item.checked = check.checked;
+        updateGithubApply();
+      });
+      const example = document.createElement("code");
+      example.textContent = item.example;
+      for (const [index, value] of [check, kindNames[item.kind] ?? item.kind, String(item.count), example].entries()) {
+        const cell = document.createElement("td");
+        if (index === 2) cell.className = "help-right";
+        cell.append(value);
+        row.append(cell);
+      }
+      return row;
+    }));
+    const skipped = githubPlan.skipped ?? [];
+    document.getElementById("github-skipped-heading").hidden = skipped.length === 0;
+    githubSkippedList.hidden = skipped.length === 0;
+    githubSkippedList.replaceChildren(...skipped.map((item) => {
+      const entry = document.createElement("li");
+      entry.dataset.reason = item.reason;
+      entry.append(`${skipNames[item.reason] ?? item.reason}: ${t("githubSkipCount")(item.count)}`);
+      if (item.example) {
+        const example = document.createElement("code");
+        example.textContent = item.example;
+        entry.append(" ", example);
+      }
+      return entry;
+    }));
+    renderGithubFixRows();
+    updateGithubApply();
+  };
+
+  githubConvertButton.addEventListener("click", () => {
+    const { from, to } = view.state.selection.main;
+    githubPlan = null;
+    githubFixChecks = new Map();
+    requestGithubPlan(view.state.doc.toString(), from, to);
+  });
+  // Auto fix > Apply the fix rules: every rule over the whole document now, as on opening
+  // (the rules that run only by hand are offered too); what was fixed before stays to be put back.
+  document.getElementById("fix-rules-run-button").addEventListener("click", async () => {
+    if (!(await checkFixes({ keep: true, byHand: true }))) showNoticeMessage(t("fixRulesRunNone"));
+  });
+  githubConvertApply.addEventListener("click", () => {
+    if (!githubRequest || !githubPlan) return;
+    const { fixes, lineBreaks } = githubRequest;
+    post({ type: "githubConvertApply", text: fixes.text, from: fixes.from, to: fixes.to, lineBreaks, kinds: githubPlan.kinds.filter((item) => item.checked).map((item) => item.kind) });
+    githubConvertDialog.close();
+  });
+  for (const id of ["github-convert-close", "github-convert-cancel"]) {
+    document.getElementById(id).addEventListener("click", () => {
+      githubRequest = null;
+      githubFixGeneration += 1;
+      githubConvertDialog.close();
+    });
+  }
+  // Esc closes the question too: an answer still on its way is dropped.
+  githubConvertDialog.addEventListener("cancel", () => {
+    githubRequest = null;
+    githubFixGeneration += 1;
+  });
+
+  const updateGithubBanner = () => {
+    let text = "";
+    if (githubSending) text = t("githubSending");
+    else if (githubError) text = githubError();
+    githubBanner.hidden = !text && !githubMode;
+    githubBannerText.textContent = text;
+    if (!text && githubMode) {
+      // What the preview shows, in volt (bold, Identity 7-1), then what that means.
+      const lead = document.createElement("strong");
+      lead.className = "github-banner-lead";
+      lead.textContent = t("githubBannerLead")(githubMode.at);
+      githubBannerText.replaceChildren(lead, ` ${t("githubBannerNote")}${githubMode.stale ? ` ${t("githubStale")}` : ""}`);
+    }
+    githubBanner.classList.toggle("github-banner-error", Boolean(githubError) && !githubSending);
+    githubResend.hidden = githubSending || !githubMode;
+    githubBack.hidden = githubSending || !githubMode;
+    githubBannerClose.hidden = githubSending || Boolean(githubMode) || !githubError;
+  };
+
+  const exitGithubMode = (render = true) => {
+    if (!githubMode) return;
+    githubMode = null;
+    githubError = null;
+    const held = githubHeldPreview ?? lastNormalPreview;
+    githubHeldPreview = null;
+    updateGithubBanner();
+    if (render && held) renderPreview(held.html, false, held.lines);
+  };
+
+  const askGithubView = () => {
+    if (!githubSending) post({ type: "githubViewAsk" });
+  };
+  githubViewButton.addEventListener("click", askGithubView);
+  githubResend.addEventListener("click", askGithubView);
+  githubBack.addEventListener("click", () => {
+    exitGithubMode();
+    preview.focus();
+  });
+  githubBannerClose.addEventListener("click", () => {
+    githubError = null;
+    updateGithubBanner();
+  });
+  githubViewSend.addEventListener("click", () => {
+    githubViewDialog.close();
+    githubSending = true;
+    githubError = null;
+    updateGithubBanner();
+    post({ type: "githubView" });
+  });
+  for (const id of ["github-view-close", "github-view-cancel"]) {
+    document.getElementById(id).addEventListener("click", () => githubViewDialog.close());
+  }
+
+  const showGithubViewQuestion = (message) => {
+    const kb = (message.bytes / 1024).toFixed(1);
+    document.getElementById("github-view-what").textContent = t("githubViewWhat")(kb);
+    document.getElementById("github-view-quota").textContent = message.remaining != null && message.limit != null
+      ? t("githubViewQuota")(message.remaining, message.limit, message.reset ?? "")
+      : t("githubViewQuotaUnknown");
+    const tooLarge = message.bytes > message.maxBytes;
+    const warning = document.getElementById("github-view-too-large");
+    warning.hidden = !tooLarge;
+    warning.textContent = tooLarge ? t("githubViewTooLarge")(Math.round(message.maxBytes / 1024)) : "";
+    githubViewSend.disabled = tooLarge;
+    githubViewDialog.showModal();
+    // Don't send is chosen first, so Enter alone never sends the document.
+    document.getElementById("github-view-cancel").focus();
+  };
+
+  const showGithubViewError = (message) => {
+    githubSending = false;
+    const kb = Math.round((message.maxBytes ?? 0) / 1024);
+    githubError = {
+      network: () => t("githubErrorNetwork"),
+      rateLimit: () => t("githubErrorRateLimit")(message.reset ?? ""),
+      tooLarge: () => t("githubErrorTooLarge")(kb)
+    }[message.code] ?? (() => t("githubErrorStatus")(message.status ?? ""));
+    updateGithubBanner();
+  };
+
+  // A preview from the host while GitHub's view is shown is held, and the banner says when the
+  // document has changed. Previews the host waits for (saving as PDF, PNG, and so on) end the
+  // GitHub view first, so they always show the document as mdEditor shows it.
+  const takeNormalPreview = (message) => {
+    if (message.forPrint || message.notifyRendered) {
+      exitGithubMode(false);
+      if (!message.forPrint) lastNormalPreview = message;
+      return true;
+    }
+    lastNormalPreview = message;
+    if (!githubMode) return true;
+    githubHeldPreview = message;
+    if (message.html !== githubMode.sentHtml && !githubMode.stale) {
+      githubMode.stale = true;
+      updateGithubBanner();
+    }
+    return false;
+  };
+
+  const showGithubPreview = (message) => {
+    githubSending = false;
+    githubError = null;
+    githubMode = { at: message.at, sentHtml: (githubHeldPreview ?? lastNormalPreview)?.html ?? null, stale: false };
+    updateGithubBanner();
+    renderPreview(message.html, false, 0);
+  };
+
   window.chrome.webview.addEventListener("message", (event) => {
     const message = event.data;
     if (message.type === "fileList") {
@@ -5451,6 +6128,49 @@
     } else if (message.type === "tocText") {
       if (message.text) placeToc(message.text);
       else showNoticeMessage(t("tocNoHeadings"));
+    } else if (message.type === "githubConvertPlan") {
+      // Asked again while the question is open (a fix rule's check changed): the kinds keep
+      // the checks the user gave them.
+      // An answer to a question that was closed meanwhile is dropped.
+      if (!githubRequest) return;
+      const reasked = githubConvertDialog.open && githubPlan;
+      const checks = new Map((githubPlan?.kinds ?? []).map((item) => [item.kind, item.checked]));
+      if (message.failed) {
+        if (reasked) githubConvertDialog.close();
+        showNoticeMessage(t("githubConvertFailed"));
+      } else if (!reasked && !message.kinds.length && !message.skipped.length && !githubRequest?.fixes.rows.length) {
+        githubRequest = null;
+        showNoticeMessage(t("githubConvertNone"));
+      } else {
+        githubPlan = { scope: message.scope, kinds: message.kinds.map((item) => ({ ...item, checked: checks.get(item.kind) ?? true })), skipped: message.skipped };
+        renderGithubPlan();
+        if (!reasked) githubConvertDialog.showModal();
+      }
+    } else if (message.type === "githubConvertEdits") {
+      const request = githubRequest;
+      githubRequest = null;
+      if (message.failed) {
+        showNoticeMessage(t("githubConvertFailed"));
+      } else if (!request || view.state.doc.toString() !== request.original) {
+        showNoticeMessage(t("githubConvertChanged"));
+      } else if (!message.edits.length && !request.fixes.changes) {
+        showNoticeMessage(t("githubConvertNone"));
+      } else {
+        // The fix rules' changes and GitHub's rewrites of their result, as one edit: a single
+        // Ctrl+Z puts both back.
+        const rewrites = EditorState.create({ doc: request.fixes.text })
+          .update({ changes: message.edits.map(({ from, to, insert }) => ({ from, to, insert })) }).changes;
+        const changes = request.fixes.changes ? request.fixes.changes.compose(rewrites) : rewrites;
+        view.dispatch({ changes, userEvent: "input", scrollIntoView: true });
+        showNoticeMessage(request.fixes.count ? t("githubConvertDoneFixes")(request.fixes.count, message.count) : t("githubConvertDone")(message.count));
+        view.focus();
+      }
+    } else if (message.type === "githubViewConfirm") {
+      showGithubViewQuestion(message);
+    } else if (message.type === "githubPreview") {
+      showGithubPreview(message);
+    } else if (message.type === "githubViewError") {
+      showGithubViewError(message);
     } else if (message.type === "applyEdits") {
       // One transaction, so Ctrl+Z undoes them together; the cursor keeps its place.
       applyingHostEdits = true;
@@ -5476,9 +6196,16 @@
       }
       view.dispatch({ changes: { from, to, insert }, selection: { anchor: from + insert.length }, scrollIntoView: true });
       view.focus();
+      // The clipboard put in a new document, and a dropped file's content, are checked as an
+      // opened file is.
+      if (message.fix) checkFixesAfterInsert();
     } else if (message.type === "documentInfo") {
       documentName.textContent = message.name;
       documentName.title = message.name;
+      for (const paneName of document.querySelectorAll(".pane-document-name")) {
+        paneName.textContent = message.name;
+        paneName.title = message.name;
+      }
       documentDirty = message.isDirty;
       documentEncoding = message.encoding ?? "utf-8";
       encodingSource = message.encodingSource ?? "detected";
@@ -5590,6 +6317,7 @@
         lineBreaksNotice = softBreaks > 0 && lineBreaksCheckbox.checked && !lineBreaksCheckbox.disabled;
       }
       if (lineBreaksNotice) updateNotice();
+      if (!takeNormalPreview(message)) return;
       renderPreview(message.html, message.forPrint, message.lines).finally(() => {
         if (message.notifyRendered) post({ type: "previewRendered", requestId: message.requestId });
       });

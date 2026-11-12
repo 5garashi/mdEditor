@@ -8,11 +8,11 @@ store: https://apps.microsoft.com/detail/9NWW2QRCLMHC
 license: MIT
 ---
 <!--
-  ファイル名 / File: samples/key-features.en.md
-  概要 / Description: mdEditor key features, shown with its own diagrams, math, 3D model, images, and map (English)
-  作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
-  作成日 / Created: 2026-11-01
-  ライセンス / License: MIT
+  File: samples/key-features.en.md
+  Description: mdEditor key features, shown with its own diagrams, math, 3D model, images, and map (English)
+  Author: 5garashi.com Design Office
+  Created: 2026-11-01
+  License: MIT
   SPDX-License-Identifier: MIT
 -->
 

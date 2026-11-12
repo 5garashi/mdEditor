@@ -38,7 +38,7 @@ internal static class TableOfContents
     public static string? Build(string markdown, MarkdownPipeline pipeline)
     {
         var headings = Markdown.Parse(markdown, pipeline).OfType<HeadingBlock>()
-            .Select(heading => (heading.Level, Text: Text(heading.Inline), Id: Markdig.Renderers.Html.HtmlAttributesExtensions.GetAttributes(heading).Id))
+            .Select(heading => (heading.Level, Text: Text(heading.Inline, markdown), Id: Markdig.Renderers.Html.HtmlAttributesExtensions.GetAttributes(heading).Id))
             .Where(heading => heading.Text.Length > 0 && !string.IsNullOrEmpty(heading.Id))
             .ToList();
         if (headings.Count > 0 && headings[0].Level == 1 && headings.Count(heading => heading.Level == 1) == 1)
@@ -51,18 +51,55 @@ internal static class TableOfContents
             return null;
         }
 
+        headings = headings.Select(heading => (heading.Level, Text: Brackets(heading.Text), heading.Id)).ToList();
         var top = headings.Min(heading => heading.Level);
         var lines = headings.Where(heading => heading.Level < top + 3).Select(heading =>
-            $"{new string(' ', (heading.Level - top) * 2)}- [{Regex.Replace(heading.Text, @"([\\\[\]])", @"\$1")}](#{heading.Id})");
+            $"{new string(' ', (heading.Level - top) * 2)}- [{heading.Text}](#{heading.Id})");
         return $"{Start}\n{string.Join("\n", lines)}\n{End}";
     }
 
-    private static string Text(ContainerInline? container) => container is null ? string.Empty : string.Concat(container.Descendants<Inline>().Select(inline => inline switch
+    // The heading as link text. Math, code, and character references (&amp; and so
+    // on) are kept as written, so the contents show them as the heading does. In
+    // plain text, the characters that would start something else in the link are
+    // escaped. A web address stays text, since a link cannot hold another link.
+    private static string Text(ContainerInline? container, string markdown) => container is null ? string.Empty : string.Concat(container.Descendants<Inline>().Select(inline => inline switch
     {
-        LiteralInline literal => literal.Content.ToString(),
-        CodeInline code => code.Content,
+        LiteralInline literal => Escape(literal.Content.ToString()),
+        MathInline math => Source(math, markdown) ?? $"{new string('$', Math.Max(1, math.DelimiterCount))}{math.Content}{new string('$', Math.Max(1, math.DelimiterCount))}",
+        CodeInline code => Source(code, markdown) ?? Escape(code.Content),
+        HtmlEntityInline entity => Source(entity, markdown) ?? Escape(entity.Transcoded.ToString()),
+        AutolinkInline autolink => Escape(autolink.Url),
+        LineBreakInline => " ",
         _ => string.Empty
     })).Trim();
+
+    private static string? Source(Inline inline, string markdown) =>
+        inline.Span.Start >= 0 && inline.Span.End < markdown.Length && inline.Span.End >= inline.Span.Start
+            ? Regex.Replace(markdown.Substring(inline.Span.Start, inline.Span.Length), @"\r?\n", " ")
+            : null;
+
+    // Backslash, $, `, *, _, ~, <, and &; and the colon of :// and the dot of www.,
+    // so a web address written as text is not made a link. Brackets are left to
+    // Brackets: written \[ … \] they would be read as math.
+    private static string Escape(string text) =>
+        Regex.Replace(Regex.Replace(text.Replace("[", "\u0001").Replace("]", "\u0002"), @"([\\$`*_~<&])", @"\$1"),
+            @"(?<=[A-Za-z])://|(?<=\bwww)\.", match => @"\" + match.Value);
+
+    // Plain-text brackets (marked by Escape) stay as they are when they pair up,
+    // which a link's text allows; otherwise they are written &#91; and &#93;.
+    private static string Brackets(string text)
+    {
+        var depth = 0;
+        foreach (var c in text)
+        {
+            depth += c == '\u0001' ? 1 : c == '\u0002' ? -1 : 0;
+            if (depth < 0) break;
+        }
+
+        return depth == 0
+            ? text.Replace('\u0001', '[').Replace('\u0002', ']')
+            : text.Replace("\u0001", "&#91;").Replace("\u0002", "&#93;");
+    }
 }
 
 // Front matter (the YAML block between --- lines at the top), read as YAML into

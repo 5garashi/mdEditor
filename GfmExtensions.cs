@@ -30,10 +30,16 @@ internal static class MarkdownPipelines
     // to GitHub" keeps only what GitHub shows, and ~text~ is struck through as there.
     // lineBreaks shows each line break in a paragraph as a line break, not a space;
     // latexMath reads \(x\) and \[x\] as math (GitHub does neither).
-    public static MarkdownPipeline Build(bool nearGitHub, bool lineBreaks = false, bool latexMath = true)
+    // preciseSource keeps where every inline starts and ends in the text (GitHub conversion
+    // rewrites the text at those places).
+    public static MarkdownPipeline Build(bool nearGitHub, bool lineBreaks = false, bool latexMath = true, bool preciseSource = false)
     {
         // GitHub-style heading ids keep Japanese text, so links like [x](#セットアップ) work.
         var builder = new MarkdownPipelineBuilder().UseAutoIdentifiers(AutoIdentifierOptions.GitHub);
+        if (preciseSource)
+        {
+            builder.UsePreciseSourceLocation();
+        }
         if (nearGitHub)
         {
             builder.UseAlertBlocks()
@@ -50,6 +56,7 @@ internal static class MarkdownPipelines
         else
         {
             builder.UseAdvancedExtensions();
+            builder.Extensions.AddIfNotAlready<InitialsAreNotListsExtension>();
         }
 
         builder.Extensions.Add(new LatexMathDelimitersExtension(latexMath));
@@ -59,6 +66,7 @@ internal static class MarkdownPipelines
         builder.UseYamlFrontMatter().UseEmojiAndSmiley(enableSmileys: false);
         builder.Extensions.AddIfNotAlready<GfmDetailsExtension>();
         builder.Extensions.Add(new LineBreaksExtension(lineBreaks));
+        builder.Extensions.Add(new HeadingMathExtension());
         return builder.Build();
     }
 }
@@ -94,6 +102,95 @@ internal sealed class LineBreaksExtension(bool show) : IMarkdownExtension
 
         document.SetData(typeof(LineBreaksExtension), count);
     }
+}
+
+// Headings with math. Markdig leaves math out of a heading's id, so the preview and the
+// contents used #31-past for "3.1 Past ($t \to 0$)", while GitHub (whose heading text holds
+// the math as written) and the Markdown check use #31-past-t-to-0; the id now has the math
+// too. And Markdig takes the first { in a heading for attributes ({#id .class}) and cuts the
+// heading there, so "## $\frac{a}{b}$" lost everything from {a}: now only a { } block that
+// ends the heading is attributes.
+internal sealed class HeadingMathExtension : IMarkdownExtension
+{
+    public void Setup(MarkdownPipelineBuilder pipeline)
+    {
+        if (pipeline.BlockParsers.Find<HeadingBlockParser>() is { TryParseAttributes: { } attributes } headings)
+        {
+            headings.TryParseAttributes = (BlockProcessor processor, ref StringSlice line, IBlock block) =>
+            {
+                if (line.Length <= 0 || Regex.Match(line.ToString(), @"\{[^{}\r\n]*\}[ \t]*$") is not { Success: true } match)
+                {
+                    return false;
+                }
+
+                var ending = line;
+                ending.Start = line.Start + match.Index;
+                if (!attributes(processor, ref ending, block))
+                {
+                    return false;
+                }
+
+                line.End = ending.End;
+                return true;
+            };
+        }
+
+        pipeline.DocumentProcessed += document =>
+        {
+            var all = document.Descendants<HeadingBlock>().ToList();
+            if (!all.Any(HasMath))
+            {
+                return;
+            }
+
+            var used = new HashSet<string>(all.Select(heading => heading.GetAttributes().Id).OfType<string>(), StringComparer.Ordinal);
+            foreach (var heading in all.Where(HasMath))
+            {
+                var htmlAttributes = heading.GetAttributes();
+                var id = htmlAttributes.Id;
+                var made = LinkHelper.UrilizeAsGfm(Text(heading.Inline!, math: false));
+                // An id written as {#id} is kept; only the one Markdig made is replaced.
+                if (id is null || !Regex.IsMatch(id, "^" + Regex.Escape(made.Length > 0 ? made : "section") + @"(-\d+)?$", RegexOptions.CultureInvariant))
+                {
+                    continue;
+                }
+
+                var wanted = LinkHelper.UrilizeAsGfm(Text(heading.Inline!, math: true));
+                if (wanted.Length == 0 || wanted == made)
+                {
+                    continue;
+                }
+
+                used.Remove(id);
+                var unique = wanted;
+                for (var number = 1; used.Contains(unique); number++)
+                {
+                    unique = $"{wanted}-{number}";
+                }
+
+                used.Add(unique);
+                htmlAttributes.Id = unique;
+            }
+        };
+    }
+
+    public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+    {
+    }
+
+    private static bool HasMath(HeadingBlock heading) => heading.Inline?.Descendants<MathInline>().Any() == true;
+
+    // The heading's text as Markdig reads it for an id, with or without the math.
+    private static string Text(ContainerInline container, bool math) => string.Concat(container.Descendants<Inline>().Select(inline => inline switch
+    {
+        LiteralInline literal => literal.Content.ToString(),
+        CodeInline code => code.Content,
+        MathInline formula when math => formula.Content.ToString(),
+        HtmlEntityInline entity => entity.Transcoded.ToString(),
+        AutolinkInline autolink => autolink.Url,
+        LineBreakInline => " ",
+        _ => string.Empty
+    }));
 }
 
 // Math written with LaTeX's own delimiters, as many AI chats and papers write it: \(x\) in a
@@ -136,12 +233,67 @@ internal sealed class LatexMathDelimitersExtension(bool latex) : IMarkdownExtens
 
         if (pipeline.InlineParsers.Contains<MathInlineParser>() && !pipeline.InlineParsers.Contains<LetterAfterMathInlineParser>())
         {
+            pipeline.InlineParsers.InsertBefore<MathInlineParser>(new MultilineDollarMathInlineParser());
             pipeline.InlineParsers.InsertBefore<MathInlineParser>(new LetterAfterMathInlineParser());
+        }
+
+        if (latex && pipeline.InlineParsers.Contains<MathInlineParser>() && !pipeline.InlineParsers.Contains<SpaceBeforeCloseMathInlineParser>())
+        {
+            pipeline.InlineParsers.InsertBefore<MathInlineParser>(new SpaceBeforeCloseMathInlineParser());
         }
     }
 
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
+    }
+}
+
+// $$ content spread over several lines, with content beside the opening delimiter.
+// Markdig's block parser requires an opening line containing only $$, while its inline
+// parser rejects line breaks. Keep the existing paragraph boundaries as a safety limit.
+internal sealed class MultilineDollarMathInlineParser : InlineParser
+{
+    public MultilineDollarMathInlineParser() => OpeningCharacters = ['$'];
+
+    public override bool Match(InlineProcessor processor, ref StringSlice slice)
+    {
+        // Only supplement multiline $$ math in an existing paragraph. Fenced/inline code,
+        // block boundaries and ordinary one-line math stay with their existing parsers.
+        var text = slice.Text;
+        var start = slice.Start;
+        if (slice.PeekChar(1) != '$' || slice.PeekChar(2) == '$'
+            || start > 0 && text[start - 1] == '$') return false;
+
+        var content = start + 2;
+        var end = content;
+        while (end <= slice.End)
+        {
+            end = text.IndexOf("$$", end, slice.End - end + 1, StringComparison.Ordinal);
+            if (end < 0) return false;
+            var slashes = 0;
+            for (var i = end - 1; i >= content && text[i] == '\\'; i--) slashes++;
+            if (slashes % 2 == 0) break;
+            end += 2;
+        }
+
+        if (end > slice.End || end == content || end + 2 <= slice.End && text[end + 2] == '$') return false;
+        var body = text[content..end];
+        if (!body.Contains('\n') || string.IsNullOrWhiteSpace(body)
+            || Regex.IsMatch(body, @"\n[ \t\r]*\n", RegexOptions.CultureInvariant)) return false;
+
+        var math = new MathInline
+        {
+            Delimiter = '$',
+            DelimiterCount = 2,
+            Content = new StringSlice(text, content, end - 1),
+            Span = new SourceSpan(processor.GetSourcePosition(start, out var line, out var column), processor.GetSourcePosition(end + 1)),
+            Line = line,
+            Column = column
+        };
+        math.GetAttributes().AddClass("math");
+        processor.Inline = math;
+        slice.Start = end + 2;
+        return true;
     }
 }
 
@@ -205,6 +357,63 @@ internal sealed class LetterAfterMathInlineParser : InlineParser
         math.GetAttributes().AddClass("math");
         processor.Inline = math;
         slice.Start = end + count;
+        return true;
+    }
+}
+
+// $x $, with a space before the closing $, as VS Code's preview and MathJax pages read it
+// (GitHub and Markdig keep it text, so this is off when the settings follow GitHub). Only the
+// space at the end is read here, so $ x$ stays text. $ x $, with a space at both ends, is
+// Markdig's own math (as in VS Code), so "$ 100 and $ 200" is math, as it was before.
+// As in VS Code, a letter or digit (A-Z, 0-9) just outside either $ keeps it text, so prices
+// ($5 and $10) and words such as US$5 do not open or close it; it stays on one line.
+internal sealed class SpaceBeforeCloseMathInlineParser : InlineParser
+{
+    public SpaceBeforeCloseMathInlineParser() => OpeningCharacters = ['$'];
+
+    private static bool IsAsciiWord(char c) => char.IsAsciiLetterOrDigit(c) || c == '_';
+
+    public override bool Match(InlineProcessor processor, ref StringSlice slice)
+    {
+        var text = slice.Text;
+        var start = slice.Start + 1;
+        if (start > slice.End || text[start] == '$' || char.IsWhiteSpace(text[start])
+            || slice.Start > 0 && (text[slice.Start - 1] is '$' or '\\' || IsAsciiWord(text[slice.Start - 1])))
+        {
+            return false;
+        }
+
+        var end = start;
+        while (true)
+        {
+            end = text.IndexOf('$', end, slice.End - end + 1);
+            if (end < 0) return false;
+            var slashes = 0;
+            for (var i = end - 1; i >= start && text[i] == '\\'; i--) slashes++;
+            if (slashes % 2 == 0) break;
+            end++;
+        }
+
+        var after = end + 1 <= slice.End ? text[end + 1] : '\0';
+        // Only the case Markdig leaves as text: the closing $ after a space.
+        if (text[end - 1] is not (' ' or '\t') || after == '$' || IsAsciiWord(after)
+            || text.AsSpan(start, end - start).IndexOfAny('\n', '\r') >= 0)
+        {
+            return false;
+        }
+
+        var math = new MathInline
+        {
+            Delimiter = '$',
+            DelimiterCount = 1,
+            Content = new StringSlice(text, start, end - 1),
+            Span = new SourceSpan(processor.GetSourcePosition(slice.Start, out var line, out var column), processor.GetSourcePosition(end)),
+            Line = line,
+            Column = column
+        };
+        math.GetAttributes().AddClass("math");
+        processor.Inline = math;
+        slice.Start = end + 1;
         return true;
     }
 }
@@ -320,6 +529,56 @@ internal sealed class LatexEnvironmentBlockParser : BlockParser
         block.AppendLine(ref line, processor.Column, processor.LineIndex, processor.CurrentLineStartPosition, processor.TrackTrivia);
         block.UpdateSpanEnd(line.End);
         return BlockState.BreakDiscard;
+    }
+}
+
+// Markdig's lettered lists (A. and I. as well as a. and i.) took a name's initials for list
+// markers: "2. V. B. Braginsky and …" became lists nested in the item, and "B. Russell wrote"
+// a list. As Pandoc decides it, a capital letter (or capital Roman numeral) with a period starts
+// a list only when two spaces or a tab follow it ("A.  item"); a. and i. are as before.
+internal sealed class InitialsAreNotListsExtension : IMarkdownExtension
+{
+    public void Setup(MarkdownPipelineBuilder pipeline)
+    {
+        if (pipeline.BlockParsers.Find<ListBlockParser>() is not { } lists)
+        {
+            return;
+        }
+
+        for (var index = 0; index < lists.ItemParsers.Count; index++)
+        {
+            if (lists.ItemParsers[index].GetType() == typeof(Markdig.Extensions.ListExtras.ListExtraItemParser))
+            {
+                lists.ItemParsers[index] = new CapitalListItemParser();
+            }
+        }
+    }
+
+    public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+    {
+    }
+
+    private sealed class CapitalListItemParser : Markdig.Extensions.ListExtras.ListExtraItemParser
+    {
+        public override bool TryParse(BlockProcessor state, char pendingBulletType, out ListInfo result)
+        {
+            var line = state.Line;
+            var position = line.Start;
+            while (position <= line.End && char.IsAsciiLetterUpper(line.Text[position]))
+            {
+                position++;
+            }
+
+            // A capital marker with a period and then one space before the text: initials.
+            if (position > line.Start && position <= line.End && line.Text[position] == '.'
+                && position + 2 <= line.End && line.Text[position + 1] == ' ' && line.Text[position + 2] is not (' ' or '\t'))
+            {
+                result = default;
+                return false;
+            }
+
+            return base.TryParse(state, pendingBulletType, out result);
+        }
     }
 }
 

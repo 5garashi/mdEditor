@@ -349,6 +349,83 @@ button.primary:hover {
   font-size: 13px;
 }
 
+/* GitHub view: over the preview while it shows what GitHub made of the document. */
+.github-banner {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--line);
+  border-left: 6px solid var(--steel);
+  background: var(--card);
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.github-banner[hidden] {
+  display: none;
+}
+
+/* Volt is for accent text on the card only when bold (Identity 7-1: 6.15:1 by day, 5.34:1 at night). */
+.github-banner-lead {
+  color: var(--volt);
+  font-weight: 700;
+}
+
+.github-banner-error {
+  border-left-color: var(--volt);
+}
+
+.github-banner-text {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
+.github-banner button {
+  min-height: 44px;
+  padding: 4px 10px;
+  font-size: 13px;
+}
+
+/* GitHub conversion and GitHub view questions. */
+.github-dialog .github-skipped-heading,
+.github-dialog .github-skipped-list,
+.github-dialog .settings-note,
+.github-dialog .github-view-facts,
+.github-dialog .github-error {
+  margin: 0 16px 12px;
+}
+
+.github-dialog .github-skipped-heading {
+  font-size: 15px;
+}
+
+.github-dialog .github-error {
+  font-weight: 700;
+}
+
+.github-dialog [hidden] {
+  display: none;
+}
+
+/* Markdown shown as written, in the editor's font: a Japanese UI font draws \ as a yen sign. */
+.github-table code,
+.github-skipped-list code {
+  font-family: Consolas, "Cascadia Mono", monospace;
+  overflow-wrap: anywhere;
+}
+
+.github-table th {
+  white-space: nowrap;
+}
+
+.github-table input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+}
+
 body.dragging {
   outline: 4px dashed var(--ink);
   outline-offset: -8px;
@@ -401,6 +478,96 @@ body.drop-insert .editor-pane {
 .brand-bar #document-name {
   flex: 0 1 auto;
   min-width: 0;
+}
+
+/* The menu (Settings, Keys, About) at the right of the header; its right margin keeps
+   it clear of the mark (Identity 3-5). The list opens below, aligned to its right. */
+.app-menu {
+  position: relative;
+  flex: 0 0 auto;
+  margin-inline-end: 24px;
+}
+
+#app-menu-button[aria-expanded="true"] {
+  color: var(--head);
+  background: var(--ink);
+}
+
+.app-menu-list {
+  position: absolute;
+  z-index: 50;
+  top: calc(100% + 6px);
+  right: 0;
+  display: flex;
+  min-width: 220px;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  background: var(--card);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.2);
+}
+
+.app-menu-list[hidden] {
+  display: none;
+}
+
+.app-menu-list button {
+  width: 100%;
+  border-color: transparent;
+  text-align: start;
+  white-space: nowrap;
+}
+
+.app-menu-list button:hover,
+.app-menu-list button:focus-visible {
+  border-color: var(--ink);
+  background: var(--paper);
+}
+
+/* The editor's Auto fix menu opens below its button, aligned to its left. */
+.autofix-menu {
+  position: relative;
+  display: inline-flex;
+}
+
+.autofix-menu[hidden] {
+  display: none;
+}
+
+#autofix-button[aria-expanded="true"] {
+  color: var(--head);
+  background: var(--ink);
+}
+
+.autofix-menu .app-menu-list {
+  right: auto;
+  left: 0;
+}
+
+/* The document name beside the heading: in the preview's own window, and when a pane
+   fills the window (the pane then covers the header that shows the name). */
+.pane-document-name {
+  display: none;
+}
+
+:root.preview-window .preview-pane .pane-document-name,
+body.editor-focused .editor-pane .pane-document-name,
+body.preview-focused .preview-pane .pane-document-name {
+  display: inline;
+  overflow: hidden;
+  min-width: 0;
+  flex: 0 1 auto;
+  color: var(--steel);
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* In the preview the heading and the name stay together; the buttons go to the right. */
+.preview-pane .pane-document-name {
+  margin-inline-end: auto;
 }
 
 /* Settings > Theme and PDF paper: the two switches side by side. */
@@ -1413,6 +1580,16 @@ body.capture-export .preview-content {
   text-underline-offset: 3px;
 }
 
+/* A link's underline does not reach inside inline blocks, which KaTeX draws math
+   with, so a link with math (a contents entry, for example) is underlined by one line
+   under the whole link instead. 2.4px: a 2px line is rounded down to one screen pixel
+   at a 90% display scale, where the 2px underline of other links stays two. */
+.preview-content a:has(.katex) {
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) left bottom / 100% 2.4px no-repeat;
+  print-color-adjust: exact;
+}
+
 .preview-content img {
   max-width: 100%;
   height: auto;
@@ -2233,6 +2410,7 @@ body.capture-export .preview-content :is(th, td) {
 
   .pane,
   .notice,
+  .github-banner,
   .help-dialog,
   .settings-group,
   .encoding-options {

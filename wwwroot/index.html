@@ -46,6 +46,17 @@
       <span id="save-state">保存済み</span>
       <button id="encoding-button" class="status-button" type="button" aria-haspopup="dialog">UTF-8</button>
     </div>
+    <!-- Settings, the key list, the samples, and About are in one menu at the right of the header,
+         clear of the mark (Identity 3-5). The items keep their ids and shortcuts. -->
+    <div class="app-menu">
+      <button id="app-menu-button" type="button" data-i18n="appMenu" aria-haspopup="menu" aria-expanded="false" aria-controls="app-menu">メニュー</button>
+      <div id="app-menu" class="app-menu-list" role="menu" aria-labelledby="app-menu-button" hidden>
+        <button id="settings-button" type="button" role="menuitem" tabindex="-1" data-i18n="settings" aria-haspopup="dialog">設定</button>
+        <button id="shortcuts-button" type="button" role="menuitem" tabindex="-1" data-i18n="shortcuts" aria-haspopup="dialog">キー操作</button>
+        <button id="sample-button" type="button" role="menuitem" tabindex="-1" data-i18n="sample" aria-haspopup="dialog">サンプル</button>
+        <button id="about-button" type="button" role="menuitem" tabindex="-1" data-i18n="about" aria-haspopup="dialog">このアプリについて</button>
+      </div>
+    </div>
     <!-- The symbol mark stays red (volt) in dark mode too, by the owner's choice. -->
     <picture>
       <img class="brand-mark" src="assets/5garashi_mark_simple.svg" alt="" aria-hidden="true">
@@ -58,10 +69,6 @@
       <button id="url-button" type="button" data-i18n="openUrl" aria-haspopup="dialog">URLを開く</button>
       <button id="save-button" class="primary" type="button" data-i18n="save">保存</button>
       <button id="save-as-button" type="button" data-i18n="saveAs">名前を付けて保存</button>
-      <!-- Theme and paper are in Settings (Ctrl+Shift+T / Ctrl+Shift+A switch them anywhere). -->
-      <button id="settings-button" type="button" data-i18n="settings" aria-haspopup="dialog">設定</button>
-      <button id="sample-button" type="button" data-i18n="sample" aria-haspopup="dialog">サンプル</button>
-      <button id="about-button" type="button" data-i18n="about" aria-haspopup="dialog">このアプリについて</button>
       <label class="language-picker"><span lang="en">Language</span>
         <select id="language-select">
           <option value="ja" lang="ja">日本語</option>
@@ -90,12 +97,22 @@
       <div class="pane-heading">
         <!-- Kept for screen readers (it names the pane); hidden so the buttons fit on one line. -->
         <h2 id="editor-heading" class="visually-hidden" data-i18n="editorHeading">Markdown を編集</h2>
+        <!-- When the editor fills the window, the document it edits. -->
+        <span class="pane-document-name" aria-hidden="true"></span>
         <button id="replace-button" type="button" data-i18n="findReplace">検索・置換</button>
         <button id="toc-button" type="button" data-i18n="toc">目次</button>
         <button id="image-button" type="button" data-i18n="imageButton" aria-haspopup="dialog">画像の調整</button>
         <button id="help-button" type="button" data-i18n="help" aria-haspopup="dialog">書き方</button>
-        <button id="shortcuts-button" type="button" data-i18n="shortcuts" aria-haspopup="dialog">キー操作</button>
-        <button class="pane-fullscreen-button" type="button" data-fullscreen-mode="editor" aria-pressed="false" aria-label="編集画面をウィンドウ全体に表示">ウィンドウ全体に表示</button>
+        <!-- Auto fix: Convert for GitHub, or the fix rules run now. Hidden in Settings if not
+             wanted (shown by default). -->
+        <div class="autofix-menu github-button">
+          <button id="autofix-button" type="button" data-i18n="autofix" data-i18n-attr="title:autofixTitle" aria-haspopup="menu" aria-expanded="false" aria-controls="autofix-menu">自動修正</button>
+          <div id="autofix-menu" class="app-menu-list" role="menu" aria-labelledby="autofix-button" hidden>
+            <button id="github-convert-button" type="button" role="menuitem" tabindex="-1" data-i18n="githubConvertItem" aria-haspopup="dialog">GitHub 変換…</button>
+            <button id="fix-rules-run-button" type="button" role="menuitem" tabindex="-1" data-i18n="fixRulesRun">自動修正のルールを当てる</button>
+          </div>
+        </div>
+        <button class="pane-fullscreen-button" type="button" data-fullscreen-mode="editor" aria-pressed="false" aria-label="全ウィンドウ表示（編集画面）">全ウィンドウ表示</button>
         <button type="button" data-detach="editor" hidden>プレビューを本体に戻す</button>
       </div>
       <div id="find-bar" class="find-bar" role="search" hidden>
@@ -137,13 +154,23 @@
     <section class="pane preview-pane" aria-labelledby="preview-heading">
       <div class="pane-heading">
         <h2 id="preview-heading" data-i18n="previewHeading">プレビュー</h2>
+        <!-- In the preview's own window, or when the preview fills the window, the document it shows. -->
+        <span id="preview-document-name" class="pane-document-name"></span>
         <!-- Read-aloud controls appear only when read-aloud is turned on in Settings. -->
         <div id="reader-controls" class="reader-controls" hidden>
           <button id="reader-play" type="button" data-i18n="readerPlay">読み上げ</button>
           <button id="reader-stop" type="button" data-i18n="readerStop" disabled>停止</button>
         </div>
-        <button type="button" data-detach="preview">別ウィンドウで表示</button>
-        <button class="pane-fullscreen-button" type="button" data-fullscreen-mode="preview" aria-pressed="false" aria-label="プレビューをウィンドウ全体に表示">ウィンドウ全体に表示</button>
+        <button id="github-view-button" class="github-button" type="button" data-i18n="githubView" data-i18n-attr="title:githubViewTitle" aria-haspopup="dialog">GitHub 表示</button>
+        <button type="button" data-detach="preview">別ウィンドウ表示</button>
+        <button class="pane-fullscreen-button" type="button" data-fullscreen-mode="preview" aria-pressed="false" aria-label="全ウィンドウ表示（プレビュー）">全ウィンドウ表示</button>
+      </div>
+      <!-- While the preview shows what GitHub made of the document (GitHub view). -->
+      <div id="github-banner" class="github-banner" role="status" hidden>
+        <span id="github-banner-text" class="github-banner-text"></span>
+        <button id="github-resend" type="button" data-i18n="githubResend" aria-haspopup="dialog">もう一度送る</button>
+        <button id="github-back" type="button" data-i18n="githubBack">元の表示に戻す</button>
+        <button id="github-banner-close" type="button" data-i18n="close" hidden>閉じる</button>
       </div>
       <!-- tabindex lets keyboard users focus and scroll a long preview (Identity 7-3 (2)). -->
       <article id="preview"
@@ -224,6 +251,8 @@
       <label class="settings-check"><input id="setting-completion" type="checkbox" checked> <span data-i18n="settingsCompletion">入力の候補を出す（リンク先の見出しとファイル、数式の命令）</span></label>
       <div class="settings-row"><button id="setting-fix-rules" type="button" data-i18n="settingsFixRules" aria-haspopup="dialog">自動修正のルール…</button></div>
       <p class="settings-note" data-i18n="settingsFixRulesNote"></p>
+      <label class="settings-check"><input id="setting-fix-on-paste" type="checkbox"> <span data-i18n="settingsFixOnPaste">貼り付けるたびに、文書全体に自動修正のルールを当てる</span></label>
+      <p class="settings-note" data-i18n="settingsFixOnPasteNote"></p>
     </fieldset>
     <fieldset class="settings-group">
       <legend data-i18n="settingsReader">読み上げ</legend>
@@ -294,6 +323,14 @@
       <p class="settings-note" data-i18n="settingsLineBreaksNote"></p>
     </fieldset>
     <fieldset class="settings-group">
+      <legend data-i18n="settingsButtons">表示するボタン</legend>
+      <label class="settings-check"><input id="setting-image-button" type="checkbox" checked> <span data-i18n="settingsImageButton">「画像の調整」のボタンを表示する</span></label>
+      <label class="settings-check"><input id="setting-help-button" type="checkbox" checked> <span data-i18n="settingsHelpButton">「書き方」のボタンを表示する</span></label>
+      <label class="settings-check"><input id="setting-github-buttons" type="checkbox" checked> <span data-i18n="settingsGitHubButtons">「GitHub 変換」と「GitHub 表示」のボタンを表示する</span></label>
+      <p class="settings-note" data-i18n="settingsGitHubButtonsNote"></p>
+      <p class="settings-note" data-i18n="settingsButtonsNote"></p>
+    </fieldset>
+    <fieldset class="settings-group">
       <legend data-i18n="settingsPdf">PDF の取り込み</legend>
       <label class="settings-row"><span data-i18n="settingsPdfFigureText">図のまわりの文字</span>
         <select id="setting-pdf-figure-text">
@@ -301,7 +338,7 @@
           <option value="text" data-i18n="pdfFigureTextText">文字として残す（編集優先）</option>
         </select></label>
       <p class="settings-note" data-i18n="settingsPdfFigureTextNote"></p>
-      <label class="settings-row"><span data-i18n="settingsPdfTables">表</span>
+      <label class="settings-row"><span data-i18n="settingsPdfTables">表と、書き込みのある図</span>
         <select id="setting-pdf-tables">
           <option value="text" data-i18n="pdfTablesText">Markdown の表にする（編集優先・初期設定）</option>
           <option value="picture" data-i18n="pdfTablesPicture">画像にする（見た目優先）</option>
@@ -440,6 +477,54 @@
     </div>
     <p class="help-intro" data-i18n="sampleIntro"></p>
     <ul id="sample-list" class="sample-list"></ul>
+  </dialog>
+  <dialog id="github-convert-dialog" class="help-dialog settings-dialog github-dialog" aria-labelledby="github-convert-heading">
+    <div class="help-header">
+      <h2 id="github-convert-heading"></h2>
+      <button id="github-convert-close" type="button" data-i18n="close">閉じる</button>
+    </div>
+    <div id="github-fix-section" hidden>
+      <h3 class="github-skipped-heading" data-i18n="githubFixHeading">先に当てる自動修正のルール</h3>
+      <p class="help-intro" data-i18n="githubFixIntro"></p>
+      <div class="help-table-wrap">
+      <table class="help-table github-table">
+        <thead><tr><th scope="col" data-i18n="githubColFix">当てる</th><th scope="col" data-i18n="githubColRule">ルール</th><th scope="col" class="help-right" data-i18n="githubColCount">数</th><th scope="col" data-i18n="githubColExample">例</th></tr></thead>
+        <tbody id="github-fix-rows"></tbody>
+      </table>
+      </div>
+      <h3 class="github-skipped-heading" data-i18n="githubRewriteHeading">GitHub 向けの書き換え</h3>
+    </div>
+    <p id="github-convert-intro" class="help-intro"></p>
+    <div class="help-table-wrap">
+    <table id="github-convert-table" class="help-table github-table">
+      <thead><tr><th scope="col" data-i18n="githubColApply">書き換える</th><th scope="col" data-i18n="githubColKind">書き方</th><th scope="col" class="help-right" data-i18n="githubColCount">数</th><th scope="col" data-i18n="githubColExample">例</th></tr></thead>
+      <tbody id="github-convert-rows"></tbody>
+    </table>
+    </div>
+    <h3 id="github-skipped-heading" class="github-skipped-heading" data-i18n="githubSkippedHeading">書き換えない書き方</h3>
+    <ul id="github-skipped-list" class="github-skipped-list"></ul>
+    <p class="settings-note" data-i18n="githubConvertNote"></p>
+    <div class="encoding-actions">
+      <button id="github-convert-apply" class="primary" type="button" data-i18n="githubConvertApply">書き換える</button>
+      <button id="github-convert-cancel" type="button" data-i18n="githubCancel">やめる</button>
+    </div>
+  </dialog>
+  <dialog id="github-view-dialog" class="help-dialog settings-dialog github-dialog" aria-labelledby="github-view-heading">
+    <div class="help-header">
+      <h2 id="github-view-heading" data-i18n="githubViewHeading">文書を GitHub に送りますか？</h2>
+      <button id="github-view-close" type="button" data-i18n="close">閉じる</button>
+    </div>
+    <p class="help-intro" data-i18n="githubViewIntro"></p>
+    <ol class="github-view-facts">
+      <li id="github-view-what"></li>
+      <li data-i18n="githubViewWho"></li>
+      <li id="github-view-quota"></li>
+    </ol>
+    <p id="github-view-too-large" class="github-error" hidden></p>
+    <div class="encoding-actions">
+      <button id="github-view-send" class="primary" type="button" data-i18n="githubViewSend">送る</button>
+      <button id="github-view-cancel" type="button" data-i18n="githubViewDontSend" autofocus>送らない</button>
+    </div>
   </dialog>
   <dialog id="url-dialog" class="help-dialog url-dialog" aria-labelledby="url-heading">
     <form id="url-form" method="dialog">

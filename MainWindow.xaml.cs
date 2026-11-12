@@ -362,7 +362,7 @@ public partial class MainWindow : Window
         _htmlSanitizer.AllowedAttributes.Clear();
         _htmlSanitizer.AllowedAttributes.UnionWith(
         [
-            "align", "alt", "checked", "cite", "class", "colspan", "controls", "data-external-src", "data-line", "data-source", "datetime", "dir",
+            "align", "alt", "checked", "cite", "class", "colspan", "controls", "data-external-src", "data-html-math", "data-line", "data-source", "datetime", "dir",
             "disabled", "height", "href", "id", "lang", "loop", "media", "muted", "name", "open", "playsinline", "poster", "reversed",
             "rowspan", "src", "srcset", "start", "style", "title", "type", "valign", "width",
             // Older presentational attributes GitHub keeps too, such as <br clear="all">
@@ -370,14 +370,22 @@ public partial class MainWindow : Window
             "abbr", "axis", "border", "cellpadding", "cellspacing", "clear", "color", "compact", "frame", "headers",
             "hreflang", "hspace", "itemprop", "noshade", "nowrap", "rules", "scope", "size", "span", "summary", "vspace"
         ]);
-        // Markdig writes table alignment as style="text-align: ..."; nothing else is kept.
+        // Markdig writes table alignment as style="text-align: ..."; nothing else is kept
+        // (except the size and colors of an SVG drawing, see InlineSvg).
         _htmlSanitizer.AllowedCssProperties.Clear();
         _htmlSanitizer.AllowedCssProperties.Add("text-align");
         _htmlSanitizer.AllowedSchemes.Clear();
         _htmlSanitizer.AllowedSchemes.UnionWith(["http", "https", "mailto"]);
+        // SVG drawings show as in VS Code and browsers, with only their drawing kept.
+        InlineSvg.Configure(_htmlSanitizer);
         // Task-list items are the only inputs Markdig emits; keep them read-only checkboxes.
         _htmlSanitizer.PostProcessNode += (_, e) =>
         {
+            if (e.Node is AngleSharp.Dom.IElement element)
+            {
+                InlineSvg.PostProcess(element);
+            }
+
             if (e.Node is AngleSharp.Dom.IElement { TagName: "IMG" or "SOURCE" or "VIDEO" } picture)
             {
                 ResolveHtmlImage(picture);
@@ -632,6 +640,16 @@ public partial class MainWindow : Window
                 break;
             case "toc":
                 SendToPage(new { type = "tocText", text = TableOfContents.Build(_text, _markdownPipeline) });
+                break;
+            case "githubConvertPlan":
+            case "githubConvertApply":
+                SendGitHubConversion(root, type == "githubConvertApply");
+                break;
+            case "githubViewAsk":
+                SendGitHubViewConfirm(SendToPage);
+                break;
+            case "githubView":
+                await ShowGitHubViewAsync(SendToPage);
                 break;
             case "openSample":
                 await OpenSampleAsync(root.GetProperty("text").GetString(),
@@ -1719,10 +1737,11 @@ public partial class MainWindow : Window
 
         // Images and links missing beside the file resolve from the page's own
         // address (<base>, canonical, or og:url), as a browser would.
-        var (markdown, exact) = HtmlImport.ToMarkdown(decoded.Text, null, relative => ExistsBeside(folder, relative), KeepPicture,
+        var (markdown, exact, plain) = HtmlImport.ToMarkdown(decoded.Text, null, relative => ExistsBeside(folder, relative), KeepPicture,
             tiles => DrawMapTiles(folder, tiles));
         ApplyImported(markdown, folder, name + ".md", false, Strings.Tr(exact
             ? "mdEditor で保存した HTML から、元の Markdown を開きました。保存すると Markdown ファイルになります（HTML ファイルは変わりません）。"
+            : plain ? "HTML を Markdown に変換できなかったため、文字だけを書式なしで入れました。保存すると Markdown ファイルになります（HTML ファイルは変わりません）。"
             : "HTML を Markdown に変換して開きました。色や配置は元に戻りません。図は画像にしました。保存すると Markdown ファイルになります（HTML ファイルは変わりません）。"));
         _importAssets = Directory.Exists(assets) ? assets : null;
         // Its pictures beside it come from the document's folder, as the preview's do,
@@ -1815,8 +1834,10 @@ public partial class MainWindow : Window
     private void ImportDocx(string path)
     {
         var name = Path.GetFileNameWithoutExtension(path);
-        var (markdown, assets, count) = ConvertDocx(path, out var guessed);
-        var notice = Strings.Tr("Word の文書を Markdown に変換して開きました。見出し・リスト・表・リンク・画像は戻り、色や配置は戻りません。保存すると Markdown ファイルになります（Word の文書は変わりません）。");
+        var (markdown, assets, count, plain) = ConvertDocx(path, out var guessed);
+        var notice = Strings.Tr(plain
+            ? "Word の文書を Markdown に変換できなかったため、段落の文字だけを書式なしで入れました。保存すると Markdown ファイルになります（Word の文書は変わりません）。"
+            : "Word の文書を Markdown に変換して開きました。見出し・リスト・表・リンク・画像は戻り、色や配置は戻りません。保存すると Markdown ファイルになります（Word の文書は変わりません）。");
         if (guessed > 0)
         {
             notice += Strings.SentenceJoin + string.Format(Strings.Tr("見出しのスタイルがないため、文字の大きさから {0} 個の段落を見出しにしました。"), guessed);
@@ -1874,6 +1895,12 @@ public partial class MainWindow : Window
                 string.Join(", ", result.PicturePages)));
         }
 
+        if (result.PlainPages is { Count: > 0 } plainPages)
+        {
+            notices.Add(string.Format(Strings.Tr("{0} ページ目は、変換できなかった部分を、書式のない文字で入れました（文字を取り出せないページは、ページ全体の画像にしました）。"),
+                string.Join(", ", plainPages)));
+        }
+
         if (result.Tagged)
         {
             notices.Add(Strings.Tr("PDF の中のタグ（見出し・段落・箇条書き・表と、その読む順）を使って読みました。"));
@@ -1902,7 +1929,20 @@ public partial class MainWindow : Window
         if (result.Tables > 0)
         {
             notices.Add(string.Format(Strings.Tr(result.TablesAsPictures ? "表 {0} 個を、線と文字から画像（SVG）に描き直しました（見た目優先）。表の中の文字は編集できません。" : "表 {0} 個を Markdown の表にしました。"), result.Tables));
-            reopenTables = Strings.Tr(result.TablesAsPictures ? "表を Markdown の表にする（編集優先・既定）" : "表を画像にする（見た目優先）");
+        }
+
+        // Pictures with lines or words drawn over them go with the tables: both are pictures
+        // when looks come first.
+        if (result.MarkedPictures > 0)
+        {
+            notices.Add(string.Format(Strings.Tr(result.TablesAsPictures
+                ? "書き込みのある図 {0} 個を、重ねて描かれた線と文字ごと画像（SVG）に描き直しました（見た目優先）。図の中の文字は編集できません。"
+                : "書き込みのある図 {0} 個は、図の画像だけを入れました。重ねて描かれた線と文字は入りません（見た目優先にすると入ります）。"), result.MarkedPictures));
+        }
+
+        if (result.Tables > 0 || result.MarkedPictures > 0)
+        {
+            reopenTables = Strings.Tr(result.TablesAsPictures ? "表を Markdown の表にする（編集優先・既定）" : "表・図を画像にする（見た目優先）");
         }
 
         string? reopen = null;
@@ -2129,10 +2169,54 @@ public partial class MainWindow : Window
 
     // Word to Markdown; its images are written to "name_files" in a new temporary folder.
     // Headings made only by a larger text size become headings too (DocxHeadings).
-    private static (string Markdown, string Assets, int Images) ConvertDocx(string path) =>
+    // Plain: the conversion failed (a document made in a way not met before), so its
+    // paragraphs' text came in as plain paragraphs instead of nothing.
+    private static (string Markdown, string Assets, int Images, bool Plain) ConvertDocx(string path) =>
         ConvertDocx(path, out _);
 
-    private static (string Markdown, string Assets, int Images) ConvertDocx(string path, out int guessedHeadings)
+    private static (string Markdown, string Assets, int Images, bool Plain) ConvertDocx(string path, out int guessedHeadings)
+    {
+        try
+        {
+            var (markdown, assets, images) = ConvertDocxFully(path, out guessedHeadings);
+            return (markdown, assets, images, false);
+        }
+        catch (Exception ex) when (ex is not (OutOfMemoryException or IOException or UnauthorizedAccessException)
+                                       && DocxPlainText(path) is { } plain)
+        {
+            guessedHeadings = 0;
+            return (plain, NewImportFolder(), 0, true);
+        }
+    }
+
+    // The text of each paragraph of a Word document (word/document.xml), escaped so it shows
+    // as written, or null when even that cannot be read (not a Word document at all).
+    private static string? DocxPlainText(string path)
+    {
+        try
+        {
+            using var zip = System.IO.Compression.ZipFile.OpenRead(path);
+            using var stream = zip.GetEntry("word/document.xml")?.Open();
+            if (stream is null)
+            {
+                return null;
+            }
+
+            System.Xml.Linq.XNamespace w = "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
+            var paragraphs = System.Xml.Linq.XDocument.Load(stream).Descendants(w + "p")
+                .Select(paragraph => string.Concat(paragraph.Descendants().Select(node =>
+                    node.Name == w + "t" ? node.Value : node.Name == w + "tab" ? "\t" : node.Name == w + "br" ? " " : string.Empty)).Trim())
+                .Where(text => text.Length > 0)
+                .Select(text => System.Text.RegularExpressions.Regex.Replace(text, @"([\\`*_\[\]<>#|~])", @"\$1"));
+            return string.Join("\n\n", paragraphs) + "\n";
+        }
+        catch (Exception ex) when (ex is not OutOfMemoryException)
+        {
+            return null;
+        }
+    }
+
+    private static (string Markdown, string Assets, int Images) ConvertDocxFully(string path, out int guessedHeadings)
     {
         var imagesName = Path.GetFileNameWithoutExtension(path) + FilesSuffix;
         var assets = NewImportFolder();
@@ -2236,8 +2320,13 @@ public partial class MainWindow : Window
         var imagesName = name + FilesSuffix;
         var assets = Path.Combine(Path.GetTempPath(), "mdEditor-import-" + Guid.NewGuid().ToString("N"));
         var result = NotebookFormat.ToMarkdown(decoded.Text, assets, imagesName);
-        ApplyImported(result.Markdown, result.Images > 0 ? assets : Path.GetDirectoryName(path)!, name + ".md", false, Strings.Tr(
-            "Jupyter Notebook を Markdown に変換して開きました。コードは言語付きのコードの枠、実行結果は「output」の枠・画像・表になります。保存すると Markdown ファイルになります（ノートブックは変わりません）。"));
+        var notice = Strings.Tr("Jupyter Notebook を Markdown に変換して開きました。コードは言語付きのコードの枠、実行結果は「output」の枠・画像・表になります。保存すると Markdown ファイルになります（ノートブックは変わりません）。");
+        if (result.Skipped > 0)
+        {
+            notice += Strings.SentenceJoin + string.Format(Strings.Tr("読み取れなかった実行結果・画像 {0} 個は入れませんでした。"), result.Skipped);
+        }
+
+        ApplyImported(result.Markdown, result.Images > 0 ? assets : Path.GetDirectoryName(path)!, name + ".md", false, notice);
         _suggestFolder = Path.GetDirectoryName(path);
         _importAssets = result.Images > 0 ? Path.Combine(assets, imagesName) : null;
     }
@@ -2360,7 +2449,8 @@ public partial class MainWindow : Window
             if (inserted.Count > 0)
             {
                 // Content goes in as blocks of its own (blank lines around it), so its headings and tables stay intact.
-                SendToPage(new { type = "insertText", text = string.Join("\n\n", inserted.Select(text => text.Trim('\n'))) + "\n", block = contents.Count > 0 });
+                // A file's content is checked as an opened file is: the page runs the fix rules on the document.
+                SendToPage(new { type = "insertText", text = string.Join("\n\n", inserted.Select(text => text.Trim('\n'))) + "\n", block = contents.Count > 0, fix = contents.Count > 0 });
             }
 
             var notices = new List<string>();
@@ -2473,7 +2563,7 @@ public partial class MainWindow : Window
         var extension = Path.GetExtension(path).ToLowerInvariant();
         if (extension == ".docx")
         {
-            var (markdown, assets, _) = ConvertDocx(path);
+            var (markdown, assets, _, _) = ConvertDocx(path);
             return (markdown, [assets, folder]);
         }
 
@@ -2695,7 +2785,7 @@ public partial class MainWindow : Window
                     var markdown = HtmlImport.ToMarkdown(fragment, source, null).Markdown.Trim('\n');
                     if (markdown.Length > 0)
                     {
-                        SendToPage(new { type = "insertText", text = markdown + "\n", block = true });
+                        SendToPage(new { type = "insertText", text = markdown + "\n", block = true, fix = true });
                         SendToPage(new { type = "notice", text = Strings.Tr("クリップボードの書式付きの内容（HTML）を Markdown にして、新しい文書に入れました。見出し・表・リンクなどは残り、色や配置は残りません。") });
                         return;
                     }
@@ -2711,7 +2801,8 @@ public partial class MainWindow : Window
             if (Clipboard.ContainsText())
             {
                 var text = Clipboard.GetText().Replace("\r\n", "\n");
-                SendToPage(new { type = "insertText", text = text.EndsWith('\n') ? text : text + "\n", block = false });
+                // The page runs the fix rules on it, as on opening a file.
+                SendToPage(new { type = "insertText", text = text.EndsWith('\n') ? text : text + "\n", block = false, fix = true });
                 SendToPage(new { type = "notice", text = Strings.Tr("クリップボードのテキストを新しい文書に入れました。") });
                 return;
             }
@@ -3971,6 +4062,7 @@ public partial class MainWindow : Window
             }
 
             var figures = new List<ExportFigure>();
+            var keyedFigures = new Dictionary<string, ExportFigure>(StringComparer.Ordinal);
             IReadOnlyList<IReadOnlyList<IReadOnlyList<CodeRun>>> codeColors = [];
             try
             {
@@ -3986,7 +4078,16 @@ public partial class MainWindow : Window
                     var frame = System.Windows.Media.Imaging.BitmapDecoder.Create(
                         new MemoryStream(png), System.Windows.Media.Imaging.BitmapCreateOptions.None,
                         System.Windows.Media.Imaging.BitmapCacheOption.OnLoad).Frames[0];
-                    figures.Add(new ExportFigure(png, frame.PixelWidth, frame.PixelHeight, CaptureScale));
+                    var figure = new ExportFigure(png, frame.PixelWidth, frame.PixelHeight, CaptureScale);
+                    // Math in the text of an HTML block is found by its key, not by its place.
+                    if (rect.TryGetProperty("key", out var key) && key.ValueKind == JsonValueKind.String)
+                    {
+                        keyedFigures[key.GetString()!] = figure;
+                    }
+                    else
+                    {
+                        figures.Add(figure);
+                    }
                 }
 
                 codeColors = ReadCodeColors(await PageValueAsync("window.mdeditorCodeColors()"));
@@ -4000,7 +4101,7 @@ public partial class MainWindow : Window
             try
             {
                 var titleText = _filePath is null ? Path.GetFileNameWithoutExtension(path) : Path.GetFileNameWithoutExtension(_filePath);
-                new DocxExport(_markdownPipeline, figures, ResolveImageForExport, codeColors).Write(_text, tempPath, titleText);
+                new DocxExport(_markdownPipeline, figures, ResolveImageForExport, codeColors, keyedFigures).Write(_text, tempPath, titleText);
                 File.Move(tempPath, path, overwrite: true);
             }
             finally
@@ -4837,7 +4938,7 @@ public partial class MainWindow : Window
     }
 
     // "Closer to GitHub" with the other settings following it too leaves out what GitHub does
-    // not show: line breaks in paragraphs and \(x\) math.
+    // not show: line breaks in paragraphs, \(x\) math, and $x $ (a space before the closing $).
     private static MarkdownPipeline BuildPipeline(bool nearGitHub, bool all, bool lineBreaks)
     {
         var github = nearGitHub && all;
@@ -5117,22 +5218,28 @@ public partial class MainWindow : Window
         }
     }
 
+    private string DocumentDisplayName =>
+        _filePath is null ? _importName ?? Strings.Tr("新しい文書.md") : Path.GetFileName(_filePath);
+
+    // The preview's own window shows the document's name too, in its title and heading.
     private void SendDocumentInfo()
     {
-        if (!_pageReady)
-        {
-            return;
-        }
-
-        SendToPage(new
+        UpdatePreviewWindowTitle();
+        var info = new
         {
             type = "documentInfo",
-            name = _filePath is null ? _importName ?? Strings.Tr("新しい文書.md") : Path.GetFileName(_filePath),
+            name = DocumentDisplayName,
             isDirty = _isDirty,
             encoding = EncodingId(_encoding),
             encodingSource = _encodingSource,
             canReopen = _filePath is not null
-        });
+        };
+        if (_pageReady)
+        {
+            SendToPage(info);
+        }
+
+        SendToPreviewWindow(info);
     }
 
     private void SendPreview(bool notifyRendered = false, bool forPrint = false, bool previewWindowOnly = false)
@@ -5430,11 +5537,11 @@ public partial class MainWindow : Window
                 return;
             }
 
-            foreach (var line in obj.Lines.Lines.Take(obj.Lines.Count))
-            {
-                renderer.Write(MarkImageSources(line.Slice.ToString(), line.Slice.Start, editorOffset));
-                renderer.WriteLine();
-            }
+            // Math written as text in the block shows as math, as on a MathJax page.
+            var lines = obj.Lines.Lines.Take(obj.Lines.Count)
+                .Select(line => MarkImageSources(line.Slice.ToString(), line.Slice.Start, editorOffset));
+            renderer.Write(HtmlTextMath.Mark(string.Join("\n", lines), obj.Line));
+            renderer.WriteLine();
         }
     }
 
@@ -5601,6 +5708,7 @@ public partial class MainWindow : Window
                     SendToPreviewWindow(new { type = "language", lang = Strings.ForcedLanguage });
                 }
                 SendToPreviewWindow(new { type = "theme", theme = _theme });
+                SendDocumentInfo();
                 SendPreview(previewWindowOnly: true);
                 SendToPreviewWindow(new { type = "syncLine", line = _lastSyncLine, edge = _lastSyncEdge });
                 break;
@@ -5621,6 +5729,12 @@ public partial class MainWindow : Window
                 break;
             case "attachPreview":
                 window.Close();
+                break;
+            case "githubViewAsk":
+                SendGitHubViewConfirm(SendToPreviewWindow);
+                break;
+            case "githubView":
+                await ShowGitHubViewAsync(SendToPreviewWindow);
                 break;
             case "zoom":
                 // Ctrl + 0 in the preview window goes back to the default zoom, as in this window.
@@ -5649,7 +5763,7 @@ public partial class MainWindow : Window
     {
         if (_previewWindow is { } window)
         {
-            window.Title = $"{Strings.Tr("プレビュー")} - mdEditor by 5garashi.com";
+            window.Title = $"{DocumentDisplayName} - {Strings.Tr("プレビュー")} - mdEditor by 5garashi.com";
         }
     }
 

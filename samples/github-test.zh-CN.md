@@ -9,11 +9,11 @@ options:
   levels: [2, 3]
 ---
 <!--
-  ファイル名 / File: samples/github-test.zh-CN.md
-  概要 / Description: Display test for GitHub-compatible Markdown (Simplified Chinese)
-  作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
-  作成日 / Created: 2026-10-21
-  ライセンス / License: MIT
+  File: samples/github-test.zh-CN.md
+  Description: Display test for GitHub-compatible Markdown (Simplified Chinese)
+  Author: 5garashi.com Design Office
+  Created: 2026-10-21
+  License: MIT
   SPDX-License-Identifier: MIT
 -->
 

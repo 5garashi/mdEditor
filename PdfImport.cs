@@ -15,6 +15,7 @@ using UglyToad.PdfPig.Core;
 using UglyToad.PdfPig.DocumentLayoutAnalysis;
 using UglyToad.PdfPig.DocumentLayoutAnalysis.PageSegmenter;
 using UglyToad.PdfPig.DocumentLayoutAnalysis.ReadingOrderDetector;
+using UglyToad.PdfPig.DocumentLayoutAnalysis.TextExtractor;
 using UglyToad.PdfPig.DocumentLayoutAnalysis.WordExtractor;
 using UglyToad.PdfPig.Graphics;
 using UglyToad.PdfPig.Graphics.Colors;
@@ -46,10 +47,14 @@ internal static partial class PdfImport
     // whether the PDF's tags were read; FigureText, how many blocks of text reached into a
     // figure, put in its picture (InPicture) or kept as text; TablesAsPictures, whether the
     // tables were drawn as pictures. PageSizes and Anchors (see ToMarkdown) let the original
-    // PDF be shown beside the Markdown, scrolling with the preview.
+    // PDF be shown beside the Markdown, scrolling with the preview. PlainPages: the pages with
+    // parts that could not be converted, put in as plain text instead. MarkedPictures: the
+    // pictures with lines or words drawn over them (see MarkedPictures), drawn again as a
+    // whole when TablesAsPictures is set, and only the picture itself otherwise.
     public sealed record Result(string Markdown, int Images, int Pages, int ReadPages, bool HasText, int Headings, IReadOnlyList<int> PicturePages, IReadOnlyList<int> ImagePages,
         IReadOnlyList<int> OutlinePages, int Figures = 0, int Formulas = 0, int Tables = 0, int Aligned = 0, bool Tagged = false, int FigureText = 0, bool InPicture = true, bool TablesAsPictures = false,
-        IReadOnlyList<(double Width, double Height)>? PageSizes = null, IReadOnlyList<(int Line, int Page, double Y)>? Anchors = null);
+        IReadOnlyList<(double Width, double Height)>? PageSizes = null, IReadOnlyList<(int Line, int Page, double Y)>? Anchors = null,
+        IReadOnlyList<int>? PlainPages = null, int MarkedPictures = 0);
 
     private sealed record Line(string Text, double Size, bool Bold, double Top, double Right, bool MathFont, string Family, double Left = 0, bool Rejoined = false);
 
@@ -59,7 +64,7 @@ internal static partial class PdfImport
     // the tags give (0 for text the tags say is no heading, -1 on a page without tags).
     // Align is "right" or "center" for text set so on the page (see Aligned).
     private sealed record Item(string Text, double Size, bool Bold, ItemKind Kind, double Top, int Page, bool Math = false, string Family = "", bool Toc = false, double Left = 0, double Advance = 0, int Frame = -1,
-        double Right = 0, double Bottom = 0, double Natural = 0, string Alt = "", string Float = "", bool ClearAfter = false, int Heading = -1, string Align = "");
+        double Right = 0, double Bottom = 0, double Natural = 0, string Alt = "", string Float = "", bool ClearAfter = false, int Heading = -1, string Align = "", bool Plain = false);
 
     // Code is one item per line; a Table item holds its Markdown.
     private enum ItemKind { Paragraph, Bullet, Numbered, Image, Code, Table }
@@ -69,6 +74,97 @@ internal static partial class PdfImport
 
     public static Result ToMarkdown(string path, string assets, string imagesName, PdfImportOptions? options = null)
     {
+        try
+        {
+            return ReadDocument(path, assets, imagesName, options);
+        }
+        catch (Exception ex) when (ex is not (OutOfMemoryException or UglyToad.PdfPig.Exceptions.PdfDocumentEncryptedException))
+        {
+            // The last resort: a PDF that opens but could not be converted as a whole comes in
+            // as plain text, page by page; one that does not open at all still fails.
+            if (PlainDocument(path, assets, imagesName) is { } plain)
+            {
+                return plain;
+            }
+
+            throw;
+        }
+    }
+
+    // Each page's text in reading order, one paragraph a line, or null when the PDF cannot
+    // be opened even so. Pictures saved before the conversion failed are thrown away.
+    private static Result? PlainDocument(string path, string assets, string imagesName)
+    {
+        PdfDocument document;
+        try
+        {
+            document = PdfDocument.Open(path);
+        }
+        catch (Exception ex) when (ex is not OutOfMemoryException)
+        {
+            return null;
+        }
+
+        using (document)
+        {
+            var folder = Path.Combine(assets, imagesName);
+            if (Directory.Exists(folder))
+            {
+                Directory.Delete(folder, true);
+            }
+
+            var readPages = Math.Min(document.NumberOfPages, MaxPages);
+            var markdown = new StringBuilder();
+            var pageSizes = new List<(double Width, double Height)>();
+            var anchors = new List<(int Line, int Page, double Y)>();
+            var lineCount = 0;
+            var hasText = false;
+            for (var number = 1; number <= readPages; number++)
+            {
+                string[] lines;
+                try
+                {
+                    var page = document.GetPage(number);
+                    pageSizes.Add((page.Width, page.Height));
+                    lines = ContentOrderTextExtractor.GetText(page).Split('\n').Select(line => line.Trim())
+                        .Where(line => line.Length > 0 && !line.All(char.IsControl)).ToArray();
+                }
+                catch (Exception ex) when (ex is not OutOfMemoryException)
+                {
+                    if (pageSizes.Count < number)
+                    {
+                        pageSizes.Add((0, 0));
+                    }
+
+                    continue;
+                }
+
+                for (var i = 0; i < lines.Length; i++)
+                {
+                    if (markdown.Length > 0)
+                    {
+                        markdown.Append("\n\n");
+                        lineCount += 2;
+                    }
+
+                    if (i == 0)
+                    {
+                        anchors.Add((lineCount, number, 0));
+                    }
+
+                    markdown.Append(EscapeListNumber(lines[i]));
+                    hasText = true;
+                }
+            }
+
+            return new Result(markdown.Length > 0 ? markdown.Append('\n').ToString() : string.Empty,
+                0, document.NumberOfPages, readPages, hasText, 0, [], [], [], PageSizes: pageSizes, Anchors: anchors,
+                PlainPages: Enumerable.Range(1, readPages).ToList());
+        }
+    }
+
+    private static Result ReadDocument(string path, string assets, string imagesName, PdfImportOptions? options)
+    {
         Tune = options ?? new PdfImportOptions();
         using var document = PdfDocument.Open(path);
         var structure = ReadStructure(document);
@@ -76,10 +172,12 @@ internal static partial class PdfImport
         var picturePages = new List<int>();
         var imagePages = new List<int>();
         var outlinePages = new List<int>();
+        // Pages, or parts of pages, put in as plain text because they could not be converted.
+        var plainPages = new SortedSet<int>();
         // Each page's size, for showing the PDF beside its Markdown.
         var pageSizes = new List<(double Width, double Height)>();
         var images = 0;
-        int figures = 0, formulas = 0, tables = 0, aligned = 0, figureText = 0;
+        int figures = 0, formulas = 0, tables = 0, aligned = 0, figureText = 0, markedPictures = 0;
         var tagged = false;
         // Formulas in a line of text: each stands in the text as one private-use character,
         // replaced with its picture at the end.
@@ -96,7 +194,7 @@ internal static partial class PdfImport
         }
 
         var readPages = Math.Min(document.NumberOfPages, MaxPages);
-        for (var number = 1; number <= readPages; number++)
+        void ReadPage(int number)
         {
             var page = document.GetPage(number);
             pageSizes.Add((page.Width, page.Height));
@@ -109,12 +207,17 @@ internal static partial class PdfImport
                 File.WriteAllBytes(Path.Combine(assets, imagesName, file), png);
                 items.Add(new Item(file, 0, false, ItemKind.Image, page.Height, number, Left: 0, Right: page.Width, Bottom: 0, Natural: page.Width * 4 / 3 * Tune.RenderScale));
                 (unreadable ? imagePages : outlinePages).Add(number);
-                continue;
+                return;
             }
 
             var pageItems = new List<Item>();
             var rejoined = new HashSet<Word>(ReferenceEqualityComparer.Instance);
             var shapes = FindShapes(page);
+            // Pictures with lines or words drawn over them (see MarkedPictures): drawn again
+            // as pictures of their whole area when the options put looks first.
+            var marked = MarkedPictures(page, shapes);
+            markedPictures += marked.Count;
+            var markedAreas = Tune.TablesAsPictures ? marked : [];
             // How each shape was drawn (see-through, scaling), read only for a page with figures or formulas.
             var states = new Lazy<IReadOnlyList<PaintState>?>(() => PathStates(document, page));
             var tags = structure is null ? null : ReadPageTags(structure, page);
@@ -124,17 +227,19 @@ internal static partial class PdfImport
             // mark as not the text (running titles, page numbers) is left out.
             // A line that runs on out of a figure (a paragraph beside an illustration whose area
             // reaches into it) stays text as a whole.
-            var crossing = CrossingLetters(page.Letters, shapes.Figures);
-            var letters = page.Letters.Where(letter => !letter.Value.All(char.IsControl) && !shapes.Tables.Any(table => Contains(table.Box, letter))
+            var pageLetters = DropOverprints(page.Letters);
+            var crossing = CrossingLetters(pageLetters, shapes.Figures);
+            var letters = pageLetters.Where(letter => !letter.Value.All(char.IsControl) && !shapes.Tables.Any(table => Contains(table.Box, letter))
                 && (crossing.Contains(letter) || !shapes.Figures.Any(figure => Contains(figure, letter)))
-                && !shapes.Formulas.Any(formula => Contains(formula.Box, letter)) && tags?.IsFurniture(letter) != true).ToList();
+                && !shapes.Formulas.Any(formula => Contains(formula.Box, letter)) && !markedAreas.Any(area => Contains(area, letter))
+                && tags?.IsFurniture(letter) != true).ToList();
             if (Tune.PagePictures && PicturePage(letters))
             {
                 var whole = new PdfRectangle(0, 0, page.Width, page.Height);
                 items.Add(new Item(SaveSvg(FigureSvg(page, whole, states.Value)), 0, false, ItemKind.Image, page.Height, number,
                     Left: 0, Right: page.Width, Bottom: 0, Natural: page.Width * 4 / 3));
                 picturePages.Add(number);
-                continue;
+                return;
             }
 
             var taggedTables = tags is null ? [] : TaggedTables(tags, letters);
@@ -267,6 +372,12 @@ internal static partial class PdfImport
                 }
             }
 
+            foreach (var area in markedAreas)
+            {
+                Place(new Item(SaveSvg(FigureSvg(page, area, states.Value)), 0, false, ItemKind.Image, area.Top, number,
+                    Left: area.Left, Right: area.Right, Bottom: area.Bottom, Natural: area.Width * 4 / 3));
+            }
+
             figures += shapes.Figures.Count;
             formulas += shapes.Formulas.Count;
             tables += shapes.Tables.Count + taggedTables.Count;
@@ -315,7 +426,8 @@ internal static partial class PdfImport
             }
 
             // A picture inside a figure is part of its SVG.
-            foreach (var image in page.GetImages().Where(image => !shapes.Figures.Any(figure => Contains(figure, image.BoundingBox))))
+            foreach (var image in page.GetImages().Where(image => !shapes.Figures.Any(figure => Contains(figure, image.BoundingBox))
+                         && !markedAreas.Any(area => Contains(area, image.BoundingBox))))
             {
                 if (SaveImage(image, assets, imagesName, images + 1) is { } file)
                 {
@@ -361,6 +473,67 @@ internal static partial class PdfImport
             items.AddRange(pageItems);
         }
 
+        // A page that could not be read as laid out (an error above, on a PDF made in a way
+        // not met before) comes in as plain text in reading order, one paragraph a line, or,
+        // with no text, as a picture of the whole page; the other pages are read as usual.
+        void ReadPlainPage(int number)
+        {
+            if (pageSizes.Count >= number)
+            {
+                pageSizes.RemoveRange(number - 1, pageSizes.Count - number + 1);
+            }
+
+            Page page;
+            try
+            {
+                page = document.GetPage(number);
+            }
+            catch (Exception ex) when (ex is not OutOfMemoryException)
+            {
+                pageSizes.Add((0, 0));
+                return;
+            }
+
+            pageSizes.Add((page.Width, page.Height));
+            string[] lines;
+            try
+            {
+                lines = ContentOrderTextExtractor.GetText(page).Split('\n').Select(line => line.Trim())
+                    .Where(line => line.Length > 0 && !line.All(char.IsControl)).ToArray();
+            }
+            catch (Exception ex) when (ex is not OutOfMemoryException)
+            {
+                lines = [];
+            }
+
+            for (var i = 0; i < lines.Length; i++)
+            {
+                items.Add(new Item(lines[i], 0, false, ItemKind.Paragraph, page.Height - i, number, Plain: true));
+            }
+
+            if (lines.Length == 0 && RenderPage(path, number, page.Width) is { } png)
+            {
+                images++;
+                var file = $"image{images}.png";
+                Directory.CreateDirectory(Path.Combine(assets, imagesName));
+                File.WriteAllBytes(Path.Combine(assets, imagesName, file), png);
+                items.Add(new Item(file, 0, false, ItemKind.Image, page.Height, number, Left: 0, Right: page.Width, Bottom: 0, Natural: page.Width * 4 / 3 * Tune.RenderScale));
+            }
+        }
+
+        for (var number = 1; number <= readPages; number++)
+        {
+            try
+            {
+                ReadPage(number);
+            }
+            catch (Exception ex) when (ex is not OutOfMemoryException)
+            {
+                plainPages.Add(number);
+                ReadPlainPage(number);
+            }
+        }
+
         var text = items.Where(item => item.Kind != ItemKind.Image).ToList();
         // The body typeface is the one most of the text is set in; a heading set in another
         // (Gothic over Mincho, for example) stands out even at the body size.
@@ -369,7 +542,7 @@ internal static partial class PdfImport
             .Select(group => group.Key).FirstOrDefault() ?? string.Empty;
         var levels = HeadingGuess.Levels(text.Select(item => new SizedParagraph(
             item.Text, item.Size, item.Bold,
-            item.Kind is ItemKind.Bullet or ItemKind.Code or ItemKind.Table || item.Math || item.Toc,
+            item.Kind is ItemKind.Bullet or ItemKind.Code or ItemKind.Table || item.Math || item.Toc || item.Plain,
             item.Family.Length > 0 && item.Family != bodyFamily)).ToList());
         // In a PDF tagged with headings, a tagged page's headings are those the tags name, at
         // their levels ("H" without one keeps the guess); text set larger than all of them (a
@@ -421,100 +594,129 @@ internal static partial class PdfImport
         var lists = new List<(double Left, int Indent)>();
         for (var index = 0; index < items.Count; index++)
         {
-            var item = items[index];
-            var level = headingOf.GetValueOrDefault(item);
-            var kind = level > 0 ? ItemKind.Paragraph : item.Kind;
-            if (kind == ItemKind.Code)
+            var written = markdown.Length;
+            var anchored = anchors.Count;
+            try
             {
-                var end = index;
-                while (end + 1 < items.Count && items[end + 1].Kind == ItemKind.Code && SameCodeBlock(items[end], items[end + 1]))
+                var item = items[index];
+                var level = headingOf.GetValueOrDefault(item);
+                var kind = level > 0 ? ItemKind.Paragraph : item.Kind;
+                if (kind == ItemKind.Code)
                 {
-                    end++;
+                    var end = index;
+                    while (end + 1 < items.Count && items[end + 1].Kind == ItemKind.Code && SameCodeBlock(items[end], items[end + 1]))
+                    {
+                        end++;
+                    }
+
+                    if (markdown.Length > 0)
+                    {
+                        markdown.Append("\n\n");
+                    }
+
+                    Anchor(item);
+                    markdown.Append(CodeBlock(items.GetRange(index, end - index + 1)));
+                    index = end;
+                    previous = ItemKind.Code;
+                    previousToc = false;
+                    lists.Clear();
+                    continue;
                 }
 
+                // A video on the internet that mdEditor had not loaded is printed as a note with
+                // its address; the address alone on a line shows it again.
+                if (level == 0 && kind is ItemKind.Paragraph or ItemKind.Bullet && ExternalVideoPattern().Match(item.Text) is { Success: true } video)
+                {
+                    kind = ItemKind.Paragraph;
+                    item = item with { Text = video.Groups["url"].Value };
+                }
+
+                if (kind is not (ItemKind.Bullet or ItemKind.Numbered))
+                {
+                    lists.Clear();
+                }
+                var listContinues = ((previous is ItemKind.Bullet or ItemKind.Numbered) && kind == previous) || (item.Toc && previousToc);
+                if (markdown.Length > 0)
+                {
+                    markdown.Append(listContinues ? "\n" : "\n\n");
+                }
+
+                Anchor(item);
+
+                previousToc = item.Toc;
+                if (item.Toc)
+                {
+                    // A table of contents is one list, nested as the PDF indents it. "1." is
+                    // written "1\." so Markdown keeps it as text, not as a numbered list.
+                    markdown.Append(new string(' ', 2 * tocDepth[item])).Append("- ").Append(EscapeListNumber(item.Text));
+                    previous = ItemKind.Paragraph;
+                    continue;
+                }
+
+                switch (kind)
+                {
+                    case ItemKind.Image:
+                        markdown.Append(Picture(item, $"{Uri.EscapeDataString(imagesName)}/{item.Text}", columnLeft, columnRight));
+                        break;
+                    case ItemKind.Bullet:
+                    case ItemKind.Numbered:
+                        while (lists.Count > 0 && lists[^1].Left >= item.Left - 4)
+                        {
+                            lists.RemoveAt(lists.Count - 1);
+                        }
+
+                        var indent = lists.Count == 0 ? 0 : lists[^1].Indent;
+                        var marker = kind == ItemKind.Bullet ? "- " : item.Text[..(item.Text.IndexOf('.') + 2)];
+                        markdown.Append(new string(' ', indent))
+                            .Append(kind == ItemKind.Bullet ? "- " + Escape(item.Text) : item.Text);
+                        lists.Add((item.Left, indent + marker.Length));
+                        break;
+                    case ItemKind.Table:
+                        markdown.Append(item.Text);
+                        break;
+                    case ItemKind.Paragraph when item.Align.Length > 0 && !item.Math && !item.Text.Any(c => c is '<' or '>' or '&' or '*' or '_' or '`' or '[' or (>= (char)0xE000 and <= (char)0xF8FF)):
+                        // Text set right or in the middle keeps its place as HTML (Markdown has no
+                        // way to say it); a heading keeps its level.
+                        var element = level > 0 ? $"h{Math.Min(level, 6)}" : "p";
+                        aligned++;
+                        markdown.Append($"<{element} align=\"{item.Align}\">{item.Text}</{element}>");
+                        break;
+                    default:
+                        markdown.Append(level > 0 ? new string('#', level) + " " + item.Text : item.Plain ? EscapeListNumber(item.Text) : Escape(item.Text));
+                        break;
+                }
+
+                if (item.ClearAfter)
+                {
+                    markdown.Append("\n\n<br clear=\"all\">");
+                }
+
+                previous = kind;
+            }
+            catch (Exception ex) when (ex is not OutOfMemoryException)
+            {
+                // This item could not be written as it was read: what it had added is taken
+                // back, and its text goes in as a plain paragraph (a picture, as a picture).
+                var item = items[index];
+                for (; counted > written; counted--)
+                {
+                    lineCount -= markdown[counted - 1] == '\n' ? 1 : 0;
+                }
+
+                markdown.Length = written;
+                anchors.RemoveRange(anchored, anchors.Count - anchored);
                 if (markdown.Length > 0)
                 {
                     markdown.Append("\n\n");
                 }
 
                 Anchor(item);
-                markdown.Append(CodeBlock(items.GetRange(index, end - index + 1)));
-                index = end;
-                previous = ItemKind.Code;
+                markdown.Append(item.Kind == ItemKind.Image ? $"![]({Uri.EscapeDataString(imagesName)}/{item.Text})" : EscapeListNumber(item.Text));
+                plainPages.Add(item.Page);
+                lists.Clear();
                 previousToc = false;
-                lists.Clear();
-                continue;
-            }
-
-            // A video on the internet that mdEditor had not loaded is printed as a note with
-            // its address; the address alone on a line shows it again.
-            if (level == 0 && kind is ItemKind.Paragraph or ItemKind.Bullet && ExternalVideoPattern().Match(item.Text) is { Success: true } video)
-            {
-                kind = ItemKind.Paragraph;
-                item = item with { Text = video.Groups["url"].Value };
-            }
-
-            if (kind is not (ItemKind.Bullet or ItemKind.Numbered))
-            {
-                lists.Clear();
-            }
-            var listContinues = ((previous is ItemKind.Bullet or ItemKind.Numbered) && kind == previous) || (item.Toc && previousToc);
-            if (markdown.Length > 0)
-            {
-                markdown.Append(listContinues ? "\n" : "\n\n");
-            }
-
-            Anchor(item);
-
-            previousToc = item.Toc;
-            if (item.Toc)
-            {
-                // A table of contents is one list, nested as the PDF indents it. "1." is
-                // written "1\." so Markdown keeps it as text, not as a numbered list.
-                markdown.Append(new string(' ', 2 * tocDepth[item])).Append("- ").Append(EscapeListNumber(item.Text));
                 previous = ItemKind.Paragraph;
-                continue;
             }
-
-            switch (kind)
-            {
-                case ItemKind.Image:
-                    markdown.Append(Picture(item, $"{Uri.EscapeDataString(imagesName)}/{item.Text}", columnLeft, columnRight));
-                    break;
-                case ItemKind.Bullet:
-                case ItemKind.Numbered:
-                    while (lists.Count > 0 && lists[^1].Left >= item.Left - 4)
-                    {
-                        lists.RemoveAt(lists.Count - 1);
-                    }
-
-                    var indent = lists.Count == 0 ? 0 : lists[^1].Indent;
-                    var marker = kind == ItemKind.Bullet ? "- " : item.Text[..(item.Text.IndexOf('.') + 2)];
-                    markdown.Append(new string(' ', indent))
-                        .Append(kind == ItemKind.Bullet ? "- " + Escape(item.Text) : item.Text);
-                    lists.Add((item.Left, indent + marker.Length));
-                    break;
-                case ItemKind.Table:
-                    markdown.Append(item.Text);
-                    break;
-                case ItemKind.Paragraph when item.Align.Length > 0 && !item.Math && !item.Text.Any(c => c is '<' or '>' or '&' or '*' or '_' or '`' or '[' or (>= (char)0xE000 and <= (char)0xF8FF)):
-                    // Text set right or in the middle keeps its place as HTML (Markdown has no
-                    // way to say it); a heading keeps its level.
-                    var element = level > 0 ? $"h{Math.Min(level, 6)}" : "p";
-                    aligned++;
-                    markdown.Append($"<{element} align=\"{item.Align}\">{item.Text}</{element}>");
-                    break;
-                default:
-                    markdown.Append(level > 0 ? new string('#', level) + " " + item.Text : Escape(item.Text));
-                    break;
-            }
-
-            if (item.ClearAfter)
-            {
-                markdown.Append("\n\n<br clear=\"all\">");
-            }
-
-            previous = kind;
         }
 
         for (var i = 0; i < inlines.Count; i++)
@@ -525,7 +727,7 @@ internal static partial class PdfImport
         var headings = levels.Count(level => level > 0);
         return new Result(markdown.Length > 0 ? markdown.Append('\n').ToString() : string.Empty,
             images, document.NumberOfPages, readPages, text.Count > 0 || imagePages.Count > 0, headings, picturePages, imagePages, outlinePages,
-            figures, formulas, tables, aligned, tagged, figureText, Tune.FigureTextInPicture, Tune.TablesAsPictures, pageSizes, anchors);
+            figures, formulas, tables, aligned, tagged, figureText, Tune.FigureTextInPicture, Tune.TablesAsPictures, pageSizes, anchors, [.. plainPages], markedPictures);
     }
 
     // Whether a page's running text (figures, tables, and formulas apart) cannot be read in
@@ -662,8 +864,9 @@ internal static partial class PdfImport
                 continue;
             }
 
-            // Raised or lowered: smaller than the letter before (or after) it on the line, and
-            // close to it; letters of one run follow the first.
+            // Raised or lowered: smaller than the letter before (or after) it on the line, but
+            // more than half its size (text beside a large step number is not raised from it),
+            // and close to it; letters of one run follow the first.
             var size = letter.PointSize;
             Letter? Beside(int at) => at >= 0 && at < letters.Count && !IsBlank(letters[at])
                 && Math.Min(Math.Abs(letters[at].EndBaseLine.X - letter.StartBaseLine.X), Math.Abs(letter.EndBaseLine.X - letters[at].StartBaseLine.X)) < size ? letters[at] : null;
@@ -674,7 +877,7 @@ internal static partial class PdfImport
                 continue;
             }
 
-            if ((Beside(i - 1) ?? Beside(i + 1)) is { } line && line.PointSize > size * 1.1
+            if ((Beside(i - 1) ?? Beside(i + 1)) is { } line && line.PointSize > size * 1.1 && line.PointSize < size * 2
                 && (letter.StartBaseLine.Y - line.StartBaseLine.Y) / line.PointSize is var raised && Math.Abs(raised) is > 0.15 and < 0.7)
             {
                 (tags[i], shift[i]) = (raised > 0 ? "sup" : "sub", line.StartBaseLine.Y - letter.StartBaseLine.Y);
@@ -776,7 +979,7 @@ internal static partial class PdfImport
                 InsertByPlace(ordered, block, all);
             }
 
-            return ordered;
+            return SideLabels(ordered);
         }
 
         var tagged = letters.Where(letter => tags.Of(letter) is not null && !IsBlank(letter)).ToList();
@@ -838,7 +1041,12 @@ internal static partial class PdfImport
     private static IEnumerable<TextBlock> TextBlocks(IReadOnlyList<Letter> letters, HashSet<Word> rejoined, IReadOnlyList<PdfRectangle> frames)
     {
         var words = NearestNeighbourWordExtractor.Instance.GetWords(letters).ToList();
+        // A step's number set large beside its text is a block of its own (see SideLabels):
+        // in the text's block it would take the line above for a raised (superscript) part.
+        var labels = words.Where(word => IsSideLabel(word, words)).ToList();
+        words.RemoveAll(labels.Contains);
         var blocks = KeyValueRows(JoinTermLines(JoinSplitLines(DocstrumBoundingBoxes.Instance.GetBlocks(words).ToList(), rejoined), rejoined), rejoined, frames);
+        blocks.AddRange(labels.Select(label => new TextBlock([new TextLine([label])])));
         var ordered = new List<TextBlock>();
         foreach (var block in UnsupervisedReadingOrderDetector.Instance.Get(blocks))
         {
@@ -846,6 +1054,131 @@ internal static partial class PdfImport
         }
 
         return ordered;
+    }
+
+    // Pictures with lines or words drawn over them (a photograph with the buttons to press
+    // ringed and named, in a box): the area of each, its frame's when it has one, or the
+    // picture's with what is drawn over it. Only the picture itself comes out of the PDF as
+    // an image, so the rings and names would be lost. A frame is a box around the picture
+    // at most three times its size (a page or card background is larger); a picture in a
+    // figure is part of the figure already.
+    private static List<PdfRectangle> MarkedPictures(Page page, PageShapes shapes)
+    {
+        var areas = new List<PdfRectangle>();
+        var drawn = page.Paths.Where(path => !path.IsClipping && (path.IsStroked || path.IsFilled)).ToList();
+        var paths = drawn.Select(path => path.GetBoundingRectangle()).OfType<PdfRectangle>().ToList();
+        // A frame is a drawn border. A box only filled is a background: the white behind the
+        // text of a page saved from a browser holds the paragraphs around the picture too.
+        var borders = drawn.Where(path => path.IsStroked).Select(path => path.GetBoundingRectangle()).OfType<PdfRectangle>().ToList();
+        foreach (var image in page.GetImages())
+        {
+            var picture = image.BoundingBox;
+            if (picture.Width * picture.Height < 100 || shapes.Figures.Any(figure => Contains(figure, picture))
+                || areas.Any(area => Contains(area, picture)))
+            {
+                continue;
+            }
+
+            var frame = borders.Where(box => Contains(box, picture) && box.Width * box.Height <= picture.Width * picture.Height * 3)
+                .OrderBy(box => box.Width * box.Height).Cast<PdfRectangle?>().FirstOrDefault();
+            var outer = frame ?? picture;
+            var over = paths.Where(box => !box.Equals(frame) && Contains(outer, box) && Overlaps(box, picture)
+                && box.Width * box.Height < picture.Width * picture.Height * 0.9).ToList();
+            var words = page.Letters.Where(letter => !IsBlank(letter) && Contains(outer, letter)).ToList();
+            // A frame alone (a border round a photograph) loses nothing: the picture is enough.
+            if (over.Count == 0 && words.Count == 0)
+            {
+                continue;
+            }
+
+            var area = frame ?? Union(over.Append(picture).Concat(words.Select(letter => letter.BoundingBox)));
+            areas.Add(new PdfRectangle(area.Left - 1, area.Bottom - 1, area.Right + 1, area.Top + 1));
+        }
+
+        return areas;
+    }
+
+    // A letter drawn again a little off its place, to look bold or to give it a shadow (the
+    // same letter less than a sixth of its size away), is read once.
+    private static IReadOnlyList<Letter> DropOverprints(IReadOnlyList<Letter> letters)
+    {
+        var kept = new List<Letter>();
+        var near = new Dictionary<(string, int, int), List<Letter>>();
+        foreach (var letter in letters)
+        {
+            var reach = Math.Max(letter.PointSize, 1) * 0.15;
+            var cell = (letter.Value, (int)Math.Floor(letter.StartBaseLine.X / reach), (int)Math.Floor(letter.StartBaseLine.Y / reach));
+            var drawnAgain = false;
+            for (var dx = -1; dx <= 1 && !drawnAgain; dx++)
+            {
+                for (var dy = -1; dy <= 1 && !drawnAgain; dy++)
+                {
+                    drawnAgain = near.TryGetValue((cell.Value, cell.Item2 + dx, cell.Item3 + dy), out var others)
+                        && others.Any(other => Math.Abs(other.PointSize - letter.PointSize) < reach
+                            && Math.Abs(other.StartBaseLine.X - letter.StartBaseLine.X) < reach
+                            && Math.Abs(other.StartBaseLine.Y - letter.StartBaseLine.Y) < reach);
+                }
+            }
+
+            if (drawnAgain)
+            {
+                continue;
+            }
+
+            kept.Add(letter);
+            if (!near.TryGetValue(cell, out var list))
+            {
+                near[cell] = list = [];
+            }
+
+            list.Add(letter);
+        }
+
+        return kept.Count == letters.Count ? letters : kept;
+    }
+
+    // A short label set large to the left of a paragraph and level with it (a step's number
+    // beside its text) is read right before that paragraph, not with the other labels down
+    // its narrow column.
+    private static List<TextBlock> SideLabels(List<TextBlock> ordered)
+    {
+        static double Size(TextBlock block) => block.TextLines.SelectMany(line => line.Words).SelectMany(word => word.Letters).Max(letter => letter.PointSize);
+        foreach (var label in ordered.Where(block => block.TextLines.Count == 1 && SideLabelPattern().IsMatch(block.Text.Trim())).ToList())
+        {
+            var box = label.BoundingBox;
+            var owner = ordered.Where(block => !ReferenceEquals(block, label) && block.BoundingBox.Left >= box.Right
+                    && block.BoundingBox.Left - box.Right < box.Height * 3
+                    && box.Top > block.BoundingBox.Bottom && box.Bottom < block.BoundingBox.Top
+                    && Size(label) >= Size(block) * 1.5)
+                .OrderBy(block => block.BoundingBox.Left - box.Right).FirstOrDefault();
+            if (owner is null)
+            {
+                continue;
+            }
+
+            ordered.Remove(label);
+            ordered.Insert(ordered.IndexOf(owner), label);
+        }
+
+        return ordered;
+    }
+
+    // A number (up to three digits, with a period or parenthesis) set at least half again as
+    // large as text that starts just to its right, level with it. Only numbers: a large first
+    // letter of a paragraph (a drop cap) belongs to its word.
+    private static bool IsSideLabel(Word word, IReadOnlyList<Word> words)
+    {
+        if (!SideLabelPattern().IsMatch(word.Text))
+        {
+            return false;
+        }
+
+        var box = word.BoundingBox;
+        var size = word.Letters.Max(letter => letter.PointSize);
+        return words.Any(other => !ReferenceEquals(other, word) && other.BoundingBox.Left >= box.Right
+            && other.BoundingBox.Left - box.Right < box.Height * 3
+            && other.BoundingBox.Bottom < box.Top && other.BoundingBox.Top > box.Bottom
+            && other.Letters.Max(letter => letter.PointSize) * 1.5 <= size);
     }
 
     // A block wholly above one read before it, and over most of its width or wholly to its
@@ -1470,7 +1803,9 @@ internal static partial class PdfImport
                 firstHeading = tags is null ? -1 : lineTag?.Heading ?? -1;
             }
 
-            current.Add(line with { Text = lineKind == ItemKind.Bullet ? rest : line.Text });
+            // A numbered line keeps the number ListMarker wrote as "4. " (from 4) or 4．), which
+            // the list marker is read from.
+            current.Add(line with { Text = lineKind is ItemKind.Bullet or ItemKind.Numbered ? rest : line.Text });
         }
 
         foreach (var item in Flush()) yield return item;
@@ -1843,6 +2178,9 @@ internal static partial class PdfImport
 
     [GeneratedRegex(@"^\s*(\d{1,3})[.)．）]\s+")]
     private static partial Regex NumberedPattern();
+
+    [GeneratedRegex(@"^\d{1,3}[.)．）]?$")]
+    private static partial Regex SideLabelPattern();
 
     [GeneratedRegex(@"^[\s\-–—]*\d{1,4}(\s*/\s*\d{1,4})?[\s\-–—]*$")]
     private static partial Regex PageNumberPattern();
