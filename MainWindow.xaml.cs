@@ -1265,7 +1265,7 @@ public partial class MainWindow : Window
             FileName = _filePath is null ? _importName ?? Strings.Tr("新しい文書.md") : Path.GetFileName(_filePath),
             InitialDirectory = _filePath is null ? _suggestFolder ?? string.Empty : string.Empty
         };
-        if (dialog.ShowDialog(this) != true)
+        if (SaveDialogName.Show(dialog, this) != true)
         {
             return false;
         }
@@ -2119,7 +2119,7 @@ public partial class MainWindow : Window
             AddExtension = true,
             FileName = "fix-rules.json"
         };
-        if (dialog.ShowDialog(this) == true)
+        if (SaveDialogName.Show(dialog, this) == true)
         {
             WriteFixRules(dialog.FileName, json, "自動修正のルールを書き出せませんでした。");
         }
@@ -3974,7 +3974,7 @@ public partial class MainWindow : Window
             InitialDirectory = _filePath is null ? _suggestFolder ?? string.Empty : string.Empty
         };
         Activate();
-        return dialog.ShowDialog(this) == true ? dialog.FileName : null;
+        return SaveDialogName.Show(dialog, this) == true ? dialog.FileName : null;
     }
 
     // Save as PNG: the whole preview as pictures; a long document is split into
