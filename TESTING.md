@@ -3,7 +3,7 @@
   概要 / Description: mdEditor を変えたときに、どのテストを動かし、どう報告するか / Which tests to run when mdEditor changes, and how to report them
   作成者 / Author: 5garashi.com設計事務所 / 5garashi.com Design Office
   作成日 / Created: 2026-11-02
-  版 / Version: 1.0.24
+  版 / Version: 1.0.25
   ライセンス / License: MIT
   SPDX-License-Identifier: MIT
 -->
@@ -46,6 +46,12 @@ mdEditor のファイルを変えたら、この文書に従ってテストを�
 - 数式のある見出しの id と、見出しの `{ }` を属性として読むかは、`GfmExtensions.cs` の `HeadingMathExtension` が決める。プレビュー・書き出し・目次・GitHub 変換が共通に使うため、変えたときは上のテストに加えて、`test_release_1024.py` 全体（`test_heading_ids_keep_the_math_as_github_does` と `test_braces_in_heading_math_do_not_cut_the_heading` を含む）、`test_release_1023.py`、`test_written_elsewhere.py` を動かす。id は「書き方の問題」の確認（markdownlint の MD051）と、`wwwroot/app.js` の `headingSlugs`（`](#` の入力の候補）の作り方と同じにする。
 - 見出しに新しい種類の書き方を足して確かめたときは、`test_release_1024.py` の目次と見出しの id のテストに例を足す。
 
+## 保存のダイアログを変えたとき
+
+- 保存のダイアログ（「名前を付けて保存」「PDFに保存」「HTMLに保存」「PNGに保存」「Wordに保存」、自動修正のルールの「書き出す…」）は、`SaveDialogName.Show` で開く。ファイル名の拡張子より前を選ぶ。新しく保存のダイアログを足すときも、これで開く。
+- `test_release_1025.py`（`run.cmd mdeditor -k test_release_1025`、約 1 分）を動かす。開いたとき、「ファイルの種類」の一覧で選んだとき、クリックと Alt+N で入ったときの選び方を確かめる。テストの間は、マウスとキーボードに触らない（本物の操作でダイアログを動かすため）。
+- 選ぶ範囲を変えたときは、拡大した画面の写しでも確かめる（選んだ部分は、色の付いた背景で見える）。
+
 ## 訳を変えたとき
 
 英語・中国語の文を変えたら、`test_translations.py` を動かし、[docs/translation-review.md](docs/translation-review.md) の手順 4・5 のとおり、見直しをほかの AI に共通の道具で頼み、指摘を判断して直し、報告する。
@@ -53,4 +59,4 @@ mdEditor のファイルを変えたら、この文書に従ってテストを�
 ---
 
 **作成者 / Author**: 5garashi.com設計事務所 / 5garashi.com Design Office
-**最終更新 / Last updated**: 2026-11-11 JST
+**最終更新 / Last updated**: 2026-11-15 JST

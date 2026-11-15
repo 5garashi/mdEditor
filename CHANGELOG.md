@@ -12,6 +12,12 @@
 
 The version number lives in [VERSION](./VERSION). Add each new version at the top, with a `## version — date` heading (used as the GitHub Release notes).
 
+## 1.0.25 — 2026-11-15
+
+- 保存のダイアログで、ファイル名の拡張子より前（`.md` や `.pdf` を含まない部分）を選ぶようにした。名前を打つと、拡張子を残したまま名前だけが替わる。ダイアログを開いたとき、ファイル名の欄にクリックやキー（Alt+N など）で入ったとき、「ファイルの種類」の一覧で種類を選んで拡張子が替わったときに選ぶ（一覧で選んだときは、ファイル名の欄に戻る）。「名前を付けて保存」「PDFに保存」「HTMLに保存」「PNGに保存」「Wordに保存」と、自動修正のルールの「書き出す…」のダイアログが対象。これまでは拡張子まで選んでいて、「ファイルの種類」を替えると何も選ばれていなかった。
+
+- Save dialogs now select the file name without its extension (the part before `.md` or `.pdf`), so typing a name replaces just the name and keeps the extension. The name is selected when the dialog opens, when the file name box is entered with a click or a key (such as Alt+N), and when you pick a type from the "Save as type" list and the extension changes (the focus also returns to the file name box). This applies to the Save As, Save as PDF, Save as HTML, Save as PNG, and Save as Word dialogs, and to the Export… dialog in Fix rules. Until now, the whole name was selected, extension included, and nothing was selected after you changed the type.
+
 ## 1.0.24 — 2026-11-12
 
 - 「GitHub 変換」で、GitHub 向けに書き換える前に、自動修正のルールを当てるようにした。確認の画面の「先に当てる自動修正のルール」に、文書（選んでいるときは選んだ範囲）で見つかったルールを、数と例とチェックとともに並べる。「開いたときに直す」のルールは初めからチェックが付き、「開いたときに聞く」と「「当てる」を押したときだけ」のルールは付かない。チェックを変えると、ルールを当てた後の文字で GitHub 向けの書き換えを数え直す。ルールで直したところと書き換えは、Ctrl+Z 1 回で一緒に戻る。数式の書き方を $ に直す 4 つのルール（別行の `\[ … \]`、文の中の `\[ … \]`、`\( … \)`、`$` の内側の空白）は並べない。同じ書き方を、GitHub 変換が GitHub の読み方に合わせて（`$x$`・`` $`x`$ ``・` ```math ` から）書き換えるため。これまでは、先に「自動修正のルールを当てる」を選ばないと、お知らせ欄で元に戻したところや、聞くだけのルールのところが、GitHub 向けにならないまま残った。

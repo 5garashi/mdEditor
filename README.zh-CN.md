@@ -21,7 +21,7 @@ tags: [markdown, windows, wpf, webview2]
 
 [English](./README.md) | [日本語](./README.ja.md) | 简体中文
 
-版本 / Version: 1.0.24（更改记录 / Changes: [CHANGELOG.md](./CHANGELOG.md)）
+版本 / Version: 1.0.25（更改记录 / Changes: [CHANGELOG.md](./CHANGELOG.md)）
 
 ## 特点
 
